@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@ Page Language="C#" %>
 <%@ Register tagprefix="SharePoint" namespace="Microsoft.SharePoint.WebControls" assembly="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
 <html>
@@ -7,6 +7,7 @@
 	<SharePoint:CssRegistration Name="default" runat="server"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
 	<title>Purchase Request</title>
 
 	<!-- STANDARD: LIBRARIES -->
@@ -27,19 +28,23 @@
 	<script src="../SiteAssets/js/popper.min.js"></script>
 	<script src="../SiteAssets/js/chart.js"></script>
     <script src="../SiteAssets/js/bootstrap4-toggle.min.js"></script>
+    <script src="../SiteAssets/js/typeahead.bundle.js" type="text/javascript"></script>
   
+      
     <!-- CUSTOM: LIBRARIES -->
     <script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
 	<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>
 	<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
 	<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
 	<script src="../SiteAssets/js/ccHelper.js" type="text/javascript" ></script>
+	<script src="../SiteAssets/js/emailSend.js" type="text/javascript"></script>
 	<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
+
 
 </head>
 <body>
-<form id="form1" runat="server">		
-<SharePoint:FormDigest runat="server"></SharePoint:FormDigest>
+<form id="form1"  runat="server">		
+<SharePoint:FormDigest  ID="FormDigest1" runat="server"></SharePoint:FormDigest>
 	<div class="container-fluid">
 		<div class="card card-header  m-0 header">
 			<div class="row mb-0 text-center">
@@ -57,7 +62,7 @@
 				<div class="progress" id="myRequestProgress" style="height:2rem;"></div>
 			</div>
 			<div class="col-3">
-				<button type="button" class="btn btn-sm btn-block btn-primary" id="btnSaveDraft" value="Draft" title="Save Draft Version"  data-toggle="modal" data-target="#draftModal"><i class="fa fa-save"></i> Draft</button>	
+				<button type="button" class="btn btn-sm btn-block btn-primary" id="btnSaveDraft" value="Draft" title="Save Draft Version"  data-toggle="modal" data-target="#draftModal"><i class="fa fa-save"></i> Save</button>	
 			</div>
 			<div class="col-3">
 				<button type="button" class="btn btn-sm btn-block btn-success" id="btnSubmitRequest" value="Submit"  title="Create a draft version before submitting" data-toggle="modal" data-target="#submitModal"><i class="fa fa-upload"></i> Submit</button>	
@@ -103,7 +108,9 @@
 										<li class="fa fa-user" style="font-size: .7rem;"></li>
 									</span>
 								</div>
-								<input type="text" class="form-control shadow-sm" id="Requestor">
+								<div id="bloodhound" style="width: 90%";>
+									<input type="text" class="typeahead form-control shadow-sm" id="Requestor">
+								</div>
 							</div>
 						</div>
 						<div class="col-2" style="text-align:right;">
@@ -159,7 +166,7 @@
 							</div>
 						</div>
 						<div class="col-2" style="text-align:right;">
-							<p class="card-text">Recommended Source:</p>
+							<p class="card-text">Funding Source:</p>
 						</div>
 						<div class="col-3">
 							<div class="input-group">
@@ -296,11 +303,11 @@
 
 						<!--BEGIN BUTTON ROW-->
 						<ul class="nav nav-tabs col-12 nav-justified">
-							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#directoratePane"><p id="directorateText">Directorate</p></a>
-							</li>
 							<li class="nav-item active">
-								<a class="nav-link active" data-toggle="tab" href="#billingOfficialPane"><p id="billingOfficialText">Billing Official</p></a>
+								<a class="nav-link active" data-toggle="tab" href="#directoratePane"><p id="directorateText">Directorate</p></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#billingOfficialPane"><p id="billingOfficialText">Billing Official</p></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" data-toggle="tab" href="#j6Pane"><p id="j6Text"> J6</p></a>
@@ -323,7 +330,7 @@
 								<a class="nav-link" data-toggle="tab" href="#requestorPane"><p id="requestorText">Requestor</p></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#supplyPane"><p id="supplyText">SOHC Supply</p></a>
+								<a class="nav-link" data-toggle="tab" href="#supplyPane"><p id="supplyText">Supply</p></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" data-toggle="tab" href="#j4Pane"><p id="j4Text">Final Review</p></a>
@@ -336,7 +343,7 @@
 						<div class="tab-content">
 
 							<!--BEGIN DIRECTORATE APPROVAL SECTION-->
-							<div class="tab-pane fade" id="directoratePane">
+							<div class="tab-pane active" id="directoratePane">
 								<div class="card" style="border-top-width:0px;">
 									<div class="card-body">
 										<div class="row mb-0">
@@ -373,7 +380,7 @@
 							<!--END DIRECTORATE APPROVAL SECTION-->	
 
 							<!--BEGIN BO APPROVAL SECTION-->
-							<div class="tab-pane active" id="billingOfficialPane">
+							<div class="tab-pane fade" id="billingOfficialPane">
 								<div class="card"  style="border-top-width:0px;">
 									<div class="card-body">
 										<div class="row mb-0">
@@ -762,6 +769,10 @@
 <script type="text/javascript">	
 	$(document).ready(function(){
 		/*
+		 * Change card message base on card type
+		 */
+		cardMessage();
+		/*
 		 * Load all available directotes
  		 */
 		getDirectorate();
@@ -774,36 +785,51 @@
 		 */
 		getFiscalYear();
 		/*
-		 * Load datepicker 
+		 * Get card holders
 		 */
-		$("#RequestDateOfRequest").datepicker();
+		getUserRole();
+		/*
+		 * Get all SharePoint user 
+		 */
+		getSpUser();
 		/*
 	 	 * Load Purchase Request
 		 */
 		loadCCRequestTracker(getCurrentId());
 		/*
+		 * Load datepicker 
+		 */
+		$("#RequestDateOfRequest").datepicker();
+		/*
 		 * Save form data 
 		 */
 		$("#btnSaveDraft").click(function(){			
-			submitDraft();
+		    submitDraft();
 		});	
 		/*
 		 * Submit
 		 */
 		$("#btnSubmitRequest").click(function(){			
 			submitRequest();
-		});	
+			processSendEmails('submit');
+		});
+		/* 
+		 * Disable all Sign buttons 
+		 */	
+		signatureRequired(); 
 		/*
 		 * Start Signature proces
-		 */
+		 */	
 		$("#btnBoSign, #btnJ6Sign , #btnPboSign, #btnDirectorateSign, #btnJ8Sign, #btnCardHolderSign, #btnRequestorSign, #btnSupplySign, #btnJ4Sign, #btnBudgetOfficerSign").click(function(){
 			signRequest($(this).attr('value'));
+			processSendEmails($(this).attr('value'));
 			setApprovalProcess($(this).attr('value'));
 			closeModal($(this).attr('value'));
 		});
 		$('#closeRequestWindow').click(function(){
 			window.top.close();
-		});					
+		});
 	});
+
 </script>
 </html>	

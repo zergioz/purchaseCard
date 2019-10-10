@@ -13,6 +13,7 @@
         <link href="../SiteAssets/css/font-awesome.min.css" rel="stylesheet" >
 		<link href="../SiteAssets/css/application.css" rel="stylesheet">
 		<link href="../SiteAssets/css/jquery-ui.css" type="text/css" rel="stylesheet"/>
+		<link href="../SiteAssets/css/select2.min.css" rel="stylesheet" />
 		<script src="../SiteAssets/js/jquery-1.12.0.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/jquery.SPServices.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/jquery-ui.js" type="text/javascript"></script>
@@ -25,6 +26,7 @@
 		<script src="../SiteAssets/js/chart.js"></script>
 		<script src="../SiteAssets/js/toolkit.js"></script>
 		<script src="../SiteAssets/js/application.js"></script>
+		<script src="../SiteAssets/js/select2.min.js"></script>
 
 		<!-- CUSTOM: LIBRARIES -->
 		<script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
@@ -50,13 +52,13 @@
 						<div class="collapse nav-toggleable-md" id="nav-toggleable-md">
 							<ul class="nav nav-pills nav-stacked flex-column">
 								<li class="nav-header">Users</li>
-								<li class="nav-item"><a class="nav-link" href="/cc/Pages/cc_user_list.aspx">Users Overview</a></li>
-								<li class="nav-item"><a class="nav-link active" href="/cc/Pages/cc_user_add.aspx">Add User</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Pages/cc_user_list.aspx">Users Overview</a></li>
+								<li class="nav-item"><a class="nav-link active" href="../Pages/cc_user_add.aspx">Add User</a></li>
 								<li class="nav-header">Requests</li>
-								<li class="nav-item"><a class="nav-link" href="/cc/Pages/purchase_request_list.aspx">Request Status</a></li>
-								<li class="nav-item"><a class="nav-link" href="/cc/Pages/purchase_request.aspx" target="_blank">Submit Request</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Pages/cc_purchase_request_list.aspx">Request Status</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Pages/purchase_request.aspx" target="_blank">Submit Request</a></li>
 								<li class="nav-header">Documentation & Other</li>
-								<li class="nav-item"><a class="nav-link" href="#" target="_blank">Documentation</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Shared%20Documents/Forms/AllItems.aspx" target="_blank">Documentation</a></li>
 								<li class="nav-item"><a class="nav-link" href="#">Other</a></li>
 							</ul>
 						</div>
@@ -108,18 +110,24 @@
 								</div>
 								<label for="personRole" class="col-sm-1 col-form-label d-none d-xl-block">Role</label>	
 								<div class="col-sm-5">
-									<select id="personRole" class="inputSelectCCUSer form-control" placeholder="Role" ></select>
+									<select id="personRole" class="inputSelectCCUSer form-control" placeholder="Role" >
+										 <option selected>Please Select</option>
+									</select>
 								</div>
 							</div>
 							
 							<div class="form-group row">
 								<label for="personRank" class="col-sm-1 col-form-label d-none d-xl-block">Rank</label>	
 								<div class="col-sm-5">
-									<select id="personRank" class="inputSelectCCUSer form-control" placeholder="Rank"></select>
+									<select id="personRank" class="inputSelectCCUSer form-control" placeholder="Rank">
+										 <option selected>Please Select</option>
+									</select>
 								</div>
 								<label for="personDirectorate" class="col-sm-1 col-form-label d-none d-xl-block">Directorate</label>							
 								<div class="col-sm-5">
-									<select id="personDirectorate" class="inputSelectCCUSer form-control" placeholder="Directorate"></select>
+									<select id="personDirectorate" class="inputSelectCCUSer form-control" placeholder="Directorate">
+										 <option selected>Please Select</option>
+									</select>
 								</div>
 							</div>
 
@@ -127,6 +135,7 @@
 								<label for="personDirectorate" class="col-sm-1 col-form-label d-none d-xl-block">Active</label>							
 								<div class="col-sm-5">
 									<select id="personActive" class="inputSelectCCUSer form-control" placeholder="PLEASE SELECT">
+										<option selected>Please Select</option>
 										<option value="YES">YES</option>
 										<option value="NO">NO</option>
 									</select>
@@ -232,9 +241,27 @@
 						</div>
 					</div>
 					<!-- END: USER ATTRIBUTES -->
-								
+					
+					<!-- START: USER BILLING OFFICIAL -->
+					<div class="card mb-4 box-shadow" id="billing_official_main">
+						<div class="card-header">
+							<h4 class="dashhead-title mb-3">Billing offical</h4>
+						</div>
+						<div class="card-body">
+							<div class="form-group row">
+								<label for="billingOfficialCardHolder" class="col-sm-6 col-form-label d-none d-xl-block">Select Corresponding Billing Officials </label>
+								<div class="col-sm-12" id="the-basics">
+									<select id="billingOfficialCardHolder" class="inputTextCCUser form-control" name="billingOfficialCardHolder[]" multiple="multiple" placeholder="Add Card Holders Accounts" style="width: 100%">
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- END: USER BILLING OFFICIAL -->
+
+
 					<!-- START: USER TRAINING -->
-					<div class="card mb-4 box-shadow">
+					<div class="card mb-4 box-shadow" id="training_main">
 						<div class="card-header">
 							<div class="dashhead-titles">
 								<h4 class="dashhead-title mb-3">User training</h4>
@@ -284,8 +311,8 @@
 			<div class="modal-dialog">
 				<!-- MODAL CONTENT -->
 				<div class="modal-content">
-					<div class="modal-body">
-						<div class="alert alert-success" role="alert"> The user account for was created successfully </div>
+					<div class="modal-body text-center">
+						The user account for was created successfully.
 					</div>
 				</div>
 			</div>
@@ -294,34 +321,32 @@
 	</body>
 	
 	<!-- JS CALLS -->
-	<script type="text/javascript">
-				
+	<script type="text/javascript">	
 		/*
 		 * Enable feature for the DOM datepicker and viable filed based on role
 		 */
-		$('input').filter(".attributes").datepicker();
-		$("#attributes_main").css("display", "none");
-		
-		/*
-		 * Load user all data this page is for new account and it should be empty.  
-		 */ 
-		getCommandData();	
-		getCleanUser();
-		getDirectorate();
-		getRank();
-		getRole();
-		getTrainingList();
-		
-		/*
-		 * Load roles to be consumed on the form - nothing special, but a one less call to SP back-end
-		 */
-		$("#personRole").change(function(){
-			var e1 = $("#personRole option:selected").text();
-			if(e1==="CARD HOLDER"){
-				$("#attributes_main").css("display", "block");
-			}else{
-				$("#attributes_main").css("display", "none");
-			}			
+		$(document).ready(function(){
+			$("input").filter(".attributes").datepicker();
+			$("#attributes_main").hide();
+			$("#billing_official_main").hide();
+			$("#training_main").hide();
+			/*
+			 * Load user all data this page is for new account and it should be empty.  
+			 */ 
+			getCommandData();	
+			getCleanUser();
+			getDirectorate();
+			getRank();
+			getRole();
+			getUserRole();
+			getTrainingList();
+			getAutoComplete();
+			/*
+		 	 * Load roles to be consumed on the form - nothing special, but a one less call to SP back-end
+		 	 */
+			$("#personRole").change(function(){
+				getUserPanesHtml();
+			});
 		});
 	</script>	
 </html>

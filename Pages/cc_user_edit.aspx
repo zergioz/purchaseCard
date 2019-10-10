@@ -5,15 +5,15 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=10" />
-		<title>Edit User</title>
+		<title>Add User</title>
 		
 		<!-- STANDARD: LIBRARIES -->
 		<link href="../SiteAssets/bootstrap-4.3.1/css/bootstrap.min.css" rel="stylesheet">
-	    <link href="../SiteAssets/css/toolkit-light.css" rel="stylesheet">
-	    <link href="../SiteAssets/css/font-awesome.min.css" rel="stylesheet" >
-	    <link href="../SiteAssets/css/bootstrap4-toggle.min.css" rel="stylesheet">
+        <link href="../SiteAssets/css/toolkit-light.css" rel="stylesheet">
+        <link href="../SiteAssets/css/font-awesome.min.css" rel="stylesheet" >
 		<link href="../SiteAssets/css/application.css" rel="stylesheet">
 		<link href="../SiteAssets/css/jquery-ui.css" type="text/css" rel="stylesheet"/>
+		<link href="../SiteAssets/css/select2.min.css" rel="stylesheet" />
 		<script src="../SiteAssets/js/jquery-1.12.0.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/jquery.SPServices.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/jquery-ui.js" type="text/javascript"></script>
@@ -24,16 +24,17 @@
 		<script src="../SiteAssets/bootstrap-4.3.1/js/bootstrap.min.js"></script>	
 		<script src="../SiteAssets/js/popper.min.js"></script>
 		<script src="../SiteAssets/js/chart.js"></script>
-	    <script src="../SiteAssets/js/bootstrap4-toggle.min.js"></script>
+		<script src="../SiteAssets/js/toolkit.js"></script>
+		<script src="../SiteAssets/js/application.js"></script>
+		<script src="../SiteAssets/js/select2.min.js"></script>
 
-	    <!-- CUSTOM: LIBRARIES -->
+		<!-- CUSTOM: LIBRARIES -->
 		<script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
-		<script src="../SiteAssets/js/ccHelper.js" type="text/javascript" ></script>
 		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
-
+		
 	</head>
 	<body ng-app="">
 		<!-- START: BODY -->
@@ -51,17 +52,18 @@
 						<div class="collapse nav-toggleable-md" id="nav-toggleable-md">
 							<ul class="nav nav-pills nav-stacked flex-column">
 								<li class="nav-header">Users</li>
-								<li class="nav-item"><a class="nav-link" href="/cc/Pages/cc_user_list.aspx">Users Overview</a></li>
-								<li class="nav-item"><a class="nav-link" href="/cc/Pages/cc_user_add.aspx">Add User</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Pages/cc_user_list.aspx">Users Overview</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Pages/cc_user_add.aspx">Add User</a></li>
 								<li class="nav-header">Requests</li>
-								<li class="nav-item"><a class="nav-link" href="/cc/Pages/purchase_request_list.aspx">Request Status</a></li>
-								<li class="nav-item"><a class="nav-link" href="/cc/Pages/purchase_request.aspx" target="_blank">Submit Request</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Pages/cc_purchase_request_list.aspx">Request Status</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Pages/purchase_request.aspx" target="_blank">Submit Request</a></li>
 								<li class="nav-header">Documentation & Other</li>
-								<li class="nav-item"><a class="nav-link" href="#" target="_blank">Documentation</a></li>
-								<li class="nav-item"><a class="nav-link active" href="#">Other</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Shared%20Documents/Forms/AllItems.aspx" target="_blank">Documentation</a></li>
+								<li class="nav-item"><a class="nav-link active" href="#" active>Other</a></li>
 							</ul>
 						</div>
 					</nav>
+					<hr class="visible-xs mt-3">
 				</div>
 				<!-- END: SIDEBAR -->
 				
@@ -75,14 +77,14 @@
 							<div class="btn-toolbar dashhead-toolbar">
 								<div class="btn-toolbar-item">
 									<a class="sidebar-brand img-responsive" href="#">
-										<span style="display:none;"><asp:LoginName runat="server" id="loginName" FormatString="{0}"></asp:LoginName></span>
-										<span class="topTitle" id="command" style="display:none;">SOCEUR </span>
-										<span id="cleanUser"></span>
-									</a>
+											<span style="display:none;"><asp:LoginName runat="server" id="loginName" FormatString="{0}"></asp:LoginName></span>
+											<span class="topTitle" id="command" style="display:none;">SOCEUR </span>
+											<span id="cleanUser"></span>
+										</a>
+									</div>
 								</div>
-							</div>
 						</div>
-						
+							
 						<!-- START: USER FORM -->
 						<div class="card-body">
 							<div class="form-group row">
@@ -108,18 +110,24 @@
 								</div>
 								<label for="personRole" class="col-sm-1 col-form-label d-none d-xl-block">Role</label>	
 								<div class="col-sm-5">
-									<select id="personRole" class="inputSelectCCUSer form-control" placeholder="Role" ></select>
+									<select id="personRole" class="inputSelectCCUSer form-control" placeholder="Role" >
+										 <option selected>Please Select</option>
+									</select>
 								</div>
 							</div>
 							
 							<div class="form-group row">
 								<label for="personRank" class="col-sm-1 col-form-label d-none d-xl-block">Rank</label>	
 								<div class="col-sm-5">
-									<select id="personRank" class="inputSelectCCUSer form-control" placeholder="Rank"></select>
+									<select id="personRank" class="inputSelectCCUSer form-control" placeholder="Rank">
+										 <option selected>Please Select</option>
+									</select>
 								</div>
 								<label for="personDirectorate" class="col-sm-1 col-form-label d-none d-xl-block">Directorate</label>							
 								<div class="col-sm-5">
-									<select id="personDirectorate" class="inputSelectCCUSer form-control" placeholder="Directorate"></select>
+									<select id="personDirectorate" class="inputSelectCCUSer form-control" placeholder="Directorate">
+										 <option selected>Please Select</option>
+									</select>
 								</div>
 							</div>
 
@@ -127,15 +135,16 @@
 								<label for="personDirectorate" class="col-sm-1 col-form-label d-none d-xl-block">Active</label>							
 								<div class="col-sm-5">
 									<select id="personActive" class="inputSelectCCUSer form-control" placeholder="PLEASE SELECT">
-												<option value="YES">YES</option>
-												<option value="NO">NO</option>
-											</select>
+										<option selected>Please Select</option>
+										<option value="YES">YES</option>
+										<option value="NO">NO</option>
+									</select>
 								</div>
 							</div>
 						</div>
 					</div>
 					<!-- END: USER FORM -->
-								
+									
 					<!-- START: USER ATTRIBUTES -->
 					<div class="card mb-4 box-shadow" id="attributes_main">
 						<div class="card-header">
@@ -232,9 +241,27 @@
 						</div>
 					</div>
 					<!-- END: USER ATTRIBUTES -->
-							
+					
+					<!-- START: USER BILLING OFFICIAL -->
+					<div class="card mb-4 box-shadow" id="billing_official_main">
+						<div class="card-header">
+							<h4 class="dashhead-title mb-3">Billing offical</h4>
+						</div>
+						<div class="card-body">
+							<div class="form-group row">
+								<label for="billingOfficialCardHolder" class="col-sm-6 col-form-label d-none d-xl-block">Select Corresponding Billing Officials </label>
+								<div class="col-sm-12" id="the-basics">
+									<select id="billingOfficialCardHolder" class="inputTextCCUser form-control" name="cardHolder[]" multiple="multiple" placeholder="Add Card Holders Accounts" style="width: 100%">
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- END: USER BILLING OFFICIAL -->
+
+
 					<!-- START: USER TRAINING -->
-					<div class="card mb-4 box-shadow">
+					<div class="card mb-4 box-shadow" id="training_main">
 						<div class="card-header">
 							<div class="dashhead-titles">
 								<h4 class="dashhead-title mb-3">User training</h4>
@@ -257,65 +284,75 @@
 							</table>
 						</div>
 					</div>
-					<!-- END: User training -->
+					<!-- END: USER TRAINING -->
+					
+					<!-- START: SUBMIT BUTTON -->	
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col col-lg-12">
 								<div class="input-group">
 								<div class="input-group-prepend">
 									<div class="input-group-text"><i class="fa fa-user"></i></div>
-										<input type="button" class="btn btn-success btn-block" value="Save User Profile" onclick="pushUserData('updateAccount')"  data-toggle="modal" data-target="#myModal"/>
+										<input type="button" class="btn btn-success btn-block" value="Update User Profile" onclick="pushUserData('updateAccount')"  data-toggle="modal" data-target="#myModal"/>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>				
+					</div>
+					<!-- END: SUBMIT BUTTON -->						
 				</div>
 				<!-- ENDS: CONTENT -->
 			</div>
 		</div>
 		<!-- END: BODY-->
-		
+
 		<!-- START: MODAL -->
 		<div class="modal fade" id="myModal" role="dialog">
 			<div class="modal-dialog">
 				<!-- MODAL CONTENT -->
 				<div class="modal-content">
-					<div class="modal-body" style="text-align: center;">
-						<i class="fa fa-check" style="color:green;"></i> The user account for was updated successfully 
+					<div class="modal-body text-center">
+						The user account for was updated successfully.
 					</div>
-					<button type="button" class="btn btn-dark" id="btnclose" data-dismiss="modal">[Close Window]</button>	
+					<button id="uploadedFileDone" type="button" class="btn btn-dark" id="btnclose" data-dismiss="modal">[Close Window]</button>
 				</div>
 			</div>
 		</div>
 		<!-- END: MODAL -->
-		
 	</body>
+	
 	<!-- JS CALLS -->
 	<script type="text/javascript">
 		/*
-		 * Enable feature for the DOM datepicker
+		 * Enable feature for the DOM datepicker and viable filed based on role
 		 */
 		$('input').filter(".attributes").datepicker();
+		$("#attributes_main").hide();
+		$("#billing_official_main").hide();
+		$("#training_main").hide();
 		/*
 		 * Load user all data this page is for new account and it should be empty.  
 		 */ 
+		userId = window.location.search.substring(10);
 		getCommandData();	
 		getCleanUser();
 		getDirectorate();
 		getRank();
 		getRole();
 		getTrainingList();
-		userId = window.location.search.substring(10);
-		$(function() {
-    		getUserInformation(userId);
- 	 	});
+		getUserRole();
+		getAutoComplete();
 		/*
-		 * Load roles to be consumed on the form - nothing special, but a one less call to SP back-end
+		 * change panes based on role
 		 */
 		$("#personRole").change(function(){
-			var userRole = $("#personRole option:selected").text();
-			userRole === "CARD HOLDER" ? $("#attributes_main").css("display", "block") : $("#attributes_main").css("display", "none");		
+			getUserPanesHtml();
 		});
+		/*
+		 * wait to load eveything then load user
+		 */	 
+		$(document).ready(function(){
+			getUserInformation(userId);	
+ 	 	});
 	</script>
 </html>

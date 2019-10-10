@@ -5,7 +5,13 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=10" />
-		<title>Users Overview</title>
+		<title>Requests Status</title>
+		
+		<!-- CUSTOM: LIBRARIES -->
+		<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>
+		<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
+		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
+		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
 				
 		<!-- STANDARD: LIBRARIES -->
 		<link href="../SiteAssets/bootstrap-4.3.1/css/bootstrap.min.css" rel="stylesheet">
@@ -24,16 +30,7 @@
 		<script src="../SiteAssets/js/popper.min.js"></script>
 		<script src="../SiteAssets/js/chart.js"></script>
 		<script src="../SiteAssets/js/toolkit.js"></script>
-		<script src="../SiteAssets/js/application.js"></script>
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
-
-		<!-- CUSTOM: LIBRARIES -->
-		<script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
-		<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>
-		<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
-		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
-		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
+		<script src="../SiteAssets/js/application.js"></script>		
 	</head>
 	<body ng-app="">
 		<!-- START: BODY -->
@@ -48,15 +45,14 @@
 								<span class="sr-only">Toggle nav</span>
 							</button>
 						</div>
-
 						<div class="collapse nav-toggleable-md" id="nav-toggleable-md">
 							<ul class="nav nav-pills nav-stacked flex-column">
 								<li class="nav-header">Users</li>
-								<li class="nav-item"><a class="nav-link active " href="../Pages/cc_user_list.aspx">Users Overview</a></li>
-								<li class="nav-item"><a class="nav-link" href="../Pages/cc_user_add.aspx">Add User</a></li>
+								<li class="nav-item"><a class="nav-link" href="cc_user_list.aspx">Users Overview</a></li>
+								<li class="nav-item"><a class="nav-link" href="cc_user_add.aspx">Add User</a></li>
 								<li class="nav-header">Requests</li>
-								<li class="nav-item"><a class="nav-link" href="../Pages/cc_purchase_request_list.aspx">Request Status</a></li>
-								<li class="nav-item"><a class="nav-link" href="../Pages/purchase_request.aspx" target="_blank">Submit Request</a></li>
+								<li class="nav-item"><a class="nav-link active" href="cc_purchase_request_list.aspx">Request Status</a></li>
+								<li class="nav-item"><a class="nav-link" href="purchase_request.aspx" target="_blank">Submit Request</a></li>
 								<li class="nav-header">Documentation & Other</li>
 								<li class="nav-item"><a class="nav-link" href="../Shared%20Documents/Forms/AllItems.aspx" target="_blank">Documentation</a></li>
 								<li class="nav-item"><a class="nav-link" href="#">Other</a></li>
@@ -64,7 +60,7 @@
 							<div class="hr-divider mt-5 mb-3">
 								<h3 class="hr-divider-content hr-divider-heading">Credit Card Breakdown</h3>
 							</div>
-						</div>	
+						</div>
 					</nav>
 					
 					<!-- START: CHARTS -->
@@ -173,7 +169,7 @@
 					<div class="card mb-4 box-shadow">
 						<div class="card-header">
 							<div class="dashhead-titles">
-								<h4 class="dashhead-title mb-3">User Overview</h4>
+								<h4 class="dashhead-title mb-3">Requests Status</h4>
 							</div>
 							<div class="btn-toolbar dashhead-toolbar">
 								<div class="btn-toolbar-item">
@@ -192,13 +188,13 @@
 							<table class="table table-hover tablesorter"  id="myTable">
 								<thead>
 									<tr>
-										<th style="text-align:left">User Id</th>
-										<th style="text-align:left">Rank</th>
-										<th style="text-align:left">Last Name</th>
-										<th style="text-align:left">First Name</th>
-										<th style="text-align:left">Role</th>
-										<th style="text-align:left">E-Mail</th>
-										<th style="text-align:left">J-Code</th>
+										<th style="text-align:left">Request Id</th>
+										<th style="text-align:left">Requestor</th>
+										<th style="text-align:left">Directorate</th>
+										<th style="text-align:left">Fiscal Year</th>
+										<th style="text-align:left">Quater</th>
+										<th style="text-align:left">Justification</th>
+										<th style="text-align:left">Status</th>
 									</tr>
 								</thead>
 								<tbody id="usersList">
@@ -245,13 +241,11 @@
 		/*
 		 * Fetch list of users and attributes 
  		 */
-		getUsersList();
-
+		getRequestsList();
 		/*
 		 * wait for DOM to be fully loaded and for SP to finalize all functions to enable sorting
 		 * without the wait table sorter does not apply to the full list.  - maybe due to DOM loading order?
 		 */
-		 
 		setTimeout(
 			function() {
 				$('#myTable').tablesorter({
@@ -272,7 +266,7 @@
 				 */
 				$("input").addClass("form-control");
 				getCleanUser();
-			}, 800
+			}, 1000
 		);
 	</script>	
 </html>
