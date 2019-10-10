@@ -73,15 +73,48 @@ function getRequestsListHtml(item){
 }
 
 /*
- * Get fiscal information for request from JSON object
+ * Fetch All training variables for customer and the id to cross reference user_id and course id 
+ * and enable date picker right after appending items; otherwise, high network 
+ * latency will make the call fail when loaded from the main "training list" page.
  */
-function getFiscalInformation(jsonData,type){
-	if (typeof jsonData !== 'undefined' && jsonData !== null){
-		var parsedReturn;
-	 	var parsedJson = JSON.parse(jsonData);
-		type = 'year' ? parsedReturn = parsedJson.j8FiscalYear : parsedReturn = parsedJson.j8Quater;
-	}
-	return parsedReturn;
+function getTrainingList(){
+	$.ajax({  
+		url: "../_api/web/lists/getbytitle('ccUsersTrainingCourses')/Items", 
+		type: "GET", 	
+		headers: { 
+			"Accept": "application/json;odata=verbose"  
+		}, 
+		success: function(data, textStatus, xhr) {  
+			$.each(data.d.results, function(i, item) {
+				getTrainingListHtml(item);
+			})
+			$('input').filter(".training").datepicker();	 
+		}, 
+		error: function r(xhr, textStatus, errorThrown) {  
+			alert("error 'getTrainingList': " + JSON.stringify(xhr));  
+		}  
+	});  
+}
+
+/*
+ * Load DOM values for users' training list
+ */
+function getTrainingListHtml(item){
+	$('#usersTraining')
+		.append('<tr id="'+ item.TARGET_AUDIENCE +'">\
+					<td class="d-none d-xl-block">'+ item.Title +'</td>\
+					<td>'+ item.COURSE_CODE +'</td>\
+					<td class="d-none d-xl-block">'+ item.COURSE_FREQUENCY +'</td>\
+					<td>'+ item.TARGET_AUDIENCE +'</td>\
+					<td>\
+						<div class="input-group mb-2">\
+							<div class="input-group-prepend">\
+								<div class="input-group-text">&#128197;</div>\
+							</div>\
+							<input id="'+item.ID+'"  name"'+item.COURSE_CODE+'" class="inputTextCCUser form-control training">\
+							<div>\
+						</td>\
+				</tr>');
 }
 
 /*
@@ -135,10 +168,11 @@ function getFiscalInformation(jsonData,type){
 	$('#ccAgent').val(attributes.personAgent);
 	$('#cclevel4').val(attributes.levelFour);
 	$('#cclevel5').val(attributes.levelFive);
+	$('#billingOfficialCardHolder').select2().val(attributes.billingOfficial).trigger('change');
 	/*
 	 * Load card holder pane when it matches the user role
 	 */
-	item.PERSON_ROLE === "CARD HOLDER" ? $("#attributes_main").css("display", "block") : $("#attributes_main").css("display", "none");
+	getUserPanesHtml();
 	/*
 	 * Training information
 	 */
@@ -148,73 +182,60 @@ function getFiscalInformation(jsonData,type){
 	}
  }
  
+
 /*
- * Fetch All training variables for customer and the id to cross reference user_id and course id 
- * and enable date picker right after appending items; otherwise, high network 
- * latency will make the call fail when loaded from the main "training list" page.
+ * Fetch card holder and billion officials
  */
-function getTrainingList (){
+function getUserRole(){
 	$.ajax({  
-		url: "../_api/web/lists/getbytitle('ccUsersTrainingCourses')/Items", 
-		type: "GET", 	
-		headers: { 
-			"Accept": "application/json;odata=verbose"  
-		}, 
-		success: function(data, textStatus, xhr) {  
-			$.each(data.d.results, function(i, item) {
-				getTrainingListHtml(item);
-			})
-			$('input').filter(".training").datepicker();	 
-		}, 
-		error: function r(xhr, textStatus, errorThrown) {  
-			alert("error 'getTrainingList': " + JSON.stringify(xhr));  
-		}  
-	});  
-}
-
-/*
- * Load DOM values for users' training list
- */
-function getTrainingListHtml(item){
-	$('#usersTraining')
-		.append('<tr id="'+ item.TARGET_AUDIENCE +'">\
-					<td class="d-none d-xl-block">'+ item.Title +'</td>\
-					<td>'+ item.COURSE_CODE +'</td>\
-					<td class="d-none d-xl-block">'+ item.COURSE_FREQUENCY +'</td>\
-					<td>'+ item.TARGET_AUDIENCE +'</td>\
-					<td>\
-						<div class="input-group mb-2">\
-							<div class="input-group-prepend">\
-								<div class="input-group-text">&#128197;</div>\
-							</div>\
-							<input id="'+item.ID+'"  name"'+item.COURSE_CODE+'" class="inputTextCCUser form-control training">\
-							<div>\
-						</td>\
-				</tr>');
-}
-
-/*
- * Get card holder list
- */
-function getUserCardHolder(){
-	$.ajax({  																						  
 		url: "../_api/web/lists/getbytitle('ccUsers')/Items", 
-		type: "GET", 	
-		headers: { 
-			"Accept": "application/json;odata=verbose"  
-		}, 
+        type: "GET",  
+		headers: {  
+            "Accept": "application/json;odata=verbose"  
+		},  
 		success: function(data, textStatus, xhr) {
-			$.each(data.d.results, function(i, item) {
-					$('#RequestCardHolderName')
-						.append('<option>'+item.PERSON_DIRECTORATE+" / "+item.P_LAST_NAME+" "+item.P_FIRST_NAME+"</option>");
-			})
-		}, 
+			$.each(data.d.results, function(i, item){
+				getUserRoleHtml(item);
+				/* this need to be fixed and separete the function */
+				userList.push(item);
+			});
+		},  
 		error: function r(xhr, textStatus, errorThrown) {  
-			alert("error 'getTrainingList': " + JSON.stringify(xhr));  
+			console.log("error 'getCommanddata': " + JSON.stringify(xhr));  
 		}  
-	});
-} 
- 
+	});	
+}
+
+/*
+ * Populate DOM 
+ */
+function getUserRoleHtml(item){
+	/*
+	 * Add list to the purchase request list page
+	 */
+	item.PERSON_ROLE === "CARD HOLDER" ? $('#RequestCardHolderName').append('<option value="'+item.PERSON_EMAIL+'">'+item.PERSON_EMAIL+'</option>') : false;
+	/*
+	 * Add "billion official" roles to add and edit users page
+	 */
+	item.PERSON_ROLE === "BILLING OFFICIAL" ? $('#billingOfficialCardHolder').append('<option value="'+item.PERSON_EMAIL+'">'+item.PERSON_EMAIL+'</option>'): false;
+}
+
+/* 
+ * load panes based on role for add and edit user page
+ */
+function getUserPanesHtml(){
+	var e1 = $("#personRole option:selected").val();
+	e1 !== "CARD HOLDER" ? $("#attributes_main").hide() : $("#attributes_main").show();
+	e1 !== "CARD HOLDER" ? $("#billing_official_main").hide() : $("#billing_official_main").show();
+	e1 === "CARD HOLDER" ? $("#training_main").show() : e1 === "BILLING OFFICIAL" ? $("#training_main").show() : $("#training_main").hide(); 
+}
+
+/*
+ * Load autocomplete
+ */
+ function getAutoComplete(){
+ 	$('#billingOfficialCardHolder').select2();
+ }
 /*    
  * Fetch site classification to render top banner - function might be deprecated in the future  
  */
@@ -238,6 +259,21 @@ function getCommandData(){
 			console.log("error 'getCommanddata': " + JSON.stringify(xhr));  
 		}  
 	});  
+}
+
+/*
+ * Get fiscal information for request from JSON object
+ */
+function getFiscalInformation(jsonData,type){
+	console.log(type);
+	if (typeof jsonData !== 'undefined' && jsonData !== null){
+		var parsedReturn;
+	 	var parsedJson = JSON.parse(jsonData);
+		type = 'year' ? parsedReturn = parsedJson.j8FiscalYear : parsedReturn = parsedJson.j8Quater;
+	} else {
+		parsedReturn = "Pending";
+	}
+	return parsedReturn;
 }
 
 /*  
@@ -284,7 +320,7 @@ function getRole(){
 }
 
 /*
- * get user name for current user
+ * Get user name for current user
  */
 function getUserName(){
 	return $().SPServices.SPGetCurrentUser({ fieldNames: ["Title", "Name"]});
@@ -301,7 +337,7 @@ function getStatus(trainingStatus, trainingDate){
 }
 
 /*
- *	get user user information based on provided id
+ *	Get user user information based on provided id
  */
 function setUserInformationRedirect(userId){
 	window.open("../Pages/cc_user_edit.aspx?PersonId="+userId,"_self");
@@ -311,12 +347,52 @@ function setUserInformationRedirect(userId){
  *	get user user information based on provided id
  */
 function setRequestInformationRedirect(userId,redirectArgument){
-	window.open("../Pages/Purchase_Request.aspx?id="+userId,redirectArgument);
+	window.open("../Pages/Purchase_Request.aspx?id="+userId,'_blank');
 }
 
 /*
- *  redirect user to defined url
+ *  Redirect user to defined url
  */
 function redirectUrl(urlAddress){
 	window.location.assign(urlAddress);
-} 			
+}
+
+/*
+ * Disable sign button by default - user has to approve or declined to enable it
+ */ 		
+ function signatureRequired(){
+ 	/*
+ 	 * Disabled all sign buttons
+ 	 */
+ 	$("[id$=Sign]").attr("disabled", true);
+ 	/*
+ 	 *  Enable sign buttons when changed 
+ 	 */	
+	$('#directorateReview').change(function(){
+		$('#btnDirectorateSign').attr("disabled", false);
+	});
+	$('#boReview').change(function(){
+		$('#btnBoSign').attr("disabled", false);
+	});
+	$('#j6Review').change(function(){
+		$('#btnJ6Sign').attr("disabled", false);
+	});
+	$('#pboReview').change(function(){
+		$('#btnPboSign').attr("disabled", false);
+	});
+	$('#j8FiscalYear').change(function(){
+		$('#btnJ8Sign').attr("disabled", false);
+	});
+	$('#cardHolderComments').keydown(function(){
+		$('#btnCardHolderSign').attr("disabled", false);
+	});
+	$('#requestorComments').keydown(function(){
+		$('#btnRequestorSign').attr("disabled", false);
+	});
+	$('#supplyComments').keydown(function(){
+		$('#btnSupplySign').attr("disabled", false);
+	});
+	$('#j4Comments').keydown(function(){
+		$('#btnJ4Sign').attr("disabled", false);
+	});
+ }	

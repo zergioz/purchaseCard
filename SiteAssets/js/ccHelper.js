@@ -1,4 +1,3 @@
-
 /*
  * Load the progress bar
  */
@@ -15,9 +14,7 @@ function loadProgressBar(status, cur, Total){
 function getCurrentId(){
 	var url =  window.location.search;
 	var res =  url.split("=");
-	/*
-	 * Set and return as global
-	 */		
+	/* Set and return as global */		
 	qId =  res[1];
 	return qId;
 }
@@ -44,7 +41,6 @@ function loadCCRequestTracker(qId){
 						   <FieldRef Name='DIRECTORATE_APPROVAL'/>\
 						   <FieldRef Name='J6_APPROVAL'/>\
 						   <FieldRef Name='PBO_APPROVAL'/>\
-						   <FieldRef Name='BUDGET_OFFICER_APPROVAL'/>\
 						   <FieldRef Name='BILLING_OFFICIAL_APPROVAL'/>\
 						   <FieldRef Name='J8_APPROVAL'/>\
 						   <FieldRef Name='CARD_HOLDER_VALIDATION'/>\
@@ -62,79 +58,49 @@ function loadCCRequestTracker(qId){
 			CAMLViewFields: viewFields,
 			completefunc: function(xData){
 				$(xData.responseXML)
-				.SPFilterNode("z:row")
-				.each(function(){
-					/*
-					 * Change card message base on card type
-					 */
-					cardMessage();
-					/*
-					 * Populate card holder information
-					 */
-					getUserCardHolder();
-					/*
-					 * Load requester information
-					 */
-					loadRequestorDom(JSON.parse($(this).attr("ows_REQUEST_FIELD")));				
-					/*
-					 * Load order details or load default if entry is empty or ivalid
-					 */					
-					loadDetailsDom(JSON.parse($(this).attr("ows_PURCHASE_DETAILS")));
-					loadRowDetails(JSON.parse($(this).attr("ows_PURCHASE_DETAILS")));
-					/*
-					 * load verification process - tabs  
-					 * provide: 
-					 *  - Ows object
-					 *  - DOM #id to poulate in array form 
-					 *  - JSon property name in array form 
-					 */
- 					loadReviewTab($(this).attr("ows_DIRECTORATE_APPROVAL"),['#directorateComments','#directorateSignature','#directorateReview'],['directorateComment','directorateSignature','directorateStatus'],'#directorateText');
-				 	loadReviewTab($(this).attr("ows_BILLING_OFFICIAL_APPROVAL"),['#boComments','#boSignature','#boReview'],['boComment','boSignature','boStatus'],'#billingOfficialText');
-					loadReviewTab($(this).attr("ows_J6_APPROVAL"),['#j6Comments','#j6Signature','#j6Review'],['j6Comment','j6Signature','j6Status'],'#j6Text');
-				 	loadReviewTab($(this).attr("ows_PBO_APPROVAL"),['#pboComments','#pboSignature','#pboReview'],['pboComment','pboSignature','pboStatus'],'#propertyBookText');
-					loadReviewTab($(this).attr("ows_BUDGET_OFFICER_APPROVAL"),['#budgetOfficerComments','#budgetOfficerSignature','#budgetOfficerReview'],['budgetOfficerComment','budgetOfficerSignature','budgetOfficerStatus'],'#budgetOfficerText');
-				 	loadReviewTab($(this).attr("ows_J8_APPROVAL"),['#j8Comments','#j8Signature','#j8Review','#j8FiscalYear','#j8Quater'],['j8Comment','j8Signature','j8Status','j8FiscalYear','j8Quater'],'#j8Text');
-					loadReviewTab($(this).attr("ows_CARD_HOLDER_VALIDATION"),['#cardHolderComments','#cardHolderTransactionId','#cardHolderSignature'],['cardHolderComment','cardHolderTransactionId','cardHolderSignature'],'#cardHolderText');
-					loadReviewTab($(this).attr("ows_REQUESTOR_VALIDATION"),['#requestorComments','#requestorSignature'],['requestorComment','requestorSignature'],'#requestorText');	
-					loadReviewTab($(this).attr("ows_SUPPLY_VALIDATION"),['#supplyComments','#supplySignature'],['supplyComment','supplySignature'],'#supplyText');
-					loadReviewTab($(this).attr("ows_FINAL_VALIDATION"),['#j4Comments','#j4Signature'],['j4Comment','j4Signature'],'#j4Text');
-					/*
-					 * Load request status and set status bar
-					 */
-					setValue($(this).attr("ows_REQUEST_STATUS"));
-					/*
-					 * Check for qId to enable upload option
-					 */
-					disableUploads(qId);
-					disableSubmit(qId);	
-					/*
-					 * List attached Items
-					 */
-					listMyAttachments(qId);
-					/*
-					 * if Request is finizalied and closed make it read only.
-					 */
-					isReadonly($(this).attr("ows_REQUEST_STATUS"));
-				});
-			},
+					.SPFilterNode("z:row")
+					.each(function(){
+						/* Load information for notification */
+						requestNotification = JSON.parse($(this).attr("ows_REQUEST_FIELD"));	
+						/* Load requester information */
+						loadRequestorDom(JSON.parse($(this).attr("ows_REQUEST_FIELD")));			
+						/* Load order details or load default if entry is empty or ivalid */					
+						loadDetailsDom(JSON.parse($(this).attr("ows_PURCHASE_DETAILS")));
+						loadRowDetails(JSON.parse($(this).attr("ows_PURCHASE_DETAILS")));
+						/*
+						 * load verification process - tabs  
+						 * provide: 
+						 *  - Ows object
+						 *  - DOM #id to poulate in array form 
+						 *  - JSon property name in array form 
+						 */
+	 					loadReviewTab($(this).attr("ows_DIRECTORATE_APPROVAL"),['#directorateComments','#directorateSignature','#directorateReview'],['directorateComment','directorateSignature','directorateStatus'],'#directorateText');
+					 	loadReviewTab($(this).attr("ows_BILLING_OFFICIAL_APPROVAL"),['#boComments','#boSignature','#boReview'],['boComment','boSignature','boStatus'],'#billingOfficialText');
+						loadReviewTab($(this).attr("ows_J6_APPROVAL"),['#j6Comments','#j6Signature','#j6Review'],['j6Comment','j6Signature','j6Status'],'#j6Text');
+					 	loadReviewTab($(this).attr("ows_PBO_APPROVAL"),['#pboComments','#pboSignature','#pboReview'],['pboComment','pboSignature','pboStatus'],'#propertyBookText');
+						//loadReviewTab($(this).attr("ows_BUDGET_OFFICER_APPROVAL"),['#budgetOfficerComments','#budgetOfficerSignature','#budgetOfficerReview'],['budgetOfficerComment','budgetOfficerSignature','budgetOfficerStatus'],'#budgetOfficerText');
+					 	loadReviewTab($(this).attr("ows_J8_APPROVAL"),['#j8Comments','#j8Signature','#j8Review','#j8FiscalYear','#j8Quater'],['j8Comment','j8Signature','j8Status','j8FiscalYear','j8Quater'],'#j8Text');
+						loadReviewTab($(this).attr("ows_CARD_HOLDER_VALIDATION"),['#cardHolderComments','#cardHolderTransactionId','#cardHolderSignature'],['cardHolderComment','cardHolderTransactionId','cardHolderSignature'],'#cardHolderText');
+						loadReviewTab($(this).attr("ows_REQUESTOR_VALIDATION"),['#requestorComments','#requestorSignature'],['requestorComment','requestorSignature'],'#requestorText');	
+						loadReviewTab($(this).attr("ows_SUPPLY_VALIDATION"),['#supplyComments','#supplySignature'],['supplyComment','supplySignature'],'#supplyText');
+						loadReviewTab($(this).attr("ows_FINAL_VALIDATION"),['#j4Comments','#j4Signature'],['j4Comment','j4Signature'],'#j4Text');
+						/* Load request status and set status bar */
+						setValue($(this).attr("ows_REQUEST_STATUS"));
+						/* Check for qId to enable upload option */
+						disableUploads(qId);
+						disableSubmit(qId);	
+						/* List attached Items */
+						listMyAttachments(qId);
+						/* if Request is finizalied and closed make it read only */
+						isClosed($(this).attr("ows_REQUEST_STATUS"));
+					});
+			}, 
 			error: function(xhr, textStatus, errorThrown){alert('Error');	}	
 		});
 	}else{
-		/*
-		 * Change card message base on card type
-		 */
-		cardMessage();
-		/*
-		 * Populate card holder information
-		 */
-		getUserCardHolder();	
-		/*
-		 * Load order details
-		 */
+		/* Load order details */
 		loadRowDetails();
-		/*
-		 * check for qId to enable upload and submit options
-		 */
+		/* Check for qId to enable upload and submit options */
 		disableUploads();
 		disableSubmit();
 	}
@@ -147,8 +113,7 @@ function loadRequestorDom(myObj){
 	$("#RequestCardType").val(myObj.RequestCardType); 	
 	$("#RequestUser").text(myObj.RequestUser);
 	$("#RequestStatus").text(myObj.RequestStatus);	
-	$("#RequestVersion").text(myObj.RequestVersion);
-	$("#RequestCardHolderName").text(myObj.RequestorCardHolderName);
+	$("#RequestCardHolderName").val(myObj.RequestorCardHolderName);
 	$("#Requestor").val(myObj.Requestor);
 	$("#RequestorDSN").val(myObj.RequestorDSN);
 	$("#RequestorDirectorate").val(myObj.RequestorDirectorate);
@@ -163,109 +128,109 @@ function loadRequestorDom(myObj){
  * Load DOM with correct information from SP List
  */
 function loadDetailsDom(requestDetails){
-	/*
-	 * Append,count, build details and, disable action to delete based on number of rows  
-	 */	
+	/* Append,count, build details and, disable action to delete based on number of rows  */	
 	for (var counter = 0; counter < requestDetails.Details.length; counter++){
 		var newRow = $("<tr>");
 		var cols = "";
-		/*
-		 * Add rows and columns 
-		 */
+		/* Add rows and columns */
 		newRow.append(rowDetailsColHtml(counter,cols));
 		$("#myPurchaseRequest").append(newRow);
-		/*
-		 * Set values for all inputs
-		 */
+		/* Set values for all inputs */
 		$("#RequestQTY"+counter).val(requestDetails.Details[counter].requestQty);
 		$("#Description"+counter).val(requestDetails.Details[counter].requestDesc);
 		$("#DD"+counter).prop( "checked", isBool(requestDetails.Details[counter].requestDdForm));
 		$("#Source"+counter).val(requestDetails.Details[counter].requestSrc);
 		$("#RequestCost"+counter).val(requestDetails.Details[counter].requestCost);
 		$("#RequestTotal"+counter).val(requestDetails.Details[counter].requestTotal);
-		/*
-		 * Add return to array as float to sum and update DOM
-		 */
+		/* Add return to array as float to sum and update DOM */
 		totalPrice.push(parseFloat(requestDetails.Details[counter].requestTotal));	
-		/*
-		 * Disable delete
-		 */
+		/* Disable delete */
 		disableDeleteBtn(counter,1);
-		/*
-		 * re-arrange details array to track old data and add new data attributes correctly 
-		 */
+		/* re-arrange details array to track old data and add new data attributes correctly */
 		createDetails(counter);
 	}
-	/*
-	 * Update total value when loading values
-	 */
+	/* Update total value when loading values */
 	addGrandTotal(totalPrice);
+}
+
+/*
+ * Create draft request and fetch request id to redirect
+ */
+function createDraftRequest(){
+	$().SPServices({
+		operation: "UpdateListItems",
+		async: false,
+		batchCmd: "New",
+		listName:"ccRequestTracker",
+		valuepairs:[
+			["Title", $("#Requestor").val()],
+			["REQUEST_FIELD", createInitialJson()], 
+			["PURCHASE_DETAILS", createDetailsJson()],
+			["REQUEST_STATUS",	"DRAFT"]
+		],
+		completefunc: function (xData, Status) {
+			$(xData.responseXML).SPFilterNode("z:row").each(function(){
+				var newId = $(this).attr("ows_ID");
+				setTimeout(function(){
+					redirectUrl("Purchase_Request.aspx?id="+newId);
+				}, 2000);	
+			});
+		}
+	});
+	
+}
+
+/*
+ * Set request status to submit
+ */
+function modifyDraftRequest(){
+	/* DEBUG */
+	console.log("function: modifyDraftRequest");
+	$().SPServices({
+		operation: "UpdateListItems",
+		async: false,
+		batchCmd: "Update",
+		listName: "ccRequestTracker",
+		ID: qId,
+		valuepairs:[
+			["REQUEST_FIELD", createInitialJson()],
+			["PURCHASE_DETAILS", createDetailsJson()]
+		],
+		completefunc: function(xData, Status){
+			setTimeout(function(){
+				redirectUrl("Purchase_Request.aspx?id="+qId);
+			}, 2000);
+		}
+	});
 }
 
 /*
  * Save data as JSON string to SharePoint list - DRAFT button.
  */
 function submitDraft(){
-	//DEBUG
+	/* DEBUG */
 	console.log("Function: Save Draft");
-	/*
-	 * for undefined requests "new" entries. Create and add details and save draft
-	 */
-	if (typeof qId === 'undefined'){
-		//DEBUG
-		console.log("Action: Save Update & qId undefined");
-		$().SPServices({
-		operation: "UpdateListItems",
-		async: false,
-		batchCmd: "New",
-		listName:"ccRequestTracker",
-		valuepairs:[["Title", $("#Requestor").val()],
-					["REQUEST_FIELD", createInitialJson()], 
-					["PURCHASE_DETAILS", createDetailsJson()],
-					["REQUEST_STATUS",	"DRAFT"]],
-		completefunc: function (xData, Status) {
-				$(xData.responseXML).SPFilterNode("z:row").each(function(){
-					var newId = $(this).attr("ows_ID");
-					setTimeout(function(){
-						redirectUrl("Purchase_Request.aspx?id="+newId);
-					}, 2000);
-					
-				});
-			}
-		});	
-	}
-	/*
-	 * For existing requests upate with new information and save draft
-	 */
-	if (qId > 0){
-		//DEBUG
-		console.log("Action: Save Update & qId: "+qId);
-		$().SPServices({
-			operation: "UpdateListItems",
-			aync: false,
-			batchCmd: "Update",
-			listName: "ccRequestTracker",
-			ID: qId,
-			valuepairs:[["REQUEST_FIELD", createInitialJson()],
-						["PURCHASE_DETAILS", createDetailsJson()]],
-			completefunc: function(xData, Status){
-				setTimeout(function(){
-					redirectUrl("Purchase_Request.aspx?id="+qId);
-				}, 2000);
-			}
-		});
-	}
+	/* for undefined requests "new" entries. Create and add details and save draft */
+	typeof qId === 'undefined' ? createDraftRequest() : modifyDraftRequest();
 }
 
 /*
  * Submit Form
  */
 function submitRequest(){
-	//DEBUG
+	/* DEBUG */
 	console.log("submitRequest", qId);
-	/*
-	 * Change Status 
-	 */
+	/* Save latest changes */
+	submitDraft();
+	/* Change status of request to SUBMITTED */
+	createSubmit();
+}
+
+/*
+ * Chaange request to submit
+ */
+function createSubmit(){
+	/* Change Status */
 	$().SPServices({
 		operation: "UpdateListItems",
 		aync: false,
@@ -274,13 +239,9 @@ function submitRequest(){
 		ID: qId,
 		valuepairs:[["REQUEST_STATUS",	"SUBMITTED"]],
 		completefunc: function(xData, Status){
-			// nothing
+			console.log('submitRequest: change request status to SUBMITTED');
 		}
 	});	
-	/*
-	 * Save latest changes
-	 */
-	submitDraft();
 }
 
 /*
@@ -296,7 +257,7 @@ function submitReview(fieldUpdate,fieldJson){
 		valuepairs:[[fieldUpdate,fieldJson],
 					["REQUEST_STATUS",fieldUpdate]],
 		completefunc: function(xData, Status){
-			// do nothing
+			console.log('submitReview');
 		}
 	});	
 }
@@ -305,7 +266,7 @@ function submitReview(fieldUpdate,fieldJson){
  * Close request and set read only
  */
 function closeRequest(){
-	// DEBUG
+	/* DEBUG */
 	console.log("Function: closeRequest");
 	$().SPServices({
 		operation: "UpdateListItems",
@@ -315,7 +276,7 @@ function closeRequest(){
 		ID: qId,
 		valuepairs:[['REQUEST_STATUS','CLOSED']],
 		completefunc: function(xData, Status){
-			// nothing
+			console.log('closeRequest: Changed request status to "CLOSED" to ID# '+qId);
 		}
 	});	
 }
@@ -611,9 +572,7 @@ function createJsonResponse(responseArray){
  * which should match the DOM id to update
  */
 function setApprovalProcess(reviewStep){
-	/*
-	 * Look up for value to submit and fill with comment and signature
-	 */
+	/* Look up for value to submit and fill with comment and signature */
 	for (var i = 0; i < returnedStep.length; i++) {	
     	if (returnedStep[i].stepName === reviewStep) {
         	submitReview(returnedStep[i].stepStatus, createJsonResponse(returnedStep[i].stepArray));
@@ -628,13 +587,16 @@ function setApprovalProcess(reviewStep){
  	if (typeof tabResponse !== 'undefined' && tabResponse !== null ) {
  			$(domArray[0]).val(JSON.parse(tabResponse)[responseArray[0]]);
 			$(domArray[1]).val(decodeURIComponent(JSON.parse(tabResponse)[responseArray[1]]));
-			$(domArray[2]).val(JSON.parse(tabResponse)[responseArray[2]]);
+			$(domArray[2]).val(decodeURIComponent(JSON.parse(tabResponse)[responseArray[2]]));
 			$(domArray[3]).val(JSON.parse(tabResponse)[responseArray[3]]);
 		 	$(domArray[4]).val(JSON.parse(tabResponse)[responseArray[4]]);
-		/*
-		 * Update tab status function 
-		 */
-		tabReviewStatus(JSON.parse(tabResponse)[responseArray[2]],tabText);
+		/* Update tab status function */
+		if (responseArray[2] !== 'j8Status'){
+			tabReviewStatus(JSON.parse(tabResponse)[responseArray[2]],tabText);
+		}
+		if (responseArray[2] === 'j8Status'){
+			tabReviewStatus(JSON.parse(tabResponse)[responseArray[3]],tabText);
+		}
 	 }
 }
 
@@ -642,15 +604,12 @@ function setApprovalProcess(reviewStep){
  * Create signature for request form
  */
 function signRequest(reviewStep){
-	/*
-	 * Look up for value to submit and fill with comment and signature
-	 */
+	var now = new Date();
+	/* Look up for value to submit and fill with comment and signature */
 	for (var i = 0; i < returnedSignatureStep.length; i++) {
     	if ('signRequest', returnedSignatureStep[i].name === reviewStep) {
-        	$(returnedSignatureStep[i].domId).val(getUserName().Name+"."+Date.now());
-        	/*
-        	 * Close request when J4 Signs
-        	 */
+        	$(returnedSignatureStep[i].domId).val("SIGNED BY: "+getUserName().Name+" ON: "+now);
+        	/* Close request when J4 Signs */
         	 if (returnedSignatureStep[i].name  === 'j4') {
         	 	closeRequest();
         	 }
@@ -712,11 +671,7 @@ function dValue(myChoice){
  * Upload is only available after saving the first draft to present users mistakes
  */
 function disableUploads(qId){
-	if (typeof qId === 'undefined'){ 
-		$("#btnSaveUpload").attr('disabled', 'disabled');
-	}else{
-		$("#btnSaveUpload").attr('title', 'Select file to upload');
-	}
+	typeof qId === 'undefined' ? $("#btnSaveUpload").attr('disabled', 'disabled') : $("#btnSaveUpload").attr('title', 'Select file to upload');
 }
 
 /*
@@ -748,29 +703,21 @@ function enableUploadStatus(step){
  * Submit is only available after saving the first draft to present users mistakes 
  */
 function disableSubmit(qId){
-	if (typeof qId === 'undefined'){ 
-		$("#btnSubmitRequest").attr('disabled', 'disabled');
-	}else{
-		$("#btnSubmitRequest").attr('title', 'Submit Request');
-	}
+	typeof qId === 'undefined' ? $("#btnSubmitRequest").attr('disabled', 'disabled') : $("#btnSubmitRequest").attr('title', 'Submit Request');
 }
 
 /*
  * return true or false strings as booleans
  */
 function isBool(booleanValue){
-	if (booleanValue === "true"){
-		isBoolean = true;
-	}else{
-		isBoolean = false;
-	}
+	booleanValue === "true" ? isBoolean = true : isBoolean = false;
 	return isBoolean;
 }
 
 /*
  * Make it read only when status is equal to closed
  */
- function isReadonly(requestStatus){
+ function isClosed(requestStatus){
 	if (typeof requestStatus !== 'undefined' && requestStatus === 'CLOSED'){ 
 		$(':input').attr('disabled','disabled');
 		$('#closeRequestWindow').prop('disabled', false);
@@ -805,11 +752,15 @@ function tabReviewStatus(reviewstatus,domId){
 		case "Declined":
 			$(domId).prepend("<i class='fa fa-times'  style='color:red;'></i> ");
 			$(':input').attr('disabled','disabled');
-			$('#closeRequestWindow').prop('disabled', false);
-			break;	
+			//$('#closeRequestWindow').prop('disabled', false);
+			break;
+		case "No Funding":
+			$(domId).prepend("<i class='fa fa-times'  style='color:red;'></i> ");
+			$(':input').attr('disabled','disabled');
+			break;
 		default:
-			$(domId).prepend("<i class='fa fa-minus'  style='color:grey;'></i> ");
-			break;	
+			$(domId).prepend("<i class='fa fa-check' style='color:green;'></i> ");
+			break;		
 	}
 }
 
@@ -825,10 +776,12 @@ function cardMessage(){
 				break;
 			case "ORF":
 				$("#warnoText").text("The ORF card requires additional legal signatures. Ensure proper guidance. ");
-				$("#warnoText").append('<span class="badge badge-secondary"><a href="#" style="color:white;">Download Form</a></span>');
+				$("#warnoText").append('<span class="badge badge-secondary"><a href="https://sof.hq.socom.mil/sites/SOCS/SJS/Pubs/_layouts/15/WopiFrame.aspx?sourcedoc=/sites/SOCS/SJS/Pubs/USSOCOM%20IMTs/22.pdf&action=default" target="_blank" style="color:white;">Download Form</a></span>');
 				break;
 			case "Training":
-				$("#warnoText").text("This card requires an SF-182 for each attendee and legal fill ratios.");
+				$("#warnoText").text("This card requires an SF-182 for each attendee and legal fill ratios. ");
+				$("#warnoText").append('<span class="badge badge-secondary"><a href="../_layouts/15/WopiFrame.aspx?sourcedoc=/app/GPC/Shared%20Documents/SF182-06.pdf&action=default" target="_blank" style="color:white;">Download Form</a></span>');
+
 				break;
 			default:
 				$("#warnoText").text("");
@@ -836,7 +789,6 @@ function cardMessage(){
 		}
 	});
 }
-
 
 /*
  * Helper functions - this function determines the file icon to be displayed - split file by "." to get the extension the render
@@ -880,7 +832,7 @@ function addGrandTotal (numberData){
 	$.isArray(numberData) ? value = sum(numberData) :  value = numberData;
 	var granTotal = $("#grandTotal").text(value);
 	$("#grandTotal").html(value);
-	value > 9999 ? 	$("#grandTotal").append(' for request over 10K <span class="badge badge-secondary"><a href="#" style="color:white;">Fownload Form</a></span>') :  false;
+	value > 9999 ? 	$("#grandTotal").append(' for request over 10K <span class="badge badge-secondary"><a href="../_layouts/15/WopiFrame.aspx?sourcedoc=/app/GPC/Shared%20Documents/RSCA%20Version%202.0%20Jan%202017.pdf&action=default" target="_blank" style="color:white;">Download Form</a></span>') :  false;
 }
 
 /*

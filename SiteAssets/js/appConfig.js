@@ -11,13 +11,16 @@ var qId;
 var documentType;
 var requestStatus;
 var totalPrice = [];
+var userList = [];
+var requestNotification;
+
 
 /* Constant values */
-var  personType			= 	[ "BILLING OFFICIAL", "CARD HOLDER" ];
-var  personRank      	= 	[ "CIV", "CTR", "AMN/E-2", "A1C/E-3", "SRA/E-4", "SSGT/E-5", "TSGT/E-6", "MSGT/E-7", "SMSGT/E-8", "PV2/E-2", "PFC/E-3", "SPC/E-4", "SGT/E-5", "SFC/E-7", "MSG/E-8", "SGM/E-9", "CSM/E-9", "PFC/E-2", "LCPL/E-3", "CPL/E-4", "GYSGT/E-7", "MSGT/E-8", "MGYSGT/E-9", "SA/E-2", "SN/E-3", "P03/E-4", "P02/E-5", "P01/E-6", "CPO/E-7", "MCPO/E-9", "CMC/E-9", "2LT/0-1", "1LT/0-2", "CAPT/0-3", "MAJ/0-4", "LTC/0-5", "COL/0-6", "ENS/0-1", "LTJG/0-2", "LT/0-3", "LCDR/0-4", "CDR/0-5", "CAPT/0-6" ];
-var  personDirectorate 	=   [ "CG", "J1", "J2", "J3", "J4", "J5", "J6", "J8", "JX", "JOSOAC-E", "SSD"];
-var  fundingSource 		=   [ "SOCE OPS", "3RD Joint Special Operations Aviation Component Ops", "SOCE EDI and Training Ops", "SOCE Military Liaison OPS Baseline", "SOCE Sensitive Activities", "SOCE OPS", "TSOC Persistent Engagement Sustainment Support OPS", "OCO", "EUCOM CE2T2", "PDP MFP2", "OCO - P2", "EDI - MFP2"];
-var  fiscalYear			=   [ "No Funding","2019","2020","2021","2021","2022"];
+var  personType			= 	[ "BILLING OFFICIAL", "CARD HOLDER", "DIRECTORATE APPROVAL",  "FINANCIAL OFFICER/J8", "IT APPROVAL/J6", "PROPERTY BOOKS OFFICER/J4","SUPPLY"];
+var  personRank      	= 	[ "CIV", "CTR", "AMN/E2", "A1C/E3", "SRA/E4", "SSGT/E5", "TSGT/E6", "MSGT/E7", "SMSGT/E8", "PV2/E2", "PFC/E3", "SPC/E4", "SGT/E5", "SFC/E7", "MSG/E8", "SGM/E9", "CSM/E9", "PFC/E2", "LCPL/E3", "CPL/E4", "GYSGT/E7", "MSGT/E8", "MGYSGT/E9", "SA/E2", "SN/E3", "P03/E4", "P02/E5", "P01/E6", "CPO/E7", "MCPO/E9", "CMC/E9", "2LT/01", "1LT/02", "CAPT/03", "MAJ/04", "LTC/05", "COL/06", "ENS/01", "LTJG/02", "LT/03", "LCDR/04", "CDR/05", "CAPT/06", "CWO-2", "CWO-3", "CWO-4", "CWO-5" ];
+var  personDirectorate 	=   [ "J1", "J2", "J3", "J4", "J5", "J6", "J8", "JX", "JSOAC-E", "SSD", "SOPA", "SOJA", "SOCG", "SOF CELL", "SOHC", "NSWU2", "TF10"];
+var  fundingSource 		=   [ "SOCE OPS", "3RD Joint Special Operations Aviation Component Ops", "SOCE EDI and Training Ops", "SOCE Military Liaison OPS Baseline", "SOCE Sensitive Activities", "TSOC Persistent Engagement Sustainment Support OPS", "OCO", "EUCOM CE2T2", "PDP MFP2", "OCO - P2", "EDI - MFP2", "ORF", "POTFF"];
+var  fiscalYear			=   [ "No Funding","2019","2020","2021","2022"];
 
 /*
  * Set users basic profile information
@@ -51,7 +54,8 @@ var personAttributes = function() {
 			spendingLimit	: $("#ccSPL").val(),
 			personAgent  	: $("#ccAgent").val(),
 			levelFour   	: $("#cclevel4").val(),
-			levelFive    	: $("#cclevel5").val()  	
+			levelFive    	: $("#cclevel5").val(),
+			billingOfficial : $("#billingOfficialCardHolder").val()
 		};
 	var jsonString = JSON.stringify(attribute);
 	return jsonString;				
@@ -64,78 +68,56 @@ var personTraining	= function (){
 	var numItems 	= $('.training').length;
 	var item  		= {}; 
 	for( j=0;j<numItems;j++){
-		console.log($('.training').id);
-		item[j] = 	{ 
-						id  	: $('.training')[j].id, 
-						date 	: $('.training')[j].value
-					};
+		item[j] = { 
+			id  	: $('.training')[j].id, 
+			date 	: $('.training')[j].value
+		};
 	}
 	var jsonString = JSON.stringify(item);
 	return jsonString; 
 }
-
 
 /*
  * Gather Approval data inpurt from form
  */
 var getApprovalData = function(){
 	var ApprovalData = {	
-			/*
-			 * Directores section
-			 */
+			/* Directores section */
 			directorateComment:   $("#directorateComments").val(),
 			directorateStatus:    $("#directorateReview").val(), 
 			directorateSignature: encodeURIComponent($("#directorateSignature").val()),
-			/*
-			 * Billin Official section
-			 */
+			/* Billin Official section */
 			boComment:   $("#boComments").val(),
 			boStatus:    $("#boReview").val(), 
 			boSignature: encodeURIComponent($("#boSignature").val()),
-			/*
-			 * J6 section
-			 */
+			/* J6 section */
 			j6Comment: $("#j6Comments").val(),
 			j6Status:  $("#j6Review").val(), 
 			j6Signature:  encodeURIComponent($("#j6Signature").val()),
-			/*
-			 * PBO section
-			 */
+			/* PBO section */
 			pboComment:   $("#pboComments").val(),
 			pboStatus:    $("#pboReview").val(), 
 			pboSignature: encodeURIComponent($("#pboSignature").val()),
-			/*
-			 * Budget Officer section
-			 */
+			/* Budget Officer section */
 			budgetOfficerComment:   $("#budgetOfficerComments").val(),
 			budgetOfficerStatus:    $("#budgetOfficerReview").val(), 
 			budgetOfficerSignature: encodeURIComponent($("#budgetOfficerSignature").val()),
-			/*
-			 * J8 section
-			 */
+			/* J8 section */
 			j8Comment:    $("#j8Comments").val(),
 			j8FiscalYear: $("#j8FiscalYear option:selected").val(),
 			j8Quater:     $("#j8Quater option:selected").val(),
 			j8Signature:  encodeURIComponent($("#j8Signature").val()),
-			/*
-			 * Card Holder section
-			 */
+			/* Card Holder section */
 			cardHolderComment:       $("#cardHolderComments").val(),
 			cardHolderTransactionId: $("#cardHolderTransactionId").val(),
 			cardHolderSignature: encodeURIComponent($("#cardHolderSignature").val()),
-			/*
-			 * Requestor section
-			 */
+			/* Requestor section */
 			requestorComment: $("#requestorComments").val(),
 			requestorSignature: encodeURIComponent($("#requestorSignature").val()),	
-			/*
-			 * Supply section
-			 */
+			/* Supply section */
 			supplyComment:  $("#supplyComments").val(), 
 			supplySignature: encodeURIComponent($("#supplySignature").val()),
-			/*
-			 * J4 section
-			 */
+			/* J4 section */
 			j4Comment:   $("#j4Comments").val(),
 			j4Signature: encodeURIComponent($("#j4Signature").val())
 		};
@@ -174,7 +156,6 @@ var returnedSignatureStep = [
 		{name: 'j4',			domId: '#j4Signature'}
 	];	
 
-
 /*
  * Set the Dollar or Euro value
  */
@@ -185,13 +166,13 @@ var setCurrency = function(){
 }
 
 /*
- * create JSON string for with the initial values
+ * Create object with all the initial values
  */
 var createInitialJson = function(){  
 	var initialJson = { 
 			RequestCardType			: $("#RequestCardType option:selected").val(),
 			Requestor				: $("#Requestor").val(),
-			RequestorCardHolderName	: $("#RequestCardHolderName option:selected").val(),
+			RequestorCardHolderName	: $("#RequestCardHolderName").val(),
 			RequestorDSN			: $("#RequestorDSN").val(),							
 			RequestorDirectorate	: $("#personDirectorate option:selected").val(),
 			RequestDateofRequest	: $("#RequestDateOfRequest").val(),				
@@ -203,3 +184,99 @@ var createInitialJson = function(){
 	return jsonString;				  
 }
 
+/*
+ * Get all SP users and return and array
+ */
+var getSpUserList = function(){
+	var userArray = [];
+	$.ajax({  
+		url: "../_api/web/siteusers", 
+        type: "GET",  
+		headers: {  
+            "Accept": "application/json;odata=verbose"  
+		},  
+		success: function(data, textStatus, xhr) {
+			$.each(data.d.results, function( index, value ) {
+  				userArray.push(value.LoginName);
+			});
+		},  
+		error: function r(xhr, textStatus, errorThrown) {  
+			console.log("getSpUserList: error");  
+		}  
+	});
+	return userArray;
+}
+
+/*
+ * Populate user search with SharePoint user list
+ */
+var getSpUser = function (){
+	var users = getSpUserList();
+	var substringMatcher = function(strs) {
+  		return function findMatches(q, cb) {
+    		var matches = [];
+    		var substringRegex;
+    	    substrRegex = new RegExp(q, 'i');
+    		$.each(strs, function(i, str) {
+      			if (substrRegex.test(str)) {
+        			matches.push(str);
+      			}
+    		});
+    		cb(matches);
+  		};
+	};
+
+	/* enable search on DOM */
+	$('#bloodhound .typeahead').typeahead({
+		input: 'Typeahead-input',
+	  	hint: true,
+	 	highlight: true,
+	  	minLength: 1
+	},{
+  		name: 'users',
+  		source: substringMatcher(users)
+	});
+}
+
+/*
+ * Get accounts to start notification - BO
+ */
+var getCardHolderBillingApprover = function(){
+    var id;
+    var billingOfficialArray = [];
+    $.each(userList, function( index, value ) {
+        if (userList[index].PERSON_EMAIL === requestNotification.RequestorCardHolderName) {
+            id = index;
+            billingOfficialArray['billingOfficial'] = JSON.parse(userList[id].PERSON_ATTRIBUTES).billingOfficial;
+            billingOfficialArray['directorAprove']  = userList[id].PERSON_DIRECTORATE;
+            //billingOfficialArray['cardHolder']		= requestNotification.RequestorCardHolderName;
+        }
+    });
+   return billingOfficialArray;
+}
+
+/*
+ * Directorate approval
+ */
+var getDirectorateApprover = function(){
+    var directorateArray = [];
+    $.each(userList, function( index, value ) {
+        if ((userList[index].PERSON_DIRECTORATE === getCardHolderBillingApprover().directorAprove) && (userList[index].PERSON_ROLE === 'DIRECTORATE APPROVAL')){
+           directorateArray.push(userList[index].PERSON_EMAIL); 
+        }
+    });
+    return directorateArray;
+} 
+
+/*
+ * J6 approval
+ */
+var getOtherApprover = function(role){
+    var directorateArray = [];
+    $.each(userList, function( index, value ) {
+        if (userList[index].PERSON_ROLE === role){
+           directorateArray.push(userList[index].PERSON_EMAIL); 
+        }
+    });
+    return directorateArray;
+} 
