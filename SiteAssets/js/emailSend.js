@@ -1,6 +1,6 @@
 function processSendEmails(value) {
     var from = 'n015-portal.noreply@socom.mil';
-    var body = "THIS IS A TEST | IGNORE IT | There is a request pending for your review: https://soceur.sof.socom.mil/app/GPC/Pages/Purchase_Request.aspx?id="+qId + " please review";
+    var body = "There is a request pending for your review: https://soceur.sof.socom.mil/app/GPC/Pages/Purchase_Request.aspx?id="+qId + " please review";
 	var subject = "GPC Card Request:"+qId;
 
 	/* DEBUG */
@@ -34,7 +34,7 @@ function processSendEmails(value) {
 		//console.log('Send j6 Notification');
 		//console.log('J6 approver', getOtherApprover('IT APPROVAL/J6'));
 		subject = 'J6 purchase request notification | request: ' + qId;
-		var to = getCardHolderBillingApprover().billingOfficial;
+		var to = getOtherApprover('IT APPROVAL/J6');
 		for (i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
 		}       
@@ -43,7 +43,7 @@ function processSendEmails(value) {
 		//console.log('Send PBO Notification');
 		//console.log('BPO approver', getOtherApprover('PROPERTY BOOKS OFFICER/J4'));
 		subject = 'PBO purchase request notification | request: '+qId;
-		var to = getCardHolderBillingApprover().billingOfficial;
+		var to = getOtherApprover('PROPERTY BOOKS OFFICER/J4');
 		for (i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
         }        
@@ -130,7 +130,7 @@ function sendEmail(from, to, body, subject) {
         },
         success: function(data) {
 			//DEBUG
-            //alert('Email Sent Successfully to: '+to);
+            alert('Email Sent Successfully to: '+to);
         },
         error: function(err) {
             alert('Error in sending Email: ' + JSON.stringify(err));
