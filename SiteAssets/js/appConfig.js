@@ -254,16 +254,18 @@ var getSpUser = function (){
 var getCardHolderBillingApprover = function(){
     var id;
     var billingOfficialArray = [];
+
     $.each(userList, function( index, value ) {
-        if (userList[index].PERSON_EMAIL === requestNotification.RequestorCardHolderName) {
+
+		if ((userList[index].PERSON_EMAIL === requestNotification.RequestorCardHolderName) && (userList[index].PERSON_ROLE === 'CARD HOLDER')) {
+			console.log(userList[index]);
             id = index;
             billingOfficialArray['billingOfficial'] = JSON.parse(userList[id].PERSON_ATTRIBUTES).billingOfficial;
             billingOfficialArray['directorAprove']  = userList[id].PERSON_DIRECTORATE;
             //billingOfficialArray['cardHolder']		= requestNotification.RequestorCardHolderName;
-			console.log(JSON.parse(userList[id].PERSON_ATTRIBUTES).billingOfficial);
-        }
+		}
     });
-   return billingOfficialArray;
+	return billingOfficialArray;
 }
 
 /*

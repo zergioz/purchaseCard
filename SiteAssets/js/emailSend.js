@@ -18,20 +18,19 @@ function processSendEmails(value) {
 		subject = 'Directorate purchase request notification | request: '+qId;
 		var to = getDirectorateApprover();
 		for (i = 0; i < to.length; i++) {
-			sendEmail(from, to[i], body, subject);
+			console.log('notification to:' + to[i] );
+			//sendEmail(from, to[i], body, subject);
 		}
     }
     if (value === 'directorate') {
-		console.log('Send Billing Official Notification');
-        console.log('Billing Official', getCardHolderBillingApprover().billingOfficial);
+		//console.log('Send Billing Official Notification');
+        //console.log('Billing Official', getCardHolderBillingApprover().billingOfficial);
         subject = 'Billing official purchase request notification | request: '+qId;
-        var to = getCardHolderBillingApprover().billingOfficial;
-		/* disabled notification due to error
+        var to = getCardHolderBillingApprover().billingOfficial;		
         for (i = 0; i < to.length; i++) {
-            sendEmail(from, to[i], body, subject);
+			sendEmail(from, to[i], body, subject);
         }
-		*/
-    }
+	}
     if(value === 'bo') {
 		//console.log('Send j6 Notification');
 		//console.log('J6 approver', getOtherApprover('IT APPROVAL/J6'));
