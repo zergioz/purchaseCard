@@ -18,8 +18,18 @@ var requestNotification;
 /* Constant values */
 var  personType			= 	[ "BILLING OFFICIAL", "CARD HOLDER", "DIRECTORATE APPROVAL",  "FINANCIAL OFFICER/J8", "IT APPROVAL/J6", "PROPERTY BOOKS OFFICER/J4","SUPPLY"];
 var  personRank      	= 	[ "CIV", "CTR", "AMN/E2", "A1C/E3", "SRA/E4", "SSGT/E5", "TSGT/E6", "MSGT/E7", "SMSGT/E8", "PV2/E2", "PFC/E3", "SPC/E4", "SGT/E5", "SFC/E7", "MSG/E8", "SGM/E9", "CSM/E9", "PFC/E2", "LCPL/E3", "CPL/E4", "GYSGT/E7", "MSGT/E8", "MGYSGT/E9", "SA/E2", "SN/E3", "P03/E4", "P02/E5", "P01/E6", "CPO/E7", "MCPO/E9", "CMC/E9", "2LT/01", "1LT/02", "CAPT/03", "MAJ/04", "LTC/05", "COL/06", "ENS/01", "LTJG/02", "LT/03", "LCDR/04", "CDR/05", "CAPT/06", "CWO-2", "CWO-3", "CWO-4", "CWO-5" ];
-var  personDirectorate 	=   [ "J1", "J2", "J3", "J4", "J5", "J6", "J8", "JX", "JSOAC-E", "SSD", "SOPA", "SOJA", "SOCG", "SOF CELL", "SOHC", "NSWU2", "TF10"];
-var  fundingSource 		=   [ "SOCE OPS", "3RD Joint Special Operations Aviation Component Ops", "SOCE EDI and Training Ops", "SOCE Military Liaison OPS Baseline", "SOCE Sensitive Activities", "TSOC Persistent Engagement Sustainment Support OPS", "OCO", "EUCOM CE2T2", "PDP MFP2", "OCO - P2", "EDI - MFP2", "ORF", "POTFF"];
+var  personDirectorate 	=   [ "J1", "J2", "J3", "J4", "J5", "J6", "J8", "JOG-E", "JSOAC-E", "SSD", "SOPA", "SOJA", "SOCG", "SOF CELL", "SOHC", "NSWU2", "TF10"];
+var  fundingSource 		=   [ 	
+								"MFP-11 Base (SOCE OPS)",
+								"MFP-11 OCO (SOCE OPS)",
+								"MFP-11 EDI (SOCE EDI and Training OPS)",
+								"MFP-2 PDP",
+								"MFP-2 PDP OCO",
+								"MFP-2 EDI",
+								"ORF",
+								"POTFF"
+							];
+
 var  fiscalYear			=   [ "No Funding","2019","2020","2021","2022"];
 
 /*
@@ -250,6 +260,7 @@ var getCardHolderBillingApprover = function(){
             billingOfficialArray['billingOfficial'] = JSON.parse(userList[id].PERSON_ATTRIBUTES).billingOfficial;
             billingOfficialArray['directorAprove']  = userList[id].PERSON_DIRECTORATE;
             //billingOfficialArray['cardHolder']		= requestNotification.RequestorCardHolderName;
+			console.log(JSON.parse(userList[id].PERSON_ATTRIBUTES).billingOfficial);
         }
     });
    return billingOfficialArray;
