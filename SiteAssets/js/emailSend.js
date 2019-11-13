@@ -19,12 +19,12 @@ function processSendEmails(value) {
 		var to = getDirectorateApprover();
 		for (i = 0; i < to.length; i++) {
 			console.log('notification to:' + to[i] );
-			//sendEmail(from, to[i], body, subject);
+			sendEmail(from, to[i], body, subject);
 		}
     }
     if (value === 'directorate') {
-		//console.log('Send Billing Official Notification');
-        //console.log('Billing Official', getCardHolderBillingApprover().billingOfficial);
+		console.log('Send Billing Official Notification');
+        console.log('Billing Official', getCardHolderBillingApprover().billingOfficial);
         subject = 'Billing official purchase request notification | request: '+qId;
         var to = getCardHolderBillingApprover().billingOfficial;		
         for (i = 0; i < to.length; i++) {

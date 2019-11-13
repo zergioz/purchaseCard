@@ -184,7 +184,7 @@ function getTrainingListHtml(item){
  
 
 /*
- * Fetch card holder and billion officials
+ * Fetch card holder and billing officials
  */
 function getUserRole(){
 	$.ajax({  
