@@ -3,7 +3,7 @@
  */
 function getUsersList(){
 	$.ajax({  
-		url: "../_api/web/lists/getbytitle('ccUsers')/Items", 
+		url: relativePath+"/_api/web/lists/getbytitle('ccUsers')/Items", 
 		type: "GET",
 		cache:true,
 		headers: { 
@@ -15,7 +15,7 @@ function getUsersList(){
 			})        
 		}, 
 		error: function r(xhr, textStatus, errorThrown) {  
-			alert("error 'getCommanddata': " + JSON.stringify(xhr));  
+			alert("error 'getUsersList': " + JSON.stringify(xhr));  
 		}  
 	});  
 }
@@ -41,7 +41,7 @@ function getUsersListHtml(item){
  */
 function getRequestsList(){
 	$.ajax({  
-		url: "../_api/web/lists/getbytitle('ccRequestTracker')/Items", 
+		url: relativePath+"/_api/web/lists/getbytitle('ccRequestTracker')/Items", 
 		type: "GET",
 		cache:true,
 		headers: {"Accept": "application/json;odata=verbose"}, 
@@ -51,7 +51,7 @@ function getRequestsList(){
 			})        
 		}, 
 		error: function r(xhr, textStatus, errorThrown) {  
-			alert("error 'getCommanddata': " + JSON.stringify(xhr));  
+			alert("error 'getRequestsList': " + JSON.stringify(xhr));  
 		}  
 	});  
 }
@@ -188,7 +188,7 @@ function getTrainingListHtml(item){
  */
 function getUserRole(){
 	$.ajax({  
-		url: "../_api/web/lists/getbytitle('ccUsers')/Items", 
+		url: relativePath+"/_api/web/lists/getbytitle('ccUsers')/Items", 
         type: "GET",  
 		headers: {  
             "Accept": "application/json;odata=verbose"  
