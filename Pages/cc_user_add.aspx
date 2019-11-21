@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<%@ Page Language="C#" %>
-<%@ Register tagprefix="SharePoint" namespace="Microsoft.SharePoint.WebControls" assembly="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -20,7 +18,6 @@
 		<script src="../SiteAssets/js/jquery.tablesorter.js"></script>
 		<script src="../SiteAssets/js/jquery.tablesorter.widgets.js"></script>
 		<script src="../SiteAssets/js/jquery.tablesorter.pager.js"></script>
-		<script src="../SiteAssets/js/angular.min.js" type="text/javascript"></script>
 		<script src="../SiteAssets/bootstrap-4.3.1/js/bootstrap.min.js"></script>	
 		<script src="../SiteAssets/js/popper.min.js"></script>
 		<script src="../SiteAssets/js/chart.js"></script>
@@ -35,6 +32,7 @@
 		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
 		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
 		
+
 	</head>
 	<body ng-app="">
 		<!-- START: BODY -->
@@ -338,7 +336,7 @@
 			getDirectorate();
 			getRank();
 			getRole();
-			getUserRole();
+			getUser();
 			getTrainingList();
 			getAutoComplete();
 			/*

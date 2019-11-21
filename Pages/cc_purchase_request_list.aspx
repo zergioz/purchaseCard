@@ -1,17 +1,9 @@
 <!DOCTYPE html>
-<%@ Page Language="C#" %>
-<%@ Register tagprefix="SharePoint" namespace="Microsoft.SharePoint.WebControls" assembly="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=10" />
 		<title>Requests Status</title>
-		
-		<!-- CUSTOM: LIBRARIES -->
-		<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>
-		<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
-		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
-		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
 				
 		<!-- STANDARD: LIBRARIES -->
 		<link href="../SiteAssets/bootstrap-4.3.1/css/bootstrap.min.css" rel="stylesheet">
@@ -31,6 +23,16 @@
 		<script src="../SiteAssets/js/chart.js"></script>
 		<script src="../SiteAssets/js/toolkit.js"></script>
 		<script src="../SiteAssets/js/application.js"></script>		
+
+		
+
+		<!-- CUSTOM: LIBRARIES -->
+		<script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
+		<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>
+		<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
+		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
+		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
+
 	</head>
 	<body ng-app="">
 		<!-- START: BODY -->

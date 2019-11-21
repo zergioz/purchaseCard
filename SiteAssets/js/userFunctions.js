@@ -2,8 +2,8 @@
  * Training inputs 
  */
 var personTraining	= function (){
-	var numItems 	= $('.training').length;
 	var item  		= {}; 
+	var numItems 	= $('.training').length;
 	for( j=0;j<numItems;j++){
 		console.log($('.training').id);
 		item[j] = { 
@@ -21,9 +21,6 @@ var personTraining	= function (){
 function pushUserData(accountType){
 	if (accountType === 'newAccount'){	
 		createUserInformation();
-		setTimeout(function(){
-			setUserInformationRedirect(userId);
-		}, 2000);
 	}
 	if (accountType === 'updateAccount'){
 		updateUserInformation();
@@ -34,51 +31,61 @@ function pushUserData(accountType){
  *	Create user account with input given with JQuery SP Service. The function "completefunc" will return the ID provided to the new account. 
  *	Such ID will be used to create the attributes and training tables.
  */
-function createUserInformation(){	
+function createUserInformation(){
+	console.log("function: createUserInformation");
 	$().SPServices({
 		operation: "UpdateListItems",
+		webURL: siteUrl,
 		async: false,
 		batchCmd: "New",
 		listName:"ccUsers",
-		valuepairs:[["Title", personInformation().pseudoName ], 
-					["PERSON_EMAIL", personInformation().personEmail], 
-					["P_LAST_NAME", personInformation().personLastName],	
-					["P_FIRST_NAME", personInformation().personFirstName], 
-					["PERSON_ROLE", personInformation().personRole], 
-					["PERSON_RANK", personInformation().personRank], 
-					["PERSON_DIRECTORATE", personInformation().personDirectorate], 
-					["PERSON_ACTIVE", personInformation().personActive],
-					["PERSON_ATTRIBUTES", personAttributes()],
-					["PERSON_TRAINING", personTraining()]],
+		valuepairs:[
+						["Title", personInformation().pseudoName], 
+						["PERSON_EMAIL", personInformation().personEmail], 
+						["P_LAST_NAME", personInformation().personLastName],	
+						["P_FIRST_NAME", personInformation().personFirstName], 
+						["PERSON_ROLE", personInformation().personRole], 
+						["PERSON_RANK", personInformation().personRank], 
+						["PERSON_DIRECTORATE", personInformation().personDirectorate], 
+						["PERSON_ACTIVE", personInformation().personActive],
+						["PERSON_ATTRIBUTES", personAttributes()],
+						["PERSON_TRAINING", personTraining()]
+					],
 		completefunc: function (xData, Status) {
 			$(xData.responseXML).SPFilterNode("z:row").each(function(){
 				userId = $(this).attr("ows_ID");
-				return userId;
 			})
 		}
-	});	
+	});
+	// Redirect
+	setTimeout(function(){
+		setUserInformationRedirect(userId);
+	}, 2000);	
 }
 
 /*
  * Update User Accoint with the newest information
  */
 function updateUserInformation(){
-	//console.log('updateUserInformation '+personInformation());
+	console.log('function: updateUserInformation');
 	$().SPServices({
 		operation: "UpdateListItems",
+		webURL: siteUrl,
 		aync: false,
 		batchCmd: "Update",
 		listName: "ccUsers",
 		ID: userId,
-		valuepairs:[["Title", personInformation().pseudoName ], 
-					["PERSON_EMAIL", personInformation().personEmail], 
-					["P_LAST_NAME", personInformation().personLastName],	
-					["P_FIRST_NAME", personInformation().personFirstName], 
-					["PERSON_ROLE", personInformation().personRole], 
-					["PERSON_RANK", personInformation().personRank], 
-					["PERSON_DIRECTORATE", personInformation().personDirectorate], 
-					["PERSON_ATTRIBUTES", personAttributes()],
-					["PERSON_TRAINING", personTraining()]],
+		valuepairs:[
+						["Title", personInformation().pseudoName ], 
+						["PERSON_EMAIL", personInformation().personEmail], 
+						["P_LAST_NAME", personInformation().personLastName],	
+						["P_FIRST_NAME", personInformation().personFirstName], 
+						["PERSON_ROLE", personInformation().personRole], 
+						["PERSON_RANK", personInformation().personRank], 
+						["PERSON_DIRECTORATE", personInformation().personDirectorate], 
+						["PERSON_ATTRIBUTES", personAttributes()],
+						["PERSON_TRAINING", personTraining()]
+					],
 		completefunc: function(xData, Status){
 			console.log('update user account succesfully');
 		}
@@ -91,7 +98,7 @@ function updateUserInformation(){
 function sendNotification(from,recipient,subject,body){
 	console.log('Executing Email Notification');
 	var siteurl = _spPageContextInfo.webServerRelativeUrl;
-	var urlTemplate = siteurl + "/_api/SP.Utilities.Utility.SendEmail";
+	var urlTemplate = siteUrl + "/_api/SP.Utilities.Utility.SendEmail";
 	$.ajax({
 	    contentType: 'application/json',
 	    url: urlTemplate,

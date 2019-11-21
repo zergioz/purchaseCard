@@ -2,22 +2,11 @@
  *	get all users from CC_Users and display all user as table entries    
  */
 function getUsersList(){
-	$.ajax({  
-		url: relativePath+"/_api/web/lists/getbytitle('ccUsers')/Items", 
-		type: "GET",
-		cache:true,
-		headers: { 
-			"Accept": "application/json;odata=verbose"  
-		}, 
-		success: function(data, textStatus, xhr) {  
-			$.each(data.d.results, function(i, item) {
-				getUsersListHtml(item);
-			})        
-		}, 
-		error: function r(xhr, textStatus, errorThrown) {  
-			alert("error 'getUsersList': " + JSON.stringify(xhr));  
-		}  
-	});  
+	setTimeout(function(){
+		$.each(userList, function(i, item) {
+			getUsersListHtml(item);
+		}); 
+	},500);	 
 }
 
 /*
@@ -37,13 +26,50 @@ function getUsersListHtml(item){
 }
 
 /*
+ * Get user information based on UseId and assign values to form
+ */
+function getUserInformation(userId){
+	setTimeout(function() {
+  		$.each(userList, function( index, value ) {
+  			if (userId === value.Id){
+  				getUserInformationHtml(value);
+  			}else{	
+  				console.log("incorrect userId was passed");
+  			}
+ 		});	
+	},500);
+}
+
+/*
+ * Get Billin Officials to on edit and adding users page and Card Holder 
+ */
+function getBillingOfficial(){
+	setTimeout(function() {
+		$.each(userList, function( index, value ) {
+			getUserHtml(value);
+		});
+	},300);
+}
+
+/*
+ * Get Card Holder 
+ */
+function getCardHolder(){
+	setTimeout(function() {
+		$.each(userList, function( index, value ) {
+			getUserHtml(value);
+		});
+	},400);
+}
+
+/*
  *	get all users from CC_Users and display all user as table entries    
  */
 function getRequestsList(){
 	$.ajax({  
-		url: relativePath+"/_api/web/lists/getbytitle('ccRequestTracker')/Items", 
+		url: siteUrl+"/_api/web/lists/getbytitle('ccRequestTracker')/Items", 
 		type: "GET",
-		cache:true,
+		cache: true,
 		headers: {"Accept": "application/json;odata=verbose"}, 
 		success: function(data, textStatus, xhr) {  
 			$.each(data.d.results, function(i, item) {
@@ -79,7 +105,7 @@ function getRequestsListHtml(item){
  */
 function getTrainingList(){
 	$.ajax({  
-		url: "../_api/web/lists/getbytitle('ccUsersTrainingCourses')/Items", 
+		url: siteUrl+"/_api/web/lists/getbytitle('ccUsersTrainingCourses')/Items", 
 		type: "GET", 	
 		headers: { 
 			"Accept": "application/json;odata=verbose"  
@@ -117,27 +143,6 @@ function getTrainingListHtml(item){
 				</tr>');
 }
 
-/*
- * Get user information based on UseId and assign values to form
- */
- function getUserInformation(userId){
-	$.ajax({  
-		url: "../_api/web/lists/getbytitle('ccUsers')/Items("+userId+")", 
-		type: "GET",
-		cache:true,
-		headers: { 
-			"Accept": "application/json;odata=verbose"  
-		}, 
-		success: function(data, textStatus, xhr) {  
-			$.each(data, function(i, item) {
-				getUserInformationHtml(item);
-			})        
-		}, 
-		error: function r(xhr, textStatus, errorThrown) {  
-			alert("error 'getCommanddata': " + JSON.stringify(xhr));  
-		}  
-	});
- }
 
 /*
  * Load DOM values for users' profile
@@ -181,35 +186,12 @@ function getTrainingListHtml(item){
   		$("#"+training[key]['id']).val(training[key]['date']);
 	}
  }
- 
 
-/*
- * Fetch card holder and billing officials
- */
-function getUserRole(){
-	$.ajax({  
-		url: relativePath+"/_api/web/lists/getbytitle('ccUsers')/Items", 
-        type: "GET",  
-		headers: {  
-            "Accept": "application/json;odata=verbose"  
-		},  
-		success: function(data, textStatus, xhr) {
-			$.each(data.d.results, function(i, item){
-				getUserRoleHtml(item);
-				/* this need to be fixed and separete the function */
-				userList.push(item);
-			});
-		},  
-		error: function r(xhr, textStatus, errorThrown) {  
-			console.log("error 'getCommanddata': " + JSON.stringify(xhr));  
-		}  
-	});	
-}
 
 /*
  * Populate DOM 
  */
-function getUserRoleHtml(item){
+function getUserHtml(item){
 	/*
 	 * Add list to the purchase request list page
 	 */
@@ -241,7 +223,7 @@ function getUserPanesHtml(){
  */
 function getCommandData(){
 	$.ajax({  
-		url: "../_api/web/lists/getbytitle('ccCommand')/Items?$Select=Title, COMMAND_URL, COMMAND_WARNING, COMMAND_CLASSIFICATION", 
+		url: siteUrl+"/_api/web/lists/getbytitle('ccCommand')/Items?$Select=Title, COMMAND_URL, COMMAND_WARNING, COMMAND_CLASSIFICATION", 
         type: "GET",  
 		headers: {  
             "Accept": "application/json;odata=verbose"  
@@ -340,14 +322,14 @@ function getStatus(trainingStatus, trainingDate){
  *	Get user user information based on provided id
  */
 function setUserInformationRedirect(userId){
-	window.open("../Pages/cc_user_edit.aspx?PersonId="+userId,"_self");
+	window.open("../Pages/cc_user_edit"+fileExt+"?PersonId="+userId,"_self");
 }
 
 /*
  *	get user user information based on provided id
  */
 function setRequestInformationRedirect(userId,redirectArgument){
-	window.open("../Pages/Purchase_Request.aspx?id="+userId,'_blank');
+	window.open("../Pages/purchase_request"+fileExt+"?id="+userId,'_blank');
 }
 
 /*

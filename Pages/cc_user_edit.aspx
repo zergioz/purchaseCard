@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<%@ Page Language="C#" %>
-<%@ Register tagprefix="SharePoint" namespace="Microsoft.SharePoint.WebControls" assembly="Microsoft.SharePoint, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" %>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -8,19 +6,19 @@
 		<title>Add User</title>
 		
 		<!-- STANDARD: LIBRARIES -->
-		<link href="../SiteAssets/bootstrap-4.3.1/css/bootstrap.min.css" rel="stylesheet">
-        <link href="../SiteAssets/css/toolkit-light.css" rel="stylesheet">
-        <link href="../SiteAssets/css/font-awesome.min.css" rel="stylesheet" >
-		<link href="../SiteAssets/css/application.css" rel="stylesheet">
+		<link href="../SiteAssets/bootstrap-4.3.1/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+        <link href="../SiteAssets/css/toolkit-light.css" type="text/css" rel="stylesheet">
+        <link href="../SiteAssets/css/font-awesome.min.css"  type="text/css" rel="stylesheet" >
+		<link href="../SiteAssets/css/application.css"  type="text/css"rel="stylesheet">
 		<link href="../SiteAssets/css/jquery-ui.css" type="text/css" rel="stylesheet"/>
-		<link href="../SiteAssets/css/select2.min.css" rel="stylesheet" />
+		<link href="../SiteAssets/css/select2.min.css" type="text/css" rel="stylesheet" />
+
 		<script src="../SiteAssets/js/jquery-1.12.0.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/jquery.SPServices.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/jquery-ui.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/jquery.tablesorter.js"></script>
 		<script src="../SiteAssets/js/jquery.tablesorter.widgets.js"></script>
 		<script src="../SiteAssets/js/jquery.tablesorter.pager.js"></script>
-		<script src="../SiteAssets/js/angular.min.js" type="text/javascript"></script>
 		<script src="../SiteAssets/bootstrap-4.3.1/js/bootstrap.min.js"></script>	
 		<script src="../SiteAssets/js/popper.min.js"></script>
 		<script src="../SiteAssets/js/chart.js"></script>
@@ -34,9 +32,8 @@
 		<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
 		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
-		
 	</head>
-	<body ng-app="">
+	<body>
 		<!-- START: BODY -->
 		<div class="container-fluid">
 			<div class="row">
@@ -77,7 +74,7 @@
 							<div class="btn-toolbar dashhead-toolbar">
 								<div class="btn-toolbar-item">
 									<a class="sidebar-brand img-responsive" href="#">
-											<span style="display:none;"><asp:LoginName runat="server" id="loginName" FormatString="{0}"></asp:LoginName></span>
+											<span style="display:block"><asp:LoginName runat="server" id="loginName" FormatString="{0}"></asp:LoginName></span>
 											<span class="topTitle" id="command" style="display:none;">SOCEUR </span>
 											<span id="cleanUser"></span>
 										</a>
@@ -339,8 +336,9 @@
 		getDirectorate();
 		getRank();
 		getRole();
+		getUser();
+		getBillingOfficial();
 		getTrainingList();
-		getUserRole();
 		getAutoComplete();
 		/*
 		 * change panes based on role
@@ -349,10 +347,9 @@
 			getUserPanesHtml();
 		});
 		/*
-		 * wait to load eveything then load user
-		 */	 
-		$(document).ready(function(){
-			getUserInformation(userId);	
- 	 	});
+		 * fetch all users information
+		 */
+  		getUserInformation(parseInt(userId));	
+	
 	</script>
 </html>

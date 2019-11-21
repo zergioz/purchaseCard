@@ -10,3 +10,25 @@
      -moz-border-radius: 0 !important;
           border-radius: 0 !important;
 }
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+}
+.tt-dataset, .tt-dataset-users{
+	background-color: #f7f7f7!important;
+	min-width: 110%;
+}
+.tt-suggestion, .tt-selectable{
+	background-color: #f7f7f7!important;
+	min-width: 100%;	
+}
+.twitter-typeahead{
+	min-width: 100%;
+}
+#bloodhound{
+	/*width: 88.3%;*/
+	min-width: 100%
+}

@@ -2,7 +2,9 @@
  * Requestor basic information
  */
 var userId;
-var relativePath = "http://localhost:8080/cc/";
+/* Development variables */
+var fileExt		= ".html";
+var siteUrl		= "http://localhost:8080/cc";
 /*
  * Request variables
  */
@@ -47,6 +49,53 @@ var  fundingSource 		=   [
 							];
 
 var  fiscalYear			=   [ "No Funding",2019,2020,2021,2022,2023];
+
+/*    
+ * Fetch site classification to render top banner - function might be deprecated in the future  
+ */
+var getCommandData = function(){
+	$.ajax({  
+		url: siteUrl+"/_api/web/lists/getbytitle('ccCommand')/Items?$Select=Title, COMMAND_URL, COMMAND_WARNING, COMMAND_CLASSIFICATION", 
+        type: "GET",  
+		headers: {  
+            "Accept": "application/json;odata=verbose"  
+		},  
+		success: function(data, textStatus, xhr) {  
+			var t="", ta="", tb="";  
+			$.each(data.d.results, function(i, item) {            	        	    
+				t+=item.Title;   
+                ta+=item.COMMAND_WARNING;
+                tb+= item.COMMAND_CLASSIFICATION;
+                document.getElementById('command').innerHTML=t;              
+			})
+		},  
+		error: function r(xhr, textStatus, errorThrown) {  
+			console.log("error 'getCommanddata': " + JSON.stringify(xhr));  
+		}  
+	});  
+}
+
+/*
+ * Fetch card holder and billing officials
+ */
+function getUser(){
+	$.ajax({  
+		url: siteUrl+"/_api/web/lists/getbytitle('ccUsers')/Items", 
+        type: "GET",  
+		headers: {  
+            "Accept": "application/json;odata=verbose"  
+		},  
+		success: function(data, textStatus, xhr) {
+			$.each(data.d.results, function(i, item){
+				/* this need to be fixed and separete the function */
+				userList.push(item);
+			});
+		},  
+		error: function r(xhr, textStatus, errorThrown) {  
+			console.log("error 'getUserRole': " + JSON.stringify(xhr));  
+		}  
+	});	
+}
 
 /*
  * Set users basic profile information
@@ -192,6 +241,16 @@ var setCurrency = function(){
 }
 
 /*
+ * Set the Dollar or Euro value
+ */
+var setJ6Validation = function(){
+	var returnCurrent;
+	$("#RequestIsJ6").is(":checked") === true ? returnCurrent = 'Yes': returnCurrent = 'No';
+	return returnCurrent;
+}
+
+
+/*
  * Create object with all the initial values
  */
 var createInitialJson = function(){  
@@ -204,7 +263,8 @@ var createInitialJson = function(){
 			RequestDateofRequest	: $("#RequestDateOfRequest").val(),				
 			RequestSource			: $("#RequestSource").val(),							
 			RequestJustification	: $("#RequestJustification").val(),					
-			RequestCurrencyType		: setCurrency()
+			RequestCurrencyType		: setCurrency(),
+			RequestIsJ6				: setJ6Validation()
 		};
 	var jsonString = JSON.stringify(initialJson);
 	return jsonString;				  
@@ -216,7 +276,7 @@ var createInitialJson = function(){
 var getSpUserList = function(){
 	var userArray = [];
 	$.ajax({  
-		url: homeUrl+"/_api/web/siteusers", 
+		url: siteUrl+"/_api/web/siteusers", 
         type: "GET",  
 		headers: {  
             "Accept": "application/json;odata=verbose"  
@@ -238,6 +298,7 @@ var getSpUserList = function(){
  */
 var getSpUser = function (){
 	var users = getSpUserList();
+
 	var substringMatcher = function(strs) {
   		return function findMatches(q, cb) {
     		var matches = [];
@@ -253,16 +314,19 @@ var getSpUser = function (){
 	};
 
 	/* enable search on DOM */
-	$('#bloodhound .typeahead').typeahead({
+	$('#bloodhound .typeahead')
+	.typeahead({
 		input: 'Typeahead-input',
-	  	hint: true,
-	 	highlight: true,
-	  	minLength: 1
+		hint: true,
+		highlight: true,
+		minLength: 3,
+		cursor: true
 	},{
-  		name: 'users',
-  		source: substringMatcher(users)
+		name: 'users',
+		source: substringMatcher(users)
 	});
 }
+
 
 /*
  * Get accounts to start notification - BO

@@ -32,7 +32,6 @@ function GetCurrentUser(){
  */
 function loadCCRequestTracker(qId){
 	if (qId > 0) {
-		//console.log("loadCCRequestTracker", qId);
 		/*jshint multistr: true */
 		var query = "<Query><Where><Eq><FieldRef Name='ID'/><Value Type='Text'>"+qId+"</Value></Eq></Where></Query>";
 		var viewFields = "<ViewFields><FieldRef Name='ID'/>\
@@ -52,6 +51,7 @@ function loadCCRequestTracker(qId){
 						  </ViewFields>";
 		$().SPServices({
 			operation:"GetListItems",
+			webURL: siteUrl,
 			asyn: true,
 			listName: "ccRequestTracker",
 			CAMLQuery: query,
@@ -110,18 +110,22 @@ function loadCCRequestTracker(qId){
  * Load SharePoint list values - there should be an item ID by the time this is loaded.
  */
 function loadRequestorDom(myObj){
-	$("#RequestCardType").val(myObj.RequestCardType); 	
-	$("#RequestUser").text(myObj.RequestUser);
-	$("#RequestStatus").text(myObj.RequestStatus);	
-	$("#RequestCardHolderName").val(myObj.RequestorCardHolderName);
-	$("#Requestor").val(myObj.Requestor);
-	$("#RequestorDSN").val(myObj.RequestorDSN);
-	$("#RequestorDirectorate").val(myObj.RequestorDirectorate);
-	$("#RequestDateOfRequest").val(Date(myObj.RequestDateOfRequest));
-	$("#personDirectorate").val(myObj.RequestorDirectorate);
-	$("#RequestJustification").val(myObj.RequestJustification);
-	$("#RequestSource").val(myObj.RequestSource);			
-	$("#RequestCurrencyType").bootstrapToggle(dValue(myObj.RequestCurrencyType));
+	console.log(myObj)
+	setTimeout(function() {
+		$("#RequestCardType").val(myObj.RequestCardType); 	
+		$("#RequestUser").text(myObj.RequestUser);
+		$("#RequestStatus").text(myObj.RequestStatus);	
+		$("#RequestCardHolderName").val(myObj.RequestorCardHolderName);
+		$("#Requestor").val(myObj.Requestor);
+		$("#RequestorDSN").val(myObj.RequestorDSN);
+		$("#RequestorDirectorate").val(myObj.RequestorDirectorate);
+		$("#RequestDateOfRequest").val(Date(myObj.RequestDateOfRequest));
+		$("#personDirectorate").val(myObj.RequestorDirectorate);
+		$("#RequestJustification").val(myObj.RequestJustification);
+		$("#RequestSource").val(myObj.RequestSource);			
+		$("#RequestCurrencyType").bootstrapToggle(dValue(myObj.RequestCurrencyType));
+		$("#RequestIsJ6").bootstrapToggle(j6Value(myObj.RequestIsJ6));
+	},500);
 }
 
 /*
@@ -159,6 +163,7 @@ function loadDetailsDom(requestDetails){
 function createDraftRequest(){
 	$().SPServices({
 		operation: "UpdateListItems",
+		webURL: siteUrl,
 		async: false,
 		batchCmd: "New",
 		listName:"ccRequestTracker",
@@ -172,7 +177,7 @@ function createDraftRequest(){
 			$(xData.responseXML).SPFilterNode("z:row").each(function(){
 				var newId = $(this).attr("ows_ID");
 				setTimeout(function(){
-					redirectUrl("Purchase_Request.aspx?id="+newId);
+					redirectUrl("purchase_request"+fileExt+"?id="+newId);
 				}, 2000);	
 			});
 		}
@@ -188,6 +193,7 @@ function modifyDraftRequest(){
 	console.log("function: modifyDraftRequest");
 	$().SPServices({
 		operation: "UpdateListItems",
+		webURL: siteUrl,
 		async: false,
 		batchCmd: "Update",
 		listName: "ccRequestTracker",
@@ -198,7 +204,7 @@ function modifyDraftRequest(){
 		],
 		completefunc: function(xData, Status){
 			setTimeout(function(){
-				redirectUrl("Purchase_Request.aspx?id="+qId);
+				redirectUrl("purchase_request"+fileExt+"?id="+qId);
 			}, 2000);
 		}
 	});
@@ -233,6 +239,7 @@ function createSubmit(){
 	/* Change Status */
 	$().SPServices({
 		operation: "UpdateListItems",
+		webURL: siteUrl,
 		aync: false,
 		batchCmd: "Update",
 		listName: "ccRequestTracker",
@@ -250,6 +257,7 @@ function createSubmit(){
 function submitReview(fieldUpdate,fieldJson){	
 	$().SPServices({
 		operation: "UpdateListItems",
+		webURL: siteUrl,
 		aync: false,
 		batchCmd: "Update",
 		listName: "ccRequestTracker",
@@ -270,6 +278,7 @@ function closeRequest(){
 	console.log("Function: closeRequest");
 	$().SPServices({
 		operation: "UpdateListItems",
+		webURL: siteUrl,
 		aync: false,
 		batchCmd: "Update",
 		listName: "ccRequestTracker",
@@ -319,7 +328,7 @@ function myUpload(){
 		var file = $("#inputGroupFile03")[0].files[0];
 		getFileBuffer(file).then(function(buffer){
 			$.ajax({
-				url:"../_api/web/lists/getbytitle('ccRequestTracker')/items('"+qId+"')/AttachmentFiles/add(FileName='"+renameUploadFile(file.name)+"')",
+				url: siteUrl+"/_api/web/lists/getbytitle('ccRequestTracker')/items('"+qId+"')/AttachmentFiles/add(FileName='"+renameUploadFile(file.name)+"')",
 				method: "POST",
 				data: buffer,
 				processData: false,
@@ -346,7 +355,7 @@ function myUpload(){
  */
 function listMyAttachments(qId){
 	$.ajax({
-		url: "../_api/web/lists/getbytitle('ccRequestTracker')/items('"+qId+"')/AttachmentFiles/",
+		url: siteUrl+"/_api/web/lists/getbytitle('ccRequestTracker')/items('"+qId+"')/AttachmentFiles/",
 		type: "GET",
 		headers:{"Accept":"application/json;odata=verbose"},
 		success:function(data, textStatus, xhr){
@@ -397,10 +406,10 @@ function ListAttachmentsClear(){
  */
 function deleteMyAttachment(QID, fileName){
 	$.ajax({
-		url: "../_api/web/lists/getbytitle('ccRequestTracker')/getItemById('"+QID+"')/AttachmentFiles/getByFileName('"+fileName+"')",
+		url: siteUrl+"/_api/web/lists/getbytitle('ccRequestTracker')/getItemById('"+QID+"')/AttachmentFiles/getByFileName('"+fileName+"')",
 		method: "POST",
 		contentType: "application/json;odata=verbose",
-		headers:{
+		headers:{ 
 			"X-RequestDigest": document.getElementById("__REQUESTDIGEST").value,
 			"X-HTTP-Method":"DELETE",
 			"Accept":"application/json;odata=verbose"
@@ -413,6 +422,19 @@ function deleteMyAttachment(QID, fileName){
 			console.log('deleteMyAttachment: Error deleting files');
 		}
 	});
+}
+
+/*
+ * Show selected file name when selected
+ */
+ function setFileName(){
+ 	$('#inputGroupFile03').on('change',function(){
+ 		//get the file name
+        var fieldVal = $(this).val();
+        var fileName = fieldVal.replace("C:\\fakepath\\", "");
+        //replace the "Choose a file" label
+        $(this).next('.custom-file-label').html(fileName);
+    });
 }
 
 /*
@@ -494,7 +516,10 @@ function rowDetailsColHtml(counter,cols){
 		cols +=	'<td><input id="Source'+counter+'" type="text" class="form-control form-control-sm" name="Src' + counter + '"/></td>';
 		cols +=	'<td><input id="RequestCost'+counter+'" type="text" onchange="updateForm(\''+counter+'\')" class="form-control form-control-sm" name="Cost' + counter + '"/></td>';
 		cols +=	'<td><input id="Rate'+counter+'" type="text"     class="form-control form-control-sm" name="Rate' + counter + '"/></td>';
-		cols +=	'<td><input id="DD'+counter+'"   type="checkbox" class="form-control form-control-sm" name="DD' + counter + '" style="border:none;border-radius:0px;"/></td>';
+		
+	  	cols +=	'<td><input id="DD'+counter+'"   type="checkbox"  class="form-control form-control-sm" name="DD' + counter + '" style="border:none;border-radius:0px;"/></td>';
+		//cols +=	'<td><input id="DD'+counter+'"   type="checkbox"  checked data-toggle="toggle"         name="DD' + counter + '" data-on="Yes" data-off="No">';
+		
 		cols +=	'<td><input id="RequestTotal'+counter+'" type="text" class="form-control form-control-sm" name="Total' + counter + '" readonly="readonly"/></td>';
 		cols +=	'<td><input type="button"  id="btnDel-'+counter+'" class="ibtnDel btn btn-sm btn-danger" style="width:100%"  value="&#10060; Delete" onclick="enableDeleteBtn(this)"></td>';
 		return cols;
@@ -612,7 +637,7 @@ function signRequest(reviewStep){
         	/* Close request when J4 Signs */
         	 if (returnedSignatureStep[i].name  === 'j4') {
         	 	closeRequest();
-        	 }
+        	}
         }
     }
 }
@@ -665,6 +690,16 @@ function dValue(myChoice){
 	myChoice === "Dollar" ? value  = "on" : value = "off";
 	return value;
 }
+
+
+/*
+ * Determine dollar/euro
+ */
+function j6Value(myChoice){	
+	myChoice === "Yes" ? value  = "on" : value = "off";
+	return value;
+}
+
 
 /*
  * Disabled upload when a new purchase request is created. 

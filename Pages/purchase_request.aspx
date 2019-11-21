@@ -36,15 +36,14 @@
 	<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
 	<script src="../SiteAssets/js/ccHelper.js" type="text/javascript" ></script>
 	<script src="../SiteAssets/js/emailSend.js" type="text/javascript"></script>
-	<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
-
+	<link  href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
 
 </head>
 <body>
 <form id="form1"  runat="server">		
 <SharePoint:FormDigest  ID="FormDigest1" runat="server"></SharePoint:FormDigest>
 	<div class="container-fluid">
-		<div class="card card-header  m-0 header">
+		<div class="card card-header m-0 header">
 			<div class="row mb-0 text-center">
 				<div class="col-12">
 					<h1 class="h1 font-weight-bold mb-0 card-title ">SPECIAL OPERATIONS COMMAND EUROPE</h1>
@@ -74,123 +73,180 @@
 		<div class="card mb-4 box-shadow">
 			<div class="card-header">Request Details:</div>
 			<div class="card-body">
-				<div class="row mb-0">
-					<div class="col-3" style="text-align:right;">Purchase card type:</div>
-					<div class="col-3">
+
+				<!-- ROW ONE-->	
+				<div class="row">
+					
+					<div class="col-lg-3" style="text-align:right;">
+						<p class="card-text">Requestor:</p>
+					</div>
+					<div class="col-lg-3">
 						<div class="input-group">
+							<div id="bloodhound">
+								<input type="text" class="typeahead form-control shadow-sm" id="Requestor" placeholder="Name Lookup_">
+							</div>
+							<!-- ICON -->
+							<!--
 							<div class="input-group-prepend input-group-sm">
-								<span class="input-group-text" required>
-									<li class="fa fa-credit-card" style="font-size: .5rem;"></li>
+								<span class="input-group-text"  style="font-size: 1em;" required>
+									<li class="fa fa-user"></li>
 								</span>
 							</div>
+							-->
+							<!-- ICON -->
+						</div>
+					</div>
+
+					<div class="col-lg-2" style="text-align:right;">
+						<p class="card-text">Requestor DSN:</p>
+					</div>
+					<div class="col-lg-3">
+						<div class="input-group">
+							<input type="text" class="form-control shadow-sm" id="RequestorDSN" required>
+							<!-- ICON -->
+							<div class="input-group-prepend input-group-sm">
+								<span class="input-group-text" style="font-size: 1em;">
+									<li class="fa fa-phone"></li>
+								</span>
+							</div>
+							<!-- ICON -->
+						</div>
+					</div>
+				</div>
+
+				<!-- ROW TWO -->
+				<div class="row">
+					<div class="col-lg-3" style="text-align:right;">
+						<p class="card-text">Card Type:</p>
+					</div>
+					<div class="col-lg-3">
+						<div class="input-group">
 							<select id="RequestCardType" class="form-control shadow-sm" required>
 								<option value="Select">Please Select</option>
 								<option value="ORF">ORF Card</option>
 								<option value="Standard">Standard Card</option>
 								<option value="Training">Training Card</option>
 							</select>
+							<!-- ICON -->
+							<div class="input-group-prepend input-group-sm">
+								<span class="input-group-text" style="font-size: .66em;" required>
+									<li class="fa fa-credit-card"></li>
+								</span>
+							</div>
+							<!-- ICON -->
 						</div>
 					</div>
-					<div class="col-6">
+					<div class="col-lg-6">
 						<div class="text-danger" id="warnoText"></div>
 					</div>
 				</div>
-					<div class="row mb-0">
-						<div class="col-3" style="text-align:right;">
-							<p class="card-text">Requestor:</p>
-						</div>
-						<div class="col-3">
-							<div class="input-group">
-								<div class="input-group-prepend input-group-sm">
-									<span class="input-group-text" required>
-										<li class="fa fa-user" style="font-size: .7rem;"></li>
-									</span>
-								</div>
-								<div id="bloodhound" style="width: 90%";>
-									<input type="text" class="typeahead form-control shadow-sm" id="Requestor">
-								</div>
+
+				<!-- ROW THREE -->
+				<div class="row">
+					<div class="col-lg-3" style="text-align:right;">
+						<p class="card-text">Card Holder:</p>
+					</div>
+					<div class="col-lg-3">
+						<div class="input-group">
+							<select class="form-control shadow-sm" id="RequestCardHolderName" required>
+								<option  value="Select">Please Select</option>
+							</select>
+							<!-- ICON -->
+							<div class="input-group-prepend input-group-sm">
+								<span class="input-group-text" style="font-size: 1em;" required>
+									<li class="fa fa-user"></li>
+								</span>
 							</div>
-						</div>
-						<div class="col-2" style="text-align:right;">
-							<p class="card-text">Cardholder:</p>
-						</div>
-						<div class="col-3">
-							<div class="input-group">
-								<div class="input-group-prepend input-group-sm">
-									<span class="input-group-text" required><li class="fa fa-user" style="font-size: .7rem;" ></li></span>
-								</div>
-								<select id="RequestCardHolderName" class="form-control shadow-sm" required>
-									<option  value="Select">Please Select</option>
-								</select>
-							</div>
-						</div>
-					</div>			
-					<div class="row mb-0">
-						<div class="col-3" style="text-align:right;">
-							<p class="card-text">Requester DSN:</p>
-						</div>
-						<div class="col-3">
-							<div class="input-group ">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><li class="fa fa-phone" style="font-size: .6rem;"></li></span>
-								</div>
-								<input type="text" class="form-control shadow-sm" id="RequestorDSN" required>
-							</div>
-						</div>
-						<div class="col-2" style="text-align:right;">
-							<p class="card-text">Requesting Directorate:</p>
-						</div>
-						<div class="col-3">
-							<div class="input-group">
-								<div class="input-group-prepend input-group-sm">
-									<span class="input-group-text" required><li class="fa fa-sitemap"  style="font-size: .5rem;"></li></span>
-								</div>
-								<select id="personDirectorate" class="form-control shadow-sm" required>
-									<option value="Select">Please Select</option>
-								</select>
-							</div>
+							<!-- ICON -->
 						</div>
 					</div>
-					<div class="row mb-0">
-						<div class="col-3" style="text-align:right;">
-							<p class="card-text">Date of Request:</p>
-						</div>
-						<div class="col-3">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fa fa-calendar" style="font-size: .5rem;"></i></span>
-								</div>
-								<input type="text" class="form-control shadow-sm" id="RequestDateOfRequest" required>
+
+					<div class="col-lg-2" style="text-align:right;">
+						<p class="card-text">Directorate:</p>
+					</div>
+					<div class="col-lg-3">
+						<div class="input-group">
+							<select id="personDirectorate" class="form-control shadow-sm" required>
+								<option value="Select">Please Select</option>
+							</select>
+							<!-- ICON -->
+							<div class="input-group-prepend input-group-sm">
+								<span class="input-group-text" style="font-size: .8em;" required>
+									<li class="fa fa-sitemap"></li>
+								</span>
 							</div>
+							<!--ICON-->
 						</div>
-						<div class="col-2" style="text-align:right;">
-							<p class="card-text">Funding Source:</p>
-						</div>
-						<div class="col-3">
-							<div class="input-group">
-								<div class="input-group-prepend input-group-sm">
-									<span class="input-group-text" required><i class="fa fa-shopping-bag" style="font-size: .6rem;"></i></span>
-								</div>
-								<select id="RequestSource" class="form-control shadow-sm" required>
-									<option value="Select">Please Select</option>
-								</select>
-							</div>
 					</div>
 				</div>
-				<div class="row mb-0">
-					<div class="col-3" style="text-align:right;">
+
+				<!-- ROW FOUR -->
+				<div class="row">
+						<div class="col-lg-3" style="text-align:right;">
+						<p class="card-text">Request Date:</p>
+					</div>
+					<div class="col-lg-3">
+						<div class="input-group">
+							<input type="text" class="form-control shadow-sm" id="RequestDateOfRequest" required>
+							<!--ICON -->
+							<div class="input-group-prepend input-group-sm">
+								<span class="input-group-text" style="font-size: .77em;">
+									<i class="fa fa-calendar"></i>
+								</span>
+							</div>
+							<!-- ICON -->
+						</div>
+					</div>
+
+					<div class="col-lg-2" style="text-align:right;">
+						<p class="card-text">Funding:</p>
+					</div>
+					<div class="col-lg-3">
+						<div class="input-group">
+							<select id="RequestSource" class="form-control shadow-sm" required>
+								<option value="Select">Please Select</option>
+							</select>
+							<!-- ICON --->
+							<div class="input-group-prepend input-group-sm">
+								<span class="input-group-text" style="font-size: .8em;" required>
+									<i class="fa fa-shopping-bag"></i>
+								</span>
+							</div>
+							<!-- ICON -->
+						</div>
+					</div>
+				</div>
+				
+				<!-- ROX SIX -->
+				<div class="row">
+					<div class="col-lg-3" style="text-align:right;">
 						<p class="card-text">Justification:</p>
 					</div>
-					<div class="col-8">
+					<div class="col-lg-8">
 						<textarea rows="5" id="RequestJustification" class="form-control shadow-sm  form-control-sm" placeholder="Please provide a justification for what you are purchasing" required></textarea>
 					</div>
 				</div>
-				<div class="row mb-2">
-					<div class="col-3" style="text-align:right;">
-						<p class="card-text font-italic">&#10045; What currency will your purchase be in?</p>
+
+				<!-- ROW SEVEN -->
+				<div class="row">
+					<div class="col-lg-3" style="text-align:right;">
+						<p class="card-text font-italic">&#10045; Currency?</p>
 					</div>
-					<div class="col-3">
-						<input id="RequestCurrencyType" type="checkbox"  checked data-toggle="toggle" data-on="$ US Dollar" data-off="&#x20AC; EURO">
+					<div class="col-lg-1">
+						<input id="RequestCurrencyType" type="checkbox"  checked data-toggle="toggle" data-on="USD" data-off="EUR">
+					</div>
+				</div>
+				<hr>
+				<!-- ROW SEVEN -->
+				<div class="row">
+					<div class="col-lg-3" style="text-align:right;">
+						<p class="card-text font-italic">&#10045; J6 Request?</p>
+					</div>
+					<div class="col-lg-1">
+						<input id="RequestIsJ6" type="checkbox"  checked data-toggle="toggle" data-on="Yes" data-off="No">
+					</div>
+					<div class="col-lg-6">
+						Does the purchase include Software, Hardward, or I.T Services?
 					</div>
 				</div>
 			</div>
@@ -212,7 +268,7 @@
 									<th>Row</th>
 									<th>QTY</th>
 									<th style="width:45%">Description</th>
-									<th style="width:15%">Source</th>
+									<th style="width:15%">Vendor</th>
 									<th>Unit Cost</th>
 									<th>Rate</th>
 									<th>DD250</th>
@@ -296,7 +352,7 @@
 		<div class="card">
 			<div class="card-header">Reviewing Process:</div>
 			<div class="card-body">
-				<div class="row mb-0">
+				<div class="row">
 					<div class="container-fluid">
 
 						<!--BEGIN BUTTON ROW-->
@@ -305,13 +361,13 @@
 								<a class="nav-link active" data-toggle="tab" href="#directoratePane"><p id="directorateText">Directorate</p></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#billingOfficialPane"><p id="billingOfficialText">Billing Official</p></a>
+								<a class="nav-link" data-toggle="tab" href="#billingOfficialPane"><p id="billingOfficialText">B.O</p></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" data-toggle="tab" href="#j6Pane"><p id="j6Text"> J6</p></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#propertyBookPane"><p id="propertyBookText">Property Books</p></a>
+								<a class="nav-link" data-toggle="tab" href="#propertyBookPane"><p id="propertyBookText">P.B.O</p></a>
 							</li>
 							<!--
 							<li class="nav-item">
@@ -331,7 +387,7 @@
 								<a class="nav-link" data-toggle="tab" href="#supplyPane"><p id="supplyText">Supply</p></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#j4Pane"><p id="j4Text">Final Review</p></a>
+								<a class="nav-link" data-toggle="tab" href="#j4Pane"><p id="j4Text">Final</p></a>
 							</li>
 						</ul>
 						<!--END BUTTON ROW-->
@@ -381,7 +437,7 @@
 							<div class="tab-pane fade" id="billingOfficialPane">
 								<div class="card"  style="border-top-width:0px;">
 									<div class="card-body">
-										<div class="row mb-0">
+										<div class="row">
 											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
 											</div>
 											<div class="col-9">
@@ -418,7 +474,7 @@
 							<div class="tab-pane fade" id="j6Pane">
 								<div class="card"  style="border-top-width:0px;">
 									<div class="card-body">
-										<div class="row mb-0">
+										<div class="row">
 											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
 											</div>
 											<div class="col-9">
@@ -455,7 +511,7 @@
 							<div class="tab-pane fade" id="propertyBookPane">
 								<div class="card"  style="border-top-width:0px;">
 									<div class="card-body">
-										<div class="row mb-0">
+										<div class="row">
 											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
 											</div>
 											<div class="col-9">
@@ -531,7 +587,7 @@
 							<div class="tab-pane fade" id="j8Pane">
 								<div class="card"  style="border-top-width:0px;">
 									<div class="card-body">
-										<div class="row mb-0">
+										<div class="row">
 											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p></div>
 											<div class="col-9">
 												<textarea rows="5" id="j8Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J8 Comments" required></textarea>
@@ -578,13 +634,13 @@
 							<div class="tab-pane fade" id="cardHolderPane">
 								<div class="card"  style="border-top-width:0px;">
 									<div class="card-body">
-										<div class="row mb-0">
+										<div class="row">
 											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p></div>
 											<div class="col-11">
 												<textarea rows="5" id="cardHolderComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Cardholder Comments" required></textarea>
 											</div>
 										</div>
-										<div class="row mb-0">
+										<div class="row">
 											<div class="col-1" style="text-align:right;"><p class="card-text">Bank Transaction ID:</p></div>
 											<div class="col-11">
 												<input rows="5" id="cardHolderTransactionId" class="form-control shadow-sm  form-control-sm" placeholder="Bank Unique Identifier or Transaction ID i.e., 082030091907319722018-XX-XXXXXX" name="cardHolderTransactionId" required="required"></input>
@@ -608,7 +664,7 @@
 							<div class="tab-pane fade" id="requestorPane">
 								<div class="card"  style="border-top-width:0px;">
 									<div class="card-body">
-										<div class="row mb-0">
+										<div class="row">
 											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
 											</div>
 											<div class="col-11">
@@ -633,7 +689,7 @@
 							<div class="tab-pane" id="supplyPane">
 								<div class="card"  style="border-top-width:0px;">
 									<div class="card-body">
-										<div class="row mb-0">
+										<div class="row">
 											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
 											</div>
 											<div class="col-11">
@@ -658,7 +714,7 @@
 							<div class="tab-pane fade" id="j4Pane">
 								<div class="card"  style="border-top-width:0px;">
 									<div class="card-body">
-										<div class="row mb-0">
+										<div class="row">
 											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p></div>
 											<div class="col-11">
 												<textarea rows="5" id="j4Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J4 Comments" required></textarea>
@@ -705,7 +761,7 @@
 					  <button  id="Form" 	type="button" class="btn btn-secondary" onclick="setUploadType(this.id);">Forms</button>
 					  <button  id="Other" 	type="button" class="btn btn-secondary" onclick="setUploadType(this.id);">Other</button>
 				</div>
-				<button id="uploadingFile" 		style="display: none;" type="button" class="btn btn-sm btn-warning" data-dismiss="modal" disabled=""><i class="fa fa-upload"></i> Uploadig...[please wait]</button>
+				<button id="uploadingFile" 		style="display: none;" type="button" class="btn btn-sm btn-warning" data-dismiss="modal" disabled=""><i class="fa fa-upload"></i> Uploading...[please wait]</button>
 				<button id="uploadedFile" 		style="display: none;" type="button" class="btn btn-sm btn-success" data-dismiss="modal" disabled=""><i class="fa fa-check"></i> Done Uploading</button>
 				<!--
 			 	<button id="uploadedFileDone" 	style="display: none;" type="button" class="btn btn-dark" id="btnclose" data-dismiss="modal">[Close Window]</button>
@@ -785,7 +841,11 @@
 		/*
 		 * Get card holders
 		 */
-		getUserRole();
+		getUser();
+		/*
+		 * Get Card Holder List
+		 */
+		getCardHolder();
 		/*
 		 * Get all SharePoint user 
 		 */
@@ -794,6 +854,10 @@
 	 	 * Load Purchase Request
 		 */
 		loadCCRequestTracker(getCurrentId());
+		/*
+		 * Display name of file selected for upload
+		 */
+		setFileName();
 		/*
 		 * Load datepicker 
 		 */
