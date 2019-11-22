@@ -24,8 +24,6 @@
 		<script src="../SiteAssets/js/toolkit.js"></script>
 		<script src="../SiteAssets/js/application.js"></script>		
 
-		
-
 		<!-- CUSTOM: LIBRARIES -->
 		<script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>

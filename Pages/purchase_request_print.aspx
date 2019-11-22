@@ -37,12 +37,24 @@
 	<script src="../SiteAssets/js/ccHelper.js" type="text/javascript" ></script>
 	<script src="../SiteAssets/js/emailSend.js" type="text/javascript"></script>
 	<link  href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
+	<script type="text/javascript">
+		$body = $("body");
+		/*
+		* Load Splash Screen - wait to load all DOM objects
+		*/
+		$body.addClass("loading");
+	</script>
 
 </head>
 <body>
 <form id="form1"  runat="server">		
 <SharePoint:FormDigest  ID="FormDigest1" runat="server"></SharePoint:FormDigest>
-	<div class="container-fluid">
+	<div class="container">
+		<div class="row mb-0">
+			<div class="col-12">
+				<button type="button" id="closeRequestWindow" class="btn btn-block btn-secondary" onclick="window.print();" value="print">PRINT <i class="fa fa-print"></i></button>
+			</div>
+		</div>
 		<div class="card card-header m-0 header">
 			<div class="row mb-0 text-center">
 				<div class="col-12">
@@ -53,26 +65,17 @@
 		</div>
 	</div>
 	<!--BEGIN BUTTON ROW-->
-	<div class="container-fluid">	
+	<div class="container">	
 		<div class="row mb-1 mb-4 box-shadow">
-			<div class="col-6">
+			<div class="col-12">
 				<div class="progress" id="myRequestProgress" style="height:2rem;"></div>
-			</div>
-			<div class="col-2">
-				<button type="button" class="btn btn-sm btn-block btn-primary" id="btnSaveDraft" value="Draft" title="Save Draft Version"  data-toggle="modal" data-target="#draftModal"><i class="fa fa-save"></i> Save</button>	
-			</div>
-			<div class="col-2">
-				<button type="button" class="btn btn-sm btn-block btn-success" id="btnSubmitRequest" value="Submit"  title="Create a draft version before submitting" data-toggle="modal" data-target="#submitModal"><i class="fa fa-upload"></i> Submit</button>	
-			</div>
-			<div class="col-2">
-				<button type="button" class="btn btn-sm btn-block btn-secondary" id="btnViewPrint" value="Submit"  title="Print Version"><i class="fa fa-upload"></i> View Print Version</button>	
 			</div>
 		</div>
 	</div>
 	<!--END BUTTON ROW-->
 	
 	<!--BEGIN REQUEST SECTION-->
-	<div class="container-fluid">
+	<div class="container">
 		<div class="card mb-4 box-shadow">
 			<div class="card-header">Request Details:</div>
 			<div class="card-body">
@@ -86,17 +89,8 @@
 					<div class="col-lg-3">
 						<div class="input-group">
 							<div id="bloodhound">
-								<input type="text" class="typeahead form-control shadow-sm" id="Requestor" placeholder="Name Lookup_">
+								<input type="text" class="typeahead form-control shadow-sm" id="Requestor" placeholder="Name Lookup_" disabled="disabled">
 							</div>
-							<!-- ICON -->
-							<!--
-							<div class="input-group-prepend input-group-sm">
-								<span class="input-group-text"  style="font-size: 1em;" required>
-									<li class="fa fa-user"></li>
-								</span>
-							</div>
-							-->
-							<!-- ICON -->
 						</div>
 					</div>
 
@@ -105,7 +99,7 @@
 					</div>
 					<div class="col-lg-3">
 						<div class="input-group">
-							<input type="text" class="form-control shadow-sm" id="RequestorDSN" required>
+							<input type="text" class="form-control shadow-sm" id="RequestorDSN" required disabled="disabled">
 							<!-- ICON -->
 							<div class="input-group-prepend input-group-sm">
 								<span class="input-group-text" style="font-size: 1em;">
@@ -124,7 +118,7 @@
 					</div>
 					<div class="col-lg-3">
 						<div class="input-group">
-							<select id="RequestCardType" class="form-control shadow-sm" required>
+							<select id="RequestCardType" class="form-control shadow-sm" required disabled="disabled">
 								<option value="Select">Please Select</option>
 								<option value="ORF">ORF Card</option>
 								<option value="Standard">Standard Card</option>
@@ -151,7 +145,7 @@
 					</div>
 					<div class="col-lg-3">
 						<div class="input-group">
-							<select class="form-control shadow-sm" id="RequestCardHolderName" required>
+							<select class="form-control shadow-sm" id="RequestCardHolderName" required disabled="disabled"> 
 								<option  value="Select">Please Select</option>
 							</select>
 							<!-- ICON -->
@@ -169,7 +163,7 @@
 					</div>
 					<div class="col-lg-3">
 						<div class="input-group">
-							<select id="personDirectorate" class="form-control shadow-sm" required>
+							<select id="personDirectorate" class="form-control shadow-sm" required disabled="disabled">
 								<option value="Select">Please Select</option>
 							</select>
 							<!-- ICON -->
@@ -190,7 +184,7 @@
 					</div>
 					<div class="col-lg-3">
 						<div class="input-group">
-							<input type="text" class="form-control shadow-sm" id="RequestDateOfRequest" required>
+							<input type="text" class="form-control shadow-sm" id="RequestDateOfRequest" required disabled="disabled">
 							<!--ICON -->
 							<div class="input-group-prepend input-group-sm">
 								<span class="input-group-text" style="font-size: .77em;">
@@ -206,7 +200,7 @@
 					</div>
 					<div class="col-lg-3">
 						<div class="input-group">
-							<select id="RequestSource" class="form-control shadow-sm" required>
+							<select id="RequestSource" class="form-control shadow-sm" required disabled="disabled">
 								<option value="Select">Please Select</option>
 							</select>
 							<!-- ICON --->
@@ -226,7 +220,7 @@
 						<p class="card-text">Justification:</p>
 					</div>
 					<div class="col-lg-8">
-						<textarea rows="5" id="RequestJustification" class="form-control shadow-sm  form-control-sm" placeholder="Please provide a justification for what you are purchasing" required></textarea>
+						<textarea rows="5" id="RequestJustification" class="form-control shadow-sm  form-control-sm" placeholder="Please provide a justification for what you are purchasing" required disabled="disabled"></textarea>
 					</div>
 				</div>
 
@@ -236,7 +230,7 @@
 						<p class="card-text font-italic">&#10045; Currency?</p>
 					</div>
 					<div class="col-lg-1">
-						<input id="RequestCurrencyType" type="checkbox"  checked data-toggle="toggle" data-on="USD" data-off="EUR">
+						<input id="RequestCurrencyType" type="checkbox"  checked data-toggle="toggle" data-on="USD" data-off="EUR" disabled="disabled">
 					</div>
 				</div>
 				<hr>
@@ -246,7 +240,7 @@
 						<p class="card-text font-italic">&#10045; J6 Request?</p>
 					</div>
 					<div class="col-lg-1">
-						<input id="RequestIsJ6" type="checkbox"  checked data-toggle="toggle" data-on="Yes" data-off="No">
+						<input id="RequestIsJ6" type="checkbox"  checked data-toggle="toggle" data-on="Yes" data-off="No" disabled="disabled">
 					</div>
 					<div class="col-lg-6">
 						Does the purchase include Software, Hardward, or I.T Services?
@@ -259,7 +253,7 @@
 			
 	
 	<!--BEGIN PURCHASE DETAILS SECTION-->
-	<div class="container-fluid">
+	<div class="container">
 		<div class="card mb-4 box-shadow">
 			<div class="card-header">Purchase Details:</div>
 			<div class="card-body">
@@ -290,7 +284,7 @@
 								</tr>
 								<tr>
 									<td colspan="6"></td>
-									<td colspan="2"><button type="button" class="btn btn-block btn-success" id="btnAddRow" value="Add a Row"> <i class="fa fa-plus"> Add Row</i></button></td>
+									<td colspan="2"></td>
 								</tr>
 							</tfoot>
 						</table>
@@ -302,43 +296,30 @@
 	<!--END PURCHASE DETAILS SECTION-->
 			
 	<!--BEGIN SECTION FOR THE ATTACHMENTS-->
-	<div class="container-fluid">
+	<div class="container">
 		<div class="card mb-4 box-shadow">
 			<div class="card-header">Attachments:</div>
 			<div class="card-body">
-				<div class="row mb-0">
-					<div class="col-4">
-						<h6 class="h6 border-bottom mb-0">Upload Attachment:</h6>
-						<div class="input-group">						
-							<div class="custom-file">
-								<input type="file" class="custom-file-input" id="inputGroupFile03">
-								<label class="custom-file-label" for="inputGroupFile03">Choose File</label>
-							</div>	
-							<div class="input-group-append">
-								<button type="button" value="Upload File" class="btn btn-outline-secondary" id="btnSaveUpload" title="Create a draft version before uploading" 
-								data-toggle="modal" data-target="#uploadModal"><i class="fa fa-cloud-upload"></i> Start Upload</button>
-							</div>					
-						</div>
-					</div>
-					<div class="col-2">
+				<div class="row">
+					<div class="col-3">
 						<div class="hr-divider mb-3">
 							<h3 class="hr-divider-content hr-divider-heading">Quotes:</h3>
 						</div>	
 						<ul id="Quote" class="list-spaced  list-group"></ul>
 					</div>
-					<div class="col-2">
+					<div class="col-3">
 						<div class="hr-divider mb-3">
 							<h3 class="hr-divider-content hr-divider-heading">Receipts:</h3>
 						</div>
 						<ul id="Receipt" class="list-spaced  list-group"></ul>
 					</div>
-					<div class="col-2">
+					<div class="col-3">
 						<div class="hr-divider mb-3">
 							<h3 class="hr-divider-content hr-divider-heading">Forms:</h3>
 						</div>
 						<ul id="Form" class="list-spaced  list-group"></ul>
 					</div>
-					<div class="col-2">
+					<div class="col-3">
 						<div class="hr-divider mb-3">
 							<h3 class="hr-divider-content hr-divider-heading">Other:</h3>
 						</div>
@@ -351,76 +332,32 @@
 	<!--END SECTION FOR THE ATTACHMENTS-->
 		
 	<!-- START: APPROVAL TABS -->
-	<div class="container-fluid">
+	<div class="container">
 		<div class="card">
 			<div class="card-header">Reviewing Process:</div>
 			<div class="card-body">
 				<div class="row">
-					<div class="container-fluid">
-
-						<!--BEGIN BUTTON ROW-->
-						<ul class="nav nav-tabs col-12 nav-justified">
-							<li class="nav-item active">
-								<a class="nav-link active" data-toggle="tab" href="#directoratePane"><p id="directorateText">Directorate</p></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#billingOfficialPane"><p id="billingOfficialText">B.O</p></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#j6Pane"><p id="j6Text"> J6</p></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#propertyBookPane"><p id="propertyBookText">P.B.O</p></a>
-							</li>
-							<!--
-							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#budgetOfficerPane"><p id="budgetOfficerText">Budget Officer</p></a>
-							</li>
-							-->
-							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#j8Pane"><p id="j8Text">J8</p></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#cardHolderPane"><p id="cardHolderText">Card Holder</p></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#requestorPane"><p id="requestorText">Requestor</p></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#supplyPane"><p id="supplyText">Supply</p></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#j4Pane"><p id="j4Text">Final</p></a>
-							</li>
-						</ul>
-						<!--END BUTTON ROW-->
-
-					</div>
-					<div class="container-fluid">		
+					<div class="container">		
 						<div class="tab-content">
 
 							<!--BEGIN DIRECTORATE APPROVAL SECTION-->
 							<div class="tab-pane active" id="directoratePane">
 								<div class="card" style="border-top-width:0px;">
+									<div class="card-header">
+										Director Comments 
+									</div>
 									<div class="card-body">
 										<div class="row mb-0">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
-											</div>
 											<div class="col-9">
-												<textarea rows="5" id="directorateComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Financial Director Comments" required></textarea>
+												<textarea rows="5" id="directorateComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Financial Director Comments" required disabled="disabled" ></textarea>
 												
 												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="directorateSignature" id="directorateSignature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnDirectorateSign" value="directorate" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="directorateSignature" id="directorateSignature" placeholder="Signature" disabled="disabled">
 												</div>	
 											</div>
-											<div class="col-2">
+											<div class="col-3">
 												<div class="input-group mb-3">
-												  <select class="custom-select" id="directorateReview">
+												  <select class="custom-select" id="directorateReview" disabled="disabled">
 												    <option selected>Choose...</option>
 												    <option value="Approved">Approved</option>
 												    <option value="Declined">Declined</option>
@@ -437,27 +374,23 @@
 							<!--END DIRECTORATE APPROVAL SECTION-->	
 
 							<!--BEGIN BO APPROVAL SECTION-->
-							<div class="tab-pane fade" id="billingOfficialPane">
+							<div class="tab-pane active" id="billingOfficialPane">
 								<div class="card"  style="border-top-width:0px;">
+									<div class="card-header">
+										Billing Official Comments 
+									</div>
 									<div class="card-body">
 										<div class="row">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
-											</div>
 											<div class="col-9">
-												<textarea rows="5" id="boComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Billing Official Comments" required></textarea>
+												<textarea rows="5" id="boComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Billing Official Comments" required disabled="disabled"></textarea>
 											
 												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="boSignature" id="boSignature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnBoSign" value="bo" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="boSignature" id="boSignature" placeholder="Signature" disabled="disabled">
 												</div>
 											</div>
-											<div class="col-2" style="text-align:right;">
+											<div class="col-3" style="text-align:right;">
 												<div class="input-group mb-3">
-												  <select class="custom-select" id="boReview">
+												  <select class="custom-select" id="boReview" disabled="disabled">
 												    <option selected>Choose...</option>
 												    <option value="Approved">Approved</option>
 												    <option value="Declined">Declined</option>
@@ -474,27 +407,23 @@
 							<!--END BO APPROVAL SECTION-->	
 
 							<!--BEGIN J6 APPROVAL SECTION-->
-							<div class="tab-pane fade" id="j6Pane">
+							<div class="tab-pane active" id="j6Pane">
 								<div class="card"  style="border-top-width:0px;">
+									<div class="card-header">
+										J6 Comments
+									</div>
 									<div class="card-body">
 										<div class="row">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
-											</div>
 											<div class="col-9">
-												<textarea rows="5" id="j6Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J6 Comments" required></textarea>
+												<textarea rows="5" id="j6Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J6 Comments" required disabled="disabled"></textarea>
 											
 												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="j6Signature" id="j6Signature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnJ6Sign" value="j6" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="j6Signature" id="j6Signature" placeholder="Signature" disabled="disabled">
 												</div>
 											</div>
-											<div class="col-2" style="text-align:right;">
+											<div class="col-3" style="text-align:right;">
 												<div class="input-group mb-3">
-												  <select class="custom-select" id="j6Review">
+												  <select class="custom-select" id="j6Review" disabled="disabled">
 												    <option selected>Choose...</option>
 												    <option value="Approved">Approved</option>
 												    <option value="Declined">Declined</option>
@@ -511,27 +440,23 @@
 							<!--END J6 APPROVAL SECTION-->
 				
 							<!--BEGIN PBO APPROVAL SECTION-->
-							<div class="tab-pane fade" id="propertyBookPane">
+							<div class="tab-pane active" id="propertyBookPane">
 								<div class="card"  style="border-top-width:0px;">
+									<div class="card-header">
+										PBO Comments
+									</div>
 									<div class="card-body">
 										<div class="row">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
-											</div>
 											<div class="col-9">
-												<textarea rows="5" id="pboComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide PBO  Comments" required></textarea>
+												<textarea rows="5" id="pboComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide PBO  Comments" required disabled="disabled"></textarea>
 
 												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="pboSignature" id="pboSignature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button"  id="btnPboSign" value="pbo" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="pboSignature" id="pboSignature" placeholder="Signature" disabled="disabled">	
 												</div>	
 											</div>
-											<div class="col-2" style="text-align:right;">
+											<div class="col-3" style="text-align:right;">
 												<div class="input-group mb-3">
-												  <select class="custom-select" id="pboReview">
+												  <select class="custom-select" id="pboReview" disabled="disabled">
 												    <option selected>Choose...</option>
 												    <option value="Approved">Approved</option>
 												    <option value="Declined">Declined</option>
@@ -587,27 +512,19 @@
 							<!--END BUDGET OFFICER APPROVAL SECTION-->	
 
 							<!--BEGIN J8 APPROVAL SECTION-->
-							<div class="tab-pane fade" id="j8Pane">
+							<div class="tab-pane active" id="j8Pane">
 								<div class="card"  style="border-top-width:0px;">
+									<div class="card-header">
+										J8 Comments
+									</div>
 									<div class="card-body">
 										<div class="row">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p></div>
 											<div class="col-9">
-												<textarea rows="5" id="j8Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J8 Comments" required></textarea>
-
-												<!-- SIGN OPTION -->
-												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="j8Signature" id="j8Signature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnJ8Sign" value="j8" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
-												</div>
+												<textarea rows="5" id="j8Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J8 Comments" required disabled="disabled"></textarea>
 											</div>
-											<div class="col-2">
+											<div class="col-3">
 												<div class="input-group mb-3">
-												  <select class="custom-select" id="j8FiscalYear">
+												  <select class="custom-select" id="j8FiscalYear" disabled="disabled">
 												    <option selected>Choose...</option>
 												  </select>
 												  <div class="input-group-append">
@@ -615,7 +532,7 @@
 												  </div>
 												</div>
 												<div class="input-group mb-3">
-												  <select class="custom-select" id="j8Quater">
+												  <select class="custom-select" id="j8Quater" disabled="disabled">
 												    <option selected>Choose...</option>
 												    <option value="Q1">Q1</option>
 												    <option value="Q2">Q2</option>
@@ -634,27 +551,23 @@
 							<!--END J8 APPROVAL SECTION-->	
 				
 							<!--BEGIN CARD HOLDER APPROVAL SECTION-->
-							<div class="tab-pane fade" id="cardHolderPane">
+							<div class="tab-pane active" id="cardHolderPane">
 								<div class="card"  style="border-top-width:0px;">
+									<div class="card-header">
+										Card Holder Comments
+									</div>
 									<div class="card-body">
 										<div class="row">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p></div>
-											<div class="col-11">
-												<textarea rows="5" id="cardHolderComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Cardholder Comments" required></textarea>
+											<div class="col-12">
+												<textarea rows="5" id="cardHolderComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Cardholder Comments" required disabled="disabled"></textarea>
 											</div>
 										</div>
 										<div class="row">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Bank Transaction ID:</p></div>
-											<div class="col-11">
-												<input rows="5" id="cardHolderTransactionId" class="form-control shadow-sm  form-control-sm" placeholder="Bank Unique Identifier or Transaction ID i.e., 082030091907319722018-XX-XXXXXX" name="cardHolderTransactionId" required="required"></input>
-
+											<div class="col-12">
+												<input rows="5" id="cardHolderTransactionId" class="form-control shadow-sm  form-control-sm" placeholder="Bank Unique Identifier or Transaction ID i.e., 082030091907319722018-XX-XXXXXX" name="cardHolderTransactionId" required="required" disabled="disabled"></input>
 												<!-- SIGN OPTION -->
 												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="cardHolderSignature" id="cardHolderSignature" placeholder="Card Holder Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnCardHolderSign" value="cardholder" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="cardHolderSignature" id="cardHolderSignature" placeholder="Card Holder Signature" disabled="disabled">
 												</div>
 											</div>
 										</div>
@@ -664,21 +577,18 @@
 							<!--END CARD HOLDER APPROVAL SECTION-->
 
 							<!--BEGIN REQUESTOR APPROVAL SECTION-->
-							<div class="tab-pane fade" id="requestorPane">
+							<div class="tab-pane active" id="requestorPane">
 								<div class="card"  style="border-top-width:0px;">
+									<div class="card-header">
+										Requestor Comments
+									</div>
 									<div class="card-body">
 										<div class="row">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
-											</div>
-											<div class="col-11">
-												<textarea rows="5" id="requestorComments" class="form-control shadow-sm  form-control-sm" placeholder="Requestor Comments" required></textarea>
-											
+											<div class="col-12">
+												<textarea rows="5" id="requestorComments" class="form-control shadow-sm  form-control-sm" placeholder="Requestor Comments" required disabled="disabled"></textarea>
+
 												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="requestorSignature" id="requestorSignature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnRequestorSign" value="requestor" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="requestorSignature" id="requestorSignature" placeholder="Signature" disabled="disabled">
 												</div>
 											</div>
 										</div>
@@ -689,22 +599,17 @@
 
 
 							<!--BEGIN SUPPLY APPROVAL SECTION-->
-							<div class="tab-pane" id="supplyPane">
+							<div class="tab-pane active" id="supplyPane">
 								<div class="card"  style="border-top-width:0px;">
+									<div class="card-header">
+										SOHC Comments
+									</div>
 									<div class="card-body">
 										<div class="row">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
-											</div>
-											<div class="col-11">
-												<textarea rows="5" id="supplyComments" class="form-control shadow-sm  form-control-sm" placeholder="SOHC Supply Comments" required></textarea>
-											
+											<div class="col-12">
+												<textarea rows="5" id="supplyComments" class="form-control shadow-sm  form-control-sm" placeholder="SOHC Supply Comments" required disabled="disabled"></textarea>
 												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="supplySignature" id="supplySignature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnSupplySign" value="supply" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="supplySignature" id="supplySignature" placeholder="Signature" disabled="disabled">
 												</div>
 											</div>
 										</div>
@@ -714,21 +619,18 @@
 							<!--END SUPPLY APPROVAL SECTION-->		
 
 							<!--BEGIN J4 APPROVAL SECTION-->
-							<div class="tab-pane fade" id="j4Pane">
+							<div class="tab-pane active" id="j4Pane">
 								<div class="card"  style="border-top-width:0px;">
+									<div class="card-header">
+										J4 Comments
+									</div>
 									<div class="card-body">
 										<div class="row">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p></div>
-											<div class="col-11">
-												<textarea rows="5" id="j4Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J4 Comments" required></textarea>
-
+											<div class="col-12">
+												<textarea rows="5" id="j4Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J4 Comments" required disabled="disabled"></textarea>
 												<!-- SIGN OPTION -->
 												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="j4Signature" id="j4Signature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnJ4Sign" value="j4" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign and Close
-												 		</button>
-												  	</div>
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="j4Signature" id="j4Signature" placeholder="Signature" disabled="disabled">
 												</div>
 											</div>
 										</div>
@@ -739,7 +641,7 @@
 				
 							<div class="row mb-0">
 								<div class="col-12">
-									<button type="button" id="closeRequestWindow" class="btn btn-block btn-secondary" id="btnCancelRequest" value="&#10060; Cancel">Close & Exit</button>
+									<button type="button" id="closeRequestWindow" class="btn btn-block btn-secondary" onclick="window.print();" value="print">PRINT <i class="fa fa-print"></i></button>
 								</div>
 							</div>
 						</div>
@@ -823,7 +725,8 @@
 </form>
 </body>
 <!-- START: FOOTER SCRIPTS-->
-<script type="text/javascript">	
+<script type="text/javascript">
+	$body = $("body");
 	$(document).ready(function(){
 		/*
 		 * Change card message base on card type
@@ -866,41 +769,31 @@
 		 */
 		$("#RequestDateOfRequest").datepicker();
 		/*
-		 * Save form data 
-		 */
-		$("#btnSaveDraft").click(function(){			
-		    submitDraft();
-		});	
 		/*
 		 * Submit
 		 */
-		$("#btnSubmitRequest").click(function(){			
+		$("#btnViewPrint").click(function(){			
 			submitRequest();
 			processSendEmails('submit');
-		});
-		/*
-		 * Print 
-		 */
-		 $("#btnViewPrint").click(function(){			
-			setPrintViewRedirect(qId,'_blank')
 		});
 		/* 
 		 * Disable all Sign buttons 
 		 */	
-		signatureRequired(); 
+		signatureRequired();
 		/*
-		 * Start Signature proces
-		 */	
-		$("#btnBoSign, #btnJ6Sign , #btnPboSign, #btnDirectorateSign, #btnJ8Sign, #btnCardHolderSign, #btnRequestorSign, #btnSupplySign, #btnJ4Sign, #btnBudgetOfficerSign").click(function(){
-			signRequest($(this).attr('value'));
-			processSendEmails($(this).attr('value'));
-			setApprovalProcess($(this).attr('value'));
-			closeModal($(this).attr('value'));
-		});
-		$('#closeRequestWindow').click(function(){
-			window.top.close();
-		});
+		 * Hide all delete buttons
+		 */
+		 setTimeout(function() {
+			$("input[id^='btnDel']").hide();
+		},1000);
+		/*
+	 	 * Wait and remove Splash screen when all elements are loaded
+ 		 */
+ 		 setTimeout(function() {
+			$body.removeClass("loading");
+		},5000);  
 	});
 
 </script>
+<div class="modal"><!-- MODAL PAGE--></div>
 </html>	

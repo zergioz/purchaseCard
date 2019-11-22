@@ -251,7 +251,7 @@ function getFiscalInformation(jsonData,type){
 	if (typeof jsonData !== 'undefined' && jsonData !== null){
 		var parsedReturn;
 	 	var parsedJson = JSON.parse(jsonData);
-		type = 'year' ? parsedReturn = parsedJson.j8FiscalYear : parsedReturn = parsedJson.j8Quater;
+		type === 'year' ? parsedReturn = parsedJson.j8FiscalYear : parsedReturn = parsedJson.j8Quater;
 	} else {
 		parsedReturn = "Pending";
 	}
@@ -328,10 +328,15 @@ function setUserInformationRedirect(userId){
 /*
  *	get user user information based on provided id
  */
-function setRequestInformationRedirect(userId,redirectArgument){
-	window.open("../Pages/purchase_request"+fileExt+"?id="+userId,'_blank');
+function setRequestInformationRedirect(requestId,redirectArgument){
+	window.open("../Pages/purchase_request"+fileExt+"?id="+requestId,'_blank');
 }
-
+/*
+ *	get user user information based on provided id
+ */
+function setPrintViewRedirect(requestId,redirectArgument){
+	window.open("../Pages/purchase_request_print"+fileExt+"?id="+requestId,'_blank');
+}
 /*
  *  Redirect user to defined url
  */

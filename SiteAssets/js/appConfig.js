@@ -27,11 +27,10 @@ var  personType			= 	[
 								"SUPPLY"
 							];
 var  personRank      	= 	[ 
-								"CIV", "CTR", "AMN/E2", "A1C/E3", "SRA/E4", "SSGT/E5", "TSGT/E6", "MSGT/E7", "SMSGT/E8", "PV2/E2", 
-								"PFC/E3","SPC/E4", "SGT/E5", "SFC/E7", "MSG/E8", "SGM/E9", "CSM/E9", "PFC/E2", "LCPL/E3", "CPL/E4", 
-								"GYSGT/E7", "MSGT/E8", "MGYSGT/E9", "SA/E2", "SN/E3", "P03/E4", "P02/E5", "P01/E6", "CPO/E7", "MCPO/E9", 
-								"CMC/E9", "2LT/01", "1LT/02", "CAPT/03", "MAJ/04", "LTC/05", "COL/06", "ENS/01", "LTJG/02", "LT/03", 
-								"LCDR/04", "CDR/05", "CAPT/06", "CWO-2", "CWO-3", "CWO-4", "CWO-5" ];
+								"1LT/02", "2LT/01", "A1C/E3", "AMN/E2","CAPT/03", "CAPT/06", "CDR/05", "CIV", "CMC/E9", "COL/06", "CPL/E4", 
+								"CPO/E7", "CSM/E9", "CTR", "CWO-2", "CWO-3", "CWO-4","CWO-5","ENS/01","GYSGT/E7","LCDR/04","LCPL/E3","LT/03",
+								"LTC/05", "LTJG/02","MAJ/04", "MCPO/E9", "MGYSGT/E9", "MSG/E8", "MSGT/E7", "MSGT/E8", "P01/E6", "P02/E5", "P03/E4",
+								"PFC/E2", "PFC/E3", "PV2/E2", "SA/E2", "SFC/E7", "SSG/E6", "SGM/E9", "SGT/E5", "SMSGT/E8", "SN/E3", "SPC/E4", "SRA/E4", "SSGT/E5", "TSGT/E6"];
 var  personDirectorate 	=   [ 	
 								"J1", "J2", "J3", "J4", "J5", "J6", "J8", 
 								"JOG-E", "JSOAC-E", "SSD", "SOPA", "SOJA", 
