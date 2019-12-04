@@ -21,7 +21,6 @@
 	<script src="../SiteAssets/js/jquery.tablesorter.js"></script>
 	<script src="../SiteAssets/js/jquery.tablesorter.widgets.js"></script>
 	<script src="../SiteAssets/js/jquery.tablesorter.pager.js"></script>
-	<script src="../SiteAssets/js/angular.min.js" type="text/javascript"></script>
 	<script src="../SiteAssets/bootstrap-4.3.1/js/bootstrap.min.js"></script>	
 	<script src="../SiteAssets/js/popper.min.js"></script>
 	<script src="../SiteAssets/js/chart.js"></script>
@@ -31,7 +30,6 @@
       
     <!-- CUSTOM: LIBRARIES -->
     <script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
-	<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>
 	<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
 	<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
 	<script src="../SiteAssets/js/ccHelper.js" type="text/javascript" ></script>
@@ -342,7 +340,7 @@
 
 							<!--BEGIN DIRECTORATE APPROVAL SECTION-->
 							<div class="tab-pane active" id="directoratePane">
-								<div class="card" style="border-top-width:0px;">
+								<div class="card  mb-4 box-shadow" style="border-top-width:0px;">
 									<div class="card-header">
 										Director Comments 
 									</div>
@@ -375,7 +373,7 @@
 
 							<!--BEGIN BO APPROVAL SECTION-->
 							<div class="tab-pane active" id="billingOfficialPane">
-								<div class="card"  style="border-top-width:0px;">
+								<div class="card  mb-4 box-shadow"  style="border-top-width:0px;">
 									<div class="card-header">
 										Billing Official Comments 
 									</div>
@@ -408,7 +406,7 @@
 
 							<!--BEGIN J6 APPROVAL SECTION-->
 							<div class="tab-pane active" id="j6Pane">
-								<div class="card"  style="border-top-width:0px;">
+								<div class="card  mb-4 box-shadow"  style="border-top-width:0px;">
 									<div class="card-header">
 										J6 Comments
 									</div>
@@ -441,7 +439,7 @@
 				
 							<!--BEGIN PBO APPROVAL SECTION-->
 							<div class="tab-pane active" id="propertyBookPane">
-								<div class="card"  style="border-top-width:0px;">
+								<div class="card  mb-4 box-shadow"  style="border-top-width:0px;">
 									<div class="card-header">
 										PBO Comments
 									</div>
@@ -474,8 +472,8 @@
 
 							<!--BEGIN BUDGET OFFICER APPROVAL SECTION-->
 							<!--
-							<div class="tab-pane fade" id="budgetOfficerPane">
-								<div class="card" style="border-top-width:0px;">
+							<div class="tab-pane active" id="budgetOfficerPane">
+								<div class="card  mb-4 box-shadow" style="border-top-width:0px;">
 									<div class="card-body">
 										<div class="row mb-0">
 											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
@@ -513,7 +511,7 @@
 
 							<!--BEGIN J8 APPROVAL SECTION-->
 							<div class="tab-pane active" id="j8Pane">
-								<div class="card"  style="border-top-width:0px;">
+								<div class="card  mb-4 box-shadow"  style="border-top-width:0px;">
 									<div class="card-header">
 										J8 Comments
 									</div>
@@ -552,7 +550,7 @@
 				
 							<!--BEGIN CARD HOLDER APPROVAL SECTION-->
 							<div class="tab-pane active" id="cardHolderPane">
-								<div class="card"  style="border-top-width:0px;">
+								<div class="card  mb-4 box-shadow"  style="border-top-width:0px;">
 									<div class="card-header">
 										Card Holder Comments
 									</div>
@@ -578,7 +576,7 @@
 
 							<!--BEGIN REQUESTOR APPROVAL SECTION-->
 							<div class="tab-pane active" id="requestorPane">
-								<div class="card"  style="border-top-width:0px;">
+								<div class="card  mb-4 box-shadow"  style="border-top-width:0px;">
 									<div class="card-header">
 										Requestor Comments
 									</div>
@@ -600,7 +598,7 @@
 
 							<!--BEGIN SUPPLY APPROVAL SECTION-->
 							<div class="tab-pane active" id="supplyPane">
-								<div class="card"  style="border-top-width:0px;">
+								<div class="card  mb-4 box-shadow"  style="border-top-width:0px;">
 									<div class="card-header">
 										SOHC Comments
 									</div>
@@ -620,7 +618,7 @@
 
 							<!--BEGIN J4 APPROVAL SECTION-->
 							<div class="tab-pane active" id="j4Pane">
-								<div class="card"  style="border-top-width:0px;">
+								<div class="card  mb-4 box-shadow"  style="border-top-width:0px;">
 									<div class="card-header">
 										J4 Comments
 									</div>
@@ -745,10 +743,6 @@
 		 */
 		getFiscalYear();
 		/*
-		 * Get card holders
-		 */
-		getUser();
-		/*
 		 * Get Card Holder List
 		 */
 		getCardHolder();
@@ -784,16 +778,10 @@
 		 * Hide all delete buttons
 		 */
 		 setTimeout(function() {
-			$("input[id^='btnDel']").hide();
-		},1000);
-		/*
-	 	 * Wait and remove Splash screen when all elements are loaded
- 		 */
- 		 setTimeout(function() {
-			$body.removeClass("loading");
-		},5000);  
+			$("input[id^='btnDel']").remove();
+		},3000);
 	});
 
 </script>
-<div class="modal"><!-- MODAL PAGE--></div>
+<div class="modalLoad"><!-- MODAL PAGE--></div>
 </html>	

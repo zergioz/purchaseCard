@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -17,7 +17,6 @@
 		<script src="../SiteAssets/js/jquery.tablesorter.js"></script>
 		<script src="../SiteAssets/js/jquery.tablesorter.widgets.js"></script>
 		<script src="../SiteAssets/js/jquery.tablesorter.pager.js"></script>
-		<script src="../SiteAssets/js/angular.min.js" type="text/javascript"></script>
 		<script src="../SiteAssets/bootstrap-4.3.1/js/bootstrap.min.js"></script>	
 		<script src="../SiteAssets/js/popper.min.js"></script>
 		<script src="../SiteAssets/js/chart.js"></script>
@@ -26,13 +25,10 @@
 
 		<!-- CUSTOM: LIBRARIES -->
 		<script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
-		<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
-		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
 		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
-
 	</head>
-	<body ng-app="">
+	<body class="loading">
 		<!-- START: BODY -->
 		<div class="container-fluid">
 			<div class="row">
@@ -48,13 +44,13 @@
 						<div class="collapse nav-toggleable-md" id="nav-toggleable-md">
 							<ul class="nav nav-pills nav-stacked flex-column">
 								<li class="nav-header">Users</li>
-								<li class="nav-item"><a class="nav-link" href="cc_user_list.aspx">Users Overview</a></li>
-								<li class="nav-item"><a class="nav-link" href="cc_user_add.aspx">Add User</a></li>
+								<li class="nav-item"><a class="nav-link" href="cc_user_list.html">Users Overview</a></li>
+								<li class="nav-item"><a class="nav-link" href="cc_user_add.html">Add User</a></li>
 								<li class="nav-header">Requests</li>
-								<li class="nav-item"><a class="nav-link active" href="cc_purchase_request_list.aspx">Request Status</a></li>
-								<li class="nav-item"><a class="nav-link" href="purchase_request.aspx" target="_blank">Submit Request</a></li>
+								<li class="nav-item"><a class="nav-link active" href="cc_purchase_request_list.html">Request Status</a></li>
+								<li class="nav-item"><a class="nav-link" href="purchase_request.html" target="_blank">Submit Request</a></li>
 								<li class="nav-header">Documentation & Other</li>
-								<li class="nav-item"><a class="nav-link" href="../Shared%20Documents/Forms/AllItems.aspx" target="_blank">Documentation</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Shared%20Documents/Forms/AllItems.html" target="_blank">Documentation</a></li>
 								<li class="nav-item"><a class="nav-link" href="#">Other</a></li>
 							</ul>
 							<div class="hr-divider mt-5 mb-3">
@@ -160,7 +156,7 @@
 						</div>
 					</div>
 					<!-- END: QUICK STATS -->
-				<hr class="visible-xs mt-3">
+					<hr class="visible-xs mt-3">
 				</div>
 				<!-- END: SIDEBAR -->
 				
@@ -184,24 +180,24 @@
 						
 						<!-- CONTENT: TABLE STARTS -->
 						<div class="card-body">
-						<div class="table-responsive">
-							<table class="table table-hover tablesorter"  id="myTable">
-								<thead>
-									<tr>
-										<th style="text-align:left">Request Id</th>
-										<th style="text-align:left">Requestor</th>
-										<th style="text-align:left">Directorate</th>
-										<th style="text-align:left">Fiscal Year</th>
-										<th style="text-align:left">Quater</th>
-										<th style="text-align:left">Justification</th>
-										<th style="text-align:left">Status</th>
-									</tr>
-								</thead>
-								<tbody id="usersList">
-									<!-- JS APPENDING -->
-								</tbody>
-							</table>
-						</div>
+							<div class="table-responsive">
+								<table class="table table-hover tablesorter"  id="myTable">
+									<thead>
+										<tr>
+											<th style="text-align:left">Id</th>
+											<th style="text-align:left">Requestor</th>
+											<th style="text-align:left">Directorate</th>
+											<th style="text-align:left">FY</th>
+											<th style="text-align:left">Qt</th>
+											<th style="text-align:left">Justification</th>
+											<th style="text-align:left">Status</th>
+										</tr>
+									</thead>
+									<tbody id="requestList">
+										<!-- JS APPENDING -->
+									</tbody>
+								</table>
+							</div>
 						</div>
 						<!-- CONTENT: TABLE ENDS -->
 						
@@ -237,36 +233,25 @@
 	</body>
 	<!-- JS CALLS -->
 	<script type="text/javascript">
+		getAllRequest();
+		getRequestsList.done(function() {
+			$('#myTable').tablesorter({
+				sortList : [[0,1]],
+				widgets: ['filter', 'pager']
+			}).tablesorterPager({
+				container: '.pager',
+				size: 10, 
+				output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+				removeRows: true,
+				fixedHeight: false,
+				cssGoto: '.gotoPage'	
+			});	
 
-		/*
-		 * Fetch list of users and attributes 
- 		 */
-		getRequestsList();
-		/*
-		 * wait for DOM to be fully loaded and for SP to finalize all functions to enable sorting
-		 * without the wait table sorter does not apply to the full list.  - maybe due to DOM loading order?
-		 */
-		setTimeout(
-			function() {
-				$('#myTable').tablesorter({
-					sortList : [[0,1]],
-					widgets: ['filter', 'pager']
-				})
-				.tablesorterPager({
-					container: '.pager',
-					size: 10, 
-					output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
-					removeRows: true,
-					fixedHeight: false,
-					cssGoto: '.gotoPage'	
-				});
-				
-				/*
-				 * Format after loading 
-				 */
-				$("input").addClass("form-control");
-				getCleanUser();
-			}, 1000
-		);
-	</script>	
+			//Format after loading 
+			$("input").addClass("form-control");
+			getCleanUser();
+		});
+	</script>
+	<!-- OVERLAY -->
+	<div class="modalLoad"><!-- MODAL PAGE--></div>
 </html>

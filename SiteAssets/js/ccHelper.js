@@ -1,3 +1,5 @@
+//@ts-check
+'use strict';
 /*
  * Load the progress bar
  */
@@ -5,9 +7,8 @@ function loadProgressBar(status, cur, Total){
 	var w = Number(Total);	
 	var a = Math.round(w);
 	var y = Number(cur)*a;		
-	document.getElementById("myRequestProgress").innerHTML='<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="'+y+'" aria-valuemin="0" aria-valuemax="100" style="width:'+y+'%">'+status+' '+y+'%</div>';
+	document.getElementById("myRequestProgress").innerHTML='<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" aria-valuenow="'+y+'" aria-valuemin="0" aria-valuemax="100" style="width:'+y+'%">'+status+' '+y+'%</div>';
 }
-
 /*
  * get item id from url 
  */
@@ -18,100 +19,92 @@ function getCurrentId(){
 	qId =  res[1];
 	return qId;
 }
-
 /* 
  * Call for current user
  */
 function GetCurrentUser(){
-	var userName=$().SPServices.SPGetCurrentUser({ fieldName:"Title" });
+	var userName = $().SPServices.SPGetCurrentUser({ fieldName:"Title" });
 	$("#myUser").text(userName);
+}
+/*
+ * Initial load when created - will load the data using a caml query to load existing data if it exists
+ * @param {number} qId
+ *  load verification process - tabs  
+ * provide: 
+ *  - Ows object
+ *  - DOM #id to poulate in array form 
+ *  - JSon property name in array form 
+ */
+function loadRequest(qId){
+	var qId;	
+	if (qId > 0) {
+		loadRequestDetails(qId);
+	}else{
+		// Load order details
+		loadRowDetails();
+		// Check for qId to enable upload and submit options
+		disableUploads();
+		disableSubmit();
+		// remove splash screen when getUser has fnished loading
+		getUser.done(function(data) {
+			$(".modalLoad").fadeOut();
+		});
+	}
 }
 
 /*
- * Initial load when created - will load the data using a caml query to load existing data if it exists
+ * Load request details
  */
-function loadCCRequestTracker(qId){
-	if (qId > 0) {
-		/*jshint multistr: true */
-		var query = "<Query><Where><Eq><FieldRef Name='ID'/><Value Type='Text'>"+qId+"</Value></Eq></Where></Query>";
-		var viewFields = "<ViewFields><FieldRef Name='ID'/>\
-						   <FieldRef Name='REQUEST_FIELD'/>\
-						   <FieldRef Name='PURCHASE_DETAILS'/>\
-						   <FieldRef Name='DIRECTORATE_APPROVAL'/>\
-						   <FieldRef Name='J6_APPROVAL'/>\
-						   <FieldRef Name='PBO_APPROVAL'/>\
-						   <FieldRef Name='BILLING_OFFICIAL_APPROVAL'/>\
-						   <FieldRef Name='J8_APPROVAL'/>\
-						   <FieldRef Name='CARD_HOLDER_VALIDATION'/>\
-						   <FieldRef Name='REQUESTOR_VALIDATION'/>\
-						   <FieldRef Name='SUPPLY_VALIDATION'/>\
-						   <FieldRef Name='FINAL_VALIDATION'/>\
-						   <FieldRef Name='FISCAL_YEAR'/>\
-						   <FieldRef Name='REQUEST_STATUS'/>\
-						  </ViewFields>";
-		$().SPServices({
-			operation:"GetListItems",
-			webURL: siteUrl,
-			asyn: true,
-			listName: "ccRequestTracker",
-			CAMLQuery: query,
-			CAMLViewFields: viewFields,
-			completefunc: function(xData){
-				$(xData.responseXML)
-					.SPFilterNode("z:row")
-					.each(function(){
-						/* Load information for notification */
-						requestNotification = JSON.parse($(this).attr("ows_REQUEST_FIELD"));	
-						/* Load requester information */
-						loadRequestorDom(JSON.parse($(this).attr("ows_REQUEST_FIELD")));			
-						/* Load order details or load default if entry is empty or ivalid */					
-						loadDetailsDom(JSON.parse($(this).attr("ows_PURCHASE_DETAILS")));
-						loadRowDetails(JSON.parse($(this).attr("ows_PURCHASE_DETAILS")));
-						/*
-						 * load verification process - tabs  
-						 * provide: 
-						 *  - Ows object
-						 *  - DOM #id to poulate in array form 
-						 *  - JSon property name in array form 
-						 */
-	 					loadReviewTab($(this).attr("ows_DIRECTORATE_APPROVAL"),['#directorateComments','#directorateSignature','#directorateReview'],['directorateComment','directorateSignature','directorateStatus'],'#directorateText');
-					 	loadReviewTab($(this).attr("ows_BILLING_OFFICIAL_APPROVAL"),['#boComments','#boSignature','#boReview'],['boComment','boSignature','boStatus'],'#billingOfficialText');
-						loadReviewTab($(this).attr("ows_J6_APPROVAL"),['#j6Comments','#j6Signature','#j6Review'],['j6Comment','j6Signature','j6Status'],'#j6Text');
-					 	loadReviewTab($(this).attr("ows_PBO_APPROVAL"),['#pboComments','#pboSignature','#pboReview'],['pboComment','pboSignature','pboStatus'],'#propertyBookText');
-						//loadReviewTab($(this).attr("ows_BUDGET_OFFICER_APPROVAL"),['#budgetOfficerComments','#budgetOfficerSignature','#budgetOfficerReview'],['budgetOfficerComment','budgetOfficerSignature','budgetOfficerStatus'],'#budgetOfficerText');
-					 	loadReviewTab($(this).attr("ows_J8_APPROVAL"),['#j8Comments','#j8Signature','#j8Review','#j8FiscalYear','#j8Quater'],['j8Comment','j8Signature','j8Status','j8FiscalYear','j8Quater'],'#j8Text');
-						loadReviewTab($(this).attr("ows_CARD_HOLDER_VALIDATION"),['#cardHolderComments','#cardHolderTransactionId','#cardHolderSignature'],['cardHolderComment','cardHolderTransactionId','cardHolderSignature'],'#cardHolderText');
-						loadReviewTab($(this).attr("ows_REQUESTOR_VALIDATION"),['#requestorComments','#requestorSignature'],['requestorComment','requestorSignature'],'#requestorText');	
-						loadReviewTab($(this).attr("ows_SUPPLY_VALIDATION"),['#supplyComments','#supplySignature'],['supplyComment','supplySignature'],'#supplyText');
-						loadReviewTab($(this).attr("ows_FINAL_VALIDATION"),['#j4Comments','#j4Signature'],['j4Comment','j4Signature'],'#j4Text');
-						/* Load request status and set status bar */
-						setValue($(this).attr("ows_REQUEST_STATUS"));
-						/* Check for qId to enable upload option */
-						disableUploads(qId);
-						disableSubmit(qId);	
-						/* List attached Items */
-						listMyAttachments(qId);
-						/* if Request is finizalied and closed make it read only */
-						isClosed($(this).attr("ows_REQUEST_STATUS"));
-					});
-			}, 
-			error: function(xhr, textStatus, errorThrown){alert('Error');	}	
-		});
-	}else{
-		/* Load order details */
-		loadRowDetails();
-		/* Check for qId to enable upload and submit options */
-		disableUploads();
-		disableSubmit();
-	}
+function loadRequestDetails(qId){
+	var qId;
+	var request = $.ajax({  
+		url: siteUrl+"/_api/web/lists/getbytitle('ccRequestTracker')/items("+qId+")", 
+		type: "GET",  
+		headers: { "Accept": "application/json;odata=verbose" },
+	});
+	/*jshint multistr: true */
+	getCardHolder.then(function data(){
+		$.when(request).done(function(data) {  
+			requestNotification = JSON.parse(data.d.REQUEST_FIELD);
+			// General information
+			loadRequestorHtml(JSON.parse(data.d.REQUEST_FIELD));			
+			loadDetailsDom(JSON.parse(data.d.PURCHASE_DETAILS));
+			loadRowDetails(JSON.parse(data.d.PURCHASE_DETAILS));
+			// Reviews
+			loadReviewTab((data.d.DIRECTORATE_APPROVAL),['#directorateComments','#directorateSignature','#directorateReview'],['directorateComment','directorateSignature','directorateStatus'],'#directorateText');
+			loadReviewTab((data.d.BILLING_OFFICIAL_APPROVAL),['#boComments','#boSignature','#boReview'],['boComment','boSignature','boStatus'],'#billingOfficialText');
+			loadReviewTab((data.d.J6_APPROVAL),['#j6Comments','#j6Signature','#j6Review'],['j6Comment','j6Signature','j6Status'],'#j6Text');
+			loadReviewTab((data.d.PBO_APPROVAL),['#pboComments','#pboSignature','#pboReview'],['pboComment','pboSignature','pboStatus'],'#propertyBookText');
+			loadReviewTab((data.d.BUDGET_OFFICER_APPROVAL),['#budgetOfficerComments','#budgetOfficerSignature','#budgetOfficerReview'],['budgetOfficerComment','budgetOfficerSignature','budgetOfficerStatus'],'#budgetOfficerText');
+			loadReviewTab((data.d.J8_APPROVAL),['#j8Comments','#j8Signature','#j8Review','#j8FiscalYear','#j8Quater'],['j8Comment','j8Signature','j8Status','j8FiscalYear','j8Quater'],'#j8Text');
+			loadReviewTab((data.d.CARD_HOLDER_VALIDATION),['#cardHolderComments','#cardHolderTransactionId','#cardHolderSignature'],['cardHolderComment','cardHolderTransactionId','cardHolderSignature'],'#cardHolderText');
+			loadReviewTab((data.d.REQUESTOR_VALIDATION),['#requestorComments','#requestorSignature'],['requestorComment','requestorSignature'],'#requestorText');	
+			loadReviewTab((data.d.SUPPLY_VALIDATION),['#supplyComments','#supplySignature'],['supplyComment','supplySignature'],'#supplyText');
+			loadReviewTab((data.d.FINAL_VALIDATION),['#j4Comments','#j4Signature'],['j4Comment','j4Signature'],'#j4Text');
+			// Update bar
+			setValue(data.d.REQUEST_STATUS);
+			// upload feature
+			disableUploads(qId);
+			disableSubmit(qId);	
+			// list attachments
+			listMyAttachments(qId);
+			// status is closed?
+			isClosed(data.d.REQUEST_STATUS);
+			// remove splash screen when getUser has fnished loading
+			getUser.done(function(data) {
+				$(".modalLoad").fadeOut();
+			});
+		}).fail(function r(xhr, textStatus, errorThrown) {  
+			console.log("error 'getCommanddata': " + JSON.stringify(xhr));  
+		})
+	});
+
 }
 
 /*
  * Load SharePoint list values - there should be an item ID by the time this is loaded.
  */
-function loadRequestorDom(myObj){
-	console.log(myObj)
-	setTimeout(function() {
+function loadRequestorHtml(myObj){
 		$("#RequestCardType").val(myObj.RequestCardType); 	
 		$("#RequestUser").text(myObj.RequestUser);
 		$("#RequestStatus").text(myObj.RequestStatus);	
@@ -125,35 +118,34 @@ function loadRequestorDom(myObj){
 		$("#RequestSource").val(myObj.RequestSource);			
 		$("#RequestCurrencyType").bootstrapToggle(dValue(myObj.RequestCurrencyType));
 		$("#RequestIsJ6").bootstrapToggle(j6Value(myObj.RequestIsJ6));
-	},500);
 }
-
 /*
  * Load DOM with correct information from SP List
+ * @param {json[]} requestDetails
+ * - Add rows and columns
+ * - Return to array as float to sum and update
+ * - Disable delete
+ * - Re-arrange details array to track old data and add new data attributes correctly
+ * - Update total value when loading values 
  */
 function loadDetailsDom(requestDetails){
 	/* Append,count, build details and, disable action to delete based on number of rows  */	
 	for (var counter = 0; counter < requestDetails.Details.length; counter++){
 		var newRow = $("<tr>");
 		var cols = "";
-		/* Add rows and columns */
+		
 		newRow.append(rowDetailsColHtml(counter,cols));
 		$("#myPurchaseRequest").append(newRow);
-		/* Set values for all inputs */
 		$("#RequestQTY"+counter).val(requestDetails.Details[counter].requestQty);
 		$("#Description"+counter).val(requestDetails.Details[counter].requestDesc);
 		$("#DD"+counter).prop( "checked", isBool(requestDetails.Details[counter].requestDdForm));
 		$("#Source"+counter).val(requestDetails.Details[counter].requestSrc);
 		$("#RequestCost"+counter).val(requestDetails.Details[counter].requestCost);
 		$("#RequestTotal"+counter).val(requestDetails.Details[counter].requestTotal);
-		/* Add return to array as float to sum and update DOM */
 		totalPrice.push(parseFloat(requestDetails.Details[counter].requestTotal));	
-		/* Disable delete */
 		disableDeleteBtn(counter,1);
-		/* re-arrange details array to track old data and add new data attributes correctly */
 		createDetails(counter);
 	}
-	/* Update total value when loading values */
 	addGrandTotal(totalPrice);
 }
 
@@ -189,7 +181,7 @@ function createDraftRequest(){
  * Set request status to submit
  */
 function modifyDraftRequest(){
-	/* DEBUG */
+	// DEBUG 
 	console.log("function: modifyDraftRequest");
 	$().SPServices({
 		operation: "UpdateListItems",
@@ -214,9 +206,9 @@ function modifyDraftRequest(){
  * Save data as JSON string to SharePoint list - DRAFT button.
  */
 function submitDraft(){
-	/* DEBUG */
+	// DEBUG 
 	console.log("Function: Save Draft");
-	/* for undefined requests "new" entries. Create and add details and save draft */
+	// for undefined requests "new" entries. Create and add details and save draft
 	typeof qId === 'undefined' ? createDraftRequest() : modifyDraftRequest();
 }
 
@@ -244,7 +236,9 @@ function createSubmit(){
 		batchCmd: "Update",
 		listName: "ccRequestTracker",
 		ID: qId,
-		valuepairs:[["REQUEST_STATUS",	"SUBMITTED"]],
+		valuepairs:[
+			["REQUEST_STATUS",	"SUBMITTED"]
+		],
 		completefunc: function(xData, Status){
 			console.log('submitRequest: change request status to SUBMITTED');
 		}
@@ -262,8 +256,10 @@ function submitReview(fieldUpdate,fieldJson){
 		batchCmd: "Update",
 		listName: "ccRequestTracker",
 		ID: qId,
-		valuepairs:[[fieldUpdate,fieldJson],
-					["REQUEST_STATUS",fieldUpdate]],
+		valuepairs:[
+			[fieldUpdate,fieldJson],
+			["REQUEST_STATUS",fieldUpdate]
+		],
 		completefunc: function(xData, Status){
 			console.log('submitReview');
 		}
@@ -403,6 +399,8 @@ function ListAttachmentsClear(){
 
 /*
  * Deletes attachments
+ * @param {integer} QID
+ * @param {string} fileName
  */
 function deleteMyAttachment(QID, fileName){
 	$.ajax({
@@ -439,6 +437,7 @@ function deleteMyAttachment(QID, fileName){
 
 /*
  * This function translates the status to a number to pass to the status bar
+ * @param {string} statusValue
  */
 function setValue(statusValue){
 	var stepStatus = [
@@ -455,7 +454,6 @@ function setValue(statusValue){
 			{caseStep: 'SUPPLY_VALIDATION',				numerStep: 9.9 	},
 			{caseStep: 'CLOSED', 						numerStep: 10 	}		
 		];
-
 	for (var i = 0; i < stepStatus.length; i++) {
     	if (stepStatus[i].caseStep === statusValue) {
         	loadProgressBar(statusValue, stepStatus[i].numerStep, "10");
@@ -516,10 +514,8 @@ function rowDetailsColHtml(counter,cols){
 		cols +=	'<td><input id="Source'+counter+'" type="text" class="form-control form-control-sm" name="Src' + counter + '"/></td>';
 		cols +=	'<td><input id="RequestCost'+counter+'" type="text" onchange="updateForm(\''+counter+'\')" class="form-control form-control-sm" name="Cost' + counter + '"/></td>';
 		cols +=	'<td><input id="Rate'+counter+'" type="text"     class="form-control form-control-sm" name="Rate' + counter + '"/></td>';
-		
 	  	cols +=	'<td><input id="DD'+counter+'"   type="checkbox"  class="form-control form-control-sm" name="DD' + counter + '" style="border:none;border-radius:0px;"/></td>';
 		//cols +=	'<td><input id="DD'+counter+'"   type="checkbox"  checked data-toggle="toggle"         name="DD' + counter + '" data-on="Yes" data-off="No">';
-		
 		cols +=	'<td><input id="RequestTotal'+counter+'" type="text" class="form-control form-control-sm" name="Total' + counter + '" readonly="readonly"/></td>';
 		cols +=	'<td><input type="button"  id="btnDel-'+counter+'" class="ibtnDel btn btn-sm btn-danger" style="width:100%"  value="&#10060; Delete" onclick="enableDeleteBtn(this)"></td>';
 		return cols;
@@ -585,10 +581,10 @@ function createDetailsJson(){
  */
 function createJsonResponse(responseArray){
 	var item = {};
-	for (i = 0; i < responseArray.length; i++) {	
+	for (var i = 0; i < responseArray.length; i++) {	
 		item [responseArray[i]] = getApprovalData()[responseArray[i]];
 	}
-	jsonString = JSON.stringify(item);
+	var jsonString = JSON.stringify(item);
 	return jsonString;
 }
 
@@ -685,21 +681,27 @@ function updateForm(counter){
 
 /*
  * Determine dollar/euro
+ * @param {string} myChoice
  */
-function dValue(myChoice){	
+function dValue(myChoice){
+	var myChoice;
+	var value;	
 	myChoice === "Dollar" ? value  = "on" : value = "off";
 	return value;
 }
 
-
 /*
- * Determine dollar/euro
+ * Determine J6 part of request flow
+ * hide or show J6 [Tab] when selected
+ * @param {string} myChoice
  */
 function j6Value(myChoice){	
+	var myChoice;
+	var value;
 	myChoice === "Yes" ? value  = "on" : value = "off";
+	value === 'on' ? $('#J6tab').show(): $('#J6tab').hide();
 	return value;
 }
-
 
 /*
  * Disabled upload when a new purchase request is created. 
@@ -745,6 +747,8 @@ function disableSubmit(qId){
  * return true or false strings as booleans
  */
 function isBool(booleanValue){
+	var booleanValue;
+	var isBoolean;
 	booleanValue === "true" ? isBoolean = true : isBoolean = false;
 	return isBoolean;
 }
@@ -885,7 +889,7 @@ var sum = function(arr) {
  * Get all funding sources. 
  */
 function getFundingSource(){
-	for(i = 0; i < fundingSource.length; i++){
+	for(var i = 0; i < fundingSource.length; i++){
 		$('#RequestSource').append('<option value="'+fundingSource[i]+'">'+fundingSource[i]+'</option>');
 	}
 }
@@ -894,7 +898,7 @@ function getFundingSource(){
  * Get fiscal years. 
  */
 function getFiscalYear(){
-	for(i = 0; i < fiscalYear.length; i++){
+	for(var i = 0; i < fiscalYear.length; i++){
 		$('#j8FiscalYear').append('<option value="'+fiscalYear[i]+'">'+fiscalYear[i]+'</option>');
 	}
 }

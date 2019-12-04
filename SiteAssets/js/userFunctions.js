@@ -1,10 +1,12 @@
-﻿/*
+﻿//@ts-check
+'use strict';
+/*
  * Training inputs 
  */
 var personTraining	= function (){
 	var item  		= {}; 
 	var numItems 	= $('.training').length;
-	for( j=0;j<numItems;j++){
+	for(var j = 0; j < numItems; j++){
 		console.log($('.training').id);
 		item[j] = { 
 			id  	: $('.training')[j].id, 
@@ -82,7 +84,8 @@ function updateUserInformation(){
 						["P_FIRST_NAME", personInformation().personFirstName], 
 						["PERSON_ROLE", personInformation().personRole], 
 						["PERSON_RANK", personInformation().personRank], 
-						["PERSON_DIRECTORATE", personInformation().personDirectorate], 
+						["PERSON_DIRECTORATE", personInformation().personDirectorate],
+						["PERSON_ACTIVE", personInformation().personActive], 
 						["PERSON_ATTRIBUTES", personAttributes()],
 						["PERSON_TRAINING", personTraining()]
 					],
@@ -90,6 +93,9 @@ function updateUserInformation(){
 			console.log('update user account succesfully');
 		}
 	});
+	setTimeout(function(){
+		setUserInformationRedirect(userId);
+	}, 2000);
 }
 
 /*
@@ -99,26 +105,27 @@ function sendNotification(from,recipient,subject,body){
 	console.log('Executing Email Notification');
 	var siteurl = _spPageContextInfo.webServerRelativeUrl;
 	var urlTemplate = siteUrl + "/_api/SP.Utilities.Utility.SendEmail";
+	
 	$.ajax({
 	    contentType: 'application/json',
 	    url: urlTemplate,
 	    type: "POST",
 	    data: JSON.stringify({
 	        'properties': {
-	            '__metadata': {
+	            	'metadata': {
 	                'type': 'SP.Utilities.EmailProperties'
-	            },
-	            'From': from,
+	        },
+	        	'From': from,
 	            'To': {
 	                'results': recipient
-	            },
+	        },
 	            'Body': body,
 	            'Subject': subject
 	        }
 	    }),
     	headers: {
-	        "Accept": "application/json;odata=verbose",
-	        "content-type": "application/json;odata=verbose",
+	    	"Accept": "application/json;odata=verbose",
+	    	"content-type": "application/json;odata=verbose",
 	        "X-RequestDigest": jQuery("#__REQUESTDIGEST").val()
 	    },
     	success: function(data) {

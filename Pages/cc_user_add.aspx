@@ -27,14 +27,13 @@
 
 		<!-- CUSTOM: LIBRARIES -->
 		<script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
-		<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
 		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
 		
 
 	</head>
-	<body ng-app="">
+	<body>
 		<!-- START: BODY -->
 		<div class="container-fluid">
 			<div class="row">
@@ -50,13 +49,13 @@
 						<div class="collapse nav-toggleable-md" id="nav-toggleable-md">
 							<ul class="nav nav-pills nav-stacked flex-column">
 								<li class="nav-header">Users</li>
-								<li class="nav-item"><a class="nav-link" href="../Pages/cc_user_list.aspx">Users Overview</a></li>
-								<li class="nav-item"><a class="nav-link active" href="../Pages/cc_user_add.aspx">Add User</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Pages/cc_user_list.html">Users Overview</a></li>
+								<li class="nav-item"><a class="nav-link active" href="../Pages/cc_user_add.html">Add User</a></li>
 								<li class="nav-header">Requests</li>
-								<li class="nav-item"><a class="nav-link" href="../Pages/cc_purchase_request_list.aspx">Request Status</a></li>
-								<li class="nav-item"><a class="nav-link" href="../Pages/purchase_request.aspx" target="_blank">Submit Request</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Pages/cc_purchase_request_list.html">Request Status</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Pages/purchase_request.html" target="_blank">Submit Request</a></li>
 								<li class="nav-header">Documentation & Other</li>
-								<li class="nav-item"><a class="nav-link" href="../Shared%20Documents/Forms/AllItems.aspx" target="_blank">Documentation</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Shared%20Documents/Forms/AllItems.html" target="_blank">Documentation</a></li>
 								<li class="nav-item"><a class="nav-link" href="#">Other</a></li>
 							</ul>
 						</div>
@@ -153,9 +152,9 @@
 								<label for="cardType" class="col-sm-1 col-form-label d-none d-xl-block">Holder Type</label>
 								<div class="col-lg-5">
 									<select id="cardType" class="inputSelectCCUSer form-control" placeholder="PLEASE SELECT">
-											<option value="ORF">ORF</option>
-											<option value="STANDARDCARD">STANDARD CARD</option>
+											<option value="STANDARD CARD">STANDARD CARD</option>
 											<option value="TRAINING">TRAINING CARD</option>
+											<option value="ORF">ORF</option>
 										</select>
 								</div>
 								<label for="ccCardID" class="col-sm-1 col-form-label d-none d-xl-block">Card ID</label>
@@ -336,8 +335,7 @@
 			getDirectorate();
 			getRank();
 			getRole();
-			getUser();
-			getTrainingList();
+			getTraining();
 			getAutoComplete();
 			/*
 		 	 * Load roles to be consumed on the form - nothing special, but a one less call to SP back-end

@@ -28,12 +28,11 @@
 
 		<!-- CUSTOM: LIBRARIES -->
 		<script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
-		<script src="../SiteAssets/js/loadPageData.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
 		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
 	</head>
-	<body>
+	<body class="loading">
 		<!-- START: BODY -->
 		<div class="container-fluid">
 			<div class="row">
@@ -212,12 +211,12 @@
 								<ul class="navbar-nav">
 									<li class="nav-item">
 										<a class="nav-link prev disabled" href="#" aria-label="Previous Page" tabindex="0" title="Previous page" alt="Prev">
-											<span aria-hidden="true">&laquo; Previous Page</span>
+											<span aria-hidden="true">&laquo; Previous</span>
 										</a>
 									</li>							
-									<li class="nav-itemgetUsersList
-																			<a class="nav-link next disabled" href="#" aria-label="Next" tabindex="0" title="Next page" alt="Next">
-											<span aria-hidden="true">Next Page &raquo;</span>
+									<li class="nav-item">
+										<a class="nav-link next disabled" href="#" aria-label="Next" tabindex="0" title="Next page" alt="Next">
+											<span aria-hidden="true">Next &raquo;</span>
 										</a>
 									</li>
 									<li class="nav-item dropdown">
@@ -238,39 +237,25 @@
 	</body>
 	<!-- JS CALLS -->
 	<script type="text/javascript">
-
-		/*
-		 * Fetch list of users and attributes 
- 		 */
- 		getUser(); 
-		getUsersList();
-
-		/*
-		 * wait for DOM to be fully loaded and for SP to finalize all functions to enable sorting
-		 * without the wait table sorter does not apply to the full list.  - maybe due to DOM loading order?
-		 */
-		 
-		setTimeout(
-			function() {
-				$('#myTable').tablesorter({
-					sortList : [[0,1]],
-					widgets: ['filter', 'pager']
-				})
-				.tablesorterPager({
-					container: '.pager',
-					size: 10, 
-					output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
-					removeRows: true,
-					fixedHeight: false,
-					cssGoto: '.gotoPage'	
-				});
-				
-				/*
-				 * Format after loading 
-				 */
-				$("input").addClass("form-control");
-				getCleanUser();
-			}, 800
-		);
-	</script>	
+		getAllUser();
+		$.when(getUsersList).done(function(data){
+			$('#myTable').tablesorter({
+			sortList : [[0,1]],
+			widgets: ['filter', 'pager']
+			})
+			.tablesorterPager({
+				container: '.pager',
+				size: 10, 
+				output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+				removeRows: true,
+				fixedHeight: false,
+				cssGoto: '.gotoPage'	
+			});
+			// Format after loading 
+			$("input").addClass("form-control");
+			getCleanUser();
+		});	
+	</script>
+	<!-- OVERLAY -->
+	<div class="modalLoad"><!-- MODAL PAGE--></div>	
 </html>

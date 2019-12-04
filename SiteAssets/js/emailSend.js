@@ -63,7 +63,7 @@ function processSendEmails(value) {
         //console.log('Send to Cardholder', requestNotification.RequestorCardHolderName);
         subject = 'Card holder purchase request notification | request: '+qId;
 		var to = requestNotification.RequestorCardHolderName;
-		sendEmail(from, to, body, subject);		
+		//sendEmail(from, to, body, subject);		
     }
     if(value === 'cardholder') {
         //console.log('Send J8 and Requestor,');
@@ -105,8 +105,8 @@ function processSendEmails(value) {
 
 
 function sendEmail(from, to, body, subject) {
-    var siteurl = _spPageContextInfo.webServerRelativeUrl;
-    var urlTemplate = siteurl + "/_api/SP.Utilities.Utility.SendEmail";
+    //var siteUrl = _spPageContextInfo.webServerRelativeUrl;
+    var urlTemplate = siteUrl + "/_api/SP.Utilities.Utility.SendEmail";
     $.ajax({
         contentType: 'application/json',
         url: urlTemplate,
