@@ -20,6 +20,7 @@ var requestNotification;
 var getRequestsList;
 var getUsersList;
 var getTrainingList ;
+var isJ6;
 /*
  * Constant values
  */ 
@@ -55,6 +56,20 @@ var  fundingSource 		=   [
 
 var  fiscalYear			=   [ "No Funding",2019,2020,2021,2022,2023];
 
+var stepStatus = [
+	{caseStep: 'DRAFT', 						fwd: "DRAFT", 					fwdj6:"DRAFT", numerStep:1},
+	{caseStep: 'SUBMITTED', 					fwd: "DIR APPROVAL", 			fwdj6:"DIR APPROVAL", numerStep:2},
+	{caseStep: 'DIRECTORATE_APPROVAL', 			fwd: "BO APPROVAL", 			fwdj6:"BO APPROVAL", numerStep:3},
+	{caseStep: 'BILLING_OFFICIAL_APPROVAL', 	fwd: "PBO APPROVAL", 			fwdj6:"J6 APPROVAL", numerStep:4},
+	{caseStep: 'J6_APPROVAL', 					fwd: "ERROR: SEE KM", 			fwdj6:"PBO APPROVAL", numerStep:5},
+	{caseStep: 'PBO_APPROVAL', 					fwd: "J8 APPROVAL", 			fwdj6:"J8 APPROVAL", numerStep:6},	
+	{caseStep: 'J8_APPROVAL', 					fwd: "CARD HOLDER VALIDATION",	fwdj6:"CARD HOLDER VALIDATION", numerStep:7},
+	{caseStep: 'CARD_HOLDER_VALIDATION', 		fwd: "REQUESTOR VALIDATION",	fwdj6:"REQUESTOR VALIDATION", numerStep:8},
+	{caseStep: 'REQUESTOR_VALIDATION', 			fwd: "FINAL VALIDATION",		fwdj6:"FINAL VALIDATION", numerStep:9.3},
+	{caseStep: 'FINAL_VALIDATION', 				fwd: "SUPPLY VALIDATION",		fwdj6:"SUPPLY VALIDATION", numerStep:9.6},
+	{caseStep: 'SUPPLY_VALIDATION',				fwd: "PENDING CLOSING",			fwdj6:"PENDING CLOSING", numerStep:9.9},
+	{caseStep: 'CLOSED', 						fwd: "CLOSED",					fwdj6:"CLOSED", numerStep:10}		
+];
 /* 
  * Verification steps 
  */
@@ -228,6 +243,21 @@ var getCommandData = function(){
 	}).fail(function r(xhr, textStatus, errorThrown) {  
 		console.log("error 'getCommanddata': " + JSON.stringify(xhr));  
 	});  
+}
+
+/*  
+ * Fetch current user username and role and redder context for manipulation -  function might be deprecated in the future  
+ */
+var getCleanUser = function(){
+	var userName;
+	var a = document.getElementById("loginName").innerText;
+	var t = a.split("\\");
+	var l = t.length;
+	a= t[l-1];
+	$(document).ready(function(){
+		userName = $().SPServices.SPGetCurrentUser({ fieldName: "Title"});
+		document.getElementById("cleanUser").innerHTML=userName;
+	});	
 }
 
 /*
@@ -579,39 +609,14 @@ function getFiscalInformation(jsonData,type){
  */
 function stepForwardStatus(status){
 	var forwardStatus;
-	var stepStatus = [
-		{caseStep: 'DRAFT', 						fwd: "DRAFT" 					},
-		{caseStep: 'SUBMITTED', 					fwd: "DIR APPROVAL" 			},
-		{caseStep: 'DIRECTORATE_APPROVAL', 			fwd: "BO APPROVAL"				},
-		{caseStep: 'BILLING_OFFICIAL_APPROVAL', 	fwd: "J6 APPROVAL" 				},
-		{caseStep: 'J6_APPROVAL', 					fwd: "PBO APPROVAL" 			},
-		{caseStep: 'PBO_APPROVAL', 					fwd: "J8 APPROVAL" 				},	
-		{caseStep: 'J8_APPROVAL', 					fwd: "CARD HOLDER VALIDATION" 	},
-		{caseStep: 'CARD_HOLDER_VALIDATION', 		fwd: "REQUESTOR VALIDATION" 	},
-		{caseStep: 'REQUESTOR_VALIDATION', 			fwd: "FINAL VALIDATION" 		},
-		{caseStep: 'FINAL_VALIDATION', 				fwd: "SUPPLY VALIDATION" 		},
-		{caseStep: 'SUPPLY_VALIDATION',				fwd: "SUPPLY VALIDATION" 		},
-		{caseStep: 'CLOSED', 						fwd: "CLOSED" 					}		
-	];
 	for(var i = 0; stepStatus.length > i; i++ ){
-		status ===  stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwd : false;
+		if(isJ6 !== true){
+			status ===  stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwd : false;
+		}else{
+			status ===  stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwdj6 : false;
+		}
 	}
 	return forwardStatus;
-}
-
-/*  
- * Fetch current user username and role and redder context for manipulation -  function might be deprecated in the future  
- */
-var getCleanUser = function(){
-	var userName;
-	var a = document.getElementById("loginName").innerText;
-	var t = a.split("\\");
-	var l = t.length;
-	a= t[l-1];
-	$(document).ready(function(){
-		userName = $().SPServices.SPGetCurrentUser({ fieldName: "Title"});
-		document.getElementById("cleanUser").innerHTML=userName;
-	});	
 }
 
 /* 
@@ -673,6 +678,7 @@ var setCurrency = function(){
 var setJ6Validation = function(){
 	var returnCurrent;
 	$("#RequestIsJ6").is(":checked") === true ? returnCurrent = 'Yes': returnCurrent = 'No';
+	isJ6 = returnCurrent;
 	return returnCurrent;
 }
 
@@ -704,40 +710,36 @@ function redirectUrl(urlAddress){
 
 /*
  * Disable sign button by default - user has to approve or declined to enable it
- */ 		
+ */ 
  function signatureRequired(){
- 	/*
- 	 * Disabled all sign buttons
- 	 */
- 	$("[id$=Sign]").attr("disabled", "true");
- 	/*
- 	 *  Enable sign buttons when changed 
- 	 */	
+ 	// Disabled all sign buttons
+ 	$("[id$=Sign]").prop("disabled", "true");
+ 	// Enable sign buttons when changed 	
 	$('#directorateReview').change(function(){
-		$('#btnDirectorateSign').attr("disabled", "false");
+		$('#btnDirectorateSign').prop("disabled", false);
 	});
 	$('#boReview').change(function(){
-		$('#btnBoSign').attr("disabled", "false");
+		$('#btnBoSign').prop("disabled", false);
 	});
 	$('#j6Review').change(function(){
-		$('#btnJ6Sign').attr("disabled", "false");
+		$('#btnJ6Sign').prop("disabled", false);
 	});
 	$('#pboReview').change(function(){
-		$('#btnPboSign').attr("disabled", "false");
+		$('#btnPboSign').prop("disabled", false);
 	});
 	$('#j8FiscalYear').change(function(){
-		$('#btnJ8Sign').attr("disabled", "false");
+		$('#btnJ8Sign').prop("disabled", false);
 	});
 	$('#cardHolderComments').keydown(function(){
-		$('#btnCardHolderSign').attr("disabled", "false");
+		$('#btnCardHolderSign').prop("disabled", false);
 	});
 	$('#requestorComments').keydown(function(){
-		$('#btnRequestorSign').attr("disabled", "false");
+		$('#btnRequestorSign').prop("disabled", false);
 	});
 	$('#supplyComments').keydown(function(){
-		$('#btnSupplySign').attr("disabled", "false");
+		$('#btnSupplySign').prop("disabled", false);
 	});
 	$('#j4Comments').keydown(function(){
-		$('#btnJ4Sign').attr("disabled", "false");
+		$('#btnJ4Sign').prop("disabled", false);
 	});
  }	

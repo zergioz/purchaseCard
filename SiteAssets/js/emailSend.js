@@ -1,7 +1,9 @@
+//@ts-check
+'use strict';
 function processSendEmails(value) {
     var from = 'n015-portal.noreply@socom.mil';
     var body = "There is a request pending for your review: https://soceur.sof.socom.mil/app/GPC/Pages/Purchase_Request.aspx?id="+qId + " please review";
-	var subject = "GPC Card Request:"+qId;
+	//var subject = "GPC Card Request:"+qId;
 
 	/* DEBUG */
 	//console.log(requestNotification);
@@ -13,11 +15,11 @@ function processSendEmails(value) {
     console.log("value submitted", value);
 
     if (value === 'submit') {
-		//console.log('Requestor Director');
-		//console.log(getDirectorateApprover());
-		subject = 'Directorate purchase request notification | request: '+qId;
+		console.log('Requestor Director');
+		console.log(getDirectorateApprover());
+		var subject = 'Directorate purchase request notification | request: '+qId;
 		var to = getDirectorateApprover();
-		for (i = 0; i < to.length; i++) {
+		for (var i = 0; i < to.length; i++) {
 			console.log('notification to:' + to[i] );
 			sendEmail(from, to[i], body, subject);
 		}
@@ -25,52 +27,62 @@ function processSendEmails(value) {
     if (value === 'directorate') {
 		console.log('Send Billing Official Notification');
         console.log('Billing Official', getCardHolderBillingApprover().billingOfficial);
-        subject = 'Billing official purchase request notification | request: '+qId;
+        var subject = 'Billing official purchase request notification | request: '+qId;
         var to = getCardHolderBillingApprover().billingOfficial;		
-        for (i = 0; i < to.length; i++) {
+        for (var i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
         }
 	}
     if(value === 'bo') {
-		//console.log('Send j6 Notification');
-		//console.log('J6 approver', getOtherApprover('IT APPROVAL/J6'));
-		subject = 'J6 purchase request notification | request: ' + qId;
-		var to = getOtherApprover('IT APPROVAL/J6');
-		for (i = 0; i < to.length; i++) {
-			sendEmail(from, to[i], body, subject);
-		}       
+        if (isJ6 === 'true'){
+            console.log('Send j6 Notification');
+		    console.log('J6 approver', getOtherApprover('IT APPROVAL/J6'));
+		    var subject = 'J6 purchase request notification | request: ' + qId;
+		    var to = getOtherApprover('IT APPROVAL/J6');
+		    for (var i = 0; i < to.length; i++) {
+			    sendEmail(from, to[i], body, subject);
+            }
+        }else{
+            console.log('Send PBO Notification');
+            console.log('BPO approver', getOtherApprover('PROPERTY BOOKS OFFICER/J4'));
+            subject = 'PBO purchase request notification | request: '+qId;
+            var to = getOtherApprover('PROPERTY BOOKS OFFICER/J4');
+            for (var i = 0; i < to.length; i++) {
+                sendEmail(from, to[i], body, subject);
+            }   
+        }      
     }
     if(value === 'j6') {
-		//console.log('Send PBO Notification');
-		//console.log('BPO approver', getOtherApprover('PROPERTY BOOKS OFFICER/J4'));
+		console.log('Send PBO Notification');
+		console.log('BPO approver', getOtherApprover('PROPERTY BOOKS OFFICER/J4'));
 		subject = 'PBO purchase request notification | request: '+qId;
 		var to = getOtherApprover('PROPERTY BOOKS OFFICER/J4');
-		for (i = 0; i < to.length; i++) {
+		for (var i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
         }        
     }
     if(value === 'pbo') {
-		//console.log('Send budget Notification'); 
-        //console.log('J8 approver', getOtherApprover('FINANCIAL OFFICER/J8'));
+		console.log('Send budget Notification'); 
+        console.log('J8 approver', getOtherApprover('FINANCIAL OFFICER/J8'));
 		subject = 'J8 purchase request notification | request: '+qId;
 		var to = getOtherApprover('FINANCIAL OFFICER/J8');
-        for (i = 0; i < to.length; i++) {
+        for (var i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
         }           
     }
     if(value === 'j8') {
-		//console.log('Send cardholder Notification');
-        //console.log('Send to Cardholder', requestNotification.RequestorCardHolderName);
+		console.log('Send cardholder Notification');
+        console.log('Send to Cardholder', requestNotification.RequestorCardHolderName);
         subject = 'Card holder purchase request notification | request: '+qId;
 		var to = requestNotification.RequestorCardHolderName;
 		//sendEmail(from, to, body, subject);		
     }
     if(value === 'cardholder') {
-        //console.log('Send J8 and Requestor,');
-        //console.log('J8 approver', getOtherApprover('FINANCIAL OFFICER/J8') +"and Requestor "+ requestNotification.Requestor);
+        console.log('Send J8 and Requestor,');
+        console.log('J8 approver', getOtherApprover('FINANCIAL OFFICER/J8') +"and Requestor "+ requestNotification.Requestor);
 		subject = 'Requestor and J8 purchase request notification | Funds Execution | request: '+qId;
 		var to = getOtherApprover('FINANCIAL OFFICER/J8');
-		for (i = 0; i < to.length; i++) {
+		for (var i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
 		}
 		console.log(requestNotification.Requestor);
@@ -78,8 +90,8 @@ function processSendEmails(value) {
 
     }
     if(value === 'requestor') {
-        //console.log('Send SUPPLY Notification');
-        //console.log('SUPPLY approver', getOtherApprover('SUPPLY'));
+        console.log('Send SUPPLY Notification');
+        console.log('SUPPLY approver', getOtherApprover('SUPPLY'));
 		subject = 'SUPPLY purchase request notification | request: '+qId;
 		var to = getOtherApprover('SUPPLY');
 		for (i = 0; i < to.length; i++) {
@@ -87,8 +99,8 @@ function processSendEmails(value) {
 		}
     }
     if(value === 'supply') {
-        //console.log('JPBO');
-        //console.log('J4/JPBO approver', getOtherApprover('PROPERTY BOOKS OFFICER/J4'));
+        console.log('JPBO');
+        console.log('J4/JPBO approver', getOtherApprover('PROPERTY BOOKS OFFICER/J4'));
 		var to = getOtherApprover('PROPERTY BOOKS OFFICER/J4');
 		for (i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject); 
@@ -107,6 +119,7 @@ function processSendEmails(value) {
 function sendEmail(from, to, body, subject) {
     //var siteUrl = _spPageContextInfo.webServerRelativeUrl;
     var urlTemplate = siteUrl + "/_api/SP.Utilities.Utility.SendEmail";
+    // @ts-ignore
     $.ajax({
         contentType: 'application/json',
         url: urlTemplate,
@@ -134,7 +147,7 @@ function sendEmail(from, to, body, subject) {
             alert('Email Sent Successfully to: '+to);
         },
         error: function(err) {
-            alert('Error in sending Email: ' + JSON.stringify(err));
+            console.log('Error in sending Email: ' + JSON.stringify(err));
         }
     });
 }

@@ -173,8 +173,7 @@ function createDraftRequest(){
 				}, 2000);	
 			});
 		}
-	});
-	
+	});	
 }
 
 /*
@@ -432,20 +431,6 @@ function deleteMyAttachment(QID, fileName){
  * @param {string} statusValue
  */
 function setValue(statusValue){
-	var stepStatus = [
-			{caseStep: 'DRAFT', 						numerStep: 1 	},
-			{caseStep: 'SUBMITTED', 					numerStep: 2 	},
-			{caseStep: 'DIRECTORATE_APPROVAL', 			numerStep: 3 	},
-			{caseStep: 'BILLING_OFFICIAL_APPROVAL', 	numerStep: 4 	},
-			{caseStep: 'J6_APPROVAL', 					numerStep: 5 	},
-			{caseStep: 'PBO_APPROVAL', 					numerStep: 6 	},	
-			{caseStep: 'J8_APPROVAL', 					numerStep: 7 	},
-			{caseStep: 'CARD_HOLDER_VALIDATION', 		numerStep: 8 	},
-			{caseStep: 'REQUESTOR_VALIDATION', 			numerStep: 9.3 	},
-			{caseStep: 'FINAL_VALIDATION', 				numerStep: 9.6 	},
-			{caseStep: 'SUPPLY_VALIDATION',				numerStep: 9.9 	},
-			{caseStep: 'CLOSED', 						numerStep: 10 	}		
-		];
 	for (var i = 0; i < stepStatus.length; i++) {
     	if (stepStatus[i].caseStep === statusValue) {
         	loadProgressBar(stepForwardStatus(statusValue), stepStatus[i].numerStep, "10");
