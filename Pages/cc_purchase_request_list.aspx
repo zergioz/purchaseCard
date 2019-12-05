@@ -249,7 +249,6 @@
 
 			//Format after loading 
 			$("input").addClass("form-control");
-			getCleanUser();
 		});
 	</script>
 	<!-- OVERLAY -->

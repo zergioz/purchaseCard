@@ -35,16 +35,8 @@
 	<script src="../SiteAssets/js/ccHelper.js" type="text/javascript" ></script>
 	<script src="../SiteAssets/js/emailSend.js" type="text/javascript"></script>
 	<link  href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
-	<script type="text/javascript">
-		$body = $("body");
-		/*
-		* Load Splash Screen - wait to load all DOM objects
-		*/
-		$body.addClass("loading");
-	</script>
-
 </head>
-<body>
+<body class="loading">
 <form id="form1"  runat="server">		
 <SharePoint:FormDigest  ID="FormDigest1" runat="server"></SharePoint:FormDigest>
 	<div class="container">
@@ -724,7 +716,6 @@
 </body>
 <!-- START: FOOTER SCRIPTS-->
 <script type="text/javascript">
-	$body = $("body");
 	$(document).ready(function(){
 		/*
 		 * Change card message base on card type
@@ -743,17 +734,13 @@
 		 */
 		getFiscalYear();
 		/*
-		 * Get Card Holder List
-		 */
-		getCardHolder();
-		/*
 		 * Get all SharePoint user 
 		 */
 		getSpUser();
 		/*
 	 	 * Load Purchase Request
 		 */
-		loadCCRequestTracker(getCurrentId());
+		loadRequest(getCurrentId());
 		/*
 		 * Display name of file selected for upload
 		 */
@@ -762,14 +749,6 @@
 		 * Load datepicker 
 		 */
 		$("#RequestDateOfRequest").datepicker();
-		/*
-		/*
-		 * Submit
-		 */
-		$("#btnViewPrint").click(function(){			
-			submitRequest();
-			processSendEmails('submit');
-		});
 		/* 
 		 * Disable all Sign buttons 
 		 */	
@@ -777,9 +756,10 @@
 		/*
 		 * Hide all delete buttons
 		 */
-		 setTimeout(function() {
-			$("input[id^='btnDel']").remove();
-		},3000);
+		 getCardHolder.done(function() {
+			//$("input[id^='btnDel']").hide();
+			$("input[id^='btnDel']").hide();
+		});
 	});
 
 </script>

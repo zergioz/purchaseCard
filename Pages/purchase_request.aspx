@@ -855,7 +855,7 @@
 		/*
 		 * Print 
 		 */
-		 $("#btnViewPrint").click(function(){			
+		$("#btnViewPrint").click(function(){			
 			setPrintViewRedirect(qId,'_blank')
 		});
 		/* 

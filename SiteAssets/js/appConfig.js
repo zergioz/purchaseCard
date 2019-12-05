@@ -152,7 +152,7 @@ var personAttributes = function() {
 var personTraining	= function (){
 	var numItems 	= $('.training').length;
 	var item  		= {}; 
-	for(var j=0;j<numItems;j++){
+	for(var j = 0; j < numItems;j++){
 		item[j] = { 
 			id  	: $('.training')[j].id, 
 			date 	: $('.training')[j].value
@@ -170,7 +170,7 @@ var getApprovalData = function(){
 			/* Directores section */
 			directorateComment:   $("#directorateComments").val(),
 			directorateStatus:    $("#directorateReview").val(), 
-			directorateSignature: encodeURIComponent($("#directorateSignature").val()),
+			directorateSignature: encodeURIComponent( $("#directorateSignature").val()),
 			/* Billin Official section */
 			boComment:   $("#boComments").val(),
 			boStatus:    $("#boReview").val(), 
@@ -283,8 +283,7 @@ var getSpUser = function (){
 	};
 
 	/* enable search on DOM */
-	$('#bloodhound .typeahead')
-	.typeahead({
+	$('#bloodhound .typeahead').typeahead({
 		input: 'Typeahead-input',
 		hint: true,
 		highlight: true,
@@ -419,7 +418,7 @@ function getAllRequest(){
 
 		});       
 	}).fail(function r(xhr, textStatus, errorThrown) {  
-		console("error 'getRequestsList': " + JSON.stringify(xhr));  
+		console.log("error 'getRequestsList': " + JSON.stringify(xhr));  
 	});  
 }
 /*
@@ -434,7 +433,7 @@ function getRequestsListHtml(item){
 					<td>'+ getFiscalInformation(item.J8_APPROVAL,'year') +'</td>\
 					<td>'+ getFiscalInformation(item.J8_APPROVAL,'quater') +'</td>\
 					<td>'+ JSON.parse(item.REQUEST_FIELD).RequestJustification +'</td>\
-					<td><a href="#" onclick="setRequestInformationRedirect('+item.Id+')">' + item.REQUEST_STATUS +'</td>\
+					<td><a href="#" onclick="setRequestInformationRedirect('+item.Id+')">' + stepForwardStatus(item.REQUEST_STATUS) +'</td>\
 				</tr>');
 	getRequestsList.done(function(data) {
 		$(".modalLoad").fadeOut();
@@ -574,16 +573,41 @@ function getFiscalInformation(jsonData,type){
 	return parsedReturn;
 }
 
+/*
+ * Display pending step in the authorization process
+ * @param {string} status
+ */
+function stepForwardStatus(status){
+	var forwardStatus;
+	var stepStatus = [
+		{caseStep: 'DRAFT', 						fwd: "DRAFT" 					},
+		{caseStep: 'SUBMITTED', 					fwd: "DIR APPROVAL" 			},
+		{caseStep: 'DIRECTORATE_APPROVAL', 			fwd: "BO APPROVAL"				},
+		{caseStep: 'BILLING_OFFICIAL_APPROVAL', 	fwd: "J6 APPROVAL" 				},
+		{caseStep: 'J6_APPROVAL', 					fwd: "PBO APPROVAL" 			},
+		{caseStep: 'PBO_APPROVAL', 					fwd: "J8 APPROVAL" 				},	
+		{caseStep: 'J8_APPROVAL', 					fwd: "CARD HOLDER VALIDATION" 	},
+		{caseStep: 'CARD_HOLDER_VALIDATION', 		fwd: "REQUESTOR VALIDATION" 	},
+		{caseStep: 'REQUESTOR_VALIDATION', 			fwd: "FINAL VALIDATION" 		},
+		{caseStep: 'FINAL_VALIDATION', 				fwd: "SUPPLY VALIDATION" 		},
+		{caseStep: 'SUPPLY_VALIDATION',				fwd: "SUPPLY VALIDATION" 		},
+		{caseStep: 'CLOSED', 						fwd: "CLOSED" 					}		
+	];
+	for(var i = 0; stepStatus.length > i; i++ ){
+		status ===  stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwd : false;
+	}
+	return forwardStatus;
+}
+
 /*  
  * Fetch current user username and role and redder context for manipulation -  function might be deprecated in the future  
  */
-function getCleanUser(){
+var getCleanUser = function(){
 	var userName;
 	var a = document.getElementById("loginName").innerText;
 	var t = a.split("\\");
 	var l = t.length;
 	a= t[l-1];
-
 	$(document).ready(function(){
 		userName = $().SPServices.SPGetCurrentUser({ fieldName: "Title"});
 		document.getElementById("cleanUser").innerHTML=userName;
@@ -685,35 +709,35 @@ function redirectUrl(urlAddress){
  	/*
  	 * Disabled all sign buttons
  	 */
- 	$("[id$=Sign]").attr("disabled", true);
+ 	$("[id$=Sign]").attr("disabled", "true");
  	/*
  	 *  Enable sign buttons when changed 
  	 */	
 	$('#directorateReview').change(function(){
-		$('#btnDirectorateSign').attr("disabled", false);
+		$('#btnDirectorateSign').attr("disabled", "false");
 	});
 	$('#boReview').change(function(){
-		$('#btnBoSign').attr("disabled", false);
+		$('#btnBoSign').attr("disabled", "false");
 	});
 	$('#j6Review').change(function(){
-		$('#btnJ6Sign').attr("disabled", false);
+		$('#btnJ6Sign').attr("disabled", "false");
 	});
 	$('#pboReview').change(function(){
-		$('#btnPboSign').attr("disabled", false);
+		$('#btnPboSign').attr("disabled", "false");
 	});
 	$('#j8FiscalYear').change(function(){
-		$('#btnJ8Sign').attr("disabled", false);
+		$('#btnJ8Sign').attr("disabled", "false");
 	});
 	$('#cardHolderComments').keydown(function(){
-		$('#btnCardHolderSign').attr("disabled", false);
+		$('#btnCardHolderSign').attr("disabled", "false");
 	});
 	$('#requestorComments').keydown(function(){
-		$('#btnRequestorSign').attr("disabled", false);
+		$('#btnRequestorSign').attr("disabled", "false");
 	});
 	$('#supplyComments').keydown(function(){
-		$('#btnSupplySign').attr("disabled", false);
+		$('#btnSupplySign').attr("disabled", "false");
 	});
 	$('#j4Comments').keydown(function(){
-		$('#btnJ4Sign').attr("disabled", false);
+		$('#btnJ4Sign').attr("disabled", "false");
 	});
  }	

@@ -331,7 +331,6 @@
 			 * Load user all data this page is for new account and it should be empty.  
 			 */ 
 			getCommandData();	
-			getCleanUser();
 			getDirectorate();
 			getRank();
 			getRole();

@@ -326,7 +326,6 @@
 		 */ 
 		userId = window.location.search.substring(10);
 		getCommandData();	
-		getCleanUser();
 		getDirectorate();
 		getRank();
 		getRole();

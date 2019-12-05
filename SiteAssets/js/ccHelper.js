@@ -36,7 +36,6 @@ function GetCurrentUser(){
  *  - JSon property name in array form 
  */
 function loadRequest(qId){
-	var qId;	
 	if (qId > 0) {
 		loadRequestDetails(qId);
 	}else{
@@ -85,7 +84,7 @@ function loadRequestDetails(qId){
 			setValue(data.d.REQUEST_STATUS);
 			// upload feature
 			disableUploads(qId);
-			disableSubmit(qId);	
+			disableSubmit(qId,data.d.REQUEST_STATUS);	
 			// list attachments
 			listMyAttachments(qId);
 			// status is closed?
@@ -153,6 +152,7 @@ function loadDetailsDom(requestDetails){
  * Create draft request and fetch request id to redirect
  */
 function createDraftRequest(){
+	console.log("function: createDraftRequest");
 	$().SPServices({
 		operation: "UpdateListItems",
 		webURL: siteUrl,
@@ -181,7 +181,6 @@ function createDraftRequest(){
  * Set request status to submit
  */
 function modifyDraftRequest(){
-	// DEBUG 
 	console.log("function: modifyDraftRequest");
 	$().SPServices({
 		operation: "UpdateListItems",
@@ -206,21 +205,16 @@ function modifyDraftRequest(){
  * Save data as JSON string to SharePoint list - DRAFT button.
  */
 function submitDraft(){
-	// DEBUG 
 	console.log("Function: Save Draft");
-	// for undefined requests "new" entries. Create and add details and save draft
 	typeof qId === 'undefined' ? createDraftRequest() : modifyDraftRequest();
 }
 
 /*
- * Submit Form
+ * Submit Form to create draft of submiting for approval
  */
 function submitRequest(){
-	/* DEBUG */
 	console.log("submitRequest", qId);
-	/* Save latest changes */
 	submitDraft();
-	/* Change status of request to SUBMITTED */
 	createSubmit();
 }
 
@@ -228,7 +222,6 @@ function submitRequest(){
  * Chaange request to submit
  */
 function createSubmit(){
-	/* Change Status */
 	$().SPServices({
 		operation: "UpdateListItems",
 		webURL: siteUrl,
@@ -270,7 +263,6 @@ function submitReview(fieldUpdate,fieldJson){
  * Close request and set read only
  */
 function closeRequest(){
-	/* DEBUG */
 	console.log("Function: closeRequest");
 	$().SPServices({
 		operation: "UpdateListItems",
@@ -456,7 +448,7 @@ function setValue(statusValue){
 		];
 	for (var i = 0; i < stepStatus.length; i++) {
     	if (stepStatus[i].caseStep === statusValue) {
-        	loadProgressBar(statusValue, stepStatus[i].numerStep, "10");
+        	loadProgressBar(stepForwardStatus(statusValue), stepStatus[i].numerStep, "10");
         }
     }				
 }
@@ -468,11 +460,7 @@ function setValue(statusValue){
 function loadRowDetails(startCounter){
 	var counter;
 	typeof startCounter === 'undefined' ? counter = 0 : counter = startCounter.Details.length;
-	/*
-	 * Add row action 
-	 * - Append to last row
-	 * - Enable and disable the delete button and keep last row delete enabled
-	 */
+	// Add row action  - Append to last row - Enable and disable the delete button and keep last row delete enabled
 	$("#btnAddRow").on("click", function(){	
 		var newRow 		= $("<tr>");
 		var cols 		= "";
@@ -482,11 +470,7 @@ function loadRowDetails(startCounter){
 		createDetails(counter);
 		disableDeleteBtn(counter,2);	
 	});
-	/*
-	 * Remove row action and add totals based on change
-	 * - Remove last row
-	 * - Update total 
-	 */
+	// Remove row action and add totals based on change - Remove last row - Update total
 	$("#myPurchaseRequest").on("click", ".ibtnDel", function (event){
 		var grandTotal	= 0;
 		$(this).closest("tr").remove();       
@@ -497,9 +481,7 @@ function loadRowDetails(startCounter){
 			.each(function(){
 				grandTotal += +$(this).val();
 		});
-		/*
-		 * Adding and substracting the total as itemas are added or removed
-		 */	
+		// Adding and substracting the total as itemas are added or removed	
 		addGrandTotal(grandTotal);
 	});			
 }
@@ -542,15 +524,13 @@ function createDetailsJson(){
 	/* THIS IS NEEDS TO BE RE-WRITTEN */
 	var detailsJson ='{';
 		detailsJson+='"Details":[';
-	for (i = 0; i < itemsDetails.length; i++) {
+	for (var i = 0; i < itemsDetails.length; i++) {
 		detailsJson += '{';
 		detailsJson += '"requestQty":"'		+ 	$('#RequestQTY'+i).val() 	+'",'; 
 		detailsJson += '"requestDesc":"'	+ 	$('#Description'+i).val() 	+'",';
 		detailsJson += '"requestSrc":"'		+ 	$('#Source'+i).val() 		+'",';
 		detailsJson += '"requestDdForm":"'	+ 	$('#DD'+i).is( ":checked" )	+'",';
-		/*
-		 * add or remove trailing comma  based on record count 
-		 */
+		// add or remove trailing comma  based on record count 
 		if( itemsDetails.length == 1 || i+1 == itemsDetails.length ){
 			detailsJson += '"requestCost":"'	+	$('#RequestCost'+i).val()	+'",';	
 			detailsJson += '"requestTotal":"'	+ 	$('#RequestTotal'+i).val()	+'"';
@@ -562,10 +542,7 @@ function createDetailsJson(){
 		}
 	}
 	detailsJson += '}]}';
-
-	/*
-	 * Safegate for empty entries 
-	 */
+	// hack for empty entries 
 	if (itemsDetails.length > 0) {
 		return detailsJson;
 	}else{
@@ -593,7 +570,6 @@ function createJsonResponse(responseArray){
  * which should match the DOM id to update
  */
 function setApprovalProcess(reviewStep){
-	/* Look up for value to submit and fill with comment and signature */
 	for (var i = 0; i < returnedStep.length; i++) {	
     	if (returnedStep[i].stepName === reviewStep) {
         	submitReview(returnedStep[i].stepStatus, createJsonResponse(returnedStep[i].stepArray));
@@ -611,7 +587,6 @@ function setApprovalProcess(reviewStep){
 			$(domArray[2]).val(decodeURIComponent(JSON.parse(tabResponse)[responseArray[2]]));
 			$(domArray[3]).val(JSON.parse(tabResponse)[responseArray[3]]);
 		 	$(domArray[4]).val(JSON.parse(tabResponse)[responseArray[4]]);
-		/* Update tab status function */
 		if (responseArray[2] !== 'j8Status'){
 			tabReviewStatus(JSON.parse(tabResponse)[responseArray[2]],tabText);
 		}
@@ -623,14 +598,14 @@ function setApprovalProcess(reviewStep){
 
 /* 
  * Create signature for request form
+ * - Look up for value to submit and fill with comment and signature 
+ * - Close request when J4 Signs
  */
 function signRequest(reviewStep){
 	var now = new Date();
-	/* Look up for value to submit and fill with comment and signature */
 	for (var i = 0; i < returnedSignatureStep.length; i++) {
     	if ('signRequest', returnedSignatureStep[i].name === reviewStep) {
         	$(returnedSignatureStep[i].domId).val("SIGNED BY: "+getUserName().Name+" ON: "+now);
-        	/* Close request when J4 Signs */
         	 if (returnedSignatureStep[i].name  === 'j4') {
         	 	closeRequest();
         	}
@@ -739,8 +714,9 @@ function enableUploadStatus(step){
  * disabled submit when a new purchase request is created. 
  * Submit is only available after saving the first draft to present users mistakes 
  */
-function disableSubmit(qId){
+function disableSubmit(qId,requestStatus){
 	typeof qId === 'undefined' ? $("#btnSubmitRequest").attr('disabled', 'disabled') : $("#btnSubmitRequest").attr('title', 'Submit Request');
+	requestStatus !== 'DRAFT'  ? $("#btnSubmitRequest").attr('disabled', 'disabled') : $("#btnSubmitRequest").attr('title', 'Submit Request');
 }
 
 /*
@@ -902,6 +878,4 @@ function getFiscalYear(){
 		$('#j8FiscalYear').append('<option value="'+fiscalYear[i]+'">'+fiscalYear[i]+'</option>');
 	}
 }
-
-
 
