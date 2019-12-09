@@ -5,7 +5,7 @@ function processSendEmails(value) {
     var body = "There is a request pending for your review: https://soceur.sof.socom.mil/app/GPC/Pages/Purchase_Request.aspx?id="+qId + " please review";
 	//var subject = "GPC Card Request:"+qId;
 
-	/* DEBUG */
+	// DEBUG
 	//console.log(requestNotification);
 	//console.log("requested by: ", requestNotification.Requestor);
 	//console.log("card holder: ", requestNotification.RequestorCardHolderName);
@@ -75,7 +75,7 @@ function processSendEmails(value) {
         console.log('Send to Cardholder', requestNotification.RequestorCardHolderName);
         subject = 'Card holder purchase request notification | request: '+qId;
 		var to = requestNotification.RequestorCardHolderName;
-		//sendEmail(from, to, body, subject);		
+		sendEmail(from, to, body, subject);		
     }
     if(value === 'cardholder') {
         console.log('Send J8 and Requestor,');
@@ -125,14 +125,9 @@ function sendEmail(from, to, body, subject) {
         url: urlTemplate,
         type: "POST",
         data: JSON.stringify({
-            'properties': {
-                '__metadata': {
-                    'type': 'SP.Utilities.EmailProperties'
-                },
+                'properties': {'__metadata': {'type': 'SP.Utilities.EmailProperties'},
                 'From': from,
-                'To': {
-                    'results': [to]
-                },
+                'To': {'results': [to]},
                 'Body': body,
                 'Subject': subject
             }
@@ -143,7 +138,6 @@ function sendEmail(from, to, body, subject) {
             "X-RequestDigest": jQuery("#__REQUESTDIGEST").val()
         },
         success: function(data) {
-			//DEBUG
             alert('Email Sent Successfully to: '+to);
         },
         error: function(err) {

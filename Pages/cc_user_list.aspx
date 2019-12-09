@@ -238,22 +238,6 @@
 	<!-- JS CALLS -->
 	<script type="text/javascript">
 		getAllUser();
-		$.when(getUsersList).done(function(data){
-			$('#myTable').tablesorter({
-			sortList : [[0,1]],
-			widgets: ['filter', 'pager']
-			})
-			.tablesorterPager({
-				container: '.pager',
-				size: 10, 
-				output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
-				removeRows: true,
-				fixedHeight: false,
-				cssGoto: '.gotoPage'	
-			});
-			// Format after loading 
-			$("input").addClass("form-control");
-		});	
 	</script>
 	<!-- OVERLAY -->
 	<div class="modalLoad"><!-- MODAL PAGE--></div>	

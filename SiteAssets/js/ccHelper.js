@@ -63,7 +63,7 @@ function loadRequestDetails(qId){
 	});
 	/*jshint multistr: true */
 	getCardHolder.then(function data(){
-		$.when(request).done(function(data) {  
+		$.when(request).done(function(data) {
 			requestNotification = JSON.parse(data.d.REQUEST_FIELD);
 			// General information
 			loadRequestorHtml(JSON.parse(data.d.REQUEST_FIELD));			
@@ -76,12 +76,14 @@ function loadRequestDetails(qId){
 			loadReviewTab((data.d.PBO_APPROVAL),['#pboComments','#pboSignature','#pboReview'],['pboComment','pboSignature','pboStatus'],'#propertyBookText');
 			loadReviewTab((data.d.BUDGET_OFFICER_APPROVAL),['#budgetOfficerComments','#budgetOfficerSignature','#budgetOfficerReview'],['budgetOfficerComment','budgetOfficerSignature','budgetOfficerStatus'],'#budgetOfficerText');
 			loadReviewTab((data.d.J8_APPROVAL),['#j8Comments','#j8Signature','#j8Review','#j8FiscalYear','#j8Quater'],['j8Comment','j8Signature','j8Status','j8FiscalYear','j8Quater'],'#j8Text');
-			loadReviewTab((data.d.CARD_HOLDER_VALIDATION),['#cardHolderComments','#cardHolderTransactionId','#cardHolderSignature'],['cardHolderComment','cardHolderTransactionId','cardHolderSignature'],'#cardHolderText');
+			loadReviewTab((data.d.CARD_HOLDER_VALIDATION),['#cardHolderComments','#cardHolderTransactionId','#cardHolderExecuted','#cardHolderSignature'],
+														  ['cardHolderComment'  ,'cardHolderTransactionId' ,'cardHolderExecuted' ,'cardHolderSignature'],
+														  '#cardHolderText');
 			loadReviewTab((data.d.REQUESTOR_VALIDATION),['#requestorComments','#requestorSignature'],['requestorComment','requestorSignature'],'#requestorText');	
 			loadReviewTab((data.d.SUPPLY_VALIDATION),['#supplyComments','#supplySignature'],['supplyComment','supplySignature'],'#supplyText');
 			loadReviewTab((data.d.FINAL_VALIDATION),['#j4Comments','#j4Signature'],['j4Comment','j4Signature'],'#j4Text');
 			// Update bar
-			setValue(data.d.REQUEST_STATUS);
+			setValue(data.d.REQUEST_STATUS, requestNotification.RequestIsJ6);
 			// upload feature
 			disableUploads(qId);
 			disableSubmit(qId,data.d.REQUEST_STATUS);	
@@ -138,6 +140,7 @@ function loadDetailsDom(requestDetails){
 		$("#RequestQTY"+counter).val(requestDetails.Details[counter].requestQty);
 		$("#Description"+counter).val(requestDetails.Details[counter].requestDesc);
 		$("#DD"+counter).prop( "checked", isBool(requestDetails.Details[counter].requestDdForm));
+		$("#DA"+counter).prop( "checked", isBool(requestDetails.Details[counter].requestDaForm));
 		$("#Source"+counter).val(requestDetails.Details[counter].requestSrc);
 		$("#RequestCost"+counter).val(requestDetails.Details[counter].requestCost);
 		$("#RequestTotal"+counter).val(requestDetails.Details[counter].requestTotal);
@@ -430,10 +433,10 @@ function deleteMyAttachment(QID, fileName){
  * This function translates the status to a number to pass to the status bar
  * @param {string} statusValue
  */
-function setValue(statusValue){
+function setValue(statusValue,isJ6){
 	for (var i = 0; i < stepStatus.length; i++) {
     	if (stepStatus[i].caseStep === statusValue) {
-        	loadProgressBar(stepForwardStatus(statusValue), stepStatus[i].numerStep, "10");
+        	loadProgressBar(stepForwardStatus(statusValue,isJ6), stepStatus[i].numerStep, "10");
         }
     }				
 }
@@ -480,11 +483,11 @@ function rowDetailsColHtml(counter,cols){
 		cols +=	'<td><input id="Description'+counter+'" type="text" class="form-control form-control-sm" name="Desc' + counter + '"/></td>';
 		cols +=	'<td><input id="Source'+counter+'" type="text" class="form-control form-control-sm" name="Src' + counter + '"/></td>';
 		cols +=	'<td><input id="RequestCost'+counter+'" type="text" onchange="updateForm(\''+counter+'\')" class="form-control form-control-sm" name="Cost' + counter + '"/></td>';
-		cols +=	'<td><input id="Rate'+counter+'" type="text"     class="form-control form-control-sm" name="Rate' + counter + '"/></td>';
-	  	cols +=	'<td><input id="DD'+counter+'"   type="checkbox"  class="form-control form-control-sm" name="DD' + counter + '" style="border:none;border-radius:0px;"/></td>';
-		//cols +=	'<td><input id="DD'+counter+'"   type="checkbox"  checked data-toggle="toggle"         name="DD' + counter + '" data-on="Yes" data-off="No">';
-		cols +=	'<td><input id="RequestTotal'+counter+'" type="text" class="form-control form-control-sm" name="Total' + counter + '" readonly="readonly"/></td>';
-		cols +=	'<td><input type="button"  id="btnDel-'+counter+'" class="ibtnDel btn btn-sm btn-danger" style="width:100%"  value="&#10060; Delete" onclick="enableDeleteBtn(this)"></td>';
+		cols +=	'<td><input id="Rate'+counter+'" type="text"     		class="form-control form-control-sm" name="Rate' + counter + '"/></td>';
+	  	cols +=	'<td><input id="DD'+counter+'"   type="checkbox"  		class="form-control form-control-sm" name="DD' + counter + '" style="border:none;border-radius:0px;"/></td>';
+		cols +=	'<td><input id="DA'+counter+'"   type="checkbox"  		class="form-control form-control-sm" name="DA' + counter + '" style="border:none;border-radius:0px;"/></td>';
+		cols +=	'<td><input id="RequestTotal'+counter+'" type="text" 	class="form-control form-control-sm" name="Total' + counter + '" readonly="readonly"/></td>';
+		cols +=	'<td><input type="button"  id="btnDel-'+counter+'" 		class="ibtnDel btn btn-sm btn-danger" style="width:100%"  value="&#10060; Delete" onclick="enableDeleteBtn(this)"></td>';
 		return cols;
 }
 
@@ -515,6 +518,7 @@ function createDetailsJson(){
 		detailsJson += '"requestDesc":"'	+ 	$('#Description'+i).val() 	+'",';
 		detailsJson += '"requestSrc":"'		+ 	$('#Source'+i).val() 		+'",';
 		detailsJson += '"requestDdForm":"'	+ 	$('#DD'+i).is( ":checked" )	+'",';
+		detailsJson += '"requestDaForm":"'	+ 	$('#DA'+i).is( ":checked" )	+'",';
 		// add or remove trailing comma  based on record count 
 		if( itemsDetails.length == 1 || i+1 == itemsDetails.length ){
 			detailsJson += '"requestCost":"'	+	$('#RequestCost'+i).val()	+'",';	
@@ -550,6 +554,26 @@ function createJsonResponse(responseArray){
 	return jsonString;
 }
 
+
+/* 
+ * Create signature for request form
+ * - Look up for value to submit and fill with comment and signature 
+ * - Close request when J4 Signs
+ */
+function signRequest(reviewStep){
+	var now = new Date();
+	for (var i = 0; i < returnedStep.length; i++) {
+    	if (returnedStep[i].stepName === reviewStep) {
+        	$(returnedStep[i].domId).val("SIGNED BY: "+getUserName().Name+" ON: "+now);
+			/* 
+			if (returnedStep[i].name  === 'j4') {
+        	 	closeRequest();
+			}
+			*/
+        }
+    }
+}
+
 /*
  * Approval signatures and comments. Provide JSON items to parse 
  * which should match the DOM id to update
@@ -557,7 +581,7 @@ function createJsonResponse(responseArray){
 function setApprovalProcess(reviewStep){
 	for (var i = 0; i < returnedStep.length; i++) {	
     	if (returnedStep[i].stepName === reviewStep) {
-        	submitReview(returnedStep[i].stepStatus, createJsonResponse(returnedStep[i].stepArray));
+			submitReview(returnedStep[i].stepStatus, createJsonResponse(returnedStep[i].stepArray));
         }
     }		
 }
@@ -570,7 +594,7 @@ function setApprovalProcess(reviewStep){
  			$(domArray[0]).val(JSON.parse(tabResponse)[responseArray[0]]);
 			$(domArray[1]).val(decodeURIComponent(JSON.parse(tabResponse)[responseArray[1]]));
 			$(domArray[2]).val(decodeURIComponent(JSON.parse(tabResponse)[responseArray[2]]));
-			$(domArray[3]).val(JSON.parse(tabResponse)[responseArray[3]]);
+			$(domArray[3]).val(decodeURIComponent(JSON.parse(tabResponse)[responseArray[3]]));
 		 	$(domArray[4]).val(JSON.parse(tabResponse)[responseArray[4]]);
 		if (responseArray[2] !== 'j8Status'){
 			tabReviewStatus(JSON.parse(tabResponse)[responseArray[2]],tabText);
@@ -579,23 +603,6 @@ function setApprovalProcess(reviewStep){
 			tabReviewStatus(JSON.parse(tabResponse)[responseArray[3]],tabText);
 		}
 	 }
-}
-
-/* 
- * Create signature for request form
- * - Look up for value to submit and fill with comment and signature 
- * - Close request when J4 Signs
- */
-function signRequest(reviewStep){
-	var now = new Date();
-	for (var i = 0; i < returnedSignatureStep.length; i++) {
-    	if ('signRequest', returnedSignatureStep[i].name === reviewStep) {
-        	$(returnedSignatureStep[i].domId).val("SIGNED BY: "+getUserName().Name+" ON: "+now);
-        	 if (returnedSignatureStep[i].name  === 'j4') {
-        	 	closeRequest();
-        	}
-        }
-    }
 }
 
 /*

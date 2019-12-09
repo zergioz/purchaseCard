@@ -20,7 +20,7 @@ var requestNotification;
 var getRequestsList;
 var getUsersList;
 var getTrainingList ;
-var isJ6;
+
 /*
  * Constant values
  */ 
@@ -65,30 +65,31 @@ var stepStatus = [
 	{caseStep: 'PBO_APPROVAL', 					fwd: "J8 APPROVAL", 			fwdj6:"J8 APPROVAL", numerStep:6},	
 	{caseStep: 'J8_APPROVAL', 					fwd: "CARD HOLDER VALIDATION",	fwdj6:"CARD HOLDER VALIDATION", numerStep:7},
 	{caseStep: 'CARD_HOLDER_VALIDATION', 		fwd: "REQUESTOR VALIDATION",	fwdj6:"REQUESTOR VALIDATION", numerStep:8},
-	{caseStep: 'REQUESTOR_VALIDATION', 			fwd: "FINAL VALIDATION",		fwdj6:"FINAL VALIDATION", numerStep:9.3},
-	{caseStep: 'FINAL_VALIDATION', 				fwd: "SUPPLY VALIDATION",		fwdj6:"SUPPLY VALIDATION", numerStep:9.6},
-	{caseStep: 'SUPPLY_VALIDATION',				fwd: "PENDING CLOSING",			fwdj6:"PENDING CLOSING", numerStep:9.9},
+	{caseStep: 'REQUESTOR_VALIDATION', 			fwd: "SUPPLY VALIDATION",		fwdj6:"SUPPLY VALIDATION", numerStep:9.3},
+	{caseStep: 'SUPPLY_VALIDATION',				fwd: "PENDING PBO FINAL",		fwdj6:"PENDING PBO FINAL", numerStep:9.6},
+	{caseStep: 'FINAL_VALIDATION', 				fwd: "PENDING CLOSING",			fwdj6:"PENDING CLOSING", numerStep:9.9},
 	{caseStep: 'CLOSED', 						fwd: "CLOSED",					fwdj6:"CLOSED", numerStep:10}		
 ];
 /* 
  * Verification steps 
  */
 var returnedStep = 	[	
-		{stepName: 'directorate',	stepStatus:'DIRECTORATE_APPROVAL', 		stepArray: ['directorateComment','directorateStatus','directorateSignature']},
-		{stepName: 'bo', 			stepStatus:'BILLING_OFFICIAL_APPROVAL', stepArray: ['boComment','boStatus','boSignature']},
-		{stepName: 'j6',	 		stepStatus:'J6_APPROVAL', 				stepArray: ['j6Comment','j6Status','j6Signature'] },
-		{stepName: 'pbo', 			stepStatus:'PBO_APPROVAL', 				stepArray: ['pboComment','pboStatus','pboSignature']},
-		{stepName: 'budget',		stepStatus:'BUDGET_OFFICER_APPROVAL',	stepArray: ['budgetOfficerComment','budgetOfficerStatus','budgetOfficerSignature']},
-		{stepName: 'j8',			stepStatus:'J8_APPROVAL', 				stepArray: ['j8Comment','j8FiscalYear','j8Quater','j8Signature']},
-		{stepName: 'cardholder',	stepStatus:'CARD_HOLDER_VALIDATION', 	stepArray: ['cardHolderComment','cardHolderTransactionId','cardHolderSignature']},
-		{stepName: 'requestor',		stepStatus:'REQUESTOR_VALIDATION', 		stepArray: ['requestorComment','requestorSignature']},
-		{stepName: 'supply',		stepStatus:'SUPPLY_VALIDATION', 		stepArray: ['supplyComment','supplySignature']},
-		{stepName: 'j4',			stepStatus:'FINAL_VALIDATION', 			stepArray: ['j4Comment','j4Signature']}
+		{stepName: 'directorate',	stepStatus:'DIRECTORATE_APPROVAL', 		stepArray: ['directorateComment','directorateStatus','directorateSignature'], domId: '#directorateSignature'},
+		{stepName: 'bo', 			stepStatus:'BILLING_OFFICIAL_APPROVAL', stepArray: ['boComment','boStatus','boSignature'],domId: '#boSignature'},
+		{stepName: 'j6',	 		stepStatus:'J6_APPROVAL', 				stepArray: ['j6Comment','j6Status','j6Signature'],domId: '#j6Signature' },
+		{stepName: 'pbo', 			stepStatus:'PBO_APPROVAL', 				stepArray: ['pboComment','pboStatus','pboSignature'],domId: '#pboSignature'},
+		{stepName: 'budget',		stepStatus:'BUDGET_OFFICER_APPROVAL',	stepArray: ['budgetOfficerComment','budgetOfficerStatus','budgetOfficerSignature'],domId: '#budgetOfficerSignature'},
+		{stepName: 'j8',			stepStatus:'J8_APPROVAL', 				stepArray: ['j8Comment','j8FiscalYear','j8Quater','j8Signature'],domId: '#j8Signature'},
+		{stepName: 'cardholder',	stepStatus:'CARD_HOLDER_VALIDATION', 	stepArray: ['cardHolderComment','cardHolderTransactionId','cardHolderExecuted','cardHolderSignature'],domId: '#cardHolderSignature'},
+		{stepName: 'requestor',		stepStatus:'REQUESTOR_VALIDATION', 		stepArray: ['requestorComment','requestorSignature'],domId: '#requestorSignature'},
+		{stepName: 'supply',		stepStatus:'SUPPLY_VALIDATION', 		stepArray: ['supplyComment','supplySignature'],domId: '#supplySignature'},
+		{stepName: 'j4',			stepStatus:'FINAL_VALIDATION', 			stepArray: ['j4Comment','j4Signature'],domId: '#j4Signature'}
 	];
 
 /*
  * Return signature values for each step
  */
+/*
 var returnedSignatureStep = [	
 		{name: 'directorate',	domId: '#directorateSignature' },
 		{name: 'bo', 			domId: '#boSignature'},
@@ -101,6 +102,7 @@ var returnedSignatureStep = [
 		{name: 'supply',		domId: '#supplySignature'},
 		{name: 'j4',			domId: '#j4Signature'}
 	];	
+*/
 
 /*
  * Create object with all the initial values
@@ -178,7 +180,7 @@ var personTraining	= function (){
 }
 
 /*
- * Gather Approval data inpurt from form
+ * Gather Approval data input from form
  */
 var getApprovalData = function(){
 	var ApprovalData = {	
@@ -210,6 +212,7 @@ var getApprovalData = function(){
 			/* Card Holder section */
 			cardHolderComment:       $("#cardHolderComments").val(),
 			cardHolderTransactionId: $("#cardHolderTransactionId").val(),
+			cardHolderExecuted: $("#cardHolderExecuted").val(),
 			cardHolderSignature: encodeURIComponent($("#cardHolderSignature").val()),
 			/* Requestor section */
 			requestorComment: $("#requestorComments").val(),
@@ -378,9 +381,6 @@ function getAllUser(){
 		$.each(data.d.results, function( index, value ) {
 			getUsersListHtml(value);
 		});
-		getUsersList.done(function(data) {
-			$(".modalLoad").fadeOut();
-		});
 	});
 }
 
@@ -398,6 +398,26 @@ function getUsersListHtml(item){
 				<td>'+ item.PERSON_EMAIL +'</td>\
 				<td><a href="#" onclick="setUserInformationRedirect('+item.Id+');">'+ item.PERSON_DIRECTORATE +'</td>\
 			</tr>');
+
+	getUsersList.done(function(data) {
+		// FadeOut Splash Screen
+		$(".modalLoad").fadeOut();
+		// Enable table sorter once rows are loaded
+		$('#myTable').tablesorter({
+			sortList : [[0,1]],
+			widgets: ['filter', 'pager']
+			})
+		.tablesorterPager({
+			container: '.pager',
+			size: 10, 
+			output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+			removeRows: true,
+			fixedHeight: false,
+			cssGoto: '.gotoPage'	
+		});
+		// Format after loading 
+		$("input").addClass("form-control");
+	});			
 }
 
 /*
@@ -452,7 +472,7 @@ function getAllRequest(){
 	});  
 }
 /*
- * Load values and append rows
+ * Load values and append rows - fadeout splash screen 
  */
 function getRequestsListHtml(item){
 	$('#requestList')
@@ -463,11 +483,27 @@ function getRequestsListHtml(item){
 					<td>'+ getFiscalInformation(item.J8_APPROVAL,'year') +'</td>\
 					<td>'+ getFiscalInformation(item.J8_APPROVAL,'quater') +'</td>\
 					<td>'+ JSON.parse(item.REQUEST_FIELD).RequestJustification +'</td>\
-					<td><a href="#" onclick="setRequestInformationRedirect('+item.Id+')">' + stepForwardStatus(item.REQUEST_STATUS) +'</td>\
+					<td><a href="#" onclick="setRequestInformationRedirect('+item.Id+')">' + stepForwardStatus(item.REQUEST_STATUS,JSON.parse(item.REQUEST_FIELD).RequestIsJ6) +'</td>\
 				</tr>');
+
 	getRequestsList.done(function(data) {
+		// Fadeout Splash Screen
 		$(".modalLoad").fadeOut();
-	});			
+		// Enable sorting after finished loading rows
+		$('#myTable').tablesorter({
+			sortList : [[0,1]],
+			widgets: ['filter', 'pager']
+		}).tablesorterPager({
+			container: '.pager',
+			size: 10, 
+			output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
+			removeRows: true,
+			fixedHeight: false,
+			cssGoto: '.gotoPage'	
+		});	
+		//Format after loading 
+		$("input").addClass("form-control");
+	});		
 }
 
 /*
@@ -607,17 +643,17 @@ function getFiscalInformation(jsonData,type){
  * Display pending step in the authorization process
  * @param {string} status
  */
-function stepForwardStatus(status){
+function stepForwardStatus(status,isJ6){
+	console.log(status + " " + isJ6);
 	var forwardStatus;
 	for(var i = 0; stepStatus.length > i; i++ ){
-		if(isJ6 !== true){
-			status ===  stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwd : false;
-		}else{
-			status ===  stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwdj6 : false;
-		}
-	}
+		//console.log(stepStatus[i].fwd);
+		isJ6 === 'Yes' ?   ( status === stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwdj6 : false) :
+							 status === stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwd   : false;
+	}			
 	return forwardStatus;
 }
+
 
 /* 
  * Fetch all directorate for form consumption and data input standardization 
@@ -649,7 +685,7 @@ function getRole(){
 /*
  * Get user name for current user
  */
-function getUserName(){
+var getUserName = function(){
 	return $().SPServices.SPGetCurrentUser({ fieldNames: ["Title", "Name"]});
 }
 
@@ -678,7 +714,6 @@ var setCurrency = function(){
 var setJ6Validation = function(){
 	var returnCurrent;
 	$("#RequestIsJ6").is(":checked") === true ? returnCurrent = 'Yes': returnCurrent = 'No';
-	isJ6 = returnCurrent;
 	return returnCurrent;
 }
 

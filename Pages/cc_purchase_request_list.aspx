@@ -207,12 +207,12 @@
 								<ul class="navbar-nav">
 									<li class="nav-item">
 										<a class="nav-link prev disabled" href="#" aria-label="Previous Page" tabindex="0" title="Previous page" alt="Prev">
-											<span aria-hidden="true">&laquo; Previous Page</span>
+											<span aria-hidden="true">&laquo; Previous</span>
 										</a>
 									</li>							
 									<li class="nav-item">
 										<a class="nav-link next disabled" href="#" aria-label="Next" tabindex="0" title="Next page" alt="Next">
-											<span aria-hidden="true">Next Page &raquo;</span>
+											<span aria-hidden="true">Next &raquo;</span>
 										</a>
 									</li>
 									<li class="nav-item dropdown">
@@ -234,22 +234,6 @@
 	<!-- JS CALLS -->
 	<script type="text/javascript">
 		getAllRequest();
-		getRequestsList.done(function() {
-			$('#myTable').tablesorter({
-				sortList : [[0,1]],
-				widgets: ['filter', 'pager']
-			}).tablesorterPager({
-				container: '.pager',
-				size: 10, 
-				output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
-				removeRows: true,
-				fixedHeight: false,
-				cssGoto: '.gotoPage'	
-			});	
-
-			//Format after loading 
-			$("input").addClass("form-control");
-		});
 	</script>
 	<!-- OVERLAY -->
 	<div class="modalLoad"><!-- MODAL PAGE--></div>

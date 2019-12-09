@@ -26,8 +26,7 @@
 	<script src="../SiteAssets/js/chart.js"></script>
     <script src="../SiteAssets/js/bootstrap4-toggle.min.js"></script>
     <script src="../SiteAssets/js/typeahead.bundle.js" type="text/javascript"></script>
-  
-      
+        
     <!-- CUSTOM: LIBRARIES -->
     <script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
 	<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
@@ -76,7 +75,6 @@
 
 				<!-- ROW ONE-->	
 				<div class="row">
-					
 					<div class="col-lg-1" style="text-align:right;">
 						<p class="card-text">Requestor</p>
 					</div>
@@ -87,7 +85,6 @@
 							</div>
 						</div>
 					</div>
-
 					<div class="col-lg-1" style="text-align:right;">
 						<p class="card-text">Requestor DSN</p>
 					</div>
@@ -151,7 +148,6 @@
 							<!-- ICON -->
 						</div>
 					</div>
-
 					<div class="col-lg-1" style="text-align:right;">
 						<p class="card-text">Directorate</p>
 					</div>
@@ -188,7 +184,6 @@
 							<!-- ICON -->
 						</div>
 					</div>
-
 					<div class="col-lg-1" style="text-align:right;">
 						<p class="card-text">Funding</p>
 					</div>
@@ -228,7 +223,8 @@
 					</div>
 				</div>
 				<hr>
-				<!-- ROW SEVEN -->
+
+				<!-- ROW EIGHT -->
 				<div class="row">
 					<div class="col-lg-2" style="text-align:right;">
 						<p class="card-text"><i class="fa fa-asterisk"></i> J6 Request?</p>
@@ -245,7 +241,6 @@
 	</div>	
 	<!--END REQUEST SECTION-->
 			
-	
 	<!--BEGIN PURCHASE DETAILS SECTION-->
 	<div class="container-fluid">
 		<div class="card mb-4 box-shadow">
@@ -262,6 +257,7 @@
 								<th>Unit Cost</th>
 								<th>Rate</th>
 								<th>DD250</th>
+								<th>DA2062</th>
 								<th>Total</th>
 								<th></th>
 							</tr>
@@ -272,12 +268,12 @@
 						<tfoot>
 							<tr>
 								<td colspan="6"></td>
-								<td colspan="1"><p>Total:$</p></td>
-								<td colspan="3"><p id="grandTotal"></p></td>
+								<td colspan="2"><p>Grand Total:$</p></td>
+								<td colspan="4"><p id="grandTotal"></p></td>
 							</tr>
 							<tr>
 								<td colspan="6"></td>
-								<td colspan="2"><button type="button" class="btn btn-block btn-success" id="btnAddRow" value="Add a Row"> <i class="fa fa-plus"> Add Row</i></button></td>
+								<td colspan="3"><button type="button" class="btn btn-block btn-success" id="btnAddRow" value="Add a Row"> <i class="fa fa-plus"> Add Row</i></button></td>
 							</tr>
 						</tfoot>
 					</table>
@@ -301,8 +297,7 @@
 								<label class="custom-file-label" for="inputGroupFile03">Choose File</label>
 							</div>	
 							<div class="input-group-append">
-								<button type="button" value="Upload File" class="btn btn-outline-secondary" id="btnSaveUpload" title="Create a draft version before uploading" 
-								data-toggle="modal" data-target="#uploadModal"><i class="fa fa-cloud-upload"></i> Upload</button>
+								<button type="button" value="Upload File" class="btn btn-outline-secondary" id="btnSaveUpload" title="Create a draft version before uploading" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-cloud-upload"></i> Upload</button>
 							</div>					
 						</div>
 					</div>
@@ -342,9 +337,9 @@
 			<div class="card-header">Reviewing Process:</div>
 			<div class="card-body">
 				<div class="row">
-					<div class="container-fluid">
 
-						<!--BEGIN BUTTON ROW-->
+					<!--BEGIN BUTTON ROW-->
+					<div class="container-fluid">
 						<ul class="nav nav-tabs flex-sm-row col-lg-12 nav-justified">
 							<li class="nav-item active">
 								<a class="nav-link active" data-toggle="tab" href="#directoratePane"><p id="directorateText">Directorate</p></a>
@@ -353,7 +348,7 @@
 								<a class="nav-link" data-toggle="tab" href="#billingOfficialPane"><p id="billingOfficialText">BO</p></a>
 							</li>
 							<li class="nav-item" id="J6tab"> 
-								<a class="nav-link" data-toggle="tab" href="#j6Pane"><p id="j6Text"> J6</p></a>
+								<a class="nav-link" data-toggle="tab" href="#j6Pane"><p id="j6Text">J6</p></a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" data-toggle="tab" href="#propertyBookPane"><p id="propertyBookText">PBO</p></a>
@@ -371,15 +366,16 @@
 								<a class="nav-link" data-toggle="tab" href="#supplyPane"><p id="supplyText">Supply</p></a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" data-toggle="tab" href="#j4Pane"><p id="j4Text">JPBO</p></a>
+								<a class="nav-link" data-toggle="tab" href="#j4Pane"><p id="j4Text">PBOFinal</p></a>
 							</li>
 							<li class="nav-item">
-									<a class="nav-link" data-toggle="tab" href="#budgetOfficerPane"><p id="budgetOfficerText">Final</p></a>
+									<a class="nav-link" data-toggle="tab" href="#budgetOfficerPane"><p id="budgetOfficerText">BOFinal</p></a>
 							</li>
 						</ul>
-						<!--END BUTTON ROW-->
-
 					</div>
+					<!--END BUTTON ROW-->
+
+					<!-- START: APPROVAL TAB CONTENT --> 
 					<div class="container-fluid">		
 						<div class="tab-content">
 
@@ -387,20 +383,11 @@
 							<div class="tab-pane active" id="directoratePane">
 								<div class="card" style="border-top-width:0px;">
 									<div class="card-body">
-										<div class="row mb-0">
+										<div class="row">
 											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Comments:</p>
 											</div>
 											<div class="col-lg-9">
 												<textarea rows="5" id="directorateComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Financial Director Comments" required></textarea>
-												
-												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="directorateSignature" id="directorateSignature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnDirectorateSign" value="directorate" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
-												</div>	
 											</div>
 											<div class="col-lg-2">
 												<div class="input-group mb-3">
@@ -413,6 +400,21 @@
 												    <label class="input-group-text" for="directorateReview">Status</label>
 												  </div>
 												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-1"></div>
+											<div class="col-lg-9">
+												<!-- SIGN OPTION -->
+												<div class="input-group">
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="directorateSignature" id="directorateSignature" placeholder="Signature">
+													<div class="input-group-append">
+														<button class="btn btn-sm btn-success" type="button" id="btnDirectorateSign" value="directorate" data-toggle="modal" data-target="#reviewModal">
+															<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
+														</button>
+													</div>
+												</div>
+												<!-- SIGN OPTION -->
 											</div>
 										</div>
 									</div>	
@@ -429,27 +431,33 @@
 											</div>
 											<div class="col-lg-9">
 												<textarea rows="5" id="boComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Billing Official Comments" required></textarea>
-											
-												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="boSignature" id="boSignature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnBoSign" value="bo" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
-												</div>
 											</div>
 											<div class="col-lg-2" style="text-align:right;">
 												<div class="input-group mb-3">
-												  <select class="custom-select" id="boReview">
-												    <option selected>Choose...</option>
-												    <option value="Approved">Approved</option>
-												    <option value="Declined">Declined</option>
-												  </select>
-												  <div class="input-group-append">
-												    <label class="input-group-text" for="boReview">Status</label>
-												  </div>
+													<select class="custom-select" id="boReview">
+														<option selected>Choose...</option>
+												    	<option value="Approved">Approved</option>
+												    	<option value="Declined">Declined</option>
+												  	</select>
+												  	<div class="input-group-append">
+												    	<label class="input-group-text" for="boReview">Status</label>
+												  	</div>
 												</div>			
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-1"></div>
+											<div class="col-lg-9">
+												<!-- SIGN OPTION -->
+												<div class="input-group">
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="boSignature" id="boSignature" placeholder="Signature">
+													<div class="input-group-append">
+														<button class="btn btn-sm btn-success" type="button" id="btnBoSign" value="bo" data-toggle="modal" data-target="#reviewModal">
+															<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
+														</button>
+													</div>
+												</div>
+												<!-- SIGN OPTION -->
 											</div>
 										</div>
 									</div>
@@ -466,15 +474,6 @@
 											</div>
 											<div class="col-lg-9">
 												<textarea rows="5" id="j6Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J6 Comments" required></textarea>
-											
-												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="j6Signature" id="j6Signature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnJ6Sign" value="j6" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
-												</div>
 											</div>
 											<div class="col-lg-2" style="text-align:right;">
 												<div class="input-group mb-3">
@@ -487,6 +486,21 @@
 												    <label class="input-group-text" for="j6Review">Status</label>
 												  </div>
 												</div>		
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-1"></div>
+											<div class="col-lg-9">
+												<!-- SIGN OPTION -->
+												<div class="input-group">
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="j6Signature" id="j6Signature" placeholder="Signature">
+													<div class="input-group-append">
+														<button class="btn btn-sm btn-success" type="button" id="btnJ6Sign" value="j6" data-toggle="modal" data-target="#reviewModal">
+															<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
+														</button>
+													 </div>
+												</div>
+												<!-- SIGN OPTION -->
 											</div>
 										</div>
 									</div>
@@ -503,15 +517,6 @@
 											</div>
 											<div class="col-lg-9">
 												<textarea rows="5" id="pboComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide PBO  Comments" required></textarea>
-
-												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="pboSignature" id="pboSignature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button"  id="btnPboSign" value="pbo" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
-												</div>	
 											</div>
 											<div class="col-lg-2" style="text-align:right;">
 												<div class="input-group mb-3">
@@ -526,47 +531,25 @@
 												</div>
 											</div>
 										</div>
+										<div class="row">
+											<div class="col-lg-1"></div>
+											<div class="col-lg-9">
+												<!-- SIGN OPTION -->
+												<div class="input-group">
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="pboSignature" id="pboSignature" placeholder="Signature">
+													<div class="input-group-append">
+														<button class="btn btn-sm btn-success" type="button"  id="btnPboSign" value="pbo" data-toggle="modal" data-target="#reviewModal">
+															<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
+														</button>
+													</div>
+												</div>
+												<!-- SIGN OPTION -->
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
 							<!--END PBO APPROVAL SECTION-->	
-
-							<!--BEGIN BUDGET OFFICER APPROVAL SECTION-->
-							<div class="tab-pane fade" id="budgetOfficerPane">
-								<div class="card" style="border-top-width:0px;">
-									<div class="card-body">
-										<div class="row mb-0">
-											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Comments:</p>
-											</div>
-											<div class="col-lg-9">
-												<textarea rows="5" id="budgetOfficerComments" class="form-control shadow-sm  form-control-sm" placeholder="Budget Officer Comments" required></textarea>
-												
-												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="budgetOfficerSignature" id="budgetOfficerSignature" placeholder="Budget Officer Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnBudgetOfficerSign" value="budget" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
-												</div>	
-											</div>
-											<div class="col-lg-2">
-												<div class="input-group mb-3">
-												  <select class="custom-select" id="budgetOfficerReview">
-												    <option selected>Choose...</option>
-												    <option value="Approved">Approved</option>
-												    <option value="Declined">Declined</option>
-												  </select>
-												  <div class="input-group-append">
-												    <label class="input-group-text" for="budgetOfficerReview">Status</label>
-												  </div>
-												</div>
-											</div>
-										</div>
-									</div>	
-								</div>
-							</div>
-							<!--END BUDGET OFFICER APPROVAL SECTION-->	
 
 							<!--BEGIN J8 APPROVAL SECTION-->
 							<div class="tab-pane fade" id="j8Pane">
@@ -576,16 +559,6 @@
 											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Comments:</p></div>
 											<div class="col-lg-9">
 												<textarea rows="5" id="j8Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J8 Comments" required></textarea>
-
-												<!-- SIGN OPTION -->
-												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="j8Signature" id="j8Signature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnJ8Sign" value="j8" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
-												</div>
 											</div>
 											<div class="col-lg-2">
 												<div class="input-group mb-3">
@@ -610,6 +583,21 @@
 												</div>
 											</div>
 										</div>
+										<div class="row">
+											<div class="col-lg-1"></div>
+											<div class="col-lg-9">
+												<!-- SIGN OPTION -->
+												<div class="input-group">
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="j8Signature" id="j8Signature" placeholder="Signature">
+													<div class="input-group-append">
+														<button class="btn btn-sm btn-success" type="button" id="btnJ8Sign" value="j8" data-toggle="modal" data-target="#reviewModal">
+															<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
+														</button>
+													</div>
+												</div>
+												<!-- SIGN OPTION -->
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -621,23 +609,32 @@
 									<div class="card-body">
 										<div class="row">
 											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Comments:</p></div>
-											<div class="col-11">
+											<div class="col-lg-11">
 												<textarea rows="5" id="cardHolderComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Cardholder Comments" required></textarea>
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Bank Transaction ID:</p></div>
-											<div class="col-lg-11">
+											<div class="col-lg-5">
 												<input rows="5" id="cardHolderTransactionId" class="form-control shadow-sm  form-control-sm" placeholder="Bank Unique Identifier or Transaction ID i.e., 082030091907319722018-XX-XXXXXX" name="cardHolderTransactionId" required="required"></input>
-
+											</div>
+											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Date Executed:</p></div>
+											<div class="col-lg-5">
+												<input rows="5" id="cardHolderExecuted" class="form-control shadow-sm  form-control-sm" placeholder="Date Purchased" name="cardHolderExecuted" required="required"></input>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-1"></div>
+											<div class="col-lg-11">
 												<!-- SIGN OPTION -->
 												<div class="input-group">
 													<input class="form-control shadow-sm  form-control-sm" type="text" name="cardHolderSignature" id="cardHolderSignature" placeholder="Card Holder Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnCardHolderSign" value="cardholder" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
+													<div class="input-group-append">
+														<button class="btn btn-sm btn-success" type="button" id="btnCardHolderSign" value="cardholder" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
+														</button>
+													</div>
 												</div>
+												<!-- SIGN OPTION -->
 											</div>
 										</div>
 									</div>
@@ -654,21 +651,25 @@
 											</div>
 											<div class="col-lg-11">
 												<textarea rows="5" id="requestorComments" class="form-control shadow-sm  form-control-sm" placeholder="Requestor Comments" required></textarea>
-											
-												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="requestorSignature" id="requestorSignature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnRequestorSign" value="requestor" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
-												</div>
 											</div>
 										</div>
+										<div class="row">
+											<div class="col-lg-1"></div>
+											<div class="col-lg-11">
+												<!-- SIGN OPTION -->
+												<div class="input-group">
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="requestorSignature" id="requestorSignature" placeholder="Signature">
+													<div class="input-group-append">
+														<button class="btn btn-sm btn-success" type="button" id="btnRequestorSign" value="requestor" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request </button>
+													</div>
+												</div>
+												<!-- SIGN OPTION -->
+											</div>
+										</div>		
 									</div>
 								</div>
 							</div>
 							<!--END REQUESTOR APPROVAL SECTION-->
-
 
 							<!--BEGIN SUPPLY APPROVAL SECTION-->
 							<div class="tab-pane" id="supplyPane">
@@ -679,15 +680,19 @@
 											</div>
 											<div class="col-lg-11">
 												<textarea rows="5" id="supplyComments" class="form-control shadow-sm  form-control-sm" placeholder="SOHC Supply Comments" required></textarea>
-											
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-1"></div>
+											<div class="col-lg-11">
+												<!-- SIGN OPTION -->
 												<div class="input-group">
 													<input class="form-control shadow-sm  form-control-sm" type="text" name="supplySignature" id="supplySignature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnSupplySign" value="supply" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
+													<div class="input-group-append">
+														<button class="btn btn-sm btn-success" type="button" id="btnSupplySign" value="supply" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request</button>
+													</div>
 												</div>
+												<!-- SIGN OPTION -->	
 											</div>
 										</div>
 									</div>
@@ -703,30 +708,65 @@
 											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Comments:</p></div>
 											<div class="col-lg-11">
 												<textarea rows="5" id="j4Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J4 Comments" required></textarea>
-
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-1"></div>
+											<div class="col-lg-11">
 												<!-- SIGN OPTION -->
 												<div class="input-group">
 													<input class="form-control shadow-sm  form-control-sm" type="text" name="j4Signature" id="j4Signature" placeholder="Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnJ4Sign" value="j4" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign and Close
-												 		</button>
-												  	</div>
+													<div class="input-group-append">
+														<button class="btn btn-sm btn-success" type="button" id="btnJ4Sign" value="j4" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign</button>
+													</div>
 												</div>
+												<!-- SIGN OPTION -->
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 							<!--END J4 APPROVAL SECTION-->
+
+							<!--BEGIN BUDGET OFFICER APPROVAL SECTION-->
+							<div class="tab-pane fade" id="budgetOfficerPane">
+								<div class="card" style="border-top-width:0px;">
+									<div class="card-body">
+										<div class="row">
+											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Comments:</p>
+											</div>
+											<div class="col-lg-11">
+												<textarea rows="5" id="budgetOfficerComments" class="form-control shadow-sm  form-control-sm" placeholder="Budget Officer Comments" required></textarea>	
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-1"></div>
+											<div class="col-lg-11">
+												<!-- SIGN OPTION -->
+												<div class="input-group">
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="budgetOfficerSignature" id="budgetOfficerSignature" placeholder="Budget Officer Signature">
+													<div class="input-group-append">
+														<button class="btn btn-sm btn-success" type="button" id="btnBudgetOfficerSign" value="budget" data-toggle="modal" data-target="#reviewModal">
+															<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign and Close
+														</button>
+													</div>
+												</div>
+												<!-- SIGN OPTION -->
+											</div>
+										</div>			
+									</div>	
+								</div>
+							</div>
+							<!--END BUDGET OFFICER APPROVAL SECTION-->	
 				
-							<div class="row mb-0">
+							<div class="row">
 								<div class="col-lg-12">
 									<button type="button" id="closeRequestWindow" class="btn btn-block btn-secondary" id="btnCancelRequest" value="&#10060; Cancel">Close & Exit</button>
 								</div>
 							</div>
 						</div>
 					</div>
-					<!-- END: APPROVAL TABS --> 
+					<!-- END: APPROVAL TAB CONTENT --> 
 				</div>
 			</div>
 		</div>	
@@ -758,7 +798,6 @@
 	<!-- START: DRAFT MODAL -->
 	<div class="modal fade" id="draftModal" role="dialog">
 		<div class="modal-dialog">
-			<!-- MODAL CONTENT -->
 			<div class="modal-content">
 				<div class="modal-header" style="align-self: center;">
 					<h5 class="modal-title">Draft version</h5>
@@ -769,12 +808,11 @@
 			</div>
 		</div>
 	</div>
-	<!-- END: MODAL -->
+	<!-- END: DRAFT MODAL -->
 	
-	<!-- START: DRAFT MODAL -->
+	<!-- START: SUBMIT MODAL -->
 	<div class="modal fade" id="submitModal" role="dialog">
 		<div class="modal-dialog">
-			<!-- MODAL CONTENT -->
 			<div class="modal-content">
 				<div class="modal-header" style="align-self: center;">
 					<h5 class="modal-title">Submitting Request</h5>
@@ -785,12 +823,11 @@
 			</div>
 		</div>
 	</div>
-	<!-- END: DRAFT MODAL -->
+	<!-- END: SUBMIT MODAL -->
 
 	<!-- START: REVIEW MODAL -->
 	<div class="modal fade" id="reviewModal" role="dialog">
 		<div class="modal-dialog">
-			<!-- MODAL CONTENT -->
 			<div class="modal-content">
 				<div class="modal-header" style="align-self: center;">
 					<h5 class="modal-title">Submitting Review</h5>
@@ -801,7 +838,8 @@
 			</div>
 		</div>
 	</div>
-	<!-- END: DRAFT MODAL -->
+	<!-- END: REVIEW MODAL -->
+
 </form>
 </body>
 <!-- START: FOOTER SCRIPTS-->
@@ -839,6 +877,7 @@
 		 * Load datepicker 
 		 */
 		$("#RequestDateOfRequest").datepicker();
+		$("#cardHolderExecuted").datepicker();
 		/*
 		 * Save form data 
 		 */
@@ -867,7 +906,7 @@
 		 */	
 		$("#btnBoSign, #btnJ6Sign , #btnPboSign, #btnDirectorateSign, #btnJ8Sign, #btnCardHolderSign, #btnRequestorSign, #btnSupplySign, #btnJ4Sign, #btnBudgetOfficerSign").click(function(){
 			signRequest($(this).attr('value'));
-			processSendEmails($(this).attr('value'));
+			//processSendEmails($(this).attr('value'));
 			setApprovalProcess($(this).attr('value'));
 			closeModal($(this).attr('value'));
 		});
