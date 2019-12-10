@@ -12,7 +12,7 @@ function processSendEmails(value) {
 	//console.log("billingOfficial: ",  getCardHolderBillingApprover().billingOfficial);
 	//console.log("director approver: ",  getCardHolderBillingApprover().directorAprove);
 	//console.log("director e-mail: ", getDirectorateApprover());
-    console.log("value submitted", value);
+    //console.log("value submitted", value);
 
     if (value === 'submit') {
 		console.log('Requestor Director');

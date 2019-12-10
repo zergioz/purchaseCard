@@ -627,7 +627,6 @@ function getFiscalInformation(jsonData,type){
  * @param {string} status
  */
 function stepForwardStatus(status,isJ6){
-	console.log(status + " " + isJ6);
 	var forwardStatus;
 	for(var i = 0; stepStatus.length > i; i++ ){
 		//console.log(stepStatus[i].fwd);

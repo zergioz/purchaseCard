@@ -717,7 +717,7 @@
 												<div class="input-group">
 													<input class="form-control shadow-sm  form-control-sm" type="text" name="j4Signature" id="j4Signature" placeholder="Signature">
 													<div class="input-group-append">
-														<button class="btn btn-sm btn-success" type="button" id="btnJ4Sign" value="j4" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign</button>
+														<button class="btn btn-sm btn-success" type="button" id="btnJ4Sign" value="j4" data-toggle="modal" data-target="#reviewModal"><i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request</button>
 													</div>
 												</div>
 												<!-- SIGN OPTION -->

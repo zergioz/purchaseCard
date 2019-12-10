@@ -242,27 +242,6 @@ function createSubmit(){
 }
 
 /*
- * Save review data from form
- */
-function submitReview(fieldUpdate,fieldJson){	
-	$().SPServices({
-		operation: "UpdateListItems",
-		webURL: siteUrl,
-		aync: false,
-		batchCmd: "Update",
-		listName: "ccRequestTracker",
-		ID: qId,
-		valuepairs:[
-			[fieldUpdate,fieldJson],
-			["REQUEST_STATUS",fieldUpdate]
-		],
-		completefunc: function(xData, Status){
-			console.log('submitReview');
-		}
-	});	
-}
-
-/*
  * Close request and set read only
  */
 function closeRequest(){
@@ -566,11 +545,6 @@ function signRequest(reviewStep){
 	for (var i = 0; i < returnedStep.length; i++) {
     	if (returnedStep[i].stepName === reviewStep) {
         	$(returnedStep[i].domId).val("SIGNED BY: "+getUserName().Name+" ON: "+now);
-			/* 
-			if (returnedStep[i].name  === 'j4') {
-        	 	closeRequest();
-			}
-			*/
         }
     }
 }
@@ -585,6 +559,33 @@ function setApprovalProcess(reviewStep){
 			submitReview(returnedStep[i].stepStatus, createJsonResponse(returnedStep[i].stepArray));
         }
     }		
+}
+
+/*
+ * Save review data from form
+ */
+function submitReview(fieldUpdate,fieldJson){
+	var submitReview =  $().SPServices({
+		operation: "UpdateListItems",
+		webURL: siteUrl,
+		async: false,
+		batchCmd: "Update",
+		listName: "ccRequestTracker",
+		ID: qId,
+		valuepairs:[
+			[fieldUpdate,fieldJson],
+			["REQUEST_STATUS",fieldUpdate]
+		],
+		completefunc: function(xData, Status){
+			console.log('function: submitReview completed');
+			if (fieldUpdate === "BUDGET_OFFICER_APPROVAL"){
+				// closing request
+				$.when(submitReview).then(function(data){
+					closeRequest();
+			})
+			}
+		}
+	});
 }
 
 /*
