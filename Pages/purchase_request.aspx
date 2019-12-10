@@ -614,13 +614,13 @@
 											</div>
 										</div>
 										<div class="row">
-											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Bank Transaction ID:</p></div>
+											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Transaction ID:</p></div>
 											<div class="col-lg-5">
 												<input rows="5" id="cardHolderTransactionId" class="form-control shadow-sm  form-control-sm" placeholder="Bank Unique Identifier or Transaction ID i.e., 082030091907319722018-XX-XXXXXX" name="cardHolderTransactionId" required="required"></input>
 											</div>
-											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Date Executed:</p></div>
+											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Executed Date:</p></div>
 											<div class="col-lg-5">
-												<input rows="5" id="cardHolderExecuted" class="form-control shadow-sm  form-control-sm" placeholder="Date Purchased" name="cardHolderExecuted" required="required"></input>
+												<input rows="5" id="cardHolderExecuted" class="form-control shadow-sm  form-control-sm" placeholder="Purchase Execution Date" name="cardHolderExecuted" required="required"></input>
 											</div>
 										</div>
 										<div class="row">
@@ -707,7 +707,7 @@
 										<div class="row">
 											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Comments:</p></div>
 											<div class="col-lg-11">
-												<textarea rows="5" id="j4Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide J4 Comments" required></textarea>
+												<textarea rows="5" id="j4Comments" class="form-control shadow-sm  form-control-sm" placeholder="Provide PBO Final Comments" required></textarea>
 											</div>
 										</div>
 										<div class="row">
@@ -736,7 +736,7 @@
 											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Comments:</p>
 											</div>
 											<div class="col-lg-11">
-												<textarea rows="5" id="budgetOfficerComments" class="form-control shadow-sm  form-control-sm" placeholder="Budget Officer Comments" required></textarea>	
+												<textarea rows="5" id="budgetOfficerComments" class="form-control shadow-sm  form-control-sm" placeholder="Billing Official Final Comments" required></textarea>	
 											</div>
 										</div>
 										<div class="row">
@@ -744,7 +744,7 @@
 											<div class="col-lg-11">
 												<!-- SIGN OPTION -->
 												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="budgetOfficerSignature" id="budgetOfficerSignature" placeholder="Budget Officer Signature">
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="budgetOfficerSignature" id="budgetOfficerSignature" placeholder="Billing Official Final Signature">
 													<div class="input-group-append">
 														<button class="btn btn-sm btn-success" type="button" id="btnBudgetOfficerSign" value="budget" data-toggle="modal" data-target="#reviewModal">
 															<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign and Close
@@ -906,8 +906,8 @@
 		 */	
 		$("#btnBoSign, #btnJ6Sign , #btnPboSign, #btnDirectorateSign, #btnJ8Sign, #btnCardHolderSign, #btnRequestorSign, #btnSupplySign, #btnJ4Sign, #btnBudgetOfficerSign").click(function(){
 			signRequest($(this).attr('value'));
-			//processSendEmails($(this).attr('value'));
 			setApprovalProcess($(this).attr('value'));
+			processSendEmails($(this).attr('value'));
 			closeModal($(this).attr('value'));
 		});
 		$('#closeRequestWindow').click(function(){

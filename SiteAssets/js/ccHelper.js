@@ -84,6 +84,7 @@ function loadRequestDetails(qId){
 			loadReviewTab((data.d.FINAL_VALIDATION),['#j4Comments','#j4Signature'],['j4Comment','j4Signature'],'#j4Text');
 			// Update bar
 			setValue(data.d.REQUEST_STATUS, requestNotification.RequestIsJ6);
+			notifyJ6 = requestNotification.RequestIsJ6;
 			// upload feature
 			disableUploads(qId);
 			disableSubmit(qId,data.d.REQUEST_STATUS);	

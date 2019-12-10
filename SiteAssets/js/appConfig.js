@@ -20,6 +20,7 @@ var requestNotification;
 var getRequestsList;
 var getUsersList;
 var getTrainingList ;
+var notifyJ6;
 
 /*
  * Constant values
@@ -85,24 +86,6 @@ var returnedStep = 	[
 		{stepName: 'supply',		stepStatus:'SUPPLY_VALIDATION', 		stepArray: ['supplyComment','supplySignature'],domId: '#supplySignature'},
 		{stepName: 'j4',			stepStatus:'FINAL_VALIDATION', 			stepArray: ['j4Comment','j4Signature'],domId: '#j4Signature'}
 	];
-
-/*
- * Return signature values for each step
- */
-/*
-var returnedSignatureStep = [	
-		{name: 'directorate',	domId: '#directorateSignature' },
-		{name: 'bo', 			domId: '#boSignature'},
-		{name: 'j6',	 		domId: '#j6Signature'},
-		{name: 'pbo', 			domId: '#pboSignature'},
-		{name: 'budget', 		domId: '#budgetOfficerSignature'},
-		{name: 'j8',			domId: '#j8Signature'},
-		{name: 'cardholder',	domId: '#cardHolderSignature'},
-		{name: 'requestor',		domId: '#requestorSignature'},
-		{name: 'supply',		domId: '#supplySignature'},
-		{name: 'j4',			domId: '#j4Signature'}
-	];	
-*/
 
 /*
  * Create object with all the initial values
@@ -267,7 +250,7 @@ var getCleanUser = function(){
  * Create promise to populate users
  */ 
 var getUser = $.ajax({
-   	url: siteUrl+"/_api/web/lists/getbytitle('ccUsers')/Items", 
+   	url: siteUrl+"/_api/web/lists/getbytitle('ccUsers')/Items?$top=1000", 
     type: "GET",  
 	headers: {  "Accept": "application/json;odata=verbose" }
 });
@@ -776,5 +759,8 @@ function redirectUrl(urlAddress){
 	});
 	$('#j4Comments').keydown(function(){
 		$('#btnJ4Sign').prop("disabled", false);
+	});
+	$('#budgetOfficerComments').keydown(function(){
+		$('#btnBudgetOfficerSign').prop("disabled", false);
 	});
  }	
