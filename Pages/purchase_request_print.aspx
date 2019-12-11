@@ -462,45 +462,6 @@
 							</div>
 							<!--END PBO APPROVAL SECTION-->	
 
-							<!--BEGIN BUDGET OFFICER APPROVAL SECTION-->
-							<!--
-							<div class="tab-pane active" id="budgetOfficerPane">
-								<div class="card  mb-4 box-shadow" style="border-top-width:0px;">
-									<div class="card-body">
-										<div class="row mb-0">
-											<div class="col-1" style="text-align:right;"><p class="card-text">Comments:</p>
-											</div>
-											<div class="col-9">
-												<textarea rows="5" id="budgetOfficerComments" class="form-control shadow-sm  form-control-sm" placeholder="Budget Officer Comments" required></textarea>
-												
-												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="budgetOfficerSignature" id="budgetOfficerSignature" placeholder="Budget Officer Signature">
-												  	<div class="input-group-append">
-												 		<button class="btn btn-sm btn-success" type="button" id="btnBudgetOfficerSign" value="budget" data-toggle="modal" data-target="#reviewModal">
-												 			<i class="fa fa-pencil" style="font-size: .8rem;"></i> Sign Request
-												 		</button>
-												  	</div>
-												</div>	
-											</div>
-											<div class="col-2">
-												<div class="input-group mb-3">
-												  <select class="custom-select" id="budgetOfficerReview">
-												    <option selected>Choose...</option>
-												    <option value="Approved">Approved</option>
-												    <option value="Declined">Declined</option>
-												  </select>
-												  <div class="input-group-append">
-												    <label class="input-group-text" for="budgetOfficerReview">Status</label>
-												  </div>
-												</div>
-											</div>
-										</div>
-									</div>	
-								</div>
-							</div>
-							-->
-							<!--END BUDGET OFFICER APPROVAL SECTION-->	
-
 							<!--BEGIN J8 APPROVAL SECTION-->
 							<div class="tab-pane active" id="j8Pane">
 								<div class="card  mb-4 box-shadow"  style="border-top-width:0px;">
@@ -612,7 +573,7 @@
 							<div class="tab-pane active" id="j4Pane">
 								<div class="card  mb-4 box-shadow"  style="border-top-width:0px;">
 									<div class="card-header">
-										J4 Comments
+										PBO FINAL
 									</div>
 									<div class="card-body">
 										<div class="row">
@@ -628,6 +589,32 @@
 								</div>
 							</div>
 							<!--END J4 APPROVAL SECTION-->
+
+							<!--BEGIN BUDGET OFFICER APPROVAL SECTION-->
+							<div class="tab-pane active" id="budgetOfficerPane">
+								<div class="card" style="border-top-width:0px;">
+									<div class="card-header">
+										BO Final
+									</div>
+									<div class="card-body">
+										<div class="row">
+											<div class="col-lg-12">
+												<textarea rows="5" id="budgetOfficerComments" class="form-control shadow-sm  form-control-sm" placeholder="Billing Official Final Comments" required></textarea>	
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12">
+												<!-- SIGN OPTION -->
+												<div class="input-group">
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="budgetOfficerSignature" id="budgetOfficerSignature" placeholder="Billing Official Final Signature">
+												</div>
+												<!-- SIGN OPTION -->
+											</div>
+										</div>			
+									</div>	
+								</div>
+							</div>
+							<!--END BUDGET OFFICER APPROVAL SECTION-->	
 				
 							<div class="row mb-0">
 								<div class="col-12">

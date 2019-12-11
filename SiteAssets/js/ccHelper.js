@@ -730,6 +730,7 @@ function isBool(booleanValue){
 	if (typeof requestStatus !== 'undefined' && requestStatus === 'CLOSED'){ 
 		$(':input').attr('disabled','disabled');
 		$('#closeRequestWindow').prop('disabled', false);
+		$('#btnViewPrint').prop('disabled', false);
 	}
  }
 
