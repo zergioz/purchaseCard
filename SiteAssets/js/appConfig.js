@@ -282,7 +282,6 @@ var getSpUserList = function(){
  */
 var getSpUser = function (){
 	var users = getSpUserList();
-
 	var substringMatcher = function(strs) {
   		return function findMatches(q, cb) {
     		var matches = [];
