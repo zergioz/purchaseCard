@@ -15,7 +15,6 @@ var itemsDetails = [];
 var documentType;
 var requestStatus;
 var totalPrice = [];
-var userList = [];
 var requestNotification;
 var getRequestsList;
 var getUsersList;
@@ -318,12 +317,12 @@ var getSpUser = function (){
 var getCardHolderBillingApprover = function(){
     var id;
     var billingOfficialArray = [];
-    $.each(userList, function( index, value ) {
-		if ((userList[index].PERSON_EMAIL === requestNotification.RequestorCardHolderName) && (userList[index].PERSON_ROLE === 'CARD HOLDER')) {
-			console.log(userList[index]);
+    $.each(getUser.responseJSON.d.results, function( index, value ) {
+		if ((getUser.responseJSON.d.results[index].PERSON_EMAIL === requestNotification.RequestorCardHolderName) && (getUser.responseJSON.d.results[index].PERSON_ROLE === 'CARD HOLDER')) {
+			console.log(getUser.responseJSON.d.results[index]);
             id = index;
-            billingOfficialArray['billingOfficial'] = JSON.parse(userList[id].PERSON_ATTRIBUTES).billingOfficial;
-            billingOfficialArray['directorAprove']  = userList[id].PERSON_DIRECTORATE;
+            billingOfficialArray['billingOfficial'] = JSON.parse(getUser.responseJSON.d.results[id].PERSON_ATTRIBUTES).billingOfficial;
+            billingOfficialArray['directorAprove']  = getUser.responseJSON.d.results[id].PERSON_DIRECTORATE;
             //billingOfficialArray['cardHolder']		= requestNotification.RequestorCardHolderName;
 		}
     });
@@ -335,9 +334,9 @@ var getCardHolderBillingApprover = function(){
  */
 var getDirectorateApprover = function(){
     var directorateArray = [];
-    $.each(userList, function( index, value ) {
-        if ((userList[index].PERSON_DIRECTORATE === getCardHolderBillingApprover().directorAprove) && (userList[index].PERSON_ROLE === 'DIRECTORATE APPROVAL')){
-           directorateArray.push(userList[index].PERSON_EMAIL); 
+    $.each(getUser.responseJSON.d.results, function( index, value ) {
+        if ((getUser.responseJSON.d.results[index].PERSON_DIRECTORATE === getCardHolderBillingApprover.directorAprove) && (getUser.responseJSON.d.results[index].PERSON_ROLE === 'DIRECTORATE APPROVAL')){
+           directorateArray.push(getUser.responseJSON.d.results[index].PERSON_EMAIL); 
         }
     });
     return directorateArray;
@@ -348,9 +347,9 @@ var getDirectorateApprover = function(){
  */
 var getOtherApprover = function(role){
     var directorateArray = [];
-    $.each(userList, function( index, value ) {
-        if (userList[index].PERSON_ROLE === role){
-           directorateArray.push(userList[index].PERSON_EMAIL); 
+    $.each(getUser.responseJSON.d.results, function( index, value ) {
+        if (getUser.responseJSON.d.results[index].PERSON_ROLE === role){
+           directorateArray.push(getUser.responseJSON.d.results[index].PERSON_EMAIL); 
         }
     });
     return directorateArray;
