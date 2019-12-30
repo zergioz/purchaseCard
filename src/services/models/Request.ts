@@ -13,6 +13,7 @@ import { SupplyValidation } from "./SupplyValidation";
 import { FinalValidation } from "./FinalValidation";
 
 export interface IRequest {
+  id?: number;
   requestor?: string;
   requestField?: RequestField;
   purchaseDetails?: PurchaseDetails;
@@ -29,6 +30,9 @@ export interface IRequest {
   status?: string;
 }
 export class Request implements IRequest {
+  @autoserialize
+  id?: number;
+
   @autoserialize
   requestor?: string;
 

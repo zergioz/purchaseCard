@@ -2,7 +2,7 @@ import dal from "./dal";
 import { ISerializer } from "./ISerializer";
 import { JsonStringSerializer } from "./JsonStringSerializer";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
 
@@ -22,6 +22,7 @@ export class RequestService {
     let parsed = {};
     try {
       parsed = JSON.stringify({
+        id: item.Id,
         requestor: item.Title,
         requestField: JSON.parse(item.REQUEST_FIELD),
         purchaseDetails: JSON.parse(item.PURCHASE_DETAILS),
@@ -56,7 +57,8 @@ export class RequestService {
           deserialized.push(this.serializer.deserialize(item, Request));
         });
         return deserialized;
-      })
+      }),
+      tap(items => console.log(items))
     );
   }
 }
