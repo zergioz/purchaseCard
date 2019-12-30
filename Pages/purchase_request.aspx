@@ -297,7 +297,7 @@
 								<label class="custom-file-label" for="inputGroupFile03">Choose File</label>
 							</div>	
 							<div class="input-group-append">
-								<button type="button" value="Upload File" class="btn btn-outline-secondary" id="btnSaveUpload" title="Save Request Before Uploading a File" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-cloud-upload"></i> Upload</button>
+								<button type="button" value="Upload File" class="btn btn-outline-secondary" id="btnSaveUpload" title="Create a draft version before uploading" data-toggle="modal" data-target="#uploadModal"><i class="fa fa-cloud-upload"></i> Upload</button>
 							</div>					
 						</div>
 					</div>
@@ -387,7 +387,7 @@
 											<div class="col-lg-1" style="text-align:right;"><p class="card-text">Comments:</p>
 											</div>
 											<div class="col-lg-9">
-												<textarea rows="5" id="directorateComments" class="form-control shadow-sm  form-control-sm" placeholder="Add Director Comments and Validate" required></textarea>
+												<textarea rows="5" id="directorateComments" class="form-control shadow-sm  form-control-sm" placeholder="Provide Financial Director Comments" required></textarea>
 											</div>
 											<div class="col-lg-2">
 												<div class="input-group mb-3">

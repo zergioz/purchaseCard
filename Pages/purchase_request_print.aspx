@@ -599,14 +599,14 @@
 									<div class="card-body">
 										<div class="row">
 											<div class="col-lg-12">
-												<textarea rows="5" id="budgetOfficerComments" class="form-control shadow-sm  form-control-sm" placeholder="Billing Official Final Comments" required></textarea>	
+												<textarea rows="5" id="budgetOfficerComments" class="form-control shadow-sm  form-control-sm" placeholder="Billing Official Final Comments" required disabled="disabled"></textarea>	
 											</div>
 										</div>
 										<div class="row">
 											<div class="col-lg-12">
 												<!-- SIGN OPTION -->
 												<div class="input-group">
-													<input class="form-control shadow-sm  form-control-sm" type="text" name="budgetOfficerSignature" id="budgetOfficerSignature" placeholder="Billing Official Final Signature">
+													<input class="form-control shadow-sm  form-control-sm" type="text" name="budgetOfficerSignature" id="budgetOfficerSignature" placeholder="Billing Official Final Signature" disabled="disabled">
 												</div>
 												<!-- SIGN OPTION -->
 											</div>

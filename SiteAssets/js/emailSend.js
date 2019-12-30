@@ -19,24 +19,23 @@ function processSendEmails(value) {
 		console.log(getDirectorateApprover());
 		var subject = 'Directorate purchase request notification | request: '+qId;
         var to = getDirectorateApprover();
-        /*
+		console.log('Email Director' + getDirectorateApprover());
 		for (var i = 0; i < to.length; i++) {
 			console.log('notification to:' + to[i] );
 			sendEmail(from, to[i], body, subject);
-        }*/
-        alert('Email Director');
+        }
+        //alert('Email Director');
     }
     if (value === 'directorate') {
 		console.log('Send Billing Official Notification');
         console.log('Billing Official', getCardHolderBillingApprover().billingOfficial);
         var subject = 'Billing official purchase request notification | request: '+qId;
         var to = getCardHolderBillingApprover().billingOfficial;		
-        /*
+        
         for (var i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
         }
-        */
-       alert('Email BO');
+       //alert('Email BO');
 	}
     if(value === 'bo') {
         if (notifyJ6 === 'Yes'){
@@ -44,23 +43,19 @@ function processSendEmails(value) {
 		    console.log('J6 approver', getOtherApprover('IT APPROVAL/J6'));
 		    var subject = 'J6 purchase request notification | request: ' + qId;
 		    var to = getOtherApprover('IT APPROVAL/J6');
-            /*
             for (var i = 0; i < to.length; i++) {
 			    sendEmail(from, to[i], body, subject);
             }
-            */
-            alert('Email J6 when included');  
+            //alert('Email J6 when included');  
         }else{
             console.log('Send PBO Notification');
             console.log('BPO approver', getOtherApprover('PROPERTY BOOKS OFFICER/J4'));
             subject = 'PBO purchase request notification | request: '+qId;
             var to = getOtherApprover('PROPERTY BOOKS OFFICER/J4');
-            /*
             for (var i = 0; i < to.length; i++) {
                 sendEmail(from, to[i], body, subject);
             }
-            */
-            alert('Email PBO');   
+            //alert('Email PBO');   
         }      
     }
 
@@ -69,84 +64,69 @@ function processSendEmails(value) {
 		console.log('BPO approver', getOtherApprover('PROPERTY BOOKS OFFICER/J4'));
 		subject = 'PBO purchase request notification | request: '+qId;
 		var to = getOtherApprover('PROPERTY BOOKS OFFICER/J4');
-        /*
         for (var i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
         }
-        */
-       alert('Email PBO');       
+        //alert('Email PBO');       
     }
     if(value === 'pbo') {
 		console.log('Send budget Notification'); 
         console.log('J8 approver', getOtherApprover('FINANCIAL OFFICER/J8'));
 		subject = 'J8 purchase request notification | request: '+qId;
 		var to = getOtherApprover('FINANCIAL OFFICER/J8');
-        /*
         for (var i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
         } 
-        */
-       alert('Email J8');               
+        //alert('Email J8');               
     }
     if(value === 'j8') {
 		console.log('Send cardholder Notification');
         console.log('Send to Cardholder', requestNotification.RequestorCardHolderName);
         subject = 'Card holder purchase request notification | request: '+qId;
 		var to = requestNotification.RequestorCardHolderName;
-        /*
         sendEmail(from, to, body, subject);
-        */
-       alert('Email Card Holder');      		
+        //alert('Email Card Holder');      		
     }
     if(value === 'cardholder') {
         console.log('Send J8 and Requestor,');
         console.log('J8 approver', getOtherApprover('FINANCIAL OFFICER/J8') +"and Requestor "+ requestNotification.Requestor);
 		subject = 'Requestor and J8 purchase request notification | Funds Execution | request: '+qId;
 		var to = getOtherApprover('FINANCIAL OFFICER/J8');
-        /*
         for (var i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
 		}
 		console.log(requestNotification.Requestor);
 		sendEmail(from, requestNotification.Requestor, body, subject);
-        */
-       alert('Email Requestor and J8');      
+        //alert('Email Requestor and J8');      
     }
     if(value === 'requestor') {
         console.log('Send SUPPLY Notification');
         console.log('SUPPLY approver', getOtherApprover('SUPPLY'));
 		subject = 'SUPPLY purchase request notification | request: '+qId;
 		var to = getOtherApprover('SUPPLY');
-        /*
         for (i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject);
         }
-        */
-       alert('Email Supply');   
+        alert('Email Supply');   
     }
     if(value === 'supply') {
         console.log('JPBO');
         console.log('J4/JPBO approver', getOtherApprover('PROPERTY BOOKS OFFICER/J4'));
 		var to = getOtherApprover('PROPERTY BOOKS OFFICER/J4');
-        /*
         for (i = 0; i < to.length; i++) {
 			sendEmail(from, to[i], body, subject); 
         }
-        */
-       alert('Email PBO Final'); 		
+        alert('Email PBO Final'); 		
     }
      if(value === 'j4') {
         subject = 'purchase request notification| close the following request: '+qId;
         console.log('Email BO Final for closing');
-        /*
         sendEmail(from, requestNotification.Requestor, body, subject);
-        */
-       alert('BO Final Email'); 	
+        //alert('BO Final Email'); 	
     }
 
               
 } 
-
 
 function sendEmail(from, to, body, subject) {
     //var siteUrl = _spPageContextInfo.webServerRelativeUrl;

@@ -44,13 +44,13 @@
 						<div class="collapse nav-toggleable-md" id="nav-toggleable-md">
 							<ul class="nav nav-pills nav-stacked flex-column">
 								<li class="nav-header">Users</li>
-								<li class="nav-item"><a class="nav-link" href="cc_user_list.html">Users Overview</a></li>
-								<li class="nav-item"><a class="nav-link" href="cc_user_add.html">Add User</a></li>
+								<li class="nav-item"><a class="nav-link" href="cc_user_list.aspx">Users Overview</a></li>
+								<li class="nav-item"><a class="nav-link" href="cc_user_add.aspx">Add User</a></li>
 								<li class="nav-header">Requests</li>
-								<li class="nav-item"><a class="nav-link active" href="cc_purchase_request_list.html">Request Status</a></li>
-								<li class="nav-item"><a class="nav-link" href="purchase_request.html" target="_blank">Submit Request</a></li>
+								<li class="nav-item"><a class="nav-link active" href="cc_purchase_request_list.aspx">Request Status</a></li>
+								<li class="nav-item"><a class="nav-link" href="purchase_request.aspx" target="_blank">Submit Request</a></li>
 								<li class="nav-header">Documentation & Other</li>
-								<li class="nav-item"><a class="nav-link" href="../Shared%20Documents/Forms/AllItems.html" target="_blank">Documentation</a></li>
+								<li class="nav-item"><a class="nav-link" href="../Shared%20Documents/Forms/AllItems.aspx" target="_blank">Documentation</a></li>
 								<li class="nav-item"><a class="nav-link" href="#">Other</a></li>
 							</ul>
 							<div class="hr-divider mt-5 mb-3">
