@@ -5,7 +5,7 @@ export const RequestTableRow = (props: any) => {
   return (
     <tr>
       <td>{item.id}</td>
-      <td>{item.requestField!.Requestor}</td>
+      <td>{item.requestor}</td>
       <td>{item.requestField!.RequestorDirectorate}</td>
       <td>FY</td>
       <td>Qt</td>

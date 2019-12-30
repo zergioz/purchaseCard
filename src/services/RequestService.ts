@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
+import { SharepointUser } from "./models/SharepointUser";
 
 export class RequestService {
   private dal: dal;
@@ -15,7 +16,6 @@ export class RequestService {
     this.dal = new dal();
     this.serializer = new JsonStringSerializer();
     this.listName = "ccRequestTracker";
-    return this;
   }
 
   mapAndParse(item: ccRequestTracker): any {
@@ -46,6 +46,7 @@ export class RequestService {
 
   read(): Observable<Request[]> {
     return this.dal.readTable(this.listName).pipe(
+      tap(items => console.log(items)),
       //parse nested json strings
       map((items: ccRequestTracker[]) => {
         return items.map(item => this.mapAndParse(item));
