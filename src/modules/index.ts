@@ -1,2 +1,3 @@
 import RequestsByDirectorateModule from "./requests-by-directorate";
-export default [RequestsByDirectorateModule];
+import AllRequestsModule from "./all-requests";
+export default [RequestsByDirectorateModule, AllRequestsModule];

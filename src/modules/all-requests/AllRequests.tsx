@@ -2,9 +2,8 @@ import React from "react";
 import { RequestTable } from "../../components/request-table/RequestTable";
 import { Request } from "../../services/models/Request";
 import { RequestService } from "../../services/RequestService";
-import { SelectorPills } from "../../components/selector-pills/SelectorPills";
-import { PersonDirectorates as directorates } from "../../constants/PersonDirectorates";
 import { StepStatus } from "../../constants/StepStatus";
+import { SelectorPills } from "../../components/selector-pills/SelectorPills";
 
 const statuses: string[] = StepStatus.map(status => status.friendlyName);
 
@@ -17,24 +16,14 @@ interface IState {
   status?: string | null;
 }
 
-export class RequestsByDirectorate extends React.Component<IProps, IState> {
+export class AllRequests extends React.Component<IProps, IState> {
   private svc: RequestService;
   constructor(props: any) {
     super(props);
-    this.state = {
-      requests: [],
-      directorate: null,
-      status: null,
-      loading: false
-    };
+    this.state = { requests: [], status: null, loading: false };
     this.svc = new RequestService();
   }
   componentWillMount() {
-    this.getData();
-  }
-
-  directorateChanged(directorate: string) {
-    this.setState({ ...this.state, directorate: directorate });
     this.getData();
   }
 
@@ -53,14 +42,8 @@ export class RequestsByDirectorate extends React.Component<IProps, IState> {
   render() {
     return (
       <React.Fragment>
-        <h1>Requests by Directorate</h1>
+        <h1>All Requests</h1>
         <hr />
-        <SelectorPills
-          values={directorates}
-          onChange={(directorate: string) =>
-            this.directorateChanged(directorate)
-          }
-        ></SelectorPills>
         <SelectorPills
           values={statuses}
           onChange={(status: string) => this.statusChanged(status)}
