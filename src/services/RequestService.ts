@@ -44,22 +44,24 @@ export class RequestService {
     return parsed;
   }
 
-  read(): Observable<Request[]> {
-    return this.dal.readTable(this.listName).pipe(
-      tap(items => console.log(items)),
-      //parse nested json strings
-      map((items: ccRequestTracker[]) => {
-        return items.map(item => this.mapAndParse(item));
-      }),
-      //hydrate each into an instance of the Request class
-      map((items: any[]) => {
-        let deserialized: Array<Request> = [];
-        items.forEach(item => {
-          deserialized.push(this.serializer.deserialize(item, Request));
-        });
-        return deserialized;
-      }),
-      tap(items => console.log(items))
-    );
+  read(filters?: string): Observable<Request[]> {
+    return this.dal
+      .getRowsWhere(this.listName, undefined, undefined, filters)
+      .pipe(
+        tap(items => console.log(items)),
+        //parse nested json strings
+        map((items: ccRequestTracker[]) => {
+          return items.map(item => this.mapAndParse(item));
+        }),
+        //hydrate each into an instance of the Request class
+        map((items: any[]) => {
+          let deserialized: Array<Request> = [];
+          items.forEach(item => {
+            deserialized.push(this.serializer.deserialize(item, Request));
+          });
+          return deserialized;
+        }),
+        tap(items => console.log(items))
+      );
   }
 }

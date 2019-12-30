@@ -37,8 +37,8 @@ export default class dal {
   }
 
   getRowsWhere(
-    siteUrl: string,
     tableName: string,
+    siteUrl?: string,
     select?: string,
     whereClause?: string
   ): Observable<any> {
