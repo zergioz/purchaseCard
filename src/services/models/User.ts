@@ -23,6 +23,4 @@ export class User {
   personTraining?: PersonTraining;
   @autoserialize
   pseudoName?: string;
-
-  constructor(data: any = {}) {}
 }

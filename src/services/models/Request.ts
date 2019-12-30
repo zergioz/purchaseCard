@@ -1,20 +1,34 @@
 import { autoserializeAs, autoserialize } from "cerialize";
-import {
-  RequestField,
-  PurchaseDetails,
-  BudgetOfficerApproval,
-  BillingOfficialApproval,
-  J6Approval,
-  PboApproval,
-  DirectorateApproval,
-  J8Approval,
-  CardholderValidation,
-  RequestorValidation,
-  SupplyValidation,
-  FinalValidation
-} from ".";
+import { RequestField } from "./RequestField";
+import { PurchaseDetails } from "./PurchaseDetails";
+import { BudgetOfficerApproval } from "./BudgetOfficerApproval";
+import { BillingOfficialApproval } from "./BillingOfficialApproval";
+import { J6Approval } from "./J6Approval";
+import { PboApproval } from "./PboApproval";
+import { DirectorateApproval } from "./DirectorateApproval";
+import { J8Approval } from "./J8Approval";
+import { CardholderValidation } from "./CardholderValidation";
+import { RequestorValidation } from "./RequestorValidation";
+import { SupplyValidation } from "./SupplyValidation";
+import { FinalValidation } from "./FinalValidation";
 
-export class Request {
+export interface IRequest {
+  requestor?: string;
+  requestField?: RequestField;
+  purchaseDetails?: PurchaseDetails;
+  budgetOfficerApproval?: BudgetOfficerApproval;
+  billingOfficialApproval?: BillingOfficialApproval;
+  j6Approval?: J6Approval;
+  pboApproval?: PboApproval;
+  directorateApproval?: DirectorateApproval;
+  j8Approval?: J8Approval;
+  cardholderValidation?: CardholderValidation;
+  requestorValidation?: RequestorValidation;
+  supplyValidation?: SupplyValidation;
+  finalValidation?: FinalValidation;
+  status?: string;
+}
+export class Request implements IRequest {
   @autoserialize
   requestor?: string;
 
@@ -56,6 +70,4 @@ export class Request {
 
   @autoserialize
   status?: string;
-
-  constructor(data: any = {}) {}
 }
