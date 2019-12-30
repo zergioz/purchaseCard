@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 
-interface IProps {
+type Props = {
   values: any[];
-  onChange: (dir: string) => void;
-}
+  changeHandler: (pillSelected: string) => void;
+};
 
-export const SelectorPills = (props: IProps) => {
+export const SelectorPills: React.FC<Props> = props => {
   const [currentSelection, updateCurrentSelection] = useState<string>("");
 
-  const pillClicked = (directorate: string, e: any) => {
+  const pillClicked = (value: string, e: any) => {
     e.preventDefault();
-    updateCurrentSelection(directorate);
-    if (props.onChange) props.onChange(currentSelection);
+    updateCurrentSelection(value);
+    if (props.changeHandler) props.changeHandler(value);
   };
 
   return (

@@ -46,7 +46,7 @@ export class AllRequests extends React.Component<IProps, IState> {
         <hr />
         <SelectorPills
           values={statuses}
-          onChange={(status: string) => this.statusChanged(status)}
+          changeHandler={(status: string) => this.statusChanged(status)}
         ></SelectorPills>
         <RequestTable items={this.state.requests}></RequestTable>
       </React.Fragment>

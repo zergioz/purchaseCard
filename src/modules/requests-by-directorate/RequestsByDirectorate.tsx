@@ -15,6 +15,7 @@ interface IState {
   loading?: boolean;
   directorate?: string | null;
   status?: string | null;
+  update?: boolean;
 }
 
 export class RequestsByDirectorate extends React.Component<IProps, IState> {
@@ -25,26 +26,24 @@ export class RequestsByDirectorate extends React.Component<IProps, IState> {
       requests: [],
       directorate: null,
       status: null,
-      loading: false
+      loading: true
     };
     this.svc = new RequestService();
   }
-  componentWillMount() {
+
+  componentDidMount() {
     this.getData();
   }
 
-  directorateChanged(directorate: string) {
+  directorateChanged = (directorate: string) => {
     this.setState({ ...this.state, directorate: directorate });
-    this.getData();
-  }
+  };
 
-  statusChanged(status: string) {
+  statusChanged = (status: string) => {
     this.setState({ ...this.state, status: status });
-    this.getData();
-  }
+  };
 
   getData() {
-    this.setState({ ...this.state, loading: true });
     this.svc.read().subscribe((items: Request[]) => {
       this.setState({ ...this.state, requests: items, loading: false });
     });
@@ -57,13 +56,11 @@ export class RequestsByDirectorate extends React.Component<IProps, IState> {
         <hr />
         <SelectorPills
           values={directorates}
-          onChange={(directorate: string) =>
-            this.directorateChanged(directorate)
-          }
+          changeHandler={this.directorateChanged}
         ></SelectorPills>
         <SelectorPills
           values={statuses}
-          onChange={(status: string) => this.statusChanged(status)}
+          changeHandler={this.statusChanged}
         ></SelectorPills>
         <RequestTable items={this.state.requests}></RequestTable>
       </React.Fragment>
