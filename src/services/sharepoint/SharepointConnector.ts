@@ -175,9 +175,12 @@ export class SharepointConnector implements IDbConnector {
     return from(
       web.siteUserInfoList.items
         .filter(
-          `substringof('${query}',Title) or substringof('${query}',EMail)`
+          query
+            ? `substringof('${query}',Title) or substringof('${query}',EMail)`
+            : ``
         )
-        .select("Id, Title, EMail")
+        .top(10000)
+        .select("Id, Title, EMail, Name, UserName")
         .orderBy("Title")
         .get()
     );
