@@ -17,5 +17,5 @@
     "experimentalDecorators": true
   },
   "include": ["src"],
-  "exclude": ["Pages", "SiteAssets"]
+  "exclude": ["src/legacy/**"]
 }

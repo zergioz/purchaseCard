@@ -8,7 +8,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import $ from "jquery";
 import Popper from "popper.js";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import "../SiteAssets/css/toolkit-light.css";
+import "./legacy/SiteAssets/css/toolkit-light.css";
+import "./legacy/SiteAssets/css/application.css";
+import "./legacy/SiteAssets/css/style.css";
 
 import React from "react";
 import ReactDOM from "react-dom";
