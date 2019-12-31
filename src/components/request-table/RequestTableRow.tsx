@@ -1,6 +1,10 @@
 import React from "react";
 import { Request } from "../../services/models/Request";
-export const RequestTableRow = (props: any) => {
+
+interface IProps {
+  request: Request;
+}
+export const RequestTableRow: React.FC<IProps> = props => {
   const item: Request = props.request;
   return (
     <tr>
