@@ -13,7 +13,7 @@ import { SupplyValidation } from "./SupplyValidation";
 import { PersonAttributes } from "./PersonAttributes";
 import { PersonTraining } from "./PersonTraining";
 import { Request } from "./Request";
-import { User } from "./User";
+import { ccUser } from "./ccUser";
 
 export default [
   BillingOfficialApproval,
@@ -31,5 +31,5 @@ export default [
   PersonAttributes,
   PersonTraining,
   Request,
-  User
+  ccUser
 ];

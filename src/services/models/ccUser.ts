@@ -2,7 +2,7 @@ import { autoserialize, autoserializeAs } from "cerialize";
 import { PersonTraining } from "./PersonTraining";
 import { PersonAttributes } from "./PersonAttributes";
 
-export class User {
+export class ccUser {
   @autoserialize
   personActive?: string;
   @autoserializeAs(PersonAttributes)
