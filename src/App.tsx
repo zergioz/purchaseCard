@@ -17,10 +17,10 @@ const App = () => {
       <Router>
         <div className="container-fluid">
           <div className="row">
-            <div className="col-md-3 sidebar">
+            <div className="col-md-2 sidebar">
               <SideBar modules={modules}></SideBar>
             </div>
-            <div className="col-md-9">
+            <div className="col-md-10">
               <UserProvider>
                 <RequestProvider>
                   <Switch>
@@ -28,7 +28,8 @@ const App = () => {
                     {modules.map(module => (
                       <Route {...module.routeProps} key={module.name} />
                     ))}
-                    <Redirect from="/requests" to="/requests/by-directorate" />
+                    <Redirect from="/requests" to="/requests/submitted-by-me" />
+                    <Redirect from="/" to="/requests/submitted-by-me" />
                   </Switch>
                 </RequestProvider>
               </UserProvider>
