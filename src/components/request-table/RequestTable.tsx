@@ -1,5 +1,6 @@
 import React from "react";
 import { RequestTableRow } from "./RequestTableRow";
+import { Request } from "../../services/models/Request";
 
 export const RequestTable = (props: any) => {
   return (
