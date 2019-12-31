@@ -1,6 +1,6 @@
 import React from "react";
-import { RequestTableFiltered } from "../../components/request-table-filtered/RequestTableFiltered";
-import { Filters } from "../../components/requests-filter/Filters";
+import { RequestTableFiltered } from "../../../components/request-table-filtered/RequestTableFiltered";
+import { Filters } from "../../../components/requests-filter/Filters";
 
 export const AllRequests: React.FC = () => {
   return (

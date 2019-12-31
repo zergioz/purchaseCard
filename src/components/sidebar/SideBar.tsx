@@ -5,15 +5,31 @@ export const SideBar = (props: any) => {
   return (
     <nav className="sidebar-nav">
       <ul className="nav nav-pills nav-stacked flex-column">
-        <li className="nav-header">Requests</li>
         {/* Create a link for each module exported from ./modules */}
-        {props.modules.map((module: any) => (
-          <li className="nav-item" key={module.name}>
-            <Link className="nav-link" to={module.routeProps.path}>
+        {props.modules.map((module: any) => {
+          let links = [
+            <Link
+              className="nav-header"
+              to={module.routeProps.path}
+              key={module.name}
+            >
               {module.name}
             </Link>
-          </li>
-        ))}
+          ];
+          {
+            /* Create a link for each submodule */
+          }
+          module.modules.map((submodule: any) => {
+            links.push(
+              <li className="nav-item" key={submodule.name}>
+                <Link className="nav-link" to={submodule.routeProps.path}>
+                  {submodule.name}
+                </Link>
+              </li>
+            );
+          });
+          return links;
+        })}
         <li className="nav-header">Documentation & Other</li>
         <li className="nav-item">
           <a

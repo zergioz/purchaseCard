@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { RequestTableFiltered } from "../../components/request-table-filtered/RequestTableFiltered";
-import { Filters } from "../../components/requests-filter/Filters";
-import UserContext from "../../contexts/UserContext";
+import { RequestTableFiltered } from "../../../components/request-table-filtered/RequestTableFiltered";
+import { Filters } from "../../../components/requests-filter/Filters";
+import UserContext from "../../../contexts/UserContext";
 
 export const SubmittedByMe: React.FC = () => {
   const { user } = useContext(UserContext);

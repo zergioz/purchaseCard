@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import {
   Route,
   HashRouter as Router,
@@ -12,6 +12,22 @@ import { RequestProvider } from "./contexts/RequestContext";
 import { UserProvider } from "./contexts/UserContext";
 
 const App = () => {
+  //create a route for each module and submodule exported from ./modules
+  const makeRoutes = () => {
+    let routes: ReactElement[] = [];
+    modules.map(module => {
+      const submodules = module.modules;
+      routes.push(<Route exact {...module.routeProps} key={module.name} />);
+
+      submodules.map(submodule => {
+        routes.push(
+          <Route exact {...submodule.routeProps} key={submodule.name} />
+        );
+      });
+    });
+    return routes;
+  };
+
   return (
     <div>
       <Router>
@@ -24,12 +40,8 @@ const App = () => {
               <UserProvider>
                 <RequestProvider>
                   <Switch>
-                    {/* Create a route for each module exported from ./modules */}
-                    {modules.map(module => (
-                      <Route {...module.routeProps} key={module.name} />
-                    ))}
-                    <Redirect from="/requests" to="/requests/submitted-by-me" />
-                    <Redirect from="/" to="/requests/submitted-by-me" />
+                    {makeRoutes()}
+                    <Redirect from="/" to="/system" />
                   </Switch>
                 </RequestProvider>
               </UserProvider>
