@@ -34,6 +34,13 @@ export class RequestsFilter extends React.Component<IProps, IState> {
     );
   };
 
+  requestorFilter = (request: Request) => {
+    return (
+      !this.props.filters.requestor ||
+      request.requestor == this.props.filters.requestor
+    );
+  };
+
   statusFilter = (request: Request) => {
     return (
       !this.props.filters.status ||
@@ -49,6 +56,7 @@ export class RequestsFilter extends React.Component<IProps, IState> {
   applyFilters = (): Request[] => {
     let filteredRequests: Request[] = this.context.requests;
     filteredRequests = filteredRequests
+      .filter(this.requestorFilter)
       .filter(this.statusFilter)
       .filter(this.directorateFilter);
     return filteredRequests;
