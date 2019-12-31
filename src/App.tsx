@@ -8,6 +8,7 @@ import {
 import modules from "./modules";
 import "./App.css";
 import { SideBar } from "./components/sidebar/SideBar";
+import { RequestProvider } from "./contexts/RequestContext";
 
 const App = () => {
   return (
@@ -19,13 +20,15 @@ const App = () => {
               <SideBar modules={modules}></SideBar>
             </div>
             <div className="col-md-9">
-              <Switch>
-                {/* Create a route for each module exported from ./modules */}
-                {modules.map(module => (
-                  <Route {...module.routeProps} key={module.name} />
-                ))}
-                <Redirect from="/requests" to="/requests/by-directorate" />
-              </Switch>
+              <RequestProvider>
+                <Switch>
+                  {/* Create a route for each module exported from ./modules */}
+                  {modules.map(module => (
+                    <Route {...module.routeProps} key={module.name} />
+                  ))}
+                  <Redirect from="/requests" to="/requests/by-directorate" />
+                </Switch>
+              </RequestProvider>
             </div>
           </div>
         </div>
