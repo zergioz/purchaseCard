@@ -489,35 +489,19 @@ function deleteDetails(item){
  * Gather all values from the dynamic form and create into a JSON output
  */
 function createDetailsJson(){
-	/* THIS IS NEEDS TO BE RE-WRITTEN */
-	var detailsJson ='{';
-		detailsJson+='"Details":[';
+	let detailsArray = [];
 	for (var i = 0; i < itemsDetails.length; i++) {
-		detailsJson += '{';
-		detailsJson += '"requestQty":"'		+ 	$('#RequestQTY'+i).val() 	+'",'; 
-		detailsJson += '"requestDesc":"'	+ 	$('#Description'+i).val() 	+'",';
-		detailsJson += '"requestSrc":"'		+ 	$('#Source'+i).val() 		+'",';
-		detailsJson += '"requestDdForm":"'	+ 	$('#DD'+i).is( ":checked" )	+'",';
-		detailsJson += '"requestDaForm":"'	+ 	$('#DA'+i).is( ":checked" )	+'",';
-		// add or remove trailing comma  based on record count 
-		if( itemsDetails.length == 1 || i+1 == itemsDetails.length ){
-			detailsJson += '"requestCost":"'	+	$('#RequestCost'+i).val()	+'",';	
-			detailsJson += '"requestTotal":"'	+ 	$('#RequestTotal'+i).val()	+'"';
-		}
-		else if( itemsDetails.length > 1 ) {
-			detailsJson += '"requestCost":"'	+ 	$('#RequestCost'+i).val()	+'",';
-			detailsJson += '"requestTotal":"'	+ 	$('#RequestTotal'+i).val()	+'"';	
-			detailsJson += '},';	
-		}
+		detailsArray.push({
+			requestQty: $('#RequestQTY'+i).val(),
+			requestDesc: $('#Description'+i).val(),
+			requestSrc: $('#Source'+i).val(),
+			requestDdForm: $('#DD'+i).is( ":checked" ),
+			requestDaForm: $('#DA'+i).is( ":checked" ),
+			requestCost: $('#RequestCost'+i).val(),
+			requestTotal: $('#RequestTotal'+i).val()
+		})
 	}
-	detailsJson += '}]}';
-	// hack for empty entries 
-	if (itemsDetails.length > 0) {
-		return detailsJson;
-	}else{
-		detailsJson = '{"Details":[{"":"","":"","":"","":"","":"","":""}]}';
-		return detailsJson;
-	}
+	return JSON.stringify({Details: detailsArray});
 }
 
 /*

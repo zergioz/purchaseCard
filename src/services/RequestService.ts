@@ -17,10 +17,11 @@ export class RequestService {
     this.listName = "ccRequestTracker";
   }
 
+  //doing this because some of the data written to the DB was not done with JSON.stringify
   mapAndParse(item: ccRequestTracker): any {
     let parsed = {};
     try {
-      parsed = JSON.stringify({
+      parsed = {
         id: item.Id,
         requestor: item.Title,
         requestField: JSON.parse(item.REQUEST_FIELD),
@@ -36,11 +37,12 @@ export class RequestService {
         supplyValidation: JSON.parse(item.SUPPLY_VALIDATION),
         finalValidation: JSON.parse(item.FINAL_VALIDATION),
         status: item.REQUEST_STATUS
-      });
+      };
     } catch (e) {
-      console.log(`Error parsing ccRequestTracker item`, e, item);
+      console.error(`Error parsing value in ccRequestTracker item`, e);
+      console.error(item);
     }
-    return parsed;
+    return JSON.stringify(parsed);
   }
 
   read(filters?: string): Observable<Request[]> {

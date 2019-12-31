@@ -10,9 +10,9 @@ class Detail {
   @autoserialize
   requestSrc?: string;
   @autoserialize
-  requestDdForm?: string;
+  requestDdForm?: boolean;
   @autoserialize
-  requestDaForm?: string;
+  requestDaForm?: boolean;
   @autoserialize
   requestCost?: string;
   @autoserialize
