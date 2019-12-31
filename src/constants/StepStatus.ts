@@ -1,4 +1,12 @@
-export const StepStatus = [
+export interface IStatus {
+  caseStep: string;
+  fwd: string;
+  fwdj6: string;
+  numerStep: number;
+  friendlyName: string;
+}
+
+export const StepStatus: IStatus[] = [
   {
     caseStep: "DRAFT",
     fwd: "DRAFT",
@@ -84,3 +92,18 @@ export const StepStatus = [
     friendlyName: "Closed"
   }
 ];
+
+export type StatusesByFriendlyName = {
+  [key: string]: IStatus;
+};
+
+//for looking up actual status values by friendly name because
+//they are stored in the db in all caps
+export const getStatusesByFriendlyName = (): StatusesByFriendlyName => {
+  let statuses: StatusesByFriendlyName = {};
+  StepStatus.map((status: IStatus) => {
+    const key: string = status.friendlyName;
+    statuses[key] = status;
+  });
+  return statuses;
+};
