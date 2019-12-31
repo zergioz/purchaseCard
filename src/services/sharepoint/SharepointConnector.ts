@@ -36,12 +36,6 @@ export class SharepointConnector implements IDbConnector {
     //let web = new Web(_spPageContextInfo.webAbsoluteUrl);
   }
 
-  /// creates a new sharepoint list
-  createTable(params: IQueryParams): Observable<any> {
-    const listName = params.tableName;
-    return from(sp.web.lists.add(listName));
-  }
-
   /// queries all the rows of a sharepoint list
   readTable(params: IQueryParams): Observable<any> {
     const tableName = params.tableName;
@@ -58,49 +52,6 @@ export class SharepointConnector implements IDbConnector {
         .filter(filter)
         .top(10000)
         .get()
-    );
-  }
-
-  /// adds a multi line text field to a sharepoint list and then adds that column to the default view
-  addColumnToTable(params: IQueryParams): Observable<any> {
-    const listName = params.tableName;
-    const fieldName = params.columnName;
-
-    return from(
-      sp.web.lists
-        .getByTitle(listName)
-        .fields.addMultilineText(
-          fieldName,
-          undefined,
-          false,
-          false,
-          false,
-          false
-        )
-    );
-  }
-
-  /// gets the information about a column in a sharepoint list
-  readColumn(params: IQueryParams): Observable<any> {
-    const listName = params.tableName;
-    const fieldName = params.columnName;
-
-    return from(
-      sp.web.lists
-        .getByTitle(listName)
-        .fields.select("InternalName")
-        .getByInternalNameOrTitle(fieldName)
-        .get()
-    );
-  }
-
-  //adds a column to the All Items view
-  addColumnToView(params: IQueryParams): Observable<any> {
-    const listName = params.tableName;
-    const fieldName = params.columnName;
-
-    return from(
-      sp.web.lists.getByTitle(listName).defaultView.fields.add(fieldName)
     );
   }
 
@@ -144,28 +95,6 @@ export class SharepointConnector implements IDbConnector {
     return from(list.items.getById(itemId).delete());
   }
 
-  //gets the details of the default view for a list
-  getDefaultView(params: IQueryParams): Observable<any> {
-    const listName = params.tableName;
-    const list = sp.web.lists.getByTitle(listName);
-
-    return from(list.defaultView.expand("ViewFields").get());
-  }
-
-  //for sending caml for calendar queries
-  sendRawQuery(params: IQueryParams): Observable<any> {
-    const caml = params.rawQuery;
-
-    const siteUrl = params.siteUrl;
-    let web = sp.web;
-    if (siteUrl) web = new Web(siteUrl);
-
-    const listName = params.tableName;
-
-    return from(web.lists.getByTitle(listName).renderListData(caml));
-  }
-
-  //gets info from the users list - used by <PeoplePicker> component
   searchUsers(params: IQueryParams): Observable<any> {
     const query = params.rawQuery;
     const siteUrl = params.siteUrl;
@@ -186,7 +115,6 @@ export class SharepointConnector implements IDbConnector {
     );
   }
 
-  //for profile info and <AdminOnly> component
   getCurrentUser(): Observable<any> {
     return from(sp.web.currentUser.get());
   }
