@@ -5,7 +5,6 @@ import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
-import { SharepointUser } from "./models/SharepointUser";
 
 export class RequestService {
   private dal: dal;
