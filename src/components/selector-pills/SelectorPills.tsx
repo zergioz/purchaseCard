@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 
 type Props = {
-  values: any[];
+  values: string[];
+  selectedValue?: string;
   changeHandler: (pillSelected: string) => void;
 };
 
 export const SelectorPills: React.FC<Props> = props => {
-  const [currentSelection, updateCurrentSelection] = useState<string>("");
+  const [currentSelection, updateCurrentSelection] = useState<string>(
+    props.selectedValue ? props.selectedValue : ""
+  );
 
   const pillClicked = (value: string, e: any) => {
     e.preventDefault();

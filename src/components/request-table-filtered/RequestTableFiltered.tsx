@@ -3,7 +3,7 @@ import { SelectorPills } from "../selector-pills/SelectorPills";
 import { PersonDirectorates as directorates } from "../../constants/PersonDirectorates";
 import { RequestContext } from "../../contexts/RequestContext";
 import { RequestsFilter } from "../requests-filter/RequestsFilter";
-import { IFilters } from "../requests-filter/Filters";
+import { IFilters, Filters } from "../requests-filter/Filters";
 import { StepStatus } from "../../constants/StepStatus";
 
 const statuses: string[] = StepStatus.map(status => status.friendlyName);
@@ -20,7 +20,7 @@ export class RequestTableFiltered extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      filters: { directorate: "", status: "", ...this.props.filters }
+      filters: { ...(this.props.filters || new Filters()) }
     };
   }
 
@@ -38,10 +38,12 @@ export class RequestTableFiltered extends React.Component<IProps, IState> {
     return (
       <React.Fragment>
         <SelectorPills
+          selectedValue={this.state.filters.directorate}
           values={directorates}
           changeHandler={this.directorateChanged}
         ></SelectorPills>
         <SelectorPills
+          selectedValue={this.state.filters.status}
           values={statuses}
           changeHandler={this.statusChanged}
         ></SelectorPills>

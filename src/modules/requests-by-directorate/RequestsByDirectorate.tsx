@@ -3,11 +3,14 @@ import { RequestTableFiltered } from "../../components/request-table-filtered/Re
 import { Filters } from "../../components/requests-filter/Filters";
 
 export const RequestsByDirectorate: React.FC = () => {
+  const defaultFilters = new Filters();
+  defaultFilters.directorate = "J6";
+
   return (
     <React.Fragment>
       <h1>Requests by Directorate</h1>
       <hr />
-      <RequestTableFiltered filters={new Filters()} />
+      <RequestTableFiltered filters={defaultFilters} />
     </React.Fragment>
   );
 };
