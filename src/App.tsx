@@ -12,17 +12,33 @@ import { RequestProvider } from "./contexts/RequestContext";
 import { UserProvider } from "./contexts/UserContext";
 
 const App = () => {
-  //create a route for each module and submodule exported from ./modules
   const makeRoutes = () => {
     let routes: ReactElement[] = [];
+
+    //creates a route for each module and submodule exported from ./modules
     modules.map(module => {
       const submodules = module.modules;
       routes.push(<Route exact {...module.routeProps} key={module.name} />);
 
-      submodules.map(submodule => {
+      //each module can have an array of submodules
+      submodules.map((submodule: any) => {
         routes.push(
           <Route exact {...submodule.routeProps} key={submodule.name} />
         );
+
+        //each submodule can have alternate routes for params i.e. /directorates/:directorate
+        submodule.alternateRouteProps &&
+          submodule.alternateRouteProps.map(
+            (alternateRouteProps: any, index: number) => {
+              routes.push(
+                <Route
+                  exact
+                  {...alternateRouteProps}
+                  key={`${submodule.name}-${index}`}
+                />
+              );
+            }
+          );
       });
     });
     return routes;

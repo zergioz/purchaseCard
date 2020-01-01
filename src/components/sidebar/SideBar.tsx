@@ -16,9 +16,6 @@ export const SideBar = (props: any) => {
               {module.name}
             </Link>
           ];
-          {
-            /* Create a link for each submodule */
-          }
           module.modules.map((submodule: any) => {
             links.push(
               <li className="nav-item" key={submodule.name}>
@@ -27,6 +24,17 @@ export const SideBar = (props: any) => {
                 </Link>
               </li>
             );
+
+            submodule.links &&
+              submodule.links.map((link: any) => {
+                links.push(
+                  <li className="nav-item" key={link.name}>
+                    <Link className="nav-link" to={link.routeProps.path}>
+                      - {link.name}
+                    </Link>
+                  </li>
+                );
+              });
           });
           return links;
         })}
