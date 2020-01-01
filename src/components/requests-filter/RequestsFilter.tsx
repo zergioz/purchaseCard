@@ -64,7 +64,7 @@ export class RequestsFilter extends React.Component<IProps, IState> {
 
   render() {
     const requests = this.applyFilters();
-    return this.context.loading || true ? (
+    return this.context.loading ? (
       <div className="d-flex justify-content-center m-xl-5">
         <div className="spinner-border" role="status">
           <span className="sr-only">Loading...</span>

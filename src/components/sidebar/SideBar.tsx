@@ -1,80 +1,51 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Nav } from "react-bootstrap";
 
 export const SideBar = (props: any) => {
   return (
-    <nav className="sidebar-nav">
-      <ul className="nav nav-pills nav-stacked flex-column">
-        <li className="nav-item">
-          <a className="nav-link" href="/">
-            Portal Home
-          </a>
-        </li>
-        {/* Create a link for each module exported from ./modules */}
-        {props.modules.map((module: any, moduleIndex: number) => {
-          let links = [
-            <Link
-              className="nav-header"
-              to={module.routeProps.path}
-              key={`sidebar-module-${moduleIndex}`}
-            >
-              {module.name}
-            </Link>
-          ];
-          module.modules.map((submodule: any, submoduleIndex: number) => {
-            links.push(
-              <li
-                className="nav-item"
-                key={`sidebar-submodule-${moduleIndex}-${submoduleIndex}`}
-              >
-                <Link className="nav-link" to={submodule.routeProps.path}>
-                  {submodule.name}
-                </Link>
-              </li>
-            );
+    <Nav className="flex-column">
+      <Nav.Link href="/">Portal Home</Nav.Link>
 
-            submodule.links &&
-              submodule.links.map((link: any, linkIndex: number) => {
-                links.push(
-                  <li
-                    className="nav-item"
-                    key={`sidebar-link-${moduleIndex}-${submoduleIndex}-${linkIndex}`}
-                  >
-                    <Link
-                      className="nav-link"
-                      style={{ marginLeft: "1rem" }}
-                      to={link.routeProps.path}
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                );
-              });
-          });
-          return links;
-        })}
-        <li className="nav-header">Documentation & Other</li>
-        <li className="nav-item">
-          <a
-            className="nav-link"
-            href="../Shared%20Documents/Forms/AllItems.aspx"
-            target="_blank"
+      {/* Create a link for each module exported from ./modules */}
+      {props.modules.map((module: any, moduleIndex: number) => {
+        let links = [
+          <Nav.Link
+            href={`/#${module.routeProps.path}`}
+            eventKey={`sidebar-module-${moduleIndex}`}
           >
-            Documentation
-          </a>
-        </li>
-        <li className="nav-header">Users</li>
-        <li className="nav-item">
-          <a className="nav-link" href="cc_user_list.aspx">
-            Users Overview
-          </a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link" href="cc_user_add.aspx">
-            Add User
-          </a>
-        </li>
-      </ul>
-    </nav>
+            {module.name}
+          </Nav.Link>
+        ];
+        module.modules.map((submodule: any, submoduleIndex: number) => {
+          links.push(
+            <Nav.Link
+              href={`/#${submodule.routeProps.path}`}
+              eventKey={`sidebar-submodule-${moduleIndex}-${submoduleIndex}`}
+            >
+              {submodule.name}
+            </Nav.Link>
+          );
+
+          submodule.links &&
+            submodule.links.map((link: any, linkIndex: number) => {
+              links.push(
+                <Nav.Link
+                  href={`/#${link.routeProps.path}`}
+                  eventKey={`sidebar-link-${moduleIndex}-${submoduleIndex}-${linkIndex}`}
+                >
+                  {link.name}
+                </Nav.Link>
+              );
+            });
+        });
+        return links;
+      })}
+
+      <Nav.Link href="../Shared%20Documents/Forms/AllItems.aspx">
+        Documentation
+      </Nav.Link>
+      <Nav.Link href="./cc_user_list.aspx">Users Overview</Nav.Link>
+      <Nav.Link href="./cc_user_add.aspx">Add User</Nav.Link>
+    </Nav>
   );
 };

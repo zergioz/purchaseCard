@@ -7,11 +7,7 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-//use styles from legacy pages to blend in
-import "./legacy/SiteAssets/bootstrap-4.3.1/css/bootstrap.min.css";
-import "./legacy/SiteAssets/css/toolkit-light.css";
-import "./legacy/SiteAssets/css/application.css";
-import "./legacy/SiteAssets/css/style.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
