@@ -2,12 +2,19 @@ import React from "react";
 import { RequestTableFiltered } from "../../../components/request-table-filtered/RequestTableFiltered";
 import { Filters } from "../../../components/requests-filter/Filters";
 
-export const AllRequests: React.FC = () => {
+interface IProps {
+  status: string;
+}
+
+export const RequestsByStatus: React.FC<IProps> = props => {
+  const defaultFilters = new Filters();
+  defaultFilters.status = props.status;
+
   return (
     <React.Fragment>
-      <h1>All Requests</h1>
+      <h1>Requests by Status</h1>
       <hr />
-      <RequestTableFiltered filters={new Filters()} />
+      <RequestTableFiltered filters={defaultFilters} />
     </React.Fragment>
   );
 };

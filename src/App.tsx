@@ -58,6 +58,7 @@ const App = () => {
                   <Switch>
                     {makeRoutes()}
                     <Redirect from="/" to="/system" />
+                    <Redirect from="/system" to="/system-home" />
                   </Switch>
                 </RequestProvider>
               </UserProvider>

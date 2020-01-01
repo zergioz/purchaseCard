@@ -1,6 +1,6 @@
 import RequestsByDirectorateModule from "./requests-by-directorate";
-import AllRequestsModule from "./all-requests";
 import SubmittedByMeModule from "./submitted-by-me";
+import RequestsByStatusModule from "./requests-by-status";
 
 export default {
   routeProps: {
@@ -8,5 +8,9 @@ export default {
     component: SubmittedByMeModule.routeProps.component
   },
   name: "Requests",
-  modules: [SubmittedByMeModule, AllRequestsModule, RequestsByDirectorateModule]
+  modules: [
+    SubmittedByMeModule,
+    RequestsByStatusModule,
+    RequestsByDirectorateModule
+  ]
 };
