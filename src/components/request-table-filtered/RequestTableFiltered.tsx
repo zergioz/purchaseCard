@@ -36,16 +36,6 @@ export class RequestTableFiltered extends React.Component<IProps, IState> {
     return (
       <React.Fragment>
         <SelectorPills
-          selectedValue={this.state.filters.directorate}
-          values={directorates}
-          changeHandler={directorate =>
-            this.updateFilters({
-              ...this.state.filters,
-              directorate: directorate
-            })
-          }
-        ></SelectorPills>
-        <SelectorPills
           selectedValue={this.state.filters.status}
           values={statuses}
           changeHandler={status =>
