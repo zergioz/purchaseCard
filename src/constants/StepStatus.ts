@@ -107,3 +107,15 @@ export const getStatusesByFriendlyName = (): StatusesByFriendlyName => {
   });
   return statuses;
 };
+
+export const convertToUgly = (friendlyName: string): string => {
+  const status = StepStatus.find(
+    status => status.friendlyName === friendlyName
+  );
+  return status ? status.caseStep : "";
+};
+
+export const convertToFriendly = (caseStep: string): string => {
+  const status = StepStatus.find(status => status.caseStep === caseStep);
+  return status ? status.friendlyName : "";
+};

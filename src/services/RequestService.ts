@@ -49,7 +49,6 @@ export class RequestService {
     return this.dal
       .getRowsWhere(this.listName, undefined, undefined, filters)
       .pipe(
-        tap(items => console.log(items)),
         //parse nested json strings
         map((items: ccRequestTracker[]) => {
           return items.map(item => this.mapAndParse(item));
@@ -61,8 +60,7 @@ export class RequestService {
             deserialized.push(this.serializer.deserialize(item, Request));
           });
           return deserialized;
-        }),
-        tap(items => console.log(items))
+        })
       );
   }
 }
