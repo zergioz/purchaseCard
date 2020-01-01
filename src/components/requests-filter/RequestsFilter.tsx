@@ -64,6 +64,14 @@ export class RequestsFilter extends React.Component<IProps, IState> {
 
   render() {
     const requests = this.applyFilters();
-    return <RequestTable items={requests} />;
+    return this.context.loading || true ? (
+      <div className="d-flex justify-content-center m-xl-5">
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    ) : (
+      <RequestTable items={requests} />
+    );
   }
 }
