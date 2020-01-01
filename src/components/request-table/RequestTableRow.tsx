@@ -11,8 +11,8 @@ export const RequestTableRow: React.FC<IProps> = props => {
       <td>{item.id}</td>
       <td>{item.requestor}</td>
       <td>{item.requestField!.RequestorDirectorate}</td>
-      <td>FY</td>
-      <td>Qt</td>
+      <td>{item.j8Approval ? item.j8Approval.j8FiscalYear : ""}</td>
+      <td>{item.j8Approval ? item.j8Approval.j8Quater : ""}</td>
       <td>{item.requestField!.RequestJustification}</td>
       <td>{item.status}</td>
     </tr>
