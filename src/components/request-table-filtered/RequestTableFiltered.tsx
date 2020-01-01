@@ -1,6 +1,5 @@
 import React from "react";
 import { SelectorPills } from "../selector-pills/SelectorPills";
-import { PersonDirectorates as directorates } from "../../constants/PersonDirectorates";
 import { RequestContext } from "../../contexts/RequestContext";
 import { RequestsFilter } from "../requests-filter/RequestsFilter";
 import { IFilters, Filters } from "../requests-filter/Filters";
