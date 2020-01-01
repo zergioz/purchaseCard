@@ -24,13 +24,11 @@ export class RequestTableFiltered extends React.Component<IProps, IState> {
     };
   }
 
-  directorateChanged = (directorate: string) => {
-    const filters = { ...this.state.filters, directorate: directorate };
-    this.setState({ ...this.state, filters: filters });
-  };
+  componentWillReceiveProps(nextProps: IProps) {
+    this.updateFilters(nextProps.filters);
+  }
 
-  statusChanged = (status: string) => {
-    const filters = { ...this.state.filters, status: status };
+  updateFilters = (filters: IFilters) => {
     this.setState({ ...this.state, filters: filters });
   };
 
@@ -40,12 +38,19 @@ export class RequestTableFiltered extends React.Component<IProps, IState> {
         <SelectorPills
           selectedValue={this.state.filters.directorate}
           values={directorates}
-          changeHandler={this.directorateChanged}
+          changeHandler={directorate =>
+            this.updateFilters({
+              ...this.state.filters,
+              directorate: directorate
+            })
+          }
         ></SelectorPills>
         <SelectorPills
           selectedValue={this.state.filters.status}
           values={statuses}
-          changeHandler={this.statusChanged}
+          changeHandler={status =>
+            this.updateFilters({ ...this.state.filters, status: status })
+          }
         ></SelectorPills>
         <RequestsFilter filters={this.state.filters} />
       </React.Fragment>

@@ -8,5 +8,5 @@ export default {
     component: SubmittedByMeModule.routeProps.component
   },
   name: "Requests",
-  modules: [SubmittedByMeModule, RequestsByDirectorateModule, AllRequestsModule]
+  modules: [SubmittedByMeModule, AllRequestsModule, RequestsByDirectorateModule]
 };

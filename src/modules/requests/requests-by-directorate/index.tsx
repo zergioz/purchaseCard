@@ -2,8 +2,11 @@ import React from "react";
 import { RequestsByDirectorate } from "./RequestsByDirectorate";
 import { PersonDirectorates as directorates } from "../../../constants/PersonDirectorates";
 
-const RequestsByDirectorateModule = () => {
-  return <RequestsByDirectorate></RequestsByDirectorate>;
+const RequestsByDirectorateModule = ({ match }: any) => {
+  const directorate = match.params.directorate || "";
+  return (
+    <RequestsByDirectorate directorate={directorate}></RequestsByDirectorate>
+  );
 };
 
 const sidebarLinks = directorates.map(directorate => {

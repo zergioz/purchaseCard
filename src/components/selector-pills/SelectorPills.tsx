@@ -19,10 +19,23 @@ export const SelectorPills: React.FC<Props> = props => {
 
   return (
     <ul className="nav nav-pills">
+      <li className="nav-item">
+        <a
+          className={`nav-link ${currentSelection == "" ? "active" : ""}`}
+          href="#"
+          onClick={(e: any) => pillClicked("", e)}
+        >
+          All
+        </a>
+      </li>
       {props.values.map((value: string, index: number) => (
         <li className="nav-item" key={value + index}>
           <a
-            className={`nav-link ${currentSelection == value ? "active" : ""}`}
+            className={`nav-link ${
+              currentSelection == value || currentSelection == ""
+                ? "active"
+                : ""
+            }`}
             href="#"
             onClick={(e: any) => pillClicked(value, e)}
           >
