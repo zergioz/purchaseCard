@@ -31,11 +31,13 @@ export class RequestTableFiltered extends React.Component<IProps, IState> {
     this.setState({ ...this.state, filters: filters });
   };
 
+  badges: string[] = [];
   render() {
     return (
       <React.Fragment>
         <SelectorPills
           selectedValue={this.state.filters.status}
+          badges={this.badges}
           values={statuses}
           changeHandler={status =>
             this.updateFilters({ ...this.state.filters, status: status })
