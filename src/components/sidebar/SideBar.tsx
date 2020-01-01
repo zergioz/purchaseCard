@@ -5,6 +5,11 @@ export const SideBar = (props: any) => {
   return (
     <nav className="sidebar-nav">
       <ul className="nav nav-pills nav-stacked flex-column">
+        <li className="nav-item">
+          <a className="nav-link" href="/">
+            Portal Home
+          </a>
+        </li>
         {/* Create a link for each module exported from ./modules */}
         {props.modules.map((module: any) => {
           let links = [
@@ -28,9 +33,13 @@ export const SideBar = (props: any) => {
             submodule.links &&
               submodule.links.map((link: any) => {
                 links.push(
-                  <li className="nav-item" key={link.name}>
-                    <Link className="nav-link" to={link.routeProps.path}>
-                      - {link.name}
+                  <li className="nav-item" key={submodule.name}>
+                    <Link
+                      className="nav-link"
+                      style={{ marginLeft: "1rem" }}
+                      to={link.routeProps.path}
+                    >
+                      {link.name}
                     </Link>
                   </li>
                 );
