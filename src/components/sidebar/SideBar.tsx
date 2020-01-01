@@ -11,7 +11,7 @@ export const SideBar = (props: any) => {
         let links = [
           <Nav.Link
             href={`/#${module.routeProps.path}`}
-            eventKey={`sidebar-module-${moduleIndex}`}
+            key={`sidebar-module-${moduleIndex}`}
           >
             {module.name}
           </Nav.Link>
@@ -20,7 +20,7 @@ export const SideBar = (props: any) => {
           links.push(
             <Nav.Link
               href={`/#${submodule.routeProps.path}`}
-              eventKey={`sidebar-submodule-${moduleIndex}-${submoduleIndex}`}
+              key={`sidebar-submodule-${moduleIndex}-${submoduleIndex}`}
             >
               {submodule.name}
             </Nav.Link>
@@ -31,7 +31,7 @@ export const SideBar = (props: any) => {
               links.push(
                 <Nav.Link
                   href={`/#${link.routeProps.path}`}
-                  eventKey={`sidebar-link-${moduleIndex}-${submoduleIndex}-${linkIndex}`}
+                  key={`sidebar-link-${moduleIndex}-${submoduleIndex}-${linkIndex}`}
                 >
                   {link.name}
                 </Nav.Link>
