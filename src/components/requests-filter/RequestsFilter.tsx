@@ -71,7 +71,10 @@ export class RequestsFilter extends React.Component<IProps, IState> {
         </div>
       </div>
     ) : (
-      <RequestTable items={requests} />
+      <>
+        <br />
+        <RequestTable items={requests} />
+      </>
     );
   }
 }

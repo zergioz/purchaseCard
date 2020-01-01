@@ -12,7 +12,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
   return (
     <React.Fragment>
       <h1>{`Requests by Directorate (${
-        props.directorate ? props.directorate : `All`
+        props.directorate ? props.directorate : `All Directorates`
       })`}</h1>
       <hr />
       <RequestTableFiltered filters={defaultFilters} />
