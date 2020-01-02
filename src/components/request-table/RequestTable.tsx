@@ -13,6 +13,10 @@ export const RequestTable = (props: IProps) => {
   const context = useContext(RequestContext);
   const items = props.items || context.filteredRequests;
 
+  const resetFilters = () => {
+    context.applyFilters(new Filters());
+  };
+
   return (
     <>
       {context.loading && (
@@ -24,7 +28,7 @@ export const RequestTable = (props: IProps) => {
       )}
 
       {!context.loading && (
-        <Table striped hover>
+        <Table striped hover style={{ marginTop: "5px" }}>
           <thead>
             <tr>
               <th>Id</th>
@@ -45,9 +49,13 @@ export const RequestTable = (props: IProps) => {
             {items && items.length == 0 && (
               <tr>
                 <td colSpan={7} style={{ textAlign: "center" }}>
-                  <Alert variant={"warning"}>
-                    There are no requests that match your filters.{" "}
-                    <Link to="/requests/all-requests" className="alert-link">
+                  <Alert variant={"success"}>
+                    There are no requests that match this filter.{" "}
+                    <Link
+                      to="/requests"
+                      className="alert-link"
+                      onClick={() => resetFilters()}
+                    >
                       Reset filters
                     </Link>
                   </Alert>
