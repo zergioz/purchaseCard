@@ -47,7 +47,7 @@ export const RequestTable = (props: IProps) => {
                 <td colSpan={7} style={{ textAlign: "center" }}>
                   <Alert variant={"warning"}>
                     There are no requests that match your filters.{" "}
-                    <Link to="/requests" className="alert-link">
+                    <Link to="/requests/all-requests" className="alert-link">
                       Reset filters
                     </Link>
                   </Alert>
