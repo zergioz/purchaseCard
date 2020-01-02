@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { ButtonToolbar, Button, Badge } from "react-bootstrap";
+import { ButtonToolbar, Button, Badge, Nav } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import {
   getStatusesByFriendlyName,
@@ -9,27 +9,31 @@ import {
 import { Request } from "../../services/models/Request";
 import { groupBy } from "../../helpers/GroupBy";
 
+const statuses: string[] = Object.keys(getStatusesByFriendlyName());
+
 interface IProps {
   requestsToCount?: Request[];
+  default?: string;
 }
 export const StatusFilter: React.FC<IProps> = props => {
-  const allRequestsCount = props.requestsToCount
-    ? props.requestsToCount.length
-    : 0;
   const context = useContext(RequestContext);
-  const [currentSelection, updateCurrentSelection] = useState<string>("");
-  const [badges, setBadges] = useState<number[]>([allRequestsCount]);
-  const statuses: StatusesByFriendlyName = getStatusesByFriendlyName();
+  const [badges, setBadges] = useState<number[]>([]);
+  const [currentSelection, updateCurrentSelection] = useState<string>(
+    props.default || "Submitted"
+  );
 
-  const values: string[] = Object.keys(statuses);
+  //update tab if the status filter changes
+  useEffect(() => {
+    updateCurrentSelection(context.filters.status);
+  }, [context.filters.status]);
 
+  //recreate badges on props update
   useEffect(() => {
     const counts = countStatusGroups();
     setBadges(counts);
   }, [props.requestsToCount]);
 
   const handleClick = (value: string) => {
-    updateCurrentSelection(value);
     context.applyFilters({ ...context.filters, status: value });
   };
 
@@ -44,7 +48,7 @@ export const StatusFilter: React.FC<IProps> = props => {
       );
 
       //loop through each friendly status value, convert it to the ugly version, and count the requests
-      values.map((statusValue, index) => {
+      statuses.map((statusValue, index) => {
         const uglyStatusValue = convertToUgly(statusValue);
         const requestsInStatus = groups.get(uglyStatusValue);
         const count = requestsInStatus ? requestsInStatus.length : 0;
@@ -54,36 +58,19 @@ export const StatusFilter: React.FC<IProps> = props => {
     return counts;
   };
 
-  const spacing = { marginLeft: "0.25em", marginTop: "0.25em" };
+  const badgeStyle = "danger";
   return (
-    <ButtonToolbar>
-      <Button
-        style={spacing}
-        size="sm"
-        variant={currentSelection == "" ? "danger" : "outline-danger"}
-        onClick={() => handleClick("")}
-      >
-        All{" "}
-        {!!badges && !!badges[0] && <Badge variant="light">{badges[0]}</Badge>}
-      </Button>
-      {values.map((value: string, index: number) => (
-        <Button
-          key={`selector-${value}-${index}`}
-          size="sm"
-          style={spacing}
-          variant={
-            currentSelection == value || currentSelection == ""
-              ? "primary"
-              : "outline-primary"
-          }
-          onClick={() => handleClick(value)}
-        >
-          {value}{" "}
-          {!!badges && !!badges[index + 1] && (
-            <Badge variant="light">{badges[index + 1]}</Badge>
-          )}
-        </Button>
+    <Nav fill variant="tabs" defaultActiveKey={`${currentSelection}`}>
+      {statuses.map((value: string, index: number) => (
+        <Nav.Item key={`selector-${value}-${index}`}>
+          <Nav.Link onClick={() => handleClick(value)} eventKey={value}>
+            {value}{" "}
+            <Badge variant={!!badges[index + 1] ? badgeStyle : "light"}>
+              {badges[index + 1]}
+            </Badge>
+          </Nav.Link>
+        </Nav.Item>
       ))}
-    </ButtonToolbar>
+    </Nav>
   );
 };
