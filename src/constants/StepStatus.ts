@@ -26,14 +26,14 @@ export const StepStatus: IStatus[] = [
     fwd: "BO APPROVAL",
     fwdj6: "BO APPROVAL",
     numerStep: 3,
-    friendlyName: "Directorate Approval"
+    friendlyName: "Director"
   },
   {
     caseStep: "BILLING_OFFICIAL_APPROVAL",
     fwd: "PBO APPROVAL",
     fwdj6: "J6 APPROVAL",
     numerStep: 4,
-    friendlyName: "BO Approval"
+    friendlyName: "Billing Official"
   },
   {
     caseStep: "J6_APPROVAL",
@@ -61,28 +61,28 @@ export const StepStatus: IStatus[] = [
     fwd: "REQUESTOR VALIDATION",
     fwdj6: "REQUESTOR VALIDATION",
     numerStep: 8,
-    friendlyName: "Cardholder Validation"
+    friendlyName: "Cardholder"
   },
   {
     caseStep: "REQUESTOR_VALIDATION",
     fwd: "SUPPLY VALIDATION",
     fwdj6: "SUPPLY VALIDATION",
     numerStep: 9.3,
-    friendlyName: "Requestor Validation"
+    friendlyName: "Requestor"
   },
   {
     caseStep: "SUPPLY_VALIDATION",
     fwd: "PENDING PBO FINAL",
     fwdj6: "PENDING PBO FINAL",
     numerStep: 9.6,
-    friendlyName: "Supply Validation"
+    friendlyName: "Supply"
   },
   {
     caseStep: "FINAL_VALIDATION",
     fwd: "PENDING CLOSING",
     fwdj6: "PENDING CLOSING",
     numerStep: 9.9,
-    friendlyName: "Final Validation"
+    friendlyName: "Final"
   },
   {
     caseStep: "CLOSED",
