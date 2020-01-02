@@ -8,12 +8,14 @@ import { Request } from "../../../services/models/Request";
 
 export const AllRequests: React.FC = () => {
   const context = useContext(RequestContext);
-  const defaultFilters = new Filters();
 
   const [filtered, setFiltered] = useState<Request[]>([]);
 
   useEffect(() => {
-    setFiltered(context.applyFilters(defaultFilters));
+    const filters = new Filters();
+    filters.status = "Submitted";
+    console.log(`AllRequests`);
+    setFiltered(context.applyFilters(filters));
   }, []);
 
   return (

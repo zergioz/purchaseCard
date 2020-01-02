@@ -14,6 +14,7 @@ export const DirectorateFilter: React.FC = () => {
   const values = directorates;
   const handleClick = (value: string) => {
     updateCurrentSelection(value);
+    console.log(`DirFilter`);
     context.applyFilters({ ...context.filters, directorate: value });
   };
 

@@ -17,6 +17,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
   useEffect(() => {
     defaultFilters.directorate = props.directorate;
     let filtered = context.applyFilters(defaultFilters);
+    console.log(`RequestsByDir`);
     setFiltered(filtered);
   }, [props, context.requests]);
 

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { RequestTableRow } from "./RequestTableRow";
 import { Request } from "../../services/models/Request";
 import { Table, Alert } from "react-bootstrap";
@@ -13,8 +13,12 @@ export const RequestTable = (props: IProps) => {
   const context = useContext(RequestContext);
   const items = props.items || context.filteredRequests;
 
+  useEffect(() => {
+    console.log(`Detected filter change`);
+  }, [context.filters]);
+
   const resetFilters = () => {
-    context.applyFilters(new Filters());
+    //context.applyFilters(new Filters());
   };
 
   return (

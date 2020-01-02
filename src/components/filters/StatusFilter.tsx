@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
-import { ButtonToolbar, Button, Badge, Nav } from "react-bootstrap";
+import { Badge, Nav } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import {
   getStatusesByFriendlyName,
-  StatusesByFriendlyName,
   convertToUgly
 } from "../../constants/StepStatus";
 import { Request } from "../../services/models/Request";
@@ -13,18 +12,14 @@ const statuses: string[] = Object.keys(getStatusesByFriendlyName());
 
 interface IProps {
   requestsToCount?: Request[];
-  default?: string;
 }
 export const StatusFilter: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
   const [badges, setBadges] = useState<number[]>([]);
-  const [currentSelection, updateCurrentSelection] = useState<string>(
-    props.default || "Submitted"
-  );
+  const [selected, setSelected] = useState<string>(context.filters.status);
 
-  //update tab if the status filter changes
   useEffect(() => {
-    updateCurrentSelection(context.filters.status);
+    setSelected(context.filters.status);
   }, [context.filters.status]);
 
   //recreate badges on props update
@@ -34,6 +29,7 @@ export const StatusFilter: React.FC<IProps> = props => {
   }, [props.requestsToCount]);
 
   const handleClick = (value: string) => {
+    console.log(`StatusFilter`);
     context.applyFilters({ ...context.filters, status: value });
   };
 
@@ -60,7 +56,7 @@ export const StatusFilter: React.FC<IProps> = props => {
 
   const badgeStyle = "danger";
   return (
-    <Nav fill variant="tabs" defaultActiveKey={`${currentSelection}`}>
+    <Nav fill variant="tabs" defaultActiveKey={selected}>
       {statuses.map((value: string, index: number) => (
         <Nav.Item key={`selector-${value}-${index}`}>
           <Nav.Link onClick={() => handleClick(value)} eventKey={value}>

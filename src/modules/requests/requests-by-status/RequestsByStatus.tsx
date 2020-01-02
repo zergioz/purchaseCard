@@ -18,6 +18,7 @@ export const RequestsByStatus: React.FC<IProps> = props => {
   useEffect(() => {
     defaultFilters.status = props.status;
     let counts = context.applyFilters(defaultFilters);
+    console.log(`RequestsBySta`);
     setFiltered(counts);
   }, [props, context.requests]);
 

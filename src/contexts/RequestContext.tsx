@@ -4,7 +4,6 @@ import { Request } from "../services/models/Request";
 import { IFilters, Filters } from "../components/filters/Filters";
 import { getStatusesByFriendlyName } from "../constants/StepStatus";
 
-const svc = new RequestService();
 const statuses = getStatusesByFriendlyName();
 
 export type RequestContextType = {
@@ -12,7 +11,6 @@ export type RequestContextType = {
   filteredRequests: Request[];
   loading: boolean;
   filters: IFilters;
-  refreshRequests: () => void;
   applyFilters: (filters: IFilters) => Request[];
 };
 
@@ -21,7 +19,6 @@ export const RequestContext = React.createContext<RequestContextType>({
   filteredRequests: [],
   loading: true,
   filters: new Filters(),
-  refreshRequests: () => null,
   applyFilters: (filters: IFilters) => []
 });
 
@@ -55,15 +52,6 @@ export const RequestProvider: React.FC = (props: any) => {
     return listItemStatus == resolvedStatus;
   };
 
-  const refreshRequests = () => {
-    updateLoading(true);
-    svc.read().subscribe((items: Request[]) => {
-      updateRequests(items);
-      applyFilters(filters);
-      updateLoading(false);
-    });
-  };
-
   const applyFilters = (filters: IFilters) => {
     let filteredRequests: Request[] = requests
       .filter(request => requestorFilter(request, filters))
@@ -71,10 +59,9 @@ export const RequestProvider: React.FC = (props: any) => {
       .filter(request => directorateFilter(request, filters));
     updateFilteredRequests(filteredRequests);
     updateFilters(filters);
+    console.log(`Filters applied`, filters, filteredRequests.length);
     return filteredRequests;
   };
-
-  if (!loading && requests.length == 0) refreshRequests();
 
   return (
     <RequestContext.Provider
@@ -83,7 +70,6 @@ export const RequestProvider: React.FC = (props: any) => {
         filteredRequests: filteredRequests,
         loading: loading,
         filters: filters,
-        refreshRequests: refreshRequests,
         applyFilters: applyFilters
       }}
     >
