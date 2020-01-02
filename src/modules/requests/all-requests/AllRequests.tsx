@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { Filters } from "../../../components/requests-filter/Filters";
+import { Filters } from "../../../components/filters/Filters";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import { SelectorPills } from "../../../components/selector-pills/SelectorPills";
 import RequestContext from "../../../contexts/RequestContext";

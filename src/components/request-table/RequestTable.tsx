@@ -3,7 +3,7 @@ import { RequestTableRow } from "./RequestTableRow";
 import { Request } from "../../services/models/Request";
 import { Table, Alert } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
-import { Filters } from "../requests-filter/Filters";
+import { Filters } from "../filters/Filters";
 import { Link } from "react-router-dom";
 
 interface IProps {

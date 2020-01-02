@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { RequestService } from "../services/RequestService";
 import { Request } from "../services/models/Request";
-import { IFilters, Filters } from "../components/requests-filter/Filters";
+import { IFilters, Filters } from "../components/filters/Filters";
 import { getStatusesByFriendlyName } from "../constants/StepStatus";
 
 const svc = new RequestService();

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useMemo, useEffect } from "react";
-import { Filters } from "../../../components/requests-filter/Filters";
+import { Filters } from "../../../components/filters/Filters";
 import UserContext from "../../../contexts/UserContext";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import { SelectorPills } from "../../../components/selector-pills/SelectorPills";
