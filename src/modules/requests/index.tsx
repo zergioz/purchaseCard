@@ -6,7 +6,7 @@ import AllRequestsModule from "./all-requests";
 export default {
   routeProps: {
     path: "/requests",
-    component: SubmittedByMeModule.routeProps.component
+    component: AllRequestsModule.routeProps.component
   },
   name: "Requests",
   modules: [
