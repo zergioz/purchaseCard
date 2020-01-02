@@ -2,7 +2,7 @@ import React, { useContext, useState, useMemo, useEffect } from "react";
 import { Filters } from "../../../components/filters/Filters";
 import UserContext from "../../../contexts/UserContext";
 import { RequestTable } from "../../../components/request-table/RequestTable";
-import { StatusFilter } from "../../../components/selector-pills/StatusFilter";
+import { StatusFilter } from "../../../components/filters/StatusFilter";
 import RequestContext from "../../../contexts/RequestContext";
 
 export const SubmittedByMe: React.FC = () => {

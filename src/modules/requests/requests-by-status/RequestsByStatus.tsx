@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import { Filters } from "../../../components/filters/Filters";
 import { RequestTable } from "../../../components/request-table/RequestTable";
-import { StatusFilter } from "../../../components/selector-pills/StatusFilter";
+import { StatusFilter } from "../../../components/filters/StatusFilter";
 import RequestContext from "../../../contexts/RequestContext";
 
 interface IProps {
