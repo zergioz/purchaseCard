@@ -1,1 +1,19 @@
+.nav > .nav-header {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-bottom: 5px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  color: #a2a9b1;
+  text-transform: uppercase;
+  margin-top: 20px;
+}
 
+.nav > .nav-link {
+  padding: 0 1rem;
+}
+
+.nav > .nav-submodule-link {
+  font-size: 85%;
+  margin-left: 10px;
+}

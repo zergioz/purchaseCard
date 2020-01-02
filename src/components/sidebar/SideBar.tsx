@@ -10,6 +10,7 @@ export const SideBar = (props: any) => {
       {props.modules.map((module: any, moduleIndex: number) => {
         let links = [
           <Nav.Link
+            className="nav-header"
             href={`/#${module.routeProps.path}`}
             key={`sidebar-module-${moduleIndex}`}
           >
@@ -30,6 +31,7 @@ export const SideBar = (props: any) => {
             submodule.links.map((link: any, linkIndex: number) => {
               links.push(
                 <Nav.Link
+                  className="nav-submodule-link"
                   href={`/#${link.routeProps.path}`}
                   key={`sidebar-link-${moduleIndex}-${submoduleIndex}-${linkIndex}`}
                 >
@@ -41,9 +43,11 @@ export const SideBar = (props: any) => {
         return links;
       })}
 
+      <Nav.Item className="nav-header">Help</Nav.Item>
       <Nav.Link href="../Shared%20Documents/Forms/AllItems.aspx">
         Documentation
       </Nav.Link>
+      <Nav.Item className="nav-header">Admin</Nav.Item>
       <Nav.Link href="./cc_user_list.aspx">Users Overview</Nav.Link>
       <Nav.Link href="./cc_user_add.aspx">Add User</Nav.Link>
     </Nav>
