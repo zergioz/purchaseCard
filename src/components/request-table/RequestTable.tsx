@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
 import { RequestTableRow } from "./RequestTableRow";
 import { Request } from "../../services/models/Request";
-import { Table } from "react-bootstrap";
+import { Table, Alert } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
+import { Filters } from "../requests-filter/Filters";
+import { Link } from "react-router-dom";
 
 interface IProps {
   items?: Request[];
@@ -10,6 +12,7 @@ interface IProps {
 export const RequestTable = (props: IProps) => {
   const context = useContext(RequestContext);
   const items = props.items || context.filteredRequests;
+
   return (
     <>
       {context.loading && (
@@ -42,7 +45,12 @@ export const RequestTable = (props: IProps) => {
             {items && items.length == 0 && (
               <tr>
                 <td colSpan={7} style={{ textAlign: "center" }}>
-                  <span className="light">Nothing to show.</span>
+                  <Alert variant={"warning"}>
+                    There are no requests that match your filters.{" "}
+                    <Link to="/requests" className="alert-link">
+                      Reset filters
+                    </Link>
+                  </Alert>
                 </td>
               </tr>
             )}
