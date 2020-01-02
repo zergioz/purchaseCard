@@ -1,5 +1,10 @@
 import React, { useState, useContext } from "react";
-import { ButtonToolbar, Button } from "react-bootstrap";
+import {
+  ButtonToolbar,
+  Button,
+  ButtonGroup,
+  ToggleButton
+} from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import { PersonDirectorates as directorates } from "../../constants/PersonDirectorates";
 
@@ -12,33 +17,36 @@ export const DirectorateFilter: React.FC = () => {
     context.applyFilters({ ...context.filters, directorate: value });
   };
 
-  const spacing = { marginLeft: "0.25em", marginTop: "0.25em" };
+  const spacing = { marginLeft: "0.25em", marginTop: "0.25em", width: "80px" };
 
   return (
-    <ButtonToolbar>
-      <Button
-        style={spacing}
-        size="sm"
-        variant={currentSelection == "" ? "danger" : "outline-danger"}
-        onClick={() => handleClick("")}
-      >
-        All
-      </Button>
-      {values.map((value: string, index: number) => (
-        <Button
-          key={`selector-${value}-${index}`}
-          size="sm"
-          style={spacing}
-          variant={
-            currentSelection == value || currentSelection == ""
-              ? "primary"
-              : "outline-primary"
-          }
-          onClick={() => handleClick(value)}
-        >
-          {value}
-        </Button>
-      ))}
-    </ButtonToolbar>
+    <>
+      Directorate filter:
+      <div className="d-flex flex-column">
+        <ButtonToolbar>
+          <Button
+            style={spacing}
+            size="sm"
+            variant={currentSelection == "" ? "primary" : "outline-secondary"}
+            onClick={() => handleClick("")}
+          >
+            No Filter
+          </Button>
+          {values.map((value: string, index: number) => (
+            <Button
+              key={`selector-${value}-${index}`}
+              size="sm"
+              style={spacing}
+              variant={
+                currentSelection == value ? "primary" : "outline-secondary"
+              }
+              onClick={() => handleClick(value)}
+            >
+              {value}
+            </Button>
+          ))}
+        </ButtonToolbar>
+      </div>
+    </>
   );
 };
