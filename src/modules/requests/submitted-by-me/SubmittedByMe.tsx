@@ -2,7 +2,7 @@ import React, { useContext, useState, useMemo, useEffect } from "react";
 import { Filters } from "../../../components/filters/Filters";
 import UserContext from "../../../contexts/UserContext";
 import { RequestTable } from "../../../components/request-table/RequestTable";
-import { SelectorPills } from "../../../components/selector-pills/SelectorPills";
+import { StatusFilter } from "../../../components/selector-pills/StatusFilter";
 import RequestContext from "../../../contexts/RequestContext";
 
 export const SubmittedByMe: React.FC = () => {
@@ -19,7 +19,7 @@ export const SubmittedByMe: React.FC = () => {
     <React.Fragment>
       <h1>Submitted by Me</h1>
       <hr />
-      <SelectorPills />
+      <StatusFilter />
       <br />
       <RequestTable />
     </React.Fragment>

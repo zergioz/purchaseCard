@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Filters } from "../../../components/filters/Filters";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import RequestContext from "../../../contexts/RequestContext";
-import { SelectorPills } from "../../../components/selector-pills/SelectorPills";
+import { StatusFilter } from "../../../components/selector-pills/StatusFilter";
 import { Request } from "../../../services/models/Request";
 
 interface IProps {
@@ -26,7 +26,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
         props.directorate ? props.directorate : `All Directorates`
       })`}</h1>
       <hr />
-      <SelectorPills requestsToCount={filtered} />
+      <StatusFilter requestsToCount={filtered} />
       <br />
       <RequestTable />
     </React.Fragment>

@@ -12,7 +12,7 @@ import { groupBy } from "../../helpers/GroupBy";
 interface IProps {
   requestsToCount?: Request[];
 }
-export const SelectorPills: React.FC<IProps> = props => {
+export const StatusFilter: React.FC<IProps> = props => {
   const allRequestsCount = props.requestsToCount
     ? props.requestsToCount.length
     : 0;

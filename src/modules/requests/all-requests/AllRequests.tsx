@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import { Filters } from "../../../components/filters/Filters";
 import { RequestTable } from "../../../components/request-table/RequestTable";
-import { SelectorPills } from "../../../components/selector-pills/SelectorPills";
+import { StatusFilter } from "../../../components/selector-pills/StatusFilter";
 import RequestContext from "../../../contexts/RequestContext";
 
 export const AllRequests: React.FC = () => {
@@ -16,7 +16,7 @@ export const AllRequests: React.FC = () => {
     <React.Fragment>
       <h1>All Requests</h1>
       <hr />
-      <SelectorPills />
+      <StatusFilter />
       <br />
       <RequestTable />
     </React.Fragment>
