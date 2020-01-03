@@ -38,7 +38,7 @@ export const StatusFilter: React.FC<IProps> = props => {
   //if the state of this component changes, then apply the filters
   useEffect(() => {
     context.applyFilters({ ...context.filters, status: selected }, true);
-  }, [selected]);
+  }, [selected, context.requests]);
 
   //groups requests by status and counts them to make the badges
   const countStatusGroups = (): number[] => {
