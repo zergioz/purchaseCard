@@ -4,12 +4,10 @@ import { RequestTable } from "../../../components/request-table/RequestTable";
 import { StatusFilter } from "../../../components/filters/StatusFilter";
 import { DirectorateFilter } from "../../../components/filters/DirectorateFilter";
 import RequestContext from "../../../contexts/RequestContext";
-import { Request } from "../../../services/models/Request";
 import { RequestService } from "../../../services";
 
 export const AllRequests: React.FC = () => {
   const context = useContext(RequestContext);
-  const [filtered, setFiltered] = useState<Request[]>([]);
   const filters = new Filters();
 
   useEffect(() => {
@@ -18,7 +16,7 @@ export const AllRequests: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setFiltered(context.applyFilters(filters, false));
+    context.applyFilters(filters, true);
   }, [context.requests]);
 
   return (

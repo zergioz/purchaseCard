@@ -3,7 +3,6 @@ import { Filters } from "../../../components/filters/Filters";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import { StatusFilter } from "../../../components/filters/StatusFilter";
 import RequestContext from "../../../contexts/RequestContext";
-import { Request } from "../../../services/models/Request";
 import { RequestService } from "../../../services";
 
 interface IProps {
@@ -12,8 +11,6 @@ interface IProps {
 
 export const RequestsByStatus: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
-  const [filtered, setFiltered] = useState<Request[]>([]);
-  const [status, setStatus] = useState<string>(props.status);
   const defaultFilters = new Filters();
 
   useEffect(() => {
@@ -22,18 +19,15 @@ export const RequestsByStatus: React.FC<IProps> = props => {
   }, []);
 
   useEffect(() => {
-    setFiltered(context.applyFilters(defaultFilters, false));
-  }, [context.requests]);
-
-  useEffect(() => {
-    setStatus(props.status);
-  }, [props.status]);
+    defaultFilters.status = props.status;
+    context.applyFilters(defaultFilters, true);
+  }, [props.status, context.requests]);
 
   return (
     <React.Fragment>
       <h1>Requests by Status</h1>
       <hr />
-      <StatusFilter selected={status} />
+      <StatusFilter selected={props.status} />
       <br />
       <RequestTable />
     </React.Fragment>

@@ -1,16 +1,14 @@
-import React, { useContext, useState, useMemo, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Filters } from "../../../components/filters/Filters";
 import UserContext from "../../../contexts/UserContext";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import { StatusFilter } from "../../../components/filters/StatusFilter";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
-import { Request } from "../../../services/models/Request";
 
 export const SubmittedByMe: React.FC = () => {
   const { user } = useContext(UserContext);
   const context = useContext(RequestContext);
-  const [filtered, setFiltered] = useState<Request[]>([]);
   const defaultFilters = new Filters();
 
   useEffect(() => {
@@ -20,9 +18,8 @@ export const SubmittedByMe: React.FC = () => {
 
   useEffect(() => {
     defaultFilters.requestor = user ? user.LoginName : "";
-    console.log(`SubmByMea applying filters`);
-    setFiltered(context.applyFilters(defaultFilters, false));
-  }, [context.requests, user]);
+    context.applyFilters(defaultFilters, true);
+  }, [user, context.requests]);
 
   return (
     <React.Fragment>
