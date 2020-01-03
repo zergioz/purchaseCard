@@ -6,7 +6,6 @@ import {
   Redirect
 } from "react-router-dom";
 import modules from "./modules";
-import "./App.css";
 import { SideBar } from "./components/sidebar/SideBar";
 import { RequestProvider } from "./contexts/RequestContext";
 import { UserProvider } from "./contexts/UserContext";
