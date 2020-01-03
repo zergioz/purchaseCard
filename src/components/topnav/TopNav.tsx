@@ -10,6 +10,9 @@ export const TopNav = () => {
         <Nav.Link href="#/requests/submitted-by-me">My Requests</Nav.Link>
         <Nav.Link href="#/requests/by-status">By Status</Nav.Link>
         <Nav.Link href="#/requests/by-directorate">By Directorate</Nav.Link>
+        <Nav.Link href="../Shared%20Documents/Forms/AllItems.aspx">
+          Help
+        </Nav.Link>
       </Nav>
       <Form inline>
         <FiscalYearFilter />
