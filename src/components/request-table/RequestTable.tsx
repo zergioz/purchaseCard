@@ -18,7 +18,7 @@ export const RequestTable = (props: IProps) => {
   }, [context.filters]);
 
   const resetFilters = () => {
-    //context.applyFilters(new Filters());
+    context.applyFilters(new Filters(), true);
   };
 
   return (
