@@ -11,22 +11,24 @@ import { groupBy } from "../../helpers/GroupBy";
 const statuses: string[] = Object.keys(getStatusesByFriendlyName());
 
 interface IProps {
-  requestsToCount?: Request[];
+  defaultFilter?: string;
+  showBadgesFor?: Request[];
 }
 export const StatusFilter: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
+  const defaultFilter = props.defaultFilter || context.filters.status;
   const [badges, setBadges] = useState<number[]>([]);
-  const [selected, setSelected] = useState<string>(context.filters.status);
+  const [selected, setSelected] = useState<string>(defaultFilter);
 
   useEffect(() => {
     setSelected(context.filters.status);
-  }, [context.filters.status]);
+  }, [defaultFilter]);
 
   //recreate badges on props update
   useEffect(() => {
     const counts = countStatusGroups();
     setBadges(counts);
-  }, [props.requestsToCount]);
+  }, [props]);
 
   const handleClick = (value: string) => {
     console.log(`StatusFilter`);
@@ -36,10 +38,10 @@ export const StatusFilter: React.FC<IProps> = props => {
   //groups requests by status and counts them to make the badges
   const countStatusGroups = (): number[] => {
     let counts = badges;
-    if (props.requestsToCount) {
-      //group props.requestsToCount by their statuses
+    if (props.showBadgesFor) {
+      //group props.showBadgesFor by their statuses
       const groups = groupBy(
-        props.requestsToCount,
+        props.showBadgesFor,
         (request: Request) => request.status
       );
 
