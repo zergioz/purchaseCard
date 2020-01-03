@@ -13,6 +13,7 @@ interface IProps {
 export const RequestsByStatus: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
   const [filtered, setFiltered] = useState<Request[]>([]);
+  const [status, setStatus] = useState<string>(props.status);
   const defaultFilters = new Filters();
 
   useEffect(() => {
@@ -21,15 +22,18 @@ export const RequestsByStatus: React.FC<IProps> = props => {
   }, []);
 
   useEffect(() => {
-    console.log(`RequestsBySta applying filters`);
     setFiltered(context.applyFilters(defaultFilters));
-  }, [props.status, context.requests]);
+  }, [context.requests]);
+
+  useEffect(() => {
+    setStatus(props.status);
+  }, [props.status]);
 
   return (
     <React.Fragment>
       <h1>Requests by Status</h1>
       <hr />
-      <StatusFilter showBadgesFor={filtered} />
+      <StatusFilter showBadgesFor={filtered} selected={status} />
       <br />
       <RequestTable />
     </React.Fragment>
