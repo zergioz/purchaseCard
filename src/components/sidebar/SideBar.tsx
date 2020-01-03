@@ -1,10 +1,24 @@
 import React from "react";
-import { Nav } from "react-bootstrap";
+import { Nav, Button } from "react-bootstrap";
 
 export const SideBar = (props: any) => {
   return (
     <Nav className="flex-column">
-      <Nav.Link href="/">Portal Home</Nav.Link>
+      <Nav.Item>
+        <br />
+        <Button
+          variant="success"
+          size="lg"
+          href="../Pages/purchase_request.aspx"
+        >
+          Submit Request
+        </Button>
+        <br />
+      </Nav.Item>
+      <Nav.Link href="/">
+        <br />
+        Portal Home
+      </Nav.Link>
 
       {/* Create a link for each module exported from ./modules */}
       {props.modules.map((module: any, moduleIndex: number) => {
