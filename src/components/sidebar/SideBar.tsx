@@ -3,7 +3,7 @@ import { Nav, Button } from "react-bootstrap";
 
 export const SideBar = (props: any) => {
   return (
-    <Nav className="flex-column">
+    <Nav className="flex-column sidebar">
       <Nav.Item>
         <br />
         <Button

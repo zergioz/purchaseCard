@@ -14,10 +14,14 @@
 }
 
 .nav > .nav-submodule-link {
-  font-size: 85%;
   margin-left: 10px;
 }
 
+.sidebar {
+  background-color: #f7f7f7;
+  border-right: 1px solid #ececec;
+}
+
 .grey {
-  background-color: #f2f2f2;
+  background-color: #f7f7f7;
 }
