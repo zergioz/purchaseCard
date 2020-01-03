@@ -18,9 +18,11 @@ export const AllRequests: React.FC = () => {
     <React.Fragment>
       <h1>All Requests</h1>
       <hr />
-      <DirectorateFilter />
-      <br />
-      <StatusFilter />
+      <div className="container-fluid grey">
+        <DirectorateFilter />
+        <br />
+        <StatusFilter />
+      </div>
       <RequestTable />
     </React.Fragment>
   );
