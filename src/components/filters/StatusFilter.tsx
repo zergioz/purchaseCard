@@ -18,16 +18,16 @@ export const StatusFilter: React.FC<IProps> = props => {
     props.selected || "Submitted"
   );
 
-  //when the requests are updated, apply all filters except status
-  //and then calculate the badges we should be showing in this component
+  //when other filters are applied, recalculate the badges we should be showing in this component
   useEffect(() => {
+    //todo: skip this calculation if only the status filter changed
     const allOtherFilters = { ...context.filters, status: "" };
-    const refiltered = context.applyFilters(allOtherFilters, false);
-    const counts = groupByStatus(refiltered);
+    const matches = context.applyFilters(allOtherFilters, false);
+    const counts = groupByStatus(matches);
     setBadges(counts);
-  }, [context.filteredRequests]);
+  }, [context.filters]);
 
-  //if the status filter changes, we also want the tabs to change
+  //if the status filter route changes, update our state
   useEffect(() => {
     if (props.selected) {
       const status = props.selected;
