@@ -28,7 +28,7 @@ export const FiscalYearFilter: React.FC = () => {
   return (
     <>
       <DropdownButton
-        variant="secondary"
+        variant="outline-primary"
         key="secondary"
         id="secondary"
         title={selected === "" ? `All Fiscal Years` : `Fiscal Year ${selected}`}

@@ -6,10 +6,10 @@ import {
   Redirect
 } from "react-router-dom";
 import modules from "./modules";
-import { SideBar } from "./components/sidebar/SideBar";
 import { TopNav } from "./components/topnav/TopNav";
 import { RequestProvider } from "./contexts/RequestContext";
 import { UserProvider } from "./contexts/UserContext";
+import { Breadcrumbs } from "./components/breadcrumbs/Breadcrumbs";
 
 const App = () => {
   const makeRoutes = () => {
@@ -50,12 +50,16 @@ const App = () => {
         <RequestProvider>
           <TopNav></TopNav>
           <Router>
+            <div className="container-fluid-spacious">
+              <div className="row">
+                <div className="col-md-12">
+                  <Breadcrumbs />
+                </div>
+              </div>
+            </div>
             <div className="container-fluid">
               <div className="row">
-                <div className="col-md-2 sidebar">
-                  <SideBar modules={modules}></SideBar>
-                </div>
-                <div className="col-md-10">
+                <div className="col-md-12">
                   <Switch>
                     {makeRoutes()}
                     <Redirect from="/" to="/requests/submitted-by-me" />

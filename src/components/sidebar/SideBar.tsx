@@ -1,12 +1,14 @@
 import React from "react";
 import { Nav, Button } from "react-bootstrap";
+import modules from "../../modules";
 
-export const SideBar = (props: any) => {
+export const SideBar = () => {
   return (
     <Nav className="flex-column sidebar">
       <Nav.Item>
         <br />
         <Button
+          className="m-3"
           variant="success"
           size="lg"
           href="../Pages/purchase_request.aspx"
@@ -21,7 +23,7 @@ export const SideBar = (props: any) => {
       </Nav.Link>
 
       {/* Create a link for each module exported from ./modules */}
-      {props.modules.map((module: any, moduleIndex: number) => {
+      {modules.map((module: any, moduleIndex: number) => {
         let links = [
           <Nav.Link
             className="nav-header"
