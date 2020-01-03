@@ -55,7 +55,11 @@ export const RequestProvider: React.FC = (props: any) => {
     updateLoading(true);
     observable.subscribe(requests => {
       updateRequests(requests);
-      updateLoading(false);
+
+      //debounce so the status filter doesn't flicker
+      setTimeout(() => {
+        updateLoading(false);
+      }, 500);
     });
   };
 
