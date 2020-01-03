@@ -5,16 +5,22 @@ import { StatusFilter } from "../../../components/filters/StatusFilter";
 import { DirectorateFilter } from "../../../components/filters/DirectorateFilter";
 import RequestContext from "../../../contexts/RequestContext";
 import { Request } from "../../../services/models/Request";
+import { RequestService } from "../../../services";
 
 export const AllRequests: React.FC = () => {
   const context = useContext(RequestContext);
-  const defaultFilters = new Filters();
-
   const [filtered, setFiltered] = useState<Request[]>([]);
+  const filters = new Filters();
 
   useEffect(() => {
-    setFiltered(context.applyFilters(defaultFilters));
+    const svc = new RequestService();
+    context.subscribeTo(svc.read());
   }, []);
+
+  useEffect(() => {
+    console.log(`AllRequests applying filters`);
+    setFiltered(context.applyFilters(filters));
+  }, [context.requests]);
 
   return (
     <React.Fragment>
@@ -22,7 +28,7 @@ export const AllRequests: React.FC = () => {
       <hr />
       <DirectorateFilter />
       <br />
-      <StatusFilter requestsToCount={filtered} />
+      <StatusFilter showBadgesFor={filtered} />
       <RequestTable />
     </React.Fragment>
   );

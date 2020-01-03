@@ -1,27 +1,28 @@
 import React, { useState } from "react";
-import { RequestService } from "../services/RequestService";
 import { Request } from "../services/models/Request";
 import { IFilters, Filters } from "../components/filters/Filters";
 import { getStatusesByFriendlyName } from "../constants/StepStatus";
+import { Observable } from "rxjs/internal/Observable";
 
-const svc = new RequestService();
 const statuses = getStatusesByFriendlyName();
 
 export type RequestContextType = {
   requests: Request[];
+  updateRequests: (requests: Request[]) => void;
+  subscribeTo: (observable: Observable<Request[]>) => void;
   filteredRequests: Request[];
   loading: boolean;
   filters: IFilters;
-  refreshRequests: () => void;
   applyFilters: (filters: IFilters) => Request[];
 };
 
 export const RequestContext = React.createContext<RequestContextType>({
   requests: [],
+  updateRequests: (requests: Request[]) => null,
+  subscribeTo: (observable: Observable<Request[]>) => null,
   filteredRequests: [],
   loading: true,
   filters: new Filters(),
-  refreshRequests: () => null,
   applyFilters: (filters: IFilters) => []
 });
 
@@ -50,18 +51,21 @@ export const RequestProvider: React.FC = (props: any) => {
     );
   };
 
+  const subscribeTo = (observable: Observable<Request[]>) => {
+    updateLoading(true);
+    observable.subscribe(requests => {
+      updateRequests(requests);
+
+      //debounce so the status filter doesn't flicker
+      setTimeout(() => {
+        updateLoading(false);
+      }, 500);
+    });
+  };
+
   const compareStatus = (friendlyStatus: any, listItemStatus: any): boolean => {
     const resolvedStatus = statuses[friendlyStatus].caseStep;
     return listItemStatus == resolvedStatus;
-  };
-
-  const refreshRequests = () => {
-    updateLoading(true);
-    svc.read().subscribe((items: Request[]) => {
-      updateRequests(items);
-      applyFilters(filters);
-      updateLoading(false);
-    });
   };
 
   const applyFilters = (filters: IFilters) => {
@@ -71,19 +75,19 @@ export const RequestProvider: React.FC = (props: any) => {
       .filter(request => directorateFilter(request, filters));
     updateFilteredRequests(filteredRequests);
     updateFilters(filters);
+    console.log(`Filters applied`, filters, filteredRequests.length);
     return filteredRequests;
   };
-
-  if (!loading && requests.length == 0) refreshRequests();
 
   return (
     <RequestContext.Provider
       value={{
         requests: requests,
+        updateRequests: updateRequests,
+        subscribeTo: subscribeTo,
         filteredRequests: filteredRequests,
         loading: loading,
         filters: filters,
-        refreshRequests: refreshRequests,
         applyFilters: applyFilters
       }}
     >

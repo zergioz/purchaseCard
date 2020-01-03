@@ -4,21 +4,27 @@ import { RequestTable } from "../../../components/request-table/RequestTable";
 import RequestContext from "../../../contexts/RequestContext";
 import { StatusFilter } from "../../../components/filters/StatusFilter";
 import { Request } from "../../../services/models/Request";
+import { RequestService } from "../../../services";
 
 interface IProps {
   directorate: string;
 }
 export const RequestsByDirectorate: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
-  const defaultFilters = new Filters();
-
   const [filtered, setFiltered] = useState<Request[]>([]);
+  const defaultFilters = new Filters();
+  defaultFilters.directorate = props.directorate;
 
   useEffect(() => {
-    defaultFilters.directorate = props.directorate;
-    let filtered = context.applyFilters(defaultFilters);
-    setFiltered(filtered);
-  }, [props, context.requests]);
+    const svc = new RequestService();
+    const obs = svc.read();
+    context.subscribeTo(obs);
+  }, []);
+
+  useEffect(() => {
+    console.log(`ReqByDir applying filters`);
+    setFiltered(context.applyFilters(defaultFilters));
+  }, [props.directorate, context.requests]);
 
   return (
     <React.Fragment>
@@ -26,7 +32,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
         props.directorate ? props.directorate : `All Directorates`
       })`}</h1>
       <hr />
-      <StatusFilter requestsToCount={filtered} />
+      <StatusFilter showBadgesFor={filtered} />
       <br />
       <RequestTable />
     </React.Fragment>
