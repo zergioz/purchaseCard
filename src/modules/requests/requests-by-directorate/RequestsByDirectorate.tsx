@@ -32,7 +32,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
         props.directorate ? props.directorate : `All Directorates`
       })`}</h1>
       <hr />
-      <StatusFilter showBadgesFor={filtered} defaultFilter="Submitted" />
+      <StatusFilter showBadgesFor={filtered} />
       <br />
       <RequestTable />
     </React.Fragment>

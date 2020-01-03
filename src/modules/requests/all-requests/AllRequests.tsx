@@ -28,7 +28,7 @@ export const AllRequests: React.FC = () => {
       <hr />
       <DirectorateFilter />
       <br />
-      <StatusFilter showBadgesFor={filtered} defaultFilter="Submitted" />
+      <StatusFilter showBadgesFor={filtered} />
       <RequestTable />
     </React.Fragment>
   );

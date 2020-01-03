@@ -11,19 +11,18 @@ import { groupBy } from "../../helpers/GroupBy";
 const statuses: string[] = Object.keys(getStatusesByFriendlyName());
 
 interface IProps {
-  defaultFilter?: string;
   showBadgesFor?: Request[];
 }
 export const StatusFilter: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
-  const defaultFilter = props.defaultFilter || context.filters.status;
   const [badges, setBadges] = useState<number[]>([]);
-  const [selected, setSelected] = useState<string>(defaultFilter);
+  const [selected, setSelected] = useState<string>("Submitted");
 
   //recreate badges on props update
   useEffect(() => {
     const counts = countStatusGroups();
     setBadges(counts);
+    handleClick(selected);
   }, [props.showBadgesFor]);
 
   const handleClick = (value: string) => {
