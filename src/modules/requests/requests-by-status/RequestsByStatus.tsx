@@ -19,7 +19,7 @@ export const RequestsByStatus: React.FC<IProps> = props => {
   }, []);
 
   useEffect(() => {
-    defaultFilters.status = props.status;
+    defaultFilters.status = props.status || "Submitted";
     context.applyFilters(defaultFilters, true);
   }, [props.status, context.requests]);
 

@@ -8,16 +8,11 @@ import { RequestService } from "../../../services";
 
 export const AllRequests: React.FC = () => {
   const context = useContext(RequestContext);
-  const filters = new Filters();
 
   useEffect(() => {
     const svc = new RequestService();
     context.subscribeTo(svc.read());
   }, []);
-
-  useEffect(() => {
-    context.applyFilters(filters, true);
-  }, [context.requests]);
 
   return (
     <React.Fragment>
