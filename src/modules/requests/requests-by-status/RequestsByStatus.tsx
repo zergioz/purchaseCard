@@ -27,8 +27,9 @@ export const RequestsByStatus: React.FC<IProps> = props => {
     <React.Fragment>
       <h1>Requests by Status</h1>
       <hr />
-      <StatusFilter selected={props.status} />
-      <br />
+      <div className="container-fluid grey">
+        <StatusFilter selected={props.status} />
+      </div>
       <RequestTable />
     </React.Fragment>
   );

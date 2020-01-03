@@ -29,8 +29,9 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
         props.directorate ? props.directorate : `All Directorates`
       })`}</h1>
       <hr />
-      <StatusFilter />
-      <br />
+      <div className="container-fluid grey">
+        <StatusFilter />
+      </div>
       <RequestTable />
     </React.Fragment>
   );

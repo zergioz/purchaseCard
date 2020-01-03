@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import modules from "./modules";
 import { SideBar } from "./components/sidebar/SideBar";
+import { TopNav } from "./components/topnav/TopNav";
 import { RequestProvider } from "./contexts/RequestContext";
 import { UserProvider } from "./contexts/UserContext";
 
@@ -45,26 +46,27 @@ const App = () => {
 
   return (
     <div>
-      <Router>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-md-2 sidebar">
-              <SideBar modules={modules}></SideBar>
-            </div>
-            <div className="col-md-10">
-              <UserProvider>
-                <RequestProvider>
+      <UserProvider>
+        <RequestProvider>
+          <TopNav></TopNav>
+          <Router>
+            <div className="container-fluid">
+              <div className="row">
+                <div className="col-md-2 sidebar">
+                  <SideBar modules={modules}></SideBar>
+                </div>
+                <div className="col-md-10">
                   <Switch>
                     {makeRoutes()}
                     <Redirect from="/" to="/system" />
                     <Redirect from="/system" to="/system-home" />
                   </Switch>
-                </RequestProvider>
-              </UserProvider>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </Router>
+          </Router>
+        </RequestProvider>
+      </UserProvider>
     </div>
   );
 };
