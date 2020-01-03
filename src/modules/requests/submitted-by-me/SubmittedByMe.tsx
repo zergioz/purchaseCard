@@ -28,7 +28,7 @@ export const SubmittedByMe: React.FC = () => {
     <React.Fragment>
       <h1>Submitted by Me</h1>
       <hr />
-      <StatusFilter showBadgesFor={filtered} />
+      <StatusFilter />
       <br />
       <RequestTable />
     </React.Fragment>

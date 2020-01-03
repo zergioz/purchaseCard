@@ -5,13 +5,11 @@ import {
   getStatusesByFriendlyName,
   groupByStatus
 } from "../../constants/StepStatus";
-import { Request } from "../../services/models/Request";
 
 const statuses: string[] = Object.keys(getStatusesByFriendlyName());
 
 interface IProps {
   selected?: string;
-  showBadgesFor: Request[];
 }
 export const StatusFilter: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
@@ -20,11 +18,14 @@ export const StatusFilter: React.FC<IProps> = props => {
     props.selected || "Submitted"
   );
 
-  //recreate the request count badges if the props are updated
+  //when the requests are updated, apply all filters except status
+  //and then calculate the badges we should be showing in this component
   useEffect(() => {
-    const counts = groupByStatus(props.showBadgesFor);
+    const allOtherFilters = { ...context.filters, status: "" };
+    const refiltered = context.applyFilters(allOtherFilters, false);
+    const counts = groupByStatus(refiltered);
     setBadges(counts);
-  }, [props.showBadgesFor]);
+  }, [context.filteredRequests]);
 
   //if the status filter changes, we also want the tabs to change
   useEffect(() => {

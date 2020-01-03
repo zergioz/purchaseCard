@@ -33,7 +33,7 @@ export const RequestsByStatus: React.FC<IProps> = props => {
     <React.Fragment>
       <h1>Requests by Status</h1>
       <hr />
-      <StatusFilter showBadgesFor={filtered} selected={status} />
+      <StatusFilter selected={status} />
       <br />
       <RequestTable />
     </React.Fragment>
