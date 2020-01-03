@@ -29,7 +29,7 @@ export const RequestsByStatus: React.FC<IProps> = props => {
     <React.Fragment>
       <h1>Requests by Status</h1>
       <hr />
-      <StatusFilter showBadgesFor={filtered} defaultFilter={props.status} />
+      <StatusFilter showBadgesFor={filtered} />
       <br />
       <RequestTable />
     </React.Fragment>
