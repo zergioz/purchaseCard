@@ -21,7 +21,7 @@ export const SubmittedByMe: React.FC = () => {
   useEffect(() => {
     defaultFilters.requestor = user ? user.LoginName : "";
     console.log(`SubmByMea applying filters`);
-    setFiltered(context.applyFilters(defaultFilters));
+    setFiltered(context.applyFilters(defaultFilters, false));
   }, [context.requests, user]);
 
   return (

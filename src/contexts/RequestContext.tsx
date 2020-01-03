@@ -13,7 +13,7 @@ export type RequestContextType = {
   filteredRequests: Request[];
   loading: boolean;
   filters: IFilters;
-  applyFilters: (filters: IFilters) => Request[];
+  applyFilters: (filters: IFilters, update: boolean) => Request[];
 };
 
 export const RequestContext = React.createContext<RequestContextType>({
@@ -23,7 +23,7 @@ export const RequestContext = React.createContext<RequestContextType>({
   filteredRequests: [],
   loading: true,
   filters: new Filters(),
-  applyFilters: (filters: IFilters) => []
+  applyFilters: (filters: IFilters, update: boolean) => []
 });
 
 export const RequestProvider: React.FC = (props: any) => {
@@ -68,14 +68,16 @@ export const RequestProvider: React.FC = (props: any) => {
     return listItemStatus == resolvedStatus;
   };
 
-  const applyFilters = (filters: IFilters) => {
+  const applyFilters = (filters: IFilters, update: boolean = true) => {
     let filteredRequests: Request[] = requests
       .filter(request => requestorFilter(request, filters))
       .filter(request => statusFilter(request, filters))
       .filter(request => directorateFilter(request, filters));
-    updateFilteredRequests(filteredRequests);
-    updateFilters(filters);
-    console.log(`Filters applied`, filters, filteredRequests.length);
+    if (update) {
+      updateFilteredRequests(filteredRequests);
+      updateFilters(filters);
+      console.log(`Filters applied`, filters, filteredRequests.length);
+    }
     return filteredRequests;
   };
 

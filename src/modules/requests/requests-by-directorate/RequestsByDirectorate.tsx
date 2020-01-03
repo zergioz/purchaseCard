@@ -23,7 +23,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
 
   useEffect(() => {
     console.log(`ReqByDir applying filters`);
-    setFiltered(context.applyFilters(defaultFilters));
+    setFiltered(context.applyFilters(defaultFilters, false));
   }, [props.directorate, context.requests]);
 
   return (

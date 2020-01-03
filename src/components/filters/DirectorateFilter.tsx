@@ -15,7 +15,7 @@ export const DirectorateFilter: React.FC = () => {
   const handleClick = (value: string) => {
     updateCurrentSelection(value);
     console.log(`DirFilter`);
-    context.applyFilters({ ...context.filters, directorate: value });
+    context.applyFilters({ ...context.filters, directorate: value }, true);
   };
 
   const spacing = { marginLeft: "0.25em", marginTop: "0.25em", width: "80px" };

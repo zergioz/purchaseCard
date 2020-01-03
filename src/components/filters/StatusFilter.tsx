@@ -21,7 +21,7 @@ export const StatusFilter: React.FC<IProps> = props => {
     props.selected || "Submitted"
   );
 
-  //recreate the request count badges if the props update
+  //recreate the request count badges if the props are updated
   useEffect(() => {
     const counts = countStatusGroups();
     setBadges(counts);
@@ -37,7 +37,7 @@ export const StatusFilter: React.FC<IProps> = props => {
 
   //if the state of this component changes, then apply the filters
   useEffect(() => {
-    context.applyFilters({ ...context.filters, status: selected });
+    context.applyFilters({ ...context.filters, status: selected }, true);
   }, [selected]);
 
   //groups requests by status and counts them to make the badges

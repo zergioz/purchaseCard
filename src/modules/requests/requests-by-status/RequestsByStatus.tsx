@@ -22,7 +22,7 @@ export const RequestsByStatus: React.FC<IProps> = props => {
   }, []);
 
   useEffect(() => {
-    setFiltered(context.applyFilters(defaultFilters));
+    setFiltered(context.applyFilters(defaultFilters, false));
   }, [context.requests]);
 
   useEffect(() => {

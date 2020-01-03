@@ -19,7 +19,7 @@ export const AllRequests: React.FC = () => {
 
   useEffect(() => {
     console.log(`AllRequests applying filters`);
-    setFiltered(context.applyFilters(filters));
+    setFiltered(context.applyFilters(filters, false));
   }, [context.requests]);
 
   return (
