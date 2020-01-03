@@ -1,3 +1,6 @@
+import { Request } from "../services/models/Request";
+import { groupBy } from "../helpers/GroupBy";
+
 export interface IStatus {
   caseStep: string;
   fwd: string;
@@ -118,4 +121,23 @@ export const convertToUgly = (friendlyName: string): string => {
 export const convertToFriendly = (caseStep: string): string => {
   const status = StepStatus.find(status => status.caseStep === caseStep);
   return status ? status.friendlyName : "";
+};
+
+//groups requests by status and counts them to make the badges
+export const groupByStatus = (requests: Request[]): number[] => {
+  let counts: number[] = [];
+  const statuses = Object.keys(getStatusesByFriendlyName());
+  if (requests) {
+    //group requests by their statuses
+    const groups = groupBy(requests, (request: Request) => request.status);
+
+    //loop through each friendly status value, convert it to the ugly version, and count the requests
+    statuses.map((statusValue: any, index: number) => {
+      const uglyStatusValue = convertToUgly(statusValue);
+      const requestsInStatus = groups.get(uglyStatusValue);
+      const count = requestsInStatus ? requestsInStatus.length : 0;
+      counts[index] = count;
+    });
+  }
+  return counts;
 };
