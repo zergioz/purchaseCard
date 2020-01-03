@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { RequestService } from "../services/RequestService";
 import { Request } from "../services/models/Request";
 import { IFilters, Filters } from "../components/filters/Filters";
 import { getStatusesByFriendlyName } from "../constants/StepStatus";
+import { Observable } from "rxjs/internal/Observable";
 
 const statuses = getStatusesByFriendlyName();
 
 export type RequestContextType = {
   requests: Request[];
+  updateRequests: (requests: Request[]) => void;
+  subscribeTo: (observable: Observable<Request[]>) => void;
   filteredRequests: Request[];
   loading: boolean;
   filters: IFilters;
@@ -16,6 +18,8 @@ export type RequestContextType = {
 
 export const RequestContext = React.createContext<RequestContextType>({
   requests: [],
+  updateRequests: (requests: Request[]) => null,
+  subscribeTo: (observable: Observable<Request[]>) => null,
   filteredRequests: [],
   loading: true,
   filters: new Filters(),
@@ -47,6 +51,14 @@ export const RequestProvider: React.FC = (props: any) => {
     );
   };
 
+  const subscribeTo = (observable: Observable<Request[]>) => {
+    updateLoading(true);
+    observable.subscribe(requests => {
+      updateRequests(requests);
+      updateLoading(false);
+    });
+  };
+
   const compareStatus = (friendlyStatus: any, listItemStatus: any): boolean => {
     const resolvedStatus = statuses[friendlyStatus].caseStep;
     return listItemStatus == resolvedStatus;
@@ -67,6 +79,8 @@ export const RequestProvider: React.FC = (props: any) => {
     <RequestContext.Provider
       value={{
         requests: requests,
+        updateRequests: updateRequests,
+        subscribeTo: subscribeTo,
         filteredRequests: filteredRequests,
         loading: loading,
         filters: filters,

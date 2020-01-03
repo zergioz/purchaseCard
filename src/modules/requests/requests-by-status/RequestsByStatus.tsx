@@ -4,6 +4,7 @@ import { RequestTable } from "../../../components/request-table/RequestTable";
 import { StatusFilter } from "../../../components/filters/StatusFilter";
 import RequestContext from "../../../contexts/RequestContext";
 import { Request } from "../../../services/models/Request";
+import { RequestService } from "../../../services";
 
 interface IProps {
   status: string;
@@ -14,6 +15,11 @@ export const RequestsByStatus: React.FC<IProps> = props => {
   const defaultFilters = new Filters();
 
   const [filtered, setFiltered] = useState<Request[]>([]);
+
+  useEffect(() => {
+    const svc = new RequestService();
+    context.subscribeTo(svc.read());
+  }, []);
 
   useEffect(() => {
     defaultFilters.status = props.status;

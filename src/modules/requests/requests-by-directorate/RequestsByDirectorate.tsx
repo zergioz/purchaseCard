@@ -4,6 +4,7 @@ import { RequestTable } from "../../../components/request-table/RequestTable";
 import RequestContext from "../../../contexts/RequestContext";
 import { StatusFilter } from "../../../components/filters/StatusFilter";
 import { Request } from "../../../services/models/Request";
+import { RequestService } from "../../../services";
 
 interface IProps {
   directorate: string;
@@ -13,6 +14,11 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
   const defaultFilters = new Filters();
 
   const [filtered, setFiltered] = useState<Request[]>([]);
+
+  useEffect(() => {
+    const svc = new RequestService();
+    context.subscribeTo(svc.read());
+  }, []);
 
   useEffect(() => {
     defaultFilters.directorate = props.directorate;
