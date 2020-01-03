@@ -24,7 +24,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
   useEffect(() => {
     console.log(`ReqByDir applying filters`);
     setFiltered(context.applyFilters(defaultFilters));
-  }, [props, context.requests]);
+  }, [props.directorate, context.requests]);
 
   return (
     <React.Fragment>
