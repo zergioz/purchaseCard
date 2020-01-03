@@ -1,22 +1,16 @@
-import React, { useState, useContext } from "react";
-import {
-  ButtonToolbar,
-  Button,
-  ButtonGroup,
-  ToggleButton
-} from "react-bootstrap";
+import React, { useState, useContext, useEffect } from "react";
+import { ButtonToolbar, Button } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import { PersonDirectorates as directorates } from "../../constants/PersonDirectorates";
 
 export const DirectorateFilter: React.FC = () => {
   const context = useContext(RequestContext);
-  const [currentSelection, updateCurrentSelection] = useState<string>("");
+  const [selected, updateSelected] = useState<string>("");
   const values = directorates;
-  const handleClick = (value: string) => {
-    updateCurrentSelection(value);
-    console.log(`DirFilter`);
-    context.applyFilters({ ...context.filters, directorate: value }, true);
-  };
+
+  useEffect(() => {
+    context.applyFilters({ ...context.filters, directorate: selected }, true);
+  }, [selected]);
 
   const spacing = { marginLeft: "0.25em", marginTop: "0.25em", width: "80px" };
 
@@ -28,8 +22,8 @@ export const DirectorateFilter: React.FC = () => {
           <Button
             style={spacing}
             size="sm"
-            variant={currentSelection == "" ? "primary" : "outline-secondary"}
-            onClick={() => handleClick("")}
+            variant={selected == "" ? "primary" : "outline-secondary"}
+            onClick={() => updateSelected("")}
           >
             No Filter
           </Button>
@@ -38,10 +32,8 @@ export const DirectorateFilter: React.FC = () => {
               key={`selector-${value}-${index}`}
               size="sm"
               style={spacing}
-              variant={
-                currentSelection == value ? "primary" : "outline-secondary"
-              }
-              onClick={() => handleClick(value)}
+              variant={selected == value ? "primary" : "outline-secondary"}
+              onClick={() => updateSelected(value)}
             >
               {value}
             </Button>
