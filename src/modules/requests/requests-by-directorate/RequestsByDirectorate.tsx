@@ -11,20 +11,19 @@ interface IProps {
 }
 export const RequestsByDirectorate: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
-  const defaultFilters = new Filters();
-
   const [filtered, setFiltered] = useState<Request[]>([]);
+  const defaultFilters = new Filters();
+  defaultFilters.directorate = props.directorate;
 
   useEffect(() => {
     const svc = new RequestService();
-    context.subscribeTo(svc.read());
+    const obs = svc.read();
+    context.subscribeTo(obs);
   }, []);
 
   useEffect(() => {
-    defaultFilters.directorate = props.directorate;
-    let filtered = context.applyFilters(defaultFilters);
-    console.log(`RequestsByDir`);
-    setFiltered(filtered);
+    console.log(`ReqByDir applying filters`);
+    setFiltered(context.applyFilters(defaultFilters));
   }, [props, context.requests]);
 
   return (
@@ -33,7 +32,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
         props.directorate ? props.directorate : `All Directorates`
       })`}</h1>
       <hr />
-      <StatusFilter requestsToCount={filtered} />
+      <StatusFilter showBadgesFor={filtered} defaultFilter="Submitted" />
       <br />
       <RequestTable />
     </React.Fragment>

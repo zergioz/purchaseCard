@@ -12,9 +12,8 @@ interface IProps {
 
 export const RequestsByStatus: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
-  const defaultFilters = new Filters();
-
   const [filtered, setFiltered] = useState<Request[]>([]);
+  const defaultFilters = new Filters();
 
   useEffect(() => {
     const svc = new RequestService();
@@ -22,17 +21,15 @@ export const RequestsByStatus: React.FC<IProps> = props => {
   }, []);
 
   useEffect(() => {
-    defaultFilters.status = props.status;
-    let counts = context.applyFilters(defaultFilters);
-    console.log(`RequestsBySta`);
-    setFiltered(counts);
-  }, [props, context.requests]);
+    console.log(`RequestsBySta applying filters`);
+    setFiltered(context.applyFilters(defaultFilters));
+  }, [props.status, context.requests]);
 
   return (
     <React.Fragment>
       <h1>Requests by Status</h1>
       <hr />
-      <StatusFilter requestsToCount={filtered} />
+      <StatusFilter showBadgesFor={filtered} defaultFilter={props.status} />
       <br />
       <RequestTable />
     </React.Fragment>

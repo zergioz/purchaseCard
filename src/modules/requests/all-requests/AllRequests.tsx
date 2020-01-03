@@ -9,8 +9,8 @@ import { RequestService } from "../../../services";
 
 export const AllRequests: React.FC = () => {
   const context = useContext(RequestContext);
-
   const [filtered, setFiltered] = useState<Request[]>([]);
+  const filters = new Filters();
 
   useEffect(() => {
     const svc = new RequestService();
@@ -18,11 +18,9 @@ export const AllRequests: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const filters = new Filters();
-    filters.status = "Submitted";
-    console.log(`AllRequests`);
+    console.log(`AllRequests applying filters`);
     setFiltered(context.applyFilters(filters));
-  }, []);
+  }, [context.requests]);
 
   return (
     <React.Fragment>
@@ -30,7 +28,7 @@ export const AllRequests: React.FC = () => {
       <hr />
       <DirectorateFilter />
       <br />
-      <StatusFilter requestsToCount={filtered} />
+      <StatusFilter showBadgesFor={filtered} defaultFilter="Submitted" />
       <RequestTable />
     </React.Fragment>
   );
