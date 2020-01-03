@@ -2,8 +2,8 @@ import React, { useContext, useEffect } from "react";
 import { Filters } from "../../../components/filters/Filters";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import RequestContext from "../../../contexts/RequestContext";
-import { StatusFilter } from "../../../components/filters/StatusFilter";
 import { RequestService } from "../../../services";
+import { FilterControls } from "../../../components/filters/FilterControls";
 
 interface IProps {
   directorate: string;
@@ -25,13 +25,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
 
   return (
     <React.Fragment>
-      <h1>{`Requests by Directorate (${
-        props.directorate ? props.directorate : `All Directorates`
-      })`}</h1>
-      <hr />
-      <div className="container-fluid grey">
-        <StatusFilter />
-      </div>
+      <FilterControls />
       <RequestTable />
     </React.Fragment>
   );

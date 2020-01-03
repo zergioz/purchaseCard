@@ -4,6 +4,9 @@ import { RequestTable } from "../../../components/request-table/RequestTable";
 import { StatusFilter } from "../../../components/filters/StatusFilter";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
+import { DirectorateFilter } from "../../../components/filters/DirectorateFilter";
+import { FiscalYearFilter } from "../../../components/filters/FiscalYearFilter";
+import { FilterControls } from "../../../components/filters/FilterControls";
 
 interface IProps {
   status: string;
@@ -25,11 +28,7 @@ export const RequestsByStatus: React.FC<IProps> = props => {
 
   return (
     <React.Fragment>
-      <h1>Requests by Status</h1>
-      <hr />
-      <div className="container-fluid grey">
-        <StatusFilter selected={props.status} />
-      </div>
+      <FilterControls status={props.status} />
       <RequestTable />
     </React.Fragment>
   );
