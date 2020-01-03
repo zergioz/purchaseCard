@@ -1,10 +1,10 @@
-import React, { useEffect, useContext, useState } from "react";
-import { Filters } from "../../../components/filters/Filters";
+import React, { useEffect, useContext } from "react";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import { StatusFilter } from "../../../components/filters/StatusFilter";
 import { DirectorateFilter } from "../../../components/filters/DirectorateFilter";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
+import { FiscalYearFilter } from "../../../components/filters/FiscalYearFilter";
 
 export const AllRequests: React.FC = () => {
   const context = useContext(RequestContext);
@@ -19,6 +19,7 @@ export const AllRequests: React.FC = () => {
       <h1>All Requests</h1>
       <hr />
       <div className="container-fluid grey">
+        <FiscalYearFilter />
         <DirectorateFilter />
         <br />
         <StatusFilter />

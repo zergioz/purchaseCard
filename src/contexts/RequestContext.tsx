@@ -41,6 +41,17 @@ export const RequestProvider: React.FC = (props: any) => {
     );
   };
 
+  const fiscalYearFilter = (request: Request, filters: IFilters) => {
+    return (
+      filters.fiscalYear == "" ||
+      (filters.fiscalYear == "Empty" &&
+        request.j8Approval &&
+        !request.j8Approval.j8FiscalYear) ||
+      (request.j8Approval &&
+        request.j8Approval.j8FiscalYear == filters.fiscalYear)
+    );
+  };
+
   const requestorFilter = (request: Request, filters: IFilters) => {
     return filters.requestor == "" || request.requestor == filters.requestor;
   };
@@ -70,6 +81,7 @@ export const RequestProvider: React.FC = (props: any) => {
 
   const applyFilters = (filters: IFilters, update: boolean = true) => {
     let filteredRequests: Request[] = requests
+      .filter(request => fiscalYearFilter(request, filters))
       .filter(request => requestorFilter(request, filters))
       .filter(request => statusFilter(request, filters))
       .filter(request => directorateFilter(request, filters));
