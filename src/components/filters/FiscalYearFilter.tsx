@@ -17,7 +17,7 @@ export const FiscalYearFilter: React.FC = () => {
         : "Empty";
     });
     const years = Array.from(groups.keys());
-    setYears(years);
+    setYears(years.sort());
   }, [context.requests]);
 
   //apply the FY filter when a selection is made
