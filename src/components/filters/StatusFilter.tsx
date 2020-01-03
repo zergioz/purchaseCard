@@ -20,24 +20,20 @@ export const StatusFilter: React.FC<IProps> = props => {
   const [badges, setBadges] = useState<number[]>([]);
   const [selected, setSelected] = useState<string>(defaultFilter);
 
-  useEffect(() => {
-    setSelected(context.filters.status);
-  }, [defaultFilter]);
-
   //recreate badges on props update
   useEffect(() => {
     const counts = countStatusGroups();
     setBadges(counts);
-  }, [props]);
+  }, [props.showBadgesFor]);
 
   const handleClick = (value: string) => {
-    console.log(`StatusFilter`);
     context.applyFilters({ ...context.filters, status: value });
+    setSelected(value);
   };
 
   //groups requests by status and counts them to make the badges
   const countStatusGroups = (): number[] => {
-    let counts = badges;
+    let counts: number[] = [];
     if (props.showBadgesFor) {
       //group props.showBadgesFor by their statuses
       const groups = groupBy(
@@ -50,7 +46,7 @@ export const StatusFilter: React.FC<IProps> = props => {
         const uglyStatusValue = convertToUgly(statusValue);
         const requestsInStatus = groups.get(uglyStatusValue);
         const count = requestsInStatus ? requestsInStatus.length : 0;
-        counts[index + 1] = count;
+        counts[index] = count;
       });
     }
     return counts;
@@ -63,8 +59,8 @@ export const StatusFilter: React.FC<IProps> = props => {
         <Nav.Item key={`selector-${value}-${index}`}>
           <Nav.Link onClick={() => handleClick(value)} eventKey={value}>
             {value}{" "}
-            <Badge variant={!!badges[index + 1] ? badgeStyle : "light"}>
-              {badges[index + 1]}
+            <Badge variant={!!badges[index] ? badgeStyle : "light"}>
+              {badges[index]}
             </Badge>
           </Nav.Link>
         </Nav.Item>
