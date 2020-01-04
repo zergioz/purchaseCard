@@ -50,7 +50,11 @@ export const TopNav = () => {
         </Nav.Link>
       </Nav>
       <Form inline>
-        <Button variant="success" href="../Pages/purchase_request.aspx">
+        <Button
+          variant="success"
+          href="../Pages/purchase_request.aspx"
+          size="lg"
+        >
           Submit Request
         </Button>
       </Form>
