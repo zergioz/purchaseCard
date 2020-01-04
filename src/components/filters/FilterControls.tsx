@@ -4,6 +4,8 @@ import { FiscalYearFilter } from "./FiscalYearFilter";
 import { Card } from "react-bootstrap";
 import { ClearFiltersButton } from "./ClearFiltersButton";
 import { StatusFilterProgressBar } from "./StatusFilterProgressBar";
+import { StatusFilter } from "./StatusFilter";
+import Media from "react-media";
 
 export const FilterControls = () => {
   return (
@@ -22,9 +24,23 @@ export const FilterControls = () => {
           </div>
         </div>
         <div className="row">
-          <div className="col-md-12">
+          <div className="col-lg-12">
             <br />
-            <StatusFilterProgressBar />
+            <Media
+              queries={{
+                small: "(max-width: 599px)",
+                medium: "(min-width: 600px) and (max-width: 1199px)",
+                large: "(min-width: 1200px)"
+              }}
+            >
+              {(matches: any) => (
+                <>
+                  {matches.small && <StatusFilter />}
+                  {matches.medium && <StatusFilter />}
+                  {matches.large && <StatusFilterProgressBar />}
+                </>
+              )}
+            </Media>
           </div>
         </div>
       </div>
