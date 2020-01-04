@@ -20,8 +20,15 @@ export const DirectorateFilter: React.FC = () => {
     }
   }, [selected]);
 
+  const onChangeSelection = (value: string) => {
+    if (!context.loading) {
+      setSelected(value);
+    }
+  };
+
   return (
     <DropdownButton
+      disabled={context.loading}
       className="m-1"
       variant={selected === "" ? "outline-primary" : "primary"}
       key="secondary"
@@ -34,7 +41,7 @@ export const DirectorateFilter: React.FC = () => {
           <Dropdown.Item
             eventKey={value}
             key={`directorate-${value}`}
-            onClick={(e: any) => setSelected(value)}
+            onClick={(e: any) => onChangeSelection(value)}
           >
             {value}
           </Dropdown.Item>
@@ -43,7 +50,7 @@ export const DirectorateFilter: React.FC = () => {
       <Dropdown.Divider />
       <Dropdown.Item
         eventKey="AllDirectorates"
-        onClick={(e: any) => setSelected("")}
+        onClick={(e: any) => onChangeSelection("")}
       >
         All Directorates
       </Dropdown.Item>

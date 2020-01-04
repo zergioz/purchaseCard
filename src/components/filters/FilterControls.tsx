@@ -10,7 +10,7 @@ import { StatusFilter } from "./StatusFilter";
 
 export const FilterControls = () => {
   return (
-    <>
+    <div className="bg-light" style={{ border: "1px solid #ccc" }}>
       <Media
         queries={{
           small: "(max-width: 599px)",
@@ -45,6 +45,6 @@ export const FilterControls = () => {
           </div>
         )}
       </Media>
-    </>
+    </div>
   );
 };

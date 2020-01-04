@@ -6,8 +6,15 @@ import {
   groupByStatus
 } from "../../constants/StepStatus";
 
+interface IStatusFilter {
+  badges: number[];
+  statuses: string[];
+  selected: string;
+  setSelected: (status: string) => void;
+}
+
 //custom hook for status filter code, since we have more than one of them for different screen sizes
-export const useStatusFilter = () => {
+export const useStatusFilter = (): IStatusFilter => {
   const context = useContext(RequestContext);
   const [badges, setBadges] = useState<number[]>([]);
   const [selected, setSelected] = useState<string>(context.filters.status);
@@ -34,14 +41,22 @@ export const useStatusFilter = () => {
     }
   }, [selected]);
 
-  return { badges, statuses, selected, setSelected };
+  const onChangeSelection = (status: string) => {
+    //the filter will bounce back if they try to change it during loading, so prevent that
+    if (!context.loading) {
+      setSelected(status);
+    }
+  };
+
+  return { badges, statuses, selected, setSelected: onChangeSelection };
 };
 
 export const StatusFilter: React.FC = () => {
-  const badgeStyle = "danger";
+  const context = useContext(RequestContext);
   const { badges, statuses, selected, setSelected } = useStatusFilter();
   return (
     <DropdownButton
+      disabled={context.loading}
       className="m-1"
       variant={selected === "" ? "outline-primary" : "primary"}
       key="secondary"

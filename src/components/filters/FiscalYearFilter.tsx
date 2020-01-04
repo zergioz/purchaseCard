@@ -32,8 +32,15 @@ export const FiscalYearFilter: React.FC = () => {
     }
   }, [selected]);
 
+  const onChangeSelection = (value: string) => {
+    if (!context.loading) {
+      setSelected(value);
+    }
+  };
+
   return (
     <DropdownButton
+      disabled={context.loading}
       className="m-1"
       variant={selected === "" ? "outline-primary" : "primary"}
       key="secondary"
@@ -46,14 +53,17 @@ export const FiscalYearFilter: React.FC = () => {
           <Dropdown.Item
             eventKey={year}
             key={`fy-${year}`}
-            onClick={() => setSelected(year)}
+            onClick={() => onChangeSelection(year)}
           >
             {`FY ${year}`}
           </Dropdown.Item>
         );
       })}
       <Dropdown.Divider />
-      <Dropdown.Item eventKey="AllFiscalYears" onClick={() => setSelected("")}>
+      <Dropdown.Item
+        eventKey="AllFiscalYears"
+        onClick={() => onChangeSelection("")}
+      >
         All Fiscal Years
       </Dropdown.Item>
     </DropdownButton>

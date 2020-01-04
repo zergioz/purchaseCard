@@ -13,6 +13,7 @@ export const ClearFiltersButton: React.FC = () => {
   return (
     <ButtonToolbar>
       <Button
+        disabled={context.loading}
         href="#/requests"
         className="m-1"
         variant="outline-secondary"
