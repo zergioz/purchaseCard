@@ -1,9 +1,9 @@
 import React from "react";
 import { DirectorateFilter } from "./DirectorateFilter";
-import { StatusFilter } from "./StatusFilter";
 import { FiscalYearFilter } from "./FiscalYearFilter";
 import { Card } from "react-bootstrap";
 import { ClearFiltersButton } from "./ClearFiltersButton";
+import { StatusFilterProgressBar } from "./StatusFilterProgressBar";
 
 export const FilterControls = () => {
   return (
@@ -23,7 +23,8 @@ export const FilterControls = () => {
         </div>
         <div className="row">
           <div className="col-md-12">
-            <StatusFilter />
+            <br />
+            <StatusFilterProgressBar />
           </div>
         </div>
       </div>
