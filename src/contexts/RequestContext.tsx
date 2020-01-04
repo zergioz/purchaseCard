@@ -42,14 +42,15 @@ export const RequestProvider: React.FC = (props: any) => {
   };
 
   const fiscalYearFilter = (request: Request, filters: IFilters) => {
-    return (
-      filters.fiscalYear == "" ||
-      (filters.fiscalYear == "Empty" &&
-        request.j8Approval &&
-        !request.j8Approval.j8FiscalYear) ||
-      (request.j8Approval &&
-        request.j8Approval.j8FiscalYear == filters.fiscalYear)
-    );
+    let match = false;
+    if (filters.fiscalYear == "Empty") {
+      match = !request.j8Approval || !request.j8Approval.j8FiscalYear;
+    } else if (filters.fiscalYear == "") {
+      match = true;
+    } else if (request.j8Approval) {
+      match = request.j8Approval.j8FiscalYear == filters.fiscalYear;
+    }
+    return match;
   };
 
   const requestorFilter = (request: Request, filters: IFilters) => {
@@ -57,9 +58,15 @@ export const RequestProvider: React.FC = (props: any) => {
   };
 
   const statusFilter = (request: Request, filters: IFilters) => {
-    return (
-      filters.status == "" || compareStatus(filters.status, request.status)
-    );
+    let match = false;
+    if (filters.status == "All Open") {
+      match = request.status != "CLOSED";
+    } else if (filters.status == "") {
+      match = true;
+    } else {
+      match = compareStatus(filters.status, request.status);
+    }
+    return match;
   };
 
   const subscribeTo = (observable: Observable<Request[]>) => {
@@ -75,8 +82,10 @@ export const RequestProvider: React.FC = (props: any) => {
   };
 
   const compareStatus = (friendlyStatus: any, listItemStatus: any): boolean => {
-    const resolvedStatus = statuses[friendlyStatus].caseStep;
-    return listItemStatus == resolvedStatus;
+    const exactMatch = statuses[friendlyStatus]
+      ? statuses[friendlyStatus].caseStep
+      : undefined;
+    return listItemStatus == exactMatch;
   };
 
   const applyFilters = (filters: IFilters, update: boolean = true) => {
