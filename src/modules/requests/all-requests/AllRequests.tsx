@@ -15,7 +15,6 @@ export const AllRequests: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    defaultFilters.status = "Submitted";
     context.applyFilters(defaultFilters, true);
   }, [context.requests]);
 

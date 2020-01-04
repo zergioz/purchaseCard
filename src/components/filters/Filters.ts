@@ -6,7 +6,7 @@ export interface IFilters {
 }
 export class Filters implements IFilters {
   directorate: string = "";
-  status: string = "";
+  status: string = "Submitted";
   requestor: string = "";
   fiscalYear: string = "";
 }

@@ -19,7 +19,6 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
 
   useEffect(() => {
     defaultFilters.directorate = props.directorate;
-    defaultFilters.status = "Submitted";
     context.applyFilters(defaultFilters, true);
   }, [props.directorate, context.requests]);
 

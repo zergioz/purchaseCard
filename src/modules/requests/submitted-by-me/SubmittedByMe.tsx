@@ -18,7 +18,6 @@ export const SubmittedByMe: React.FC = () => {
 
   useEffect(() => {
     defaultFilters.requestor = user ? user.LoginName : "";
-    defaultFilters.status = "Submitted";
     context.applyFilters(defaultFilters, true);
   }, [user, context.requests]);
 
