@@ -5,11 +5,21 @@ import { PersonDirectorates as directorates } from "../../constants/PersonDirect
 
 export const DirectorateFilter: React.FC = () => {
   const context = useContext(RequestContext);
-  const [selected, updateSelected] = useState<string>("");
+  const [selected, updateSelected] = useState<string>(
+    context.filters.directorate
+  );
   const values = directorates;
 
+  //filters change, update our state
   useEffect(() => {
-    context.applyFilters({ ...context.filters, directorate: selected }, true);
+    updateSelected(context.filters.directorate);
+  }, [context.filters]);
+
+  //apply the filter when our state changes
+  useEffect(() => {
+    if (context.filters.directorate !== selected) {
+      context.applyFilters({ ...context.filters, directorate: selected }, true);
+    }
   }, [selected]);
 
   return (

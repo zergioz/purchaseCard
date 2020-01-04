@@ -7,7 +7,14 @@ import { Request } from "../../services/models/Request";
 export const FiscalYearFilter: React.FC = () => {
   const context = useContext(RequestContext);
   const [years, setYears] = useState<any[]>([]);
-  const [selected, updateSelected] = useState<string>("");
+  const [selected, updateSelected] = useState<string>(
+    context.filters.fiscalYear
+  );
+
+  //filters change, update our state
+  useEffect(() => {
+    updateSelected(context.filters.fiscalYear);
+  }, [context.filters]);
 
   //group each request by year when the data is updated
   useEffect(() => {
@@ -22,7 +29,9 @@ export const FiscalYearFilter: React.FC = () => {
 
   //apply the FY filter when a selection is made
   useEffect(() => {
-    context.applyFilters({ ...context.filters, fiscalYear: selected }, true);
+    if (context.filters.fiscalYear !== selected) {
+      context.applyFilters({ ...context.filters, fiscalYear: selected }, true);
+    }
   }, [selected]);
 
   return (
