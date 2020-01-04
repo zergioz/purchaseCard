@@ -1,7 +1,7 @@
 import React from "react";
 import { DirectorateFilter } from "./DirectorateFilter";
 import { FiscalYearFilter } from "./FiscalYearFilter";
-import { Card } from "react-bootstrap";
+import { Card, ButtonGroup } from "react-bootstrap";
 import { ClearFiltersButton } from "./ClearFiltersButton";
 import { StatusFilterProgressBar } from "./StatusFilterProgressBar";
 import { StatusFilterTabs } from "./StatusFilterTabs";
@@ -19,16 +19,29 @@ export const FilterControls = () => {
         }}
       >
         {(matches: any) => (
-          <div className="container-fluid grey">
+          <div className="container-fluid">
             <div className="row">
               <div className="col-md-12">
                 <small className="text-secondary">Filters</small>
+
                 <Card>
-                  <Card.Body className="btn-group p-1">
-                    <DirectorateFilter />
-                    <FiscalYearFilter />
-                    {matches.small && <StatusFilter />}
-                    <ClearFiltersButton />
+                  <Card.Body className="p-1">
+                    {(matches.medium || matches.large) && (
+                      <ButtonGroup>
+                        <StatusFilter />
+                        <DirectorateFilter />
+                        <FiscalYearFilter />
+                        <ClearFiltersButton />
+                      </ButtonGroup>
+                    )}
+                    {matches.small && (
+                      <ButtonGroup vertical>
+                        <StatusFilter />
+                        <DirectorateFilter />
+                        <FiscalYearFilter />
+                        <ClearFiltersButton />
+                      </ButtonGroup>
+                    )}
                   </Card.Body>
                 </Card>
               </div>
