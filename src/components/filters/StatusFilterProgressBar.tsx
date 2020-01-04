@@ -1,42 +1,17 @@
-import React, { useState, useContext, useEffect } from "react";
-import RequestContext from "../../contexts/RequestContext";
-import {
-  getStatusesByFriendlyName,
-  groupByStatus
-} from "../../constants/StepStatus";
+import React, { useState, useEffect } from "react";
 import { ProgressBar, Nav, Badge } from "react-bootstrap";
 import "./StatusFilterProgressBar.css";
-
-const statuses = Object.keys(getStatusesByFriendlyName());
+import { useStatusFilter } from "./StatusFilter";
 
 export const StatusFilterProgressBar = () => {
-  const context = useContext(RequestContext);
-  const [badges, setBadges] = useState<number[]>([]);
-  const [selected, setSelected] = useState<string>(context.filters.status);
+  const { badges, statuses, selected, setSelected } = useStatusFilter();
   const [selectedIndex, setSelectedIndex] = useState<number>(
-    statuses.indexOf(context.filters.status)
+    statuses.indexOf(selected)
   );
-
-  //when other filters are applied, recalculate the badges we should be showing in this component
-  useEffect(() => {
-    //todo: skip this calculation if only the status filter changed
-    const allOtherFilters = { ...context.filters, status: "" };
-    const matches = context.applyFilters(allOtherFilters, false);
-    const counts = groupByStatus(matches);
-    setBadges(counts);
-  }, [context.filters]);
 
   //if the status filter changes, update our state
   useEffect(() => {
-    setSelected(context.filters.status);
-    setSelectedIndex(statuses.indexOf(context.filters.status));
-  }, [context.filters]);
-
-  //if the state of this component changes, then apply the filters
-  useEffect(() => {
-    if (context.filters.status !== selected) {
-      context.applyFilters({ ...context.filters, status: selected }, true);
-    }
+    setSelectedIndex(statuses.indexOf(selected));
   }, [selected]);
 
   const badgeStyle = "danger";
