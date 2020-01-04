@@ -5,14 +5,12 @@ import { PersonDirectorates as directorates } from "../../constants/PersonDirect
 
 export const DirectorateFilter: React.FC = () => {
   const context = useContext(RequestContext);
-  const [selected, updateSelected] = useState<string>(
-    context.filters.directorate
-  );
+  const [selected, setSelected] = useState<string>(context.filters.directorate);
   const values = directorates;
 
   //filters change, update our state
   useEffect(() => {
-    updateSelected(context.filters.directorate);
+    setSelected(context.filters.directorate);
   }, [context.filters]);
 
   //apply the filter when our state changes
@@ -36,7 +34,7 @@ export const DirectorateFilter: React.FC = () => {
           <Dropdown.Item
             eventKey={value}
             key={`directorate-${value}`}
-            onClick={(e: any) => updateSelected(value)}
+            onClick={(e: any) => setSelected(value)}
           >
             {value}
           </Dropdown.Item>
@@ -45,7 +43,7 @@ export const DirectorateFilter: React.FC = () => {
       <Dropdown.Divider />
       <Dropdown.Item
         eventKey="AllDirectorates"
-        onClick={(e: any) => updateSelected("")}
+        onClick={(e: any) => setSelected("")}
       >
         All Directorates
       </Dropdown.Item>

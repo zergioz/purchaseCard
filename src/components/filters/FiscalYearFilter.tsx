@@ -7,13 +7,11 @@ import { Request } from "../../services/models/Request";
 export const FiscalYearFilter: React.FC = () => {
   const context = useContext(RequestContext);
   const [years, setYears] = useState<any[]>([]);
-  const [selected, updateSelected] = useState<string>(
-    context.filters.fiscalYear
-  );
+  const [selected, setSelected] = useState<string>(context.filters.fiscalYear);
 
   //filters change, update our state
   useEffect(() => {
-    updateSelected(context.filters.fiscalYear);
+    setSelected(context.filters.fiscalYear);
   }, [context.filters]);
 
   //group each request by year when the data is updated
@@ -48,17 +46,14 @@ export const FiscalYearFilter: React.FC = () => {
           <Dropdown.Item
             eventKey={year}
             key={`fy-${year}`}
-            onClick={() => updateSelected(year)}
+            onClick={() => setSelected(year)}
           >
             {`FY ${year}`}
           </Dropdown.Item>
         );
       })}
       <Dropdown.Divider />
-      <Dropdown.Item
-        eventKey="AllFiscalYears"
-        onClick={() => updateSelected("")}
-      >
+      <Dropdown.Item eventKey="AllFiscalYears" onClick={() => setSelected("")}>
         All Fiscal Years
       </Dropdown.Item>
     </DropdownButton>
