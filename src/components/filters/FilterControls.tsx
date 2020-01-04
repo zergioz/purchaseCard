@@ -3,10 +3,7 @@ import { DirectorateFilter } from "./DirectorateFilter";
 import { StatusFilter } from "./StatusFilter";
 import { FiscalYearFilter } from "./FiscalYearFilter";
 
-interface IProps {
-  status?: string;
-}
-export const FilterControls = (props: IProps) => {
+export const FilterControls = () => {
   return (
     <div className="container-fluid grey">
       <div className="row pt-2">
@@ -17,7 +14,7 @@ export const FilterControls = (props: IProps) => {
       </div>
       <div className="row">
         <div className="col-md-12">
-          <StatusFilter selected={props.status} />
+          <StatusFilter />
         </div>
       </div>
     </div>

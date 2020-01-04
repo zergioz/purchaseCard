@@ -1,11 +1,8 @@
 import React, { useEffect, useContext } from "react";
 import { Filters } from "../../../components/filters/Filters";
 import { RequestTable } from "../../../components/request-table/RequestTable";
-import { StatusFilter } from "../../../components/filters/StatusFilter";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
-import { DirectorateFilter } from "../../../components/filters/DirectorateFilter";
-import { FiscalYearFilter } from "../../../components/filters/FiscalYearFilter";
 import { FilterControls } from "../../../components/filters/FilterControls";
 
 interface IProps {
@@ -22,13 +19,13 @@ export const RequestsByStatus: React.FC<IProps> = props => {
   }, []);
 
   useEffect(() => {
-    defaultFilters.status = props.status || "Submitted";
+    defaultFilters.status = props.status;
     context.applyFilters(defaultFilters, true);
   }, [props.status, context.requests]);
 
   return (
     <React.Fragment>
-      <FilterControls status={props.status} />
+      <FilterControls />
       <RequestTable />
     </React.Fragment>
   );

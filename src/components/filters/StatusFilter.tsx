@@ -8,15 +8,10 @@ import {
 
 const statuses: string[] = Object.keys(getStatusesByFriendlyName());
 
-interface IProps {
-  selected?: string;
-}
-export const StatusFilter: React.FC<IProps> = props => {
+export const StatusFilter: React.FC = () => {
   const context = useContext(RequestContext);
   const [badges, setBadges] = useState<number[]>([]);
-  const [selected, setSelected] = useState<string>(
-    props.selected || "Submitted"
-  );
+  const [selected, setSelected] = useState<string>(context.filters.status);
 
   //when other filters are applied, recalculate the badges we should be showing in this component
   useEffect(() => {
@@ -27,18 +22,17 @@ export const StatusFilter: React.FC<IProps> = props => {
     setBadges(counts);
   }, [context.filters]);
 
-  //if the status filter route changes, update our state
+  //if the status filter changes, update our state
   useEffect(() => {
-    if (props.selected) {
-      const status = props.selected;
-      setSelected(status);
-    }
-  }, [props.selected]);
+    setSelected(context.filters.status);
+  }, [context.filters]);
 
   //if the state of this component changes, then apply the filters
   useEffect(() => {
-    context.applyFilters({ ...context.filters, status: selected }, true);
-  }, [selected, context.requests]);
+    if (context.filters.status !== selected) {
+      context.applyFilters({ ...context.filters, status: selected }, true);
+    }
+  }, [selected]);
 
   const badgeStyle = "danger";
 
