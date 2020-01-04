@@ -3,7 +3,7 @@ import { RequestTable } from "../../../components/request-table/RequestTable";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
 import { Filters } from "../../../components/filters/Filters";
-import { FilterControls } from "../../../components/filters/FilterControls";
+import { RequestFilters } from "../../../components/request-filters/RequestFilters";
 
 export const AllRequests: React.FC = () => {
   const context = useContext(RequestContext);
@@ -20,7 +20,7 @@ export const AllRequests: React.FC = () => {
 
   return (
     <React.Fragment>
-      <FilterControls />
+      <RequestFilters />
       <RequestTable />
     </React.Fragment>
   );

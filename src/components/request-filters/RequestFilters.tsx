@@ -1,14 +1,14 @@
 import React from "react";
-import { DirectorateFilter } from "./DirectorateFilter";
-import { FiscalYearFilter } from "./FiscalYearFilter";
+import { DirectorateFilter } from "../filters/DirectorateFilter";
+import { FiscalYearFilter } from "../filters/FiscalYearFilter";
 import { Card, ButtonGroup } from "react-bootstrap";
-import { ClearFiltersButton } from "./ClearFiltersButton";
-import { StatusFilterProgressBar } from "./StatusFilterProgressBar";
-import { StatusFilterTabs } from "./StatusFilterTabs";
+import { ClearFiltersButton } from "../filters/ClearFiltersButton";
+import { StatusFilterProgressBar } from "../filters/StatusFilterProgressBar";
+import { StatusFilterTabs } from "../filters/StatusFilterTabs";
 import Media from "react-media";
-import { StatusFilter } from "./StatusFilter";
+import { StatusFilter } from "../filters/StatusFilter";
 
-export const FilterControls = () => {
+export const RequestFilters = () => {
   return (
     <div className="bg-light" style={{ border: "1px solid #ccc" }}>
       <Media

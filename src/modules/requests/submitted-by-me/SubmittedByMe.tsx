@@ -4,7 +4,7 @@ import UserContext from "../../../contexts/UserContext";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
-import { FilterControls } from "../../../components/filters/FilterControls";
+import { RequestFilters } from "../../../components/request-filters/RequestFilters";
 
 export const SubmittedByMe: React.FC = () => {
   const { user } = useContext(UserContext);
@@ -23,7 +23,7 @@ export const SubmittedByMe: React.FC = () => {
 
   return (
     <React.Fragment>
-      <FilterControls />
+      <RequestFilters />
       <RequestTable />
     </React.Fragment>
   );

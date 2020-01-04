@@ -3,7 +3,7 @@ import { Filters } from "../../../components/filters/Filters";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
-import { FilterControls } from "../../../components/filters/FilterControls";
+import { RequestFilters } from "../../../components/request-filters/RequestFilters";
 
 interface IProps {
   directorate: string;
@@ -24,7 +24,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
 
   return (
     <React.Fragment>
-      <FilterControls />
+      <RequestFilters />
       <RequestTable />
     </React.Fragment>
   );
