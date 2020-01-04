@@ -8,7 +8,7 @@ import {
 
 const statuses: string[] = Object.keys(getStatusesByFriendlyName());
 
-export const StatusFilter: React.FC = () => {
+export const StatusFilterTabs: React.FC = () => {
   const context = useContext(RequestContext);
   const [badges, setBadges] = useState<number[]>([]);
   const [selected, setSelected] = useState<string>(context.filters.status);

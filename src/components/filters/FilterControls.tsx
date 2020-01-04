@@ -4,7 +4,7 @@ import { FiscalYearFilter } from "./FiscalYearFilter";
 import { Card } from "react-bootstrap";
 import { ClearFiltersButton } from "./ClearFiltersButton";
 import { StatusFilterProgressBar } from "./StatusFilterProgressBar";
-import { StatusFilter } from "./StatusFilter";
+import { StatusFilterTabs } from "./StatusFilterTabs";
 import Media from "react-media";
 
 export const FilterControls = () => {
@@ -35,8 +35,8 @@ export const FilterControls = () => {
             >
               {(matches: any) => (
                 <>
-                  {matches.small && <StatusFilter />}
-                  {matches.medium && <StatusFilter />}
+                  {matches.small && <StatusFilterTabs />}
+                  {matches.medium && <StatusFilterTabs />}
                   {matches.large && <StatusFilterProgressBar />}
                 </>
               )}
