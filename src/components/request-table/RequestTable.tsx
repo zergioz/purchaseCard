@@ -17,24 +17,38 @@ export const RequestTable = (props: IProps) => {
     <>
       {context.loading && <LoadingResults />}
       {!context.loading && items && items.length > 0 && (
-        <Table striped hover style={{ marginTop: "5px" }}>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Requestor</th>
-              <th>Directorate</th>
-              <th>FY</th>
-              <th>Qt</th>
-              <th>Justification</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="requestList">
-            {items.map((item: Request, index: number) => (
-              <RequestTableRow request={item} key={index}></RequestTableRow>
-            ))}
-          </tbody>
-        </Table>
+        <div className="container-fluid-spacious">
+          <div className="row">
+            <div className="col-md-12 text-center">
+              <span>{`Showing ${context.filteredRequests.length} of ${context.requests.length} requests`}</span>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-12">
+              <Table striped hover style={{ marginTop: "5px" }}>
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Requestor</th>
+                    <th>Directorate</th>
+                    <th>FY</th>
+                    <th>Qt</th>
+                    <th>Justification</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="requestList">
+                  {items.map((item: Request, index: number) => (
+                    <RequestTableRow
+                      request={item}
+                      key={index}
+                    ></RequestTableRow>
+                  ))}
+                </tbody>
+              </Table>
+            </div>
+          </div>
+        </div>
       )}
       {!context.loading && items && items.length == 0 && <NoResults />}
     </>
