@@ -23,25 +23,14 @@ export const FilterControls = () => {
             <div className="row">
               <div className="col-md-12">
                 <small className="text-secondary">Filters</small>
-
                 <Card>
                   <Card.Body className="p-1">
-                    {(matches.medium || matches.large) && (
-                      <ButtonGroup>
-                        <StatusFilter />
-                        <DirectorateFilter />
-                        <FiscalYearFilter />
-                        <ClearFiltersButton />
-                      </ButtonGroup>
-                    )}
-                    {matches.small && (
-                      <ButtonGroup vertical>
-                        <StatusFilter />
-                        <DirectorateFilter />
-                        <FiscalYearFilter />
-                        <ClearFiltersButton />
-                      </ButtonGroup>
-                    )}
+                    <ButtonGroup vertical={matches.small}>
+                      <StatusFilter />
+                      <DirectorateFilter />
+                      <FiscalYearFilter />
+                      <ClearFiltersButton />
+                    </ButtonGroup>
                   </Card.Body>
                 </Card>
               </div>
