@@ -77,6 +77,12 @@ export const StatusFilter: React.FC = () => {
       })}
       <Dropdown.Divider />
       <Dropdown.Item
+        eventKey="AllOpen"
+        onClick={(e: any) => setSelected("All Open")}
+      >
+        All Open
+      </Dropdown.Item>
+      <Dropdown.Item
         eventKey="AllStatuses"
         onClick={(e: any) => setSelected("")}
       >
