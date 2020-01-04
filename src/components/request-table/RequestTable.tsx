@@ -1,10 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { RequestTableRow } from "./RequestTableRow";
 import { Request } from "../../services/models/Request";
-import { Table, Alert, Spinner } from "react-bootstrap";
+import { Table, Spinner } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import { Filters } from "../filters/Filters";
-import { Link } from "react-router-dom";
+import { NoResults } from "./NoResults";
+import { LoadingResults } from "./LoadingResults";
 
 interface IProps {
   items?: Request[];
@@ -19,15 +20,8 @@ export const RequestTable = (props: IProps) => {
 
   return (
     <>
-      {context.loading && (
-        <div className="d-flex justify-content-center m-xl-5">
-          <Spinner animation="border" role="status" variant="success">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        </div>
-      )}
-
-      {!context.loading && (
+      {context.loading && <LoadingResults />}
+      {!context.loading && items && items.length > 0 && (
         <Table striped hover style={{ marginTop: "5px" }}>
           <thead>
             <tr>
@@ -45,26 +39,9 @@ export const RequestTable = (props: IProps) => {
               <RequestTableRow request={item} key={index}></RequestTableRow>
             ))}
           </tbody>
-          <tfoot>
-            {items && items.length == 0 && (
-              <tr>
-                <td colSpan={7} style={{ textAlign: "center" }}>
-                  <Alert variant={"success"}>
-                    There are no requests that match this filter.{" "}
-                    <Link
-                      to="/requests"
-                      className="alert-link"
-                      onClick={() => clearFilters()}
-                    >
-                      Clear filters
-                    </Link>
-                  </Alert>
-                </td>
-              </tr>
-            )}
-          </tfoot>
         </Table>
       )}
+      {!context.loading && items && items.length == 0 && <NoResults />}
     </>
   );
 };
