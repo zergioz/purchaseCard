@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { RequestTableRow } from "./RequestTableRow";
 import { Request } from "../../services/models/Request";
-import { Table, Alert } from "react-bootstrap";
+import { Table, Alert, Spinner } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import { Filters } from "../filters/Filters";
 import { Link } from "react-router-dom";
@@ -25,9 +25,9 @@ export const RequestTable = (props: IProps) => {
     <>
       {context.loading && (
         <div className="d-flex justify-content-center m-xl-5">
-          <div className="spinner-border" role="status">
+          <Spinner animation="border" role="status" variant="success">
             <span className="sr-only">Loading...</span>
-          </div>
+          </Spinner>
         </div>
       )}
 
