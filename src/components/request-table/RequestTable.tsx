@@ -13,11 +13,7 @@ export const RequestTable = (props: IProps) => {
   const context = useContext(RequestContext);
   const items = props.items || context.filteredRequests;
 
-  useEffect(() => {
-    console.log(`Detected filter change`);
-  }, [context.filters]);
-
-  const resetFilters = () => {
+  const clearFilters = () => {
     context.applyFilters(new Filters(), true);
   };
 
@@ -58,9 +54,9 @@ export const RequestTable = (props: IProps) => {
                     <Link
                       to="/requests"
                       className="alert-link"
-                      onClick={() => resetFilters()}
+                      onClick={() => clearFilters()}
                     >
-                      Reset filters
+                      Clear filters
                     </Link>
                   </Alert>
                 </td>

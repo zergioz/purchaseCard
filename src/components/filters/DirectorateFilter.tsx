@@ -25,7 +25,7 @@ export const DirectorateFilter: React.FC = () => {
   return (
     <DropdownButton
       className="m-1"
-      variant="outline-primary"
+      variant={selected === "" ? "outline-primary" : "primary"}
       key="secondary"
       id="secondary"
       size="sm"
