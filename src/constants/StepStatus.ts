@@ -43,7 +43,7 @@ export const StepStatus: IStatus[] = [
     fwd: "ERROR: SEE J69",
     fwdj6: "PBO APPROVAL",
     numerStep: 5,
-    friendlyName: "J6 Approval"
+    friendlyName: "Tech Review"
   },
   {
     caseStep: "PBO_APPROVAL",
@@ -57,7 +57,7 @@ export const StepStatus: IStatus[] = [
     fwd: "CARD HOLDER VALIDATION",
     fwdj6: "CARD HOLDER VALIDATION",
     numerStep: 7,
-    friendlyName: "J8 Approval"
+    friendlyName: "Finance"
   },
   {
     caseStep: "CARD_HOLDER_VALIDATION",
