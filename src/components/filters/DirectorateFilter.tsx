@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { ButtonToolbar, Button } from "react-bootstrap";
+import { DropdownButton, Dropdown } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import { PersonDirectorates as directorates } from "../../constants/PersonDirectorates";
 
@@ -12,34 +12,33 @@ export const DirectorateFilter: React.FC = () => {
     context.applyFilters({ ...context.filters, directorate: selected }, true);
   }, [selected]);
 
-  const spacing = { marginLeft: "0.25em", marginTop: "0.25em", width: "80px" };
-
   return (
-    <>
-      Directorate filter:
-      <div className="d-flex flex-column">
-        <ButtonToolbar>
-          <Button
-            style={spacing}
-            size="sm"
-            variant={selected == "" ? "primary" : "outline-secondary"}
-            onClick={() => updateSelected("")}
+    <DropdownButton
+      className="m-1"
+      variant="outline-primary"
+      key="secondary"
+      id="secondary"
+      size="sm"
+      title={selected === "" ? `All Directorates` : `Directorate: ${selected}`}
+    >
+      {values.map(value => {
+        return (
+          <Dropdown.Item
+            eventKey={value}
+            key={`directorate-${value}`}
+            onClick={(e: any) => updateSelected(value)}
           >
-            No Filter
-          </Button>
-          {values.map((value: string, index: number) => (
-            <Button
-              key={`selector-${value}-${index}`}
-              size="sm"
-              style={spacing}
-              variant={selected == value ? "primary" : "outline-secondary"}
-              onClick={() => updateSelected(value)}
-            >
-              {value}
-            </Button>
-          ))}
-        </ButtonToolbar>
-      </div>
-    </>
+            {value}
+          </Dropdown.Item>
+        );
+      })}
+      <Dropdown.Divider />
+      <Dropdown.Item
+        eventKey="AllDirectorates"
+        onClick={(e: any) => updateSelected("")}
+      >
+        All Directorates
+      </Dropdown.Item>
+    </DropdownButton>
   );
 };

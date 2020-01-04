@@ -26,32 +26,32 @@ export const FiscalYearFilter: React.FC = () => {
   }, [selected]);
 
   return (
-    <>
-      <DropdownButton
-        variant="outline-primary"
-        key="secondary"
-        id="secondary"
-        title={selected === "" ? `All Fiscal Years` : `Fiscal Year ${selected}`}
+    <DropdownButton
+      className="m-1"
+      variant="outline-primary"
+      key="secondary"
+      id="secondary"
+      size="sm"
+      title={selected === "" ? `All Fiscal Years` : `Fiscal Year: ${selected}`}
+    >
+      {years.map(year => {
+        return (
+          <Dropdown.Item
+            eventKey={year}
+            key={`fy-${year}`}
+            onClick={() => updateSelected(year)}
+          >
+            {`FY ${year}`}
+          </Dropdown.Item>
+        );
+      })}
+      <Dropdown.Divider />
+      <Dropdown.Item
+        eventKey="AllFiscalYears"
+        onClick={() => updateSelected("")}
       >
-        {years.map(year => {
-          return (
-            <Dropdown.Item
-              eventKey={year}
-              key={`fy-${year}`}
-              onClick={() => updateSelected(year)}
-            >
-              {`Fiscal Year ${year}`}
-            </Dropdown.Item>
-          );
-        })}
-        <Dropdown.Divider />
-        <Dropdown.Item
-          eventKey="AllFiscalYears"
-          onClick={() => updateSelected("")}
-        >
-          All Fiscal Years
-        </Dropdown.Item>
-      </DropdownButton>
-    </>
+        All Fiscal Years
+      </Dropdown.Item>
+    </DropdownButton>
   );
 };
