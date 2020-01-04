@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Button, ButtonToolbar } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import { Filters } from "./Filters";
+import { FaTimes } from "react-icons/fa";
 
 export const ClearFiltersButton: React.FC = () => {
   const context = useContext(RequestContext);
@@ -11,30 +12,25 @@ export const ClearFiltersButton: React.FC = () => {
     context.applyFilters(defaultFilters, true);
   };
 
-  const shallowCompare = (newObj: any, prevObj: any) => {
+  const areEqual = (newObj: any, prevObj: any) => {
     for (const key in newObj) {
-      if (newObj[key] !== prevObj[key]) return true;
+      if (newObj[key] !== prevObj[key]) return false;
     }
-    return false;
+    return true;
   };
 
   return (
     <ButtonToolbar>
       <Button
         disabled={context.loading}
+        hidden={areEqual(defaultFilters, context.filters)}
         href="#/requests"
         className="m-1"
-        variant={
-          shallowCompare(defaultFilters, context.filters)
-            ? "secondary"
-            : "outline-secondary"
-        }
-        key="secondary"
-        id="secondary"
+        variant="light"
         size="sm"
         onClick={() => clearFilters()}
       >
-        Clear Filters
+        <FaTimes style={{ marginBottom: "3px" }} /> Clear Filters
       </Button>
     </ButtonToolbar>
   );
