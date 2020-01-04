@@ -5,7 +5,7 @@ import { RequestService } from "../../../services";
 import { Filters } from "../../../components/filters/Filters";
 import { RequestFilters } from "../../../components/request-filters/RequestFilters";
 
-export const AllRequests: React.FC = () => {
+export const AllOpenRequests: React.FC = () => {
   const context = useContext(RequestContext);
   const defaultFilters = new Filters();
 

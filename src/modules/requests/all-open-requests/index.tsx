@@ -1,16 +1,16 @@
 import React from "react";
-import { AllRequests } from "./AllRequests";
+import { AllOpenRequests } from "./AllOpenRequests";
 
 const RequestsByStatusModule = () => {
-  return <AllRequests></AllRequests>;
+  return <AllOpenRequests></AllOpenRequests>;
 };
 
 export default {
   routeProps: {
-    path: "/requests/all-requests",
+    path: "/requests/all-open-requests",
     component: RequestsByStatusModule
   },
-  name: "All Requests",
+  name: "All Open Requests",
   modules: [],
   links: []
 };
