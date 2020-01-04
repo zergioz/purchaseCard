@@ -9,12 +9,14 @@ interface IProps {
 export const FilterControls = (props: IProps) => {
   return (
     <div className="container-fluid grey">
-      <div className="row">
-        <div className="col-md-11">
+      <div className="row pb-2">
+        <div className="col">
           <DirectorateFilter />
         </div>
-        <div className="col-md-1 p-2">
-          <FiscalYearFilter />
+        <div className="col-auto">
+          <div className="pt-3">
+            <FiscalYearFilter />
+          </div>
         </div>
       </div>
       <div className="row">
