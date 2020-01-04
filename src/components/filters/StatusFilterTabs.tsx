@@ -8,24 +8,21 @@ export const StatusFilterTabs: React.FC = () => {
   const badgeStyle = "danger";
 
   return (
-    <div className="grey">
-      <br />
-      <Nav fill variant="tabs" defaultActiveKey={selected}>
-        {statuses.map((value: string, index: number) => (
-          <Nav.Item key={`selector-${value}-${index}`}>
-            <Nav.Link
-              onClick={() => setSelected(value)}
-              eventKey={value}
-              active={value == selected}
-            >
-              {value}{" "}
-              <Badge variant={!!badges[index] ? badgeStyle : "light"}>
-                {badges[index]}
-              </Badge>
-            </Nav.Link>
-          </Nav.Item>
-        ))}
-      </Nav>
-    </div>
+    <Nav fill variant="tabs" defaultActiveKey={selected}>
+      {statuses.map((value: string, index: number) => (
+        <Nav.Item key={`selector-${value}-${index}`}>
+          <Nav.Link
+            onClick={() => setSelected(value)}
+            eventKey={value}
+            active={value == selected}
+          >
+            {value}{" "}
+            <Badge variant={!!badges[index] ? badgeStyle : "light"}>
+              {badges[index]}
+            </Badge>
+          </Nav.Link>
+        </Nav.Item>
+      ))}
+    </Nav>
   );
 };
