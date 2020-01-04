@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { RequestTableRow } from "./RequestTableRow";
 import { Request } from "../../services/models/Request";
-import { Table, Spinner } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
-import { Filters } from "../filters/Filters";
 import { NoResults } from "./NoResults";
 import { LoadingResults } from "./LoadingResults";
 
@@ -13,10 +12,6 @@ interface IProps {
 export const RequestTable = (props: IProps) => {
   const context = useContext(RequestContext);
   const items = props.items || context.filteredRequests;
-
-  const clearFilters = () => {
-    context.applyFilters(new Filters(), true);
-  };
 
   return (
     <>
