@@ -11,7 +11,10 @@ export const StatusFilterProgressBar = () => {
 
   //if the status filter changes, update our state
   useEffect(() => {
-    setSelectedIndex(statuses.indexOf(selected));
+    let index = statuses.indexOf(selected);
+    //blank filter isn't in the list
+    index = index == -1 ? 0 : index;
+    setSelectedIndex(index);
   }, [selected]);
 
   const badgeStyle = "danger";
