@@ -14,28 +14,22 @@ export const Breadcrumbs = () => {
   const makeModuleBreadcrumbs = () => {
     let crumbs: ReactElement<any>[] = [];
 
-    modules.map((module: any, moduleIndex: number) => {
-      if (location.pathname.indexOf(module.routeProps.path) != -1) {
-        const moduleCrumb = getBreadcrumbForModule(module, moduleIndex);
+    modules.map((mod: any) => {
+      if (location.pathname.indexOf(mod.routeProps.path) != -1) {
+        const moduleCrumb = getBreadcrumbForModule(mod, 1);
         crumbs.push(moduleCrumb);
       }
 
-      module.modules.map((submodule: any, submoduleIndex: number) => {
+      mod.modules.map((submodule: any) => {
         if (location.pathname.indexOf(submodule.routeProps.path) != -1) {
-          const submoduleCrumb = getBreadcrumbForModule(
-            submodule,
-            moduleIndex * 100 + submoduleIndex * 10
-          );
+          const submoduleCrumb = getBreadcrumbForModule(submodule, 2);
           crumbs.push(submoduleCrumb);
         }
 
         submodule.links &&
-          submodule.links.map((link: any, linkIndex: number) => {
+          submodule.links.map((link: any) => {
             if (location.pathname.indexOf(link.routeProps.path) != -1) {
-              const linkCrumb = getBreadcrumbForModule(
-                link,
-                moduleIndex * 100 + submoduleIndex * 10 + linkIndex
-              );
+              const linkCrumb = getBreadcrumbForModule(link, 3);
               crumbs.push(linkCrumb);
             }
           });

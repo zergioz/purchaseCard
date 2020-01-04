@@ -1,6 +1,5 @@
 import React from "react";
 import { Navbar, Nav, Form, NavDropdown, Button } from "react-bootstrap";
-import { FiscalYearFilter } from "../filters/FiscalYearFilter";
 import modules from "../../modules";
 
 export const TopNav = () => {
@@ -9,21 +8,22 @@ export const TopNav = () => {
       <Navbar.Brand href="#/">GPC Request System</Navbar.Brand>
       <Nav className="mr-auto">
         {/* Create a link for each module exported from ./modules */}
-        {modules.map((module: any, moduleIndex: number) => {
+        {modules.map((module: any) => {
           let links: any[] = [];
-          module.modules.map((submodule: any, submoduleIndex: number) => {
+          module.modules.map((submodule: any) => {
             let link: any = null;
             if (submodule.links && submodule.links.length) {
               link = (
                 <NavDropdown
                   title={submodule.name}
                   id="collasible-nav-dropdown"
+                  key={`nav-${submodule.routeProps.path}`}
                 >
-                  {submodule.links.map((link: any, linkIndex: number) => {
+                  {submodule.links.map((link: any) => {
                     return (
                       <NavDropdown.Item
                         href={`/#${link.routeProps.path}`}
-                        key={`topnav-link-${moduleIndex}-${submoduleIndex}-${linkIndex}`}
+                        key={`nav-${link.routeProps.path}`}
                       >
                         {link.name}
                       </NavDropdown.Item>
@@ -35,7 +35,7 @@ export const TopNav = () => {
               link = (
                 <Nav.Link
                   href={`/#${submodule.routeProps.path}`}
-                  key={`topnav-submodule-${moduleIndex}-${submoduleIndex}`}
+                  key={`nav-${submodule.routeProps.path}`}
                 >
                   {submodule.name}
                 </Nav.Link>
