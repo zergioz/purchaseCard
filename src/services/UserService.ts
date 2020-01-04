@@ -1,5 +1,4 @@
 import dal from "./dal";
-import { JsonStringSerializer } from "./JsonStringSerializer";
 import { Observable } from "rxjs";
 
 export class UserService {

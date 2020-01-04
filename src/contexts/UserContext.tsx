@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UserService } from "../services/UserService";
+import { UserService } from "../services";
 import { CurrentSharepointUser } from "../services/models/CurrentSharepointUser";
 
 const svc = new UserService();
