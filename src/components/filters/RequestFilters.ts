@@ -24,11 +24,11 @@ interface IRequestFiltering {
 export const useRequestFiltering = (): IRequestFiltering => {
   const applyFilters = (filters: IRequestFilters, requests: Request[]) => {
     let filteredRequests: Request[] = requests
-      .filter(request => keywordFilter(request, filters))
       .filter(request => fiscalYearFilter(request, filters))
       .filter(request => requestorFilter(request, filters))
       .filter(request => statusFilter(request, filters))
-      .filter(request => directorateFilter(request, filters));
+      .filter(request => directorateFilter(request, filters))
+      .filter(request => keywordFilter(request, filters));
     return filteredRequests;
   };
 
