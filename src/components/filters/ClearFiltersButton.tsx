@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Button, ButtonToolbar } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import { FaTimes } from "react-icons/fa";
+import { areEqual } from "../../helpers/AreEqual";
 
 export const ClearFiltersButton: React.FC = () => {
   const context = useContext(RequestContext);
@@ -9,13 +10,6 @@ export const ClearFiltersButton: React.FC = () => {
 
   const clearFilters = () => {
     context.applyFilters(defaultFilters, true);
-  };
-
-  const areEqual = (newObj: any, prevObj: any) => {
-    for (const key in newObj) {
-      if (newObj[key] !== prevObj[key]) return false;
-    }
-    return true;
   };
 
   return (
