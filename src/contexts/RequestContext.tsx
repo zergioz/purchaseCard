@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Request } from "../services/models/Request";
-import { IFilters, Filters } from "../components/filters/Filters";
-import { getStatusesByFriendlyName } from "../constants/StepStatus";
+import {
+  IFilters,
+  Filters,
+  useRequestFiltering
+} from "../components/filters/Filters";
 import { Observable } from "rxjs/internal/Observable";
-
-const statuses = getStatusesByFriendlyName();
 
 export type RequestContextType = {
   requests: Request[];
@@ -34,40 +35,7 @@ export const RequestProvider: React.FC = (props: any) => {
   const [loading, updateLoading] = useState<boolean>(false);
   const [filters, updateFilters] = useState<IFilters>(new Filters());
 
-  const directorateFilter = (request: Request, filters: IFilters) => {
-    return (
-      filters.directorate == "" ||
-      request.requestField!.RequestorDirectorate == filters.directorate
-    );
-  };
-
-  const fiscalYearFilter = (request: Request, filters: IFilters) => {
-    let match = false;
-    if (filters.fiscalYear == "Empty") {
-      match = !request.j8Approval || !request.j8Approval.j8FiscalYear;
-    } else if (filters.fiscalYear == "") {
-      match = true;
-    } else if (request.j8Approval) {
-      match = request.j8Approval.j8FiscalYear == filters.fiscalYear;
-    }
-    return match;
-  };
-
-  const requestorFilter = (request: Request, filters: IFilters) => {
-    return filters.requestor == "" || request.requestor == filters.requestor;
-  };
-
-  const statusFilter = (request: Request, filters: IFilters) => {
-    let match = false;
-    if (filters.status == "All Open") {
-      match = request.status != "CLOSED";
-    } else if (filters.status == "") {
-      match = true;
-    } else {
-      match = compareStatus(filters.status, request.status);
-    }
-    return match;
-  };
+  const { applyFilters } = useRequestFiltering();
 
   const subscribeTo = (observable: Observable<Request[]>) => {
     updateLoading(true);
@@ -81,23 +49,11 @@ export const RequestProvider: React.FC = (props: any) => {
     });
   };
 
-  const compareStatus = (friendlyStatus: any, listItemStatus: any): boolean => {
-    const exactMatch = statuses[friendlyStatus]
-      ? statuses[friendlyStatus].caseStep
-      : undefined;
-    return listItemStatus == exactMatch;
-  };
-
-  const applyFilters = (filters: IFilters, update: boolean = true) => {
-    let filteredRequests: Request[] = requests
-      .filter(request => fiscalYearFilter(request, filters))
-      .filter(request => requestorFilter(request, filters))
-      .filter(request => statusFilter(request, filters))
-      .filter(request => directorateFilter(request, filters));
+  const applyRequestFilters = (filters: IFilters, update: boolean = true) => {
+    let filteredRequests: Request[] = applyFilters(filters, requests);
     if (update) {
       updateFilteredRequests(filteredRequests);
       updateFilters(filters);
-      console.log(`Filters applied`, filters, filteredRequests.length);
     }
     return filteredRequests;
   };
@@ -111,7 +67,7 @@ export const RequestProvider: React.FC = (props: any) => {
         filteredRequests: filteredRequests,
         loading: loading,
         filters: filters,
-        applyFilters: applyFilters
+        applyFilters: applyRequestFilters
       }}
     >
       {props.children}
