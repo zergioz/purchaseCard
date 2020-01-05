@@ -18,6 +18,7 @@ export const RequestFiltersContainer = (props: IProps) => {
   const hideStatusFilterProgressBar = hidden.has("StatusFilterProgressBar");
   const hideDirectorate = hidden.has("DirectorateFilter");
   const hideFiscalYear = hidden.has("FiscalYearFilter");
+  const hideCard = hidden.has("Card");
 
   return (
     <div className="bg-light" style={{ border: "1px solid #ccc" }}>
@@ -30,21 +31,23 @@ export const RequestFiltersContainer = (props: IProps) => {
       >
         {(matches: any) => (
           <div className="container-fluid">
-            <div className="row">
-              <div className="col-md-12">
-                <small className="text-secondary">Filters</small>
-                <Card>
-                  <Card.Body className="p-1">
-                    <ButtonGroup vertical={matches.small}>
-                      {!hideStatus && <StatusFilter />}
-                      {!hideDirectorate && <DirectorateFilter />}
-                      {!hideFiscalYear && <FiscalYearFilter />}
-                      <ClearFiltersButton />
-                    </ButtonGroup>
-                  </Card.Body>
-                </Card>
+            {!hideCard && (
+              <div className="row">
+                <div className="col-md-12">
+                  <small className="text-secondary">Filters</small>
+                  <Card>
+                    <Card.Body className="p-1">
+                      <ButtonGroup vertical={matches.small}>
+                        {!hideStatus && <StatusFilter />}
+                        {!hideDirectorate && <DirectorateFilter />}
+                        {!hideFiscalYear && <FiscalYearFilter />}
+                        <ClearFiltersButton />
+                      </ButtonGroup>
+                    </Card.Body>
+                  </Card>
+                </div>
               </div>
-            </div>
+            )}
             <div className="row">
               <div className="col-lg-12">
                 <br />

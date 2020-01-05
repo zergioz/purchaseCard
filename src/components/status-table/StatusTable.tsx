@@ -43,7 +43,7 @@ export const StatusTable = () => {
             })}
             <tr>
               <td>
-                <b>All</b>
+                <b>All Statuses</b>
               </td>
               <td>
                 <b>{context.requests.length}</b>

@@ -32,7 +32,7 @@ export const SubmittedByMe: React.FC = () => {
         </div>
         <div className="row">
           <div className="col-12">
-            <RequestFiltersContainer />
+            <RequestFiltersContainer hide={["Card"]} />
             <RequestTable />
           </div>
         </div>
