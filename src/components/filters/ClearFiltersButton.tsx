@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button, ButtonToolbar } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
-import { Filters } from "./Filters";
+import { RequestFilters } from "./RequestFilters";
 import { FaTimes } from "react-icons/fa";
 
 export const ClearFiltersButton: React.FC = () => {

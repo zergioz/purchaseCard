@@ -2,12 +2,12 @@ import React, { useEffect, useContext } from "react";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
-import { Filters } from "../../../components/filters/Filters";
-import { RequestFilters } from "../../../components/request-filters/RequestFilters";
+import { RequestFilters } from "../../../components/filters/RequestFilters";
+import { RequestFiltersContainer } from "../../../components/request-filters-container/RequestFiltersContainer";
 
 export const AllOpenRequests: React.FC = () => {
   const context = useContext(RequestContext);
-  const defaultFilters = new Filters();
+  const defaultFilters = new RequestFilters();
 
   useEffect(() => {
     const svc = new RequestService();
@@ -21,7 +21,7 @@ export const AllOpenRequests: React.FC = () => {
 
   return (
     <React.Fragment>
-      <RequestFilters />
+      <RequestFiltersContainer />
       <RequestTable />
     </React.Fragment>
   );

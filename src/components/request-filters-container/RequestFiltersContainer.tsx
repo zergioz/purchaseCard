@@ -11,7 +11,7 @@ import { StatusFilter } from "../filters/StatusFilter";
 interface IProps {
   hide?: string[];
 }
-export const RequestFilters = (props: IProps) => {
+export const RequestFiltersContainer = (props: IProps) => {
   const hidden = new Set(props.hide);
   const hideStatus = hidden.has("StatusFilter");
   const hideStatusFilterTabs = hidden.has("StatusFilterTabs");

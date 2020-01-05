@@ -2,13 +2,13 @@ import { getStatusesByFriendlyName } from "../../constants/StepStatus";
 import { Request } from "../../services/models/Request";
 
 const statuses = getStatusesByFriendlyName();
-export interface IFilters {
+export interface IRequestFilters {
   directorate: string;
   status: string;
   requestor: string;
   fiscalYear: string;
 }
-export class Filters implements IFilters {
+export class RequestFilters implements IRequestFilters {
   directorate: string = "";
   status: string = "All Open";
   requestor: string = "";
@@ -16,11 +16,11 @@ export class Filters implements IFilters {
 }
 
 interface IRequestFiltering {
-  applyFilters: (filters: Filters, requests: Request[]) => Request[];
+  applyFilters: (filters: RequestFilters, requests: Request[]) => Request[];
 }
 
 export const useRequestFiltering = (): IRequestFiltering => {
-  const applyFilters = (filters: IFilters, requests: Request[]) => {
+  const applyFilters = (filters: IRequestFilters, requests: Request[]) => {
     let filteredRequests: Request[] = requests
       .filter(request => fiscalYearFilter(request, filters))
       .filter(request => requestorFilter(request, filters))
@@ -36,14 +36,14 @@ export const useRequestFiltering = (): IRequestFiltering => {
     return listItemStatus == exactMatch;
   };
 
-  const directorateFilter = (request: Request, filters: IFilters) => {
+  const directorateFilter = (request: Request, filters: IRequestFilters) => {
     return (
       filters.directorate == "" ||
       request.requestField!.RequestorDirectorate == filters.directorate
     );
   };
 
-  const fiscalYearFilter = (request: Request, filters: IFilters) => {
+  const fiscalYearFilter = (request: Request, filters: IRequestFilters) => {
     let match = false;
     if (filters.fiscalYear == "Empty") {
       match = !request.j8Approval || !request.j8Approval.j8FiscalYear;
@@ -55,11 +55,11 @@ export const useRequestFiltering = (): IRequestFiltering => {
     return match;
   };
 
-  const requestorFilter = (request: Request, filters: IFilters) => {
+  const requestorFilter = (request: Request, filters: IRequestFilters) => {
     return filters.requestor == "" || request.requestor == filters.requestor;
   };
 
-  const statusFilter = (request: Request, filters: IFilters) => {
+  const statusFilter = (request: Request, filters: IRequestFilters) => {
     let match = false;
     if (filters.status == "All Open") {
       match = request.status != "CLOSED";

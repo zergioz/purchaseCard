@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import RequestContext from "../../contexts/RequestContext";
-import { useRequestFiltering, Filters } from "../filters/Filters";
+import { useRequestFiltering, RequestFilters } from "../filters/RequestFilters";
 import { Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { PersonDirectorates as directorates } from "../../constants/PersonDirectorates";
@@ -20,12 +20,16 @@ export const DirectorateTable = () => {
   const createDirectorateViewModel = (requests: Request[]) => {
     directorates.map(directorate => {
       const open = applyFilters(
-        { ...new Filters(), directorate: directorate, status: "All Open" },
+        {
+          ...new RequestFilters(),
+          directorate: directorate,
+          status: "All Open"
+        },
         requests
       );
 
       const closed = applyFilters(
-        { ...new Filters(), directorate: directorate, status: "Closed" },
+        { ...new RequestFilters(), directorate: directorate, status: "Closed" },
         requests
       );
 
@@ -71,7 +75,7 @@ export const DirectorateTable = () => {
             <b>
               {
                 applyFilters(
-                  { ...new Filters(), status: "All Open" },
+                  { ...new RequestFilters(), status: "All Open" },
                   context.requests
                 ).length
               }
@@ -81,7 +85,7 @@ export const DirectorateTable = () => {
             <b>
               {
                 applyFilters(
-                  { ...new Filters(), status: "Closed" },
+                  { ...new RequestFilters(), status: "Closed" },
                   context.requests
                 ).length
               }

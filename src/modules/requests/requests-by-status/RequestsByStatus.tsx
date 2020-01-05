@@ -1,9 +1,9 @@
 import React, { useEffect, useContext } from "react";
-import { Filters } from "../../../components/filters/Filters";
+import { RequestFilters } from "../../../components/filters/RequestFilters";
 import { RequestTable } from "../../../components/request-table/RequestTable";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
-import { RequestFilters } from "../../../components/request-filters/RequestFilters";
+import { RequestFiltersContainer } from "../../../components/request-filters-container/RequestFiltersContainer";
 
 interface IProps {
   status: string;
@@ -11,7 +11,7 @@ interface IProps {
 
 export const RequestsByStatus: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
-  const defaultFilters = new Filters();
+  const defaultFilters = new RequestFilters();
 
   useEffect(() => {
     const svc = new RequestService();
@@ -26,7 +26,7 @@ export const RequestsByStatus: React.FC<IProps> = props => {
 
   return (
     <React.Fragment>
-      <RequestFilters />
+      <RequestFiltersContainer />
       <RequestTable />
     </React.Fragment>
   );
