@@ -25,6 +25,13 @@ export const TopNav = () => {
                     id="collapsible-nav-dropdown"
                     key={`nav-${submodule.routeProps.path}`}
                   >
+                    <NavDropdown.Item
+                      href={`/#${submodule.routeProps.path}`}
+                      key={`nav-${submodule.routeProps.path}`}
+                    >
+                      All
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
                     {submodule.links.map((link: any) => {
                       return (
                         <NavDropdown.Item
@@ -35,13 +42,6 @@ export const TopNav = () => {
                         </NavDropdown.Item>
                       );
                     })}
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item
-                      href={`/#${submodule.routeProps.path}`}
-                      key={`nav-${submodule.routeProps.path}`}
-                    >
-                      All
-                    </NavDropdown.Item>
                   </NavDropdown>
                 );
               } else {
