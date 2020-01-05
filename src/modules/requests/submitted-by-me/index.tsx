@@ -10,5 +10,8 @@ export default {
     path: "/requests/submitted-by-me",
     component: SubmittedByMeModule
   },
-  name: "Submitted by Me"
+  name: "Submitted by Me",
+  modules: [],
+  linksAsDropdown: false, //for top navigation
+  links: []
 };

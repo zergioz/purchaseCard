@@ -14,7 +14,11 @@ export const TopNav = () => {
             let links: any[] = [];
             module.modules.map((submodule: any) => {
               let link: any = null;
-              if (submodule.links && submodule.links.length) {
+              if (
+                submodule.linksAsDropdown &&
+                submodule.links &&
+                submodule.links.length
+              ) {
                 link = (
                   <NavDropdown
                     title={submodule.name}

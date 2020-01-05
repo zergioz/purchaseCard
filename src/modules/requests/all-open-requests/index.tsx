@@ -12,5 +12,6 @@ export default {
   },
   name: "All Open Requests",
   modules: [],
+  linksAsDropdown: false, //for top navigation
   links: []
 };

@@ -35,5 +35,6 @@ export default {
   ],
   name: "Requests by Status",
   modules: [],
+  linksAsDropdown: false,
   links: sidebarLinks
 };

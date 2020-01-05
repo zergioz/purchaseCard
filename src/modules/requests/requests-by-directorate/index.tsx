@@ -9,7 +9,7 @@ const RequestsByDirectorateModule = ({ match }: any) => {
   );
 };
 
-const sidebarLinks = directorates.map(directorate => {
+const links = directorates.map(directorate => {
   return {
     routeProps: {
       path: `/requests/by-directorate/${directorate}`,
@@ -32,5 +32,6 @@ export default {
   ],
   name: "Requests by Directorate",
   modules: [],
-  links: sidebarLinks
+  linksAsDropdown: false, //for top navigation
+  links: links
 };
