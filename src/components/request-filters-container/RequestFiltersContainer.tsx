@@ -7,6 +7,7 @@ import { StatusFilterProgressBar } from "../request-filters/StatusFilterProgress
 import { StatusFilterTabs } from "../request-filters/StatusFilterTabs";
 import Media from "react-media";
 import { StatusFilter } from "../request-filters/StatusFilter";
+import { KeywordFilter } from "../request-filters/KeywordFilter";
 
 interface IProps {
   hide?: string[];
@@ -31,9 +32,13 @@ export const RequestFiltersContainer = (props: IProps) => {
       >
         {(matches: any) => (
           <div className="container-fluid">
-            {!hideCard && (
-              <div className="row">
-                <div className="col-md-12">
+            <div className="row">
+              <div className="col">
+                <small className="text-secondary">Search</small>
+                <KeywordFilter />
+              </div>
+              {!hideCard && (
+                <div className="col-md-6">
                   <small className="text-secondary">Filters</small>
                   <Card>
                     <Card.Body className="p-1">
@@ -41,13 +46,15 @@ export const RequestFiltersContainer = (props: IProps) => {
                         {!hideStatus && <StatusFilter />}
                         {!hideDirectorate && <DirectorateFilter />}
                         {!hideFiscalYear && <FiscalYearFilter />}
+
                         <ClearFiltersButton />
                       </ButtonGroup>
                     </Card.Body>
                   </Card>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
             <div className="row">
               <div className="col-lg-12">
                 <br />

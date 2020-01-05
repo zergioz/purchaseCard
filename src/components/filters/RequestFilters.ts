@@ -7,12 +7,14 @@ export interface IRequestFilters {
   status: string;
   requestor: string;
   fiscalYear: string;
+  keyword: string;
 }
 export class RequestFilters implements IRequestFilters {
   directorate: string = "";
   status: string = "All Open";
   requestor: string = "";
   fiscalYear: string = "";
+  keyword: string = "";
 }
 
 interface IRequestFiltering {
@@ -22,6 +24,7 @@ interface IRequestFiltering {
 export const useRequestFiltering = (): IRequestFiltering => {
   const applyFilters = (filters: IRequestFilters, requests: Request[]) => {
     let filteredRequests: Request[] = requests
+      .filter(request => keywordFilter(request, filters))
       .filter(request => fiscalYearFilter(request, filters))
       .filter(request => requestorFilter(request, filters))
       .filter(request => statusFilter(request, filters))
@@ -53,6 +56,16 @@ export const useRequestFiltering = (): IRequestFiltering => {
       match = request.j8Approval.j8FiscalYear == filters.fiscalYear;
     }
     return match;
+  };
+
+  const keywordFilter = (request: Request, filters: IRequestFilters) => {
+    const keyword = filters.keyword.toLowerCase();
+    return (
+      keyword == "" ||
+      JSON.stringify(request)
+        .toLowerCase()
+        .includes(keyword)
+    );
   };
 
   const requestorFilter = (request: Request, filters: IRequestFilters) => {
