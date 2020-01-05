@@ -28,26 +28,27 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
 
   return (
     <React.Fragment>
-      {props.directorate && (
-        <>
-          <RequestFiltersContainer hide={["DirectorateFilter"]} />
-          <RequestTable />
-        </>
-      )}
-      {!props.directorate && (
-        <div className="container">
-          <div className="row">
-            <div className="col-12 mb-4 text-center">
-              <h2>Requests by Directorate</h2>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              <DirectorateTable />
-            </div>
+      <div className={`container${props.directorate && `-fluid-spacious`}`}>
+        <div className="row">
+          <div className="col-12 mb-4 text-center">
+            <h2>
+              Requests by Directorate{" "}
+              {props.directorate && `(${props.directorate})`}
+            </h2>
           </div>
         </div>
-      )}
+        <div className="row">
+          <div className="col-12">
+            {props.directorate && (
+              <>
+                <RequestFiltersContainer hide={["DirectorateFilter"]} />
+                <RequestTable />
+              </>
+            )}
+            {!props.directorate && <DirectorateTable />}
+          </div>
+        </div>
+      </div>
     </React.Fragment>
   );
 };

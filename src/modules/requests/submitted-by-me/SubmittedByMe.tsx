@@ -24,8 +24,19 @@ export const SubmittedByMe: React.FC = () => {
 
   return (
     <React.Fragment>
-      <RequestFiltersContainer />
-      <RequestTable />
+      <div className="container-fluid-spacious">
+        <div className="row">
+          <div className="col-12 mb-4 text-center">
+            <h2>Submitted by Me</h2>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12">
+            <RequestFiltersContainer />
+            <RequestTable />
+          </div>
+        </div>
+      </div>
     </React.Fragment>
   );
 };

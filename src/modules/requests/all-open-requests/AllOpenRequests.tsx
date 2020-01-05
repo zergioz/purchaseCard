@@ -21,8 +21,21 @@ export const AllOpenRequests: React.FC = () => {
 
   return (
     <React.Fragment>
-      <RequestFiltersContainer />
-      <RequestTable />
+      <div className="container-fluid-spacious">
+        <div className="row">
+          <div className="col-12 mb-4 text-center">
+            <h2>All Requests</h2>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12">
+            <RequestFiltersContainer
+              hide={["StatusFilterTabs", "StatusFilterProgressBar"]}
+            />
+            <RequestTable />
+          </div>
+        </div>
+      </div>
     </React.Fragment>
   );
 };

@@ -18,7 +18,7 @@ export default {
   modules: [
     SubmittedByMeModule,
     AllOpenRequestsModule,
-    RequestsByStatusModule,
+    //RequestsByStatusModule,
     RequestsByDirectorateModule
   ]
 };

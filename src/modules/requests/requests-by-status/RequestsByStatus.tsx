@@ -26,8 +26,19 @@ export const RequestsByStatus: React.FC<IProps> = props => {
 
   return (
     <React.Fragment>
-      <RequestFiltersContainer />
-      <RequestTable />
+      <div className="container-fluid-spacious">
+        <div className="row">
+          <div className="col-12 mb-4 text-center">
+            <h2>Requests by Status</h2>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12">
+            <RequestFiltersContainer />
+            <RequestTable />
+          </div>
+        </div>
+      </div>
     </React.Fragment>
   );
 };
