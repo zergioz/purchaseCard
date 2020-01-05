@@ -14,6 +14,8 @@ export type RequestContextType = {
   filteredRequests: Request[];
   loading: boolean;
   filters: IFilters;
+  pageFilters: IFilters;
+  updatePageFilters: (filters: IFilters) => void;
   applyFilters: (filters: IFilters, update: boolean) => Request[];
 };
 
@@ -24,6 +26,8 @@ export const RequestContext = React.createContext<RequestContextType>({
   filteredRequests: [],
   loading: true,
   filters: new Filters(),
+  pageFilters: new Filters(),
+  updatePageFilters: (filters: IFilters) => null,
   applyFilters: (filters: IFilters, update: boolean) => []
 });
 
@@ -34,6 +38,9 @@ export const RequestProvider: React.FC = (props: any) => {
   );
   const [loading, updateLoading] = useState<boolean>(false);
   const [filters, updateFilters] = useState<IFilters>(new Filters());
+
+  //the clear filters button goes back to filters that are set by the page
+  const [pageFilters, updatePageFilters] = useState<IFilters>(new Filters());
 
   const { applyFilters } = useRequestFiltering();
 
@@ -67,6 +74,8 @@ export const RequestProvider: React.FC = (props: any) => {
         filteredRequests: filteredRequests,
         loading: loading,
         filters: filters,
+        pageFilters: pageFilters,
+        updatePageFilters: updatePageFilters,
         applyFilters: applyRequestFilters
       }}
     >

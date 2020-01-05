@@ -15,6 +15,7 @@ export const AllOpenRequests: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    context.updatePageFilters(defaultFilters);
     context.applyFilters(defaultFilters, true);
   }, [context.requests]);
 

@@ -22,6 +22,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
   //when the data comes back or the directorate changes, refilter
   useEffect(() => {
     defaultFilters.directorate = props.directorate;
+    context.updatePageFilters(defaultFilters);
     context.applyFilters(defaultFilters, true);
   }, [props.directorate, context.requests]);
 

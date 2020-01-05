@@ -6,7 +6,7 @@ import { FaTimes } from "react-icons/fa";
 
 export const ClearFiltersButton: React.FC = () => {
   const context = useContext(RequestContext);
-  const defaultFilters = new Filters();
+  const defaultFilters = context.pageFilters;
 
   const clearFilters = () => {
     context.applyFilters(defaultFilters, true);
@@ -24,7 +24,6 @@ export const ClearFiltersButton: React.FC = () => {
       <Button
         disabled={context.loading}
         hidden={areEqual(defaultFilters, context.filters)}
-        href="#/requests"
         className="m-1"
         variant="light"
         size="sm"

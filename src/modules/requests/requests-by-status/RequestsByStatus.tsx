@@ -20,6 +20,7 @@ export const RequestsByStatus: React.FC<IProps> = props => {
 
   useEffect(() => {
     defaultFilters.status = props.status;
+    context.updatePageFilters(defaultFilters);
     context.applyFilters(defaultFilters, true);
   }, [props.status, context.requests]);
 

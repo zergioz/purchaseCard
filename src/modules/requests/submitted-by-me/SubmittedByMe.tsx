@@ -18,6 +18,7 @@ export const SubmittedByMe: React.FC = () => {
 
   useEffect(() => {
     defaultFilters.requestor = user ? user.LoginName : "";
+    context.updatePageFilters(defaultFilters);
     context.applyFilters(defaultFilters, true);
   }, [user, context.requests]);
 
