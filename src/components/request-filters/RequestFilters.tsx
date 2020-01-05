@@ -8,7 +8,17 @@ import { StatusFilterTabs } from "../filters/StatusFilterTabs";
 import Media from "react-media";
 import { StatusFilter } from "../filters/StatusFilter";
 
-export const RequestFilters = () => {
+interface IProps {
+  hide?: string[];
+}
+export const RequestFilters = (props: IProps) => {
+  const hidden = new Set(props.hide);
+  const hideStatus = hidden.has("StatusFilter");
+  const hideStatusFilterTabs = hidden.has("StatusFilterTabs");
+  const hideStatusFilterProgressBar = hidden.has("StatusFilterProgressBar");
+  const hideDirectorate = hidden.has("DirectorateFilter");
+  const hideFiscalYear = hidden.has("FiscalYearFilter");
+
   return (
     <div className="bg-light" style={{ border: "1px solid #ccc" }}>
       <Media
@@ -26,9 +36,9 @@ export const RequestFilters = () => {
                 <Card>
                   <Card.Body className="p-1">
                     <ButtonGroup vertical={matches.small}>
-                      <StatusFilter />
-                      <DirectorateFilter />
-                      <FiscalYearFilter />
+                      {!hideStatus && <StatusFilter />}
+                      {!hideDirectorate && <DirectorateFilter />}
+                      {!hideFiscalYear && <FiscalYearFilter />}
                       <ClearFiltersButton />
                     </ButtonGroup>
                   </Card.Body>
@@ -38,8 +48,12 @@ export const RequestFilters = () => {
             <div className="row">
               <div className="col-lg-12">
                 <br />
-                {matches.medium && <StatusFilterTabs />}
-                {matches.large && <StatusFilterProgressBar />}
+                {!hideStatusFilterTabs && matches.medium && (
+                  <StatusFilterTabs />
+                )}
+                {!hideStatusFilterProgressBar && matches.large && (
+                  <StatusFilterProgressBar />
+                )}
               </div>
             </div>
           </div>

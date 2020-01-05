@@ -1,8 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-  Filters,
-  useRequestFiltering
-} from "../../../components/filters/Filters";
+import React, { useContext, useEffect } from "react";
+import { Filters } from "../../../components/filters/Filters";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
 import { RequestFilters } from "../../../components/request-filters/RequestFilters";
@@ -14,7 +11,6 @@ interface IProps {
 }
 export const RequestsByDirectorate: React.FC<IProps> = props => {
   const context = useContext(RequestContext);
-  const { applyFilters } = useRequestFiltering();
   const defaultFilters = new Filters();
 
   //get data on mount
@@ -33,7 +29,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
     <React.Fragment>
       {props.directorate && (
         <>
-          <RequestFilters />
+          <RequestFilters hide={["DirectorateFilter"]} />
           <RequestTable />
         </>
       )}
