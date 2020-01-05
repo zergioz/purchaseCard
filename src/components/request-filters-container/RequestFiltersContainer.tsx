@@ -1,12 +1,12 @@
 import React from "react";
-import { DirectorateFilter } from "../filters/DirectorateFilter";
-import { FiscalYearFilter } from "../filters/FiscalYearFilter";
+import { DirectorateFilter } from "../request-filters/DirectorateFilter";
+import { FiscalYearFilter } from "../request-filters/FiscalYearFilter";
 import { Card, ButtonGroup } from "react-bootstrap";
 import { ClearFiltersButton } from "../filters/ClearFiltersButton";
-import { StatusFilterProgressBar } from "../filters/StatusFilterProgressBar";
-import { StatusFilterTabs } from "../filters/StatusFilterTabs";
+import { StatusFilterProgressBar } from "../request-filters/StatusFilterProgressBar";
+import { StatusFilterTabs } from "../request-filters/StatusFilterTabs";
 import Media from "react-media";
-import { StatusFilter } from "../filters/StatusFilter";
+import { StatusFilter } from "../request-filters/StatusFilter";
 
 interface IProps {
   hide?: string[];
