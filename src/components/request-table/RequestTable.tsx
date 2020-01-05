@@ -5,13 +5,16 @@ import { Table } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import { NoResults } from "./NoResults";
 import { LoadingResults } from "./LoadingResults";
+import { useRequestFiltering } from "../filters/RequestFilters";
 
 interface IProps {
   items?: Request[];
 }
 export const RequestTable = (props: IProps) => {
   const context = useContext(RequestContext);
+  const { applyFilters } = useRequestFiltering();
   const items = props.items || context.filteredRequests;
+  const pageItems = applyFilters(context.pageFilters, context.requests);
 
   return (
     <>
@@ -20,7 +23,7 @@ export const RequestTable = (props: IProps) => {
         <div className="container-fluid-spacious">
           <div className="row">
             <div className="col-md-12 text-center">
-              <span>{`Showing ${context.filteredRequests.length} of ${context.requests.length} requests`}</span>
+              <span>{`Showing ${items.length} of ${pageItems.length} requests`}</span>
             </div>
           </div>
           <div className="row">
