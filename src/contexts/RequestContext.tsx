@@ -49,6 +49,10 @@ export const RequestProvider: React.FC = (props: any) => {
   const { applyFilters } = useRequestFiltering();
 
   const subscribeTo = (observable: Observable<Request[]>) => {
+    //! this app doesn't write to the db yet, so one fetch per session is enough (for now)
+    //! we'll eventually need to remove this line
+    if (requests.length > 0) return;
+
     updateLoading(true);
     observable.subscribe(requests => {
       updateRequests(requests);
