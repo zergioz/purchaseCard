@@ -19,21 +19,48 @@ export const StatusFilterProgressBar = () => {
 
   const badgeStyle = "danger";
 
+  const StatusFilterProgressStepIcon = (props: any) => {
+    return (
+      <div
+        style={{ cursor: "pointer" }}
+        className={`progress-step ${
+          selectedIndex >= props.index ? "accomplished" : ""
+        } ${selectedIndex == props.index ? "current" : ""}`}
+        onClick={() => setSelected(props.value)}
+      >
+        {props.index + 1}
+      </div>
+    );
+  };
+
+  const StatusFilterProgressStep = (props: any) => {
+    return (
+      <Nav.Link
+        onClick={() => setSelected(props.value)}
+        eventKey={props.value}
+        active={props.value == selected}
+      >
+        <span className="nowrap" style={{ whiteSpace: "pre" }}>
+          {props.value}
+        </span>
+        <p className="text-secondary">
+          {" "}
+          <Badge variant={!!badges[props.index] ? badgeStyle : "light"}>
+            {badges[props.index]}
+          </Badge>{" "}
+          {badges[props.index] == 1 ? "item" : "items"}
+        </p>
+      </Nav.Link>
+    );
+  };
+
   return (
     <>
       <div className="container-fluid-spacious">
         <div className="row">
           {statuses.map((value: string, index: number) => (
             <div className="col-1 d-flex justify-content-center">
-              <div
-                style={{ cursor: "pointer" }}
-                className={`progress-step ${
-                  selectedIndex >= index ? "accomplished" : ""
-                } ${selectedIndex == index ? "current" : ""}`}
-                onClick={() => setSelected(value)}
-              >
-                {index + 1}
-              </div>
+              <StatusFilterProgressStepIcon index={index} value={value} />
             </div>
           ))}
         </div>
@@ -51,22 +78,7 @@ export const StatusFilterProgressBar = () => {
         <div className="row">
           {statuses.map((value: string, index: number) => (
             <div className="col-1 text-center">
-              <Nav.Link
-                onClick={() => setSelected(value)}
-                eventKey={value}
-                active={value == selected}
-              >
-                <span className="nowrap" style={{ whiteSpace: "pre" }}>
-                  {value}
-                </span>
-                <p className="text-secondary">
-                  {" "}
-                  <Badge variant={!!badges[index] ? badgeStyle : "light"}>
-                    {badges[index]}
-                  </Badge>{" "}
-                  items
-                </p>
-              </Nav.Link>
+              <StatusFilterProgressStep index={index} value={value} />
             </div>
           ))}
         </div>
