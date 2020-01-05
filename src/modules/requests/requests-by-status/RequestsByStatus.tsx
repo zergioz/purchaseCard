@@ -4,6 +4,7 @@ import { RequestTable } from "../../../components/request-table/RequestTable";
 import RequestContext from "../../../contexts/RequestContext";
 import { RequestService } from "../../../services";
 import { RequestFiltersContainer } from "../../../components/request-filters-container/RequestFiltersContainer";
+import { StatusTable } from "../../../components/status-table/StatusTable";
 
 interface IProps {
   status: string;
@@ -26,16 +27,27 @@ export const RequestsByStatus: React.FC<IProps> = props => {
 
   return (
     <React.Fragment>
-      <div className="container-fluid-spacious">
+      <div className={`container${props.status && `-fluid-spacious`}`}>
         <div className="row">
           <div className="col-12 mb-4 text-center">
-            <h2>Requests by Status</h2>
+            <h2>Requests by Status {props.status && `(${props.status})`}</h2>
           </div>
         </div>
         <div className="row">
           <div className="col-12">
-            <RequestFiltersContainer />
-            <RequestTable />
+            {props.status && (
+              <>
+                <RequestFiltersContainer
+                  hide={[
+                    "StatusFilter",
+                    "StatusFilterTabs",
+                    "StatusFilterProgressBar"
+                  ]}
+                />
+                <RequestTable />
+              </>
+            )}
+            {!props.status && <StatusTable />}
           </div>
         </div>
       </div>
