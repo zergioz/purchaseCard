@@ -32,6 +32,6 @@ export default {
   ],
   name: "Requests by Directorate",
   modules: [],
-  linksAsDropdown: false, //for top navigation
+  linksAsDropdown: true, //for top navigation
   links: links
 };

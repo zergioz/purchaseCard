@@ -12,7 +12,7 @@ const RequestsByStatusModule = ({ match }: any) => {
   return <RequestsByStatus status={status}></RequestsByStatus>;
 };
 
-const sidebarLinks = Object.keys(statuses).map(status => {
+const links = Object.keys(statuses).map(status => {
   return {
     routeProps: {
       path: `/requests/by-status/${status}`,
@@ -35,6 +35,6 @@ export default {
   ],
   name: "Requests by Status",
   modules: [],
-  linksAsDropdown: false,
-  links: sidebarLinks
+  linksAsDropdown: true,
+  links: links
 };
