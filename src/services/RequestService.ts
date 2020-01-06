@@ -52,7 +52,7 @@ export class RequestService {
     return this.dal
       .getRowsWhere(this.listName, undefined, select, filters)
       .pipe(
-        tap((items: any) => console.log(items)),
+        //tap((items: any) => console.log(items)),
         //parse nested json strings
         map((items: ccRequestTracker[]) => {
           return items.map(item => this.mapAndParse(item));
