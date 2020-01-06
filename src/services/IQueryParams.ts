@@ -9,5 +9,6 @@ export interface IQueryParams {
   siteUrl: string;
   rawQuery: string;
   select: string;
+  expand: string;
   whereClause: string;
 }
