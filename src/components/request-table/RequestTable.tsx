@@ -32,8 +32,8 @@ export const RequestTable = (props: IProps) => {
                 <thead>
                   <tr>
                     <th>Id</th>
-                    <th>Requestor</th>
                     <th>Directorate</th>
+                    <th>Requestor</th>
                     <th>FY</th>
                     <th>Qt</th>
                     <th>Justification</th>
