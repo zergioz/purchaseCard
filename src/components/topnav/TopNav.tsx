@@ -11,8 +11,10 @@ export const TopNav = () => {
         <Nav className="mr-auto">
           {/* Create a link for each module exported from ./modules */}
           {modules.map((module: any) => {
+            if (module.hideFromTopNav) return;
             let links: any[] = [];
             module.modules.map((submodule: any) => {
+              if (submodule.hideFromTopNav) return;
               let link: any = null;
               if (
                 submodule.linksAsDropdown &&
