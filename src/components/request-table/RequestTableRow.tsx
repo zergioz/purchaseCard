@@ -1,6 +1,6 @@
 import React from "react";
 import { Request } from "../../services/models/Request";
-import { Link } from "react-router-dom";
+import { StepBadges } from "./StepBadges";
 
 interface IProps {
   request: Request;
@@ -18,9 +18,22 @@ export const RequestTableRow: React.FC<IProps> = props => {
           item.requestor!.FirstName
         } ${item.requestor!.LastName}`}</a>
       </td>
-      <td>{item.j8Approval ? item.j8Approval.j8FiscalYear : ""}</td>
-      <td>{item.j8Approval ? item.j8Approval.j8Quater : ""}</td>
-      <td>{item.requestField!.RequestJustification}</td>
+      <td>
+        {item.approvals["j8Approval"]!
+          ? item.approvals["j8Approval"]!.j8FiscalYear
+          : ""}
+      </td>
+      <td>
+        {item.approvals["j8Approval"]!
+          ? item.approvals["j8Approval"]!.j8Quater
+          : ""}
+      </td>
+      <td>
+        <div>
+          <StepBadges request={props.request} />
+        </div>
+        <div>{item.requestField!.RequestJustification}</div>
+      </td>
       <td>{item.status}</td>
     </tr>
   );
