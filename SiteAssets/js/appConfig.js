@@ -17,9 +17,7 @@ var documentType;
 var requestStatus;
 var totalPrice = [];
 var requestNotification;
-var getRequestsList;
 var getUsersList;
-var getTrainingList ;
 var notifyJ6;
 
 /*
@@ -86,6 +84,49 @@ var returnedStep = 	[
 		{stepName: 'supply',		stepStatus:'SUPPLY_VALIDATION', 		stepArray: ['supplyComment','supplySignature'],domId: '#supplySignature'},
 		{stepName: 'j4',			stepStatus:'FINAL_VALIDATION', 			stepArray: ['j4Comment','j4Signature'],domId: '#j4Signature'}
 	];
+
+
+/*    
+ * Fetch site classification to render top banner - function might be deprecated in the future  
+ */
+var getCommandData = $.ajax({  
+	url: siteUrl+"/_api/web/lists/getbytitle('ccCommand')/Items?$Select=Title, COMMAND_URL, COMMAND_WARNING, COMMAND_CLASSIFICATION", 
+   	type: "GET",  
+	headers: { "Accept": "application/json;odata=verbose" },
+});
+
+var getCommand = function(){
+	$.when(getCommandData).done(function(data) {  
+		$.each(getCommandData.responseJSON.d.results, function(i, item) {         
+            $('#command').append(item['COMMAND_CLASSIFICATION']);              
+		})
+	}).fail(function r(xhr, textStatus, errorThrown) {  
+		console.log("error 'getCommanddata': " + JSON.stringify(xhr));  
+	});  
+}
+
+/*
+ * Create promise to populate users
+ */ 
+var getUser = $.ajax({
+	url: siteUrl+"/_api/web/lists/getbytitle('ccUsers')/Items?$top=1000", 
+ 	type: "GET",  
+ 	headers: {  "Accept": "application/json;odata=verbose" }
+});
+
+/*  
+ * Fetch current user username and role and redder context for manipulation -  function might be deprecated in the future  
+ */
+var getCleanUser = function(){
+	var userName;
+	//var a = document.getElementById("loginName").innerText;
+	//var t = a.split("\\");
+	//var l = t.length;
+	//a= t[l-1];
+	userName = $().SPServices.SPGetCurrentUser({ fieldName: "Name"});
+	console.log(userName);
+	$("#cleanUser").append(userName);	
+}
 
 /*
  * Create object with all the initial values
@@ -163,99 +204,6 @@ var personTraining	= function (){
 }
 
 /*
- * Gather Approval data input from form
- */
-var getApprovalData = function(){
-	var ApprovalData = {	
-			/* Directores section */
-			directorateComment:   $("#directorateComments").val(),
-			directorateStatus:    $("#directorateReview").val(), 
-			directorateSignature: encodeURIComponent( $("#directorateSignature").val()),
-			/* Billin Official section */
-			boComment:   $("#boComments").val(),
-			boStatus:    $("#boReview").val(), 
-			boSignature: encodeURIComponent($("#boSignature").val()),
-			/* J6 section */
-			j6Comment: $("#j6Comments").val(),
-			j6Status:  $("#j6Review").val(), 
-			j6Signature:  encodeURIComponent($("#j6Signature").val()),
-			/* PBO section */
-			pboComment:   $("#pboComments").val(),
-			pboStatus:    $("#pboReview").val(), 
-			pboSignature: encodeURIComponent($("#pboSignature").val()),
-			/* Budget Officer section */
-			budgetOfficerComment:   $("#budgetOfficerComments").val(),
-			budgetOfficerStatus:    $("#budgetOfficerReview").val(), 
-			budgetOfficerSignature: encodeURIComponent($("#budgetOfficerSignature").val()),
-			/* J8 section */
-			j8Comment:    $("#j8Comments").val(),
-			j8FiscalYear: $("#j8FiscalYear option:selected").val(),
-			j8Quater:     $("#j8Quater option:selected").val(),
-			j8Signature:  encodeURIComponent($("#j8Signature").val()),
-			/* Card Holder section */
-			cardHolderComment:       $("#cardHolderComments").val(),
-			cardHolderTransactionId: $("#cardHolderTransactionId").val(),
-			cardHolderExecuted: $("#cardHolderExecuted").val(),
-			cardHolderSignature: encodeURIComponent($("#cardHolderSignature").val()),
-			/* Requestor section */
-			requestorComment: $("#requestorComments").val(),
-			requestorSignature: encodeURIComponent($("#requestorSignature").val()),	
-			/* Supply section */
-			supplyComment:  $("#supplyComments").val(), 
-			supplySignature: encodeURIComponent($("#supplySignature").val()),
-			/* J4 section */
-			j4Comment:   $("#j4Comments").val(),
-			j4Signature: encodeURIComponent($("#j4Signature").val())
-		};
-	return ApprovalData;
-} 
-
-/*    
- * Fetch site classification to render top banner - function might be deprecated in the future  
- */
-var getCommandData = function(){
-	$.ajax({  
-		url: siteUrl+"/_api/web/lists/getbytitle('ccCommand')/Items?$Select=Title, COMMAND_URL, COMMAND_WARNING, COMMAND_CLASSIFICATION", 
-        type: "GET",  
-		headers: { "Accept": "application/json;odata=verbose" },
-	}).done(function(data) {  
-		var t="", ta="", tb="";  
-		$.each(data.d.results, function(i, item) {            	        	    
-			t+=item.Title;   
-            ta+=item.COMMAND_WARNING;
-        	tb+= item.COMMAND_CLASSIFICATION;
-            document.getElementById('command').innerHTML=t;              
-		})
-	}).fail(function r(xhr, textStatus, errorThrown) {  
-		console.log("error 'getCommanddata': " + JSON.stringify(xhr));  
-	});  
-}
-
-/*  
- * Fetch current user username and role and redder context for manipulation -  function might be deprecated in the future  
- */
-var getCleanUser = function(){
-	var userName;
-	var a = document.getElementById("loginName").innerText;
-	var t = a.split("\\");
-	var l = t.length;
-	a= t[l-1];
-	$(document).ready(function(){
-		userName = $().SPServices.SPGetCurrentUser({ fieldName: "Title"});
-		document.getElementById("cleanUser").innerHTML=userName;
-	});	
-}
-
-/*
- * Create promise to populate users
- */ 
-var getUser = $.ajax({
-   	url: siteUrl+"/_api/web/lists/getbytitle('ccUsers')/Items?$top=1000", 
-    type: "GET",  
-	headers: {  "Accept": "application/json;odata=verbose" }
-});
-
-/*
  * Get all SP users and return and array
  */
 var getSpUserList = function(){
@@ -310,51 +258,6 @@ var getSpUser = function (){
 	});
 }
 
-
-/*
- * Get accounts to start notification - BO
- */
-var getCardHolderBillingApprover = function(){
-    var id;
-    var billingOfficialArray = [];
-    $.each(getUser.responseJSON.d.results, function( index, value ) {
-		if ((getUser.responseJSON.d.results[index].PERSON_EMAIL === requestNotification.RequestorCardHolderName) && (getUser.responseJSON.d.results[index].PERSON_ROLE === 'CARD HOLDER')) {
-			console.log(getUser.responseJSON.d.results[index]);
-            id = index;
-            billingOfficialArray['billingOfficial'] = JSON.parse(getUser.responseJSON.d.results[id].PERSON_ATTRIBUTES).billingOfficial;
-            billingOfficialArray['directorAprove']  = getUser.responseJSON.d.results[id].PERSON_DIRECTORATE;
-            //billingOfficialArray['cardHolder']		= requestNotification.RequestorCardHolderName;
-		}
-    });
-	return billingOfficialArray;
-}
-
-/*
- * Directorate approval
- */
-var getDirectorateApprover = function(){
-    var directorateArray = [];
-    $.each(getUser.responseJSON.d.results, function( index, value ) {
-        if ((getUser.responseJSON.d.results[index].PERSON_DIRECTORATE === getCardHolderBillingApprover.directorAprove) && (getUser.responseJSON.d.results[index].PERSON_ROLE === 'DIRECTORATE APPROVAL')){
-           directorateArray.push(getUser.responseJSON.d.results[index].PERSON_EMAIL); 
-        }
-    });
-    return directorateArray;
-} 
-
-/*
- * J6 approval
- */
-var getOtherApprover = function(role){
-    var directorateArray = [];
-    $.each(getUser.responseJSON.d.results, function( index, value ) {
-        if (getUser.responseJSON.d.results[index].PERSON_ROLE === role){
-           directorateArray.push(getUser.responseJSON.d.results[index].PERSON_EMAIL); 
-        }
-    });
-    return directorateArray;
-} 
-
 /*
  *	get all users from CC_Users and display all user as table entries    
  */
@@ -388,7 +291,7 @@ function getUsersListHtml(item){
 		$('#myTable').tablesorter({
 			sortList : [[0,1]],
 			widgets: ['filter', 'pager']
-			})
+		})
 		.tablesorterPager({
 			container: '.pager',
 			size: 10, 
@@ -401,6 +304,98 @@ function getUsersListHtml(item){
 		$("input").addClass("form-control");
 	});			
 }
+
+/*
+ * Gather Approval data input from form
+ */
+var getApprovalData = function(){
+	var ApprovalData = {	
+			/* Directores section */
+			directorateComment:   $("#directorateComments").val(),
+			directorateStatus:    $("#directorateReview").val(), 
+			directorateSignature: encodeURIComponent( $("#directorateSignature").val()),
+			/* Billin Official section */
+			boComment:   $("#boComments").val(),
+			boStatus:    $("#boReview").val(), 
+			boSignature: encodeURIComponent($("#boSignature").val()),
+			/* J6 section */
+			j6Comment: $("#j6Comments").val(),
+			j6Status:  $("#j6Review").val(), 
+			j6Signature:  encodeURIComponent($("#j6Signature").val()),
+			/* PBO section */
+			pboComment:   $("#pboComments").val(),
+			pboStatus:    $("#pboReview").val(), 
+			pboSignature: encodeURIComponent($("#pboSignature").val()),
+			/* Budget Officer section */
+			budgetOfficerComment:   $("#budgetOfficerComments").val(),
+			budgetOfficerStatus:    $("#budgetOfficerReview").val(), 
+			budgetOfficerSignature: encodeURIComponent($("#budgetOfficerSignature").val()),
+			/* J8 section */
+			j8Comment:    $("#j8Comments").val(),
+			j8FiscalYear: $("#j8FiscalYear option:selected").val(),
+			j8Quater:     $("#j8Quater option:selected").val(),
+			j8Signature:  encodeURIComponent($("#j8Signature").val()),
+			/* Card Holder section */
+			cardHolderComment:       $("#cardHolderComments").val(),
+			cardHolderTransactionId: $("#cardHolderTransactionId").val(),
+			cardHolderExecuted: $("#cardHolderExecuted").val(),
+			cardHolderSignature: encodeURIComponent($("#cardHolderSignature").val()),
+			/* Requestor section */
+			requestorComment: $("#requestorComments").val(),
+			requestorSignature: encodeURIComponent($("#requestorSignature").val()),	
+			/* Supply section */
+			supplyComment:  $("#supplyComments").val(), 
+			supplySignature: encodeURIComponent($("#supplySignature").val()),
+			/* J4 section */
+			j4Comment:   $("#j4Comments").val(),
+			j4Signature: encodeURIComponent($("#j4Signature").val())
+		};
+	return ApprovalData;
+} 
+
+/*
+ * Get accounts to start notification - BO
+ */
+var getCardHolderBillingApprover = function(){
+    var id;
+    var billingOfficialArray = [];
+    $.each(getUser.responseJSON.d.results, function( index, value ) {
+		if ((getUser.responseJSON.d.results[index].PERSON_EMAIL === requestNotification.RequestorCardHolderName) && (getUser.responseJSON.d.results[index].PERSON_ROLE === 'CARD HOLDER')) {
+			console.log(getUser.responseJSON.d.results[index]);
+            id = index;
+            billingOfficialArray['billingOfficial'] = JSON.parse(getUser.responseJSON.d.results[id].PERSON_ATTRIBUTES).billingOfficial;
+            billingOfficialArray['directorAprove']  = getUser.responseJSON.d.results[id].PERSON_DIRECTORATE;
+            //billingOfficialArray['cardHolder']		= requestNotification.RequestorCardHolderName;
+		}
+    });
+	return billingOfficialArray;
+}
+
+/*
+ * Directorate approval
+ */
+var getDirectorateApprover = function(){
+    var directorateArray = [];
+    $.each(getUser.responseJSON.d.results, function( index, value ) {
+        if ((getUser.responseJSON.d.results[index].PERSON_DIRECTORATE === getCardHolderBillingApprover().directorAprove) && (getUser.responseJSON.d.results[index].PERSON_ROLE === 'DIRECTORATE APPROVAL')){
+           directorateArray.push(getUser.responseJSON.d.results[index].PERSON_EMAIL); 
+        }
+    });
+    return directorateArray;
+} 
+
+/*
+ * J6 approval
+ */
+var getOtherApprover = function(role){
+    var directorateArray = [];
+    $.each(getUser.responseJSON.d.results, function( index, value ) {
+        if (getUser.responseJSON.d.results[index].PERSON_ROLE === role){
+           directorateArray.push(getUser.responseJSON.d.results[index].PERSON_EMAIL); 
+        }
+    });
+    return directorateArray;
+} 
 
 /*
  * Populate card holder when getUser promise is completed
@@ -438,21 +433,23 @@ function getBillingOfficial(){
 /*
  *	get all users from CC_Users and display all user as table entries    
  */
+var getRequestsList = $.ajax({  
+	url: siteUrl+"/_api/web/lists/getbytitle('ccRequestTracker')/Items", 
+	type: "GET",
+	cache: true,
+	headers: {"Accept": "application/json;odata=verbose"}
+}); 
+
 function getAllRequest(){
-	getRequestsList = $.ajax({  
-			url: siteUrl+"/_api/web/lists/getbytitle('ccRequestTracker')/Items", 
-			type: "GET",
-			cache: true,
-			headers: {"Accept": "application/json;odata=verbose"}
-	}).done(function(data) {  
+	$.when(getRequestsList).done(function(data) {  
 		$.each(data.d.results, function(i, item) {
 			getRequestsListHtml(item);
-
 		});       
 	}).fail(function r(xhr, textStatus, errorThrown) {  
 		console.log("error 'getRequestsList': " + JSON.stringify(xhr));  
 	});  
 }
+
 /*
  * Load values and append rows - fadeout splash screen 
  */
@@ -493,12 +490,14 @@ function getRequestsListHtml(item){
  * and enable date picker right after appending items; otherwise, high network 
  * latency will make the call fail when loaded from the main "training list" page.
  */
+var getTrainingList = $.ajax({  
+	url: siteUrl+"/_api/web/lists/getbytitle('ccUsersTrainingCourses')/Items", 
+	type: "GET", 	
+	headers: { "Accept": "application/json;odata=verbose" }
+}); 
+
 function getTraining(){
-	getTrainingList = $.ajax({  
-		url: siteUrl+"/_api/web/lists/getbytitle('ccUsersTrainingCourses')/Items", 
-		type: "GET", 	
-		headers: { "Accept": "application/json;odata=verbose" }
-	}).done(function(data) {  
+	$.when(getTrainingList).done(function(data) {  
 		$.each(data.d.results, function(i, item) {
 			getTrainingListHtml(item);
 			$('input').filter(".training").datepicker();
@@ -529,7 +528,6 @@ function getTrainingListHtml(item){
 			</tr>');
 }
 
-
 /*
  * Load DOM values for users' profile
  */
@@ -544,9 +542,7 @@ function getTrainingListHtml(item){
 	$("#personRank").val(item.PERSON_RANK);
 	$('#personDirectorate').val(item.PERSON_DIRECTORATE);
 	$('#personActive').val(item.PERSON_ACTIVE);
-	/*
-	 * Attributes
-	 */
+	// Attributes
 	$('#cardType').val(attributes.cardType);
 	$('#ccCardID').val(attributes.cardId);
 	$('#ccCardLimit').val(attributes.cardLimit);
@@ -559,13 +555,9 @@ function getTrainingListHtml(item){
 	$('#cclevel4').val(attributes.levelFour);
 	$('#cclevel5').val(attributes.levelFive);
 	$('#billingOfficialCardHolder').select2().val(attributes.billingOfficial).trigger('change');
-	/*
-	 * Load card holder pane when it matches the user role
-	 */
+	// Load card holder pane when it matches the user role
 	getUserPanesHtml();
-	/*
-	 * Training information
-	 */
+	// Training information
 	var training = JSON.parse(item.PERSON_TRAINING); 
 	for (var key in training) {
   		$("#"+training[key]['id']).val(training[key]['date']);
@@ -575,18 +567,13 @@ function getTrainingListHtml(item){
 	});
  }
 
-
 /*
  * Populate DOM 
  */
 function getUserHtml(item){
-	/*
-	 * Add list to the purchase request list page
-	 */
+	// Add list to the purchase request list page
 	item.PERSON_ROLE === "CARD HOLDER" ? $('#RequestCardHolderName').append('<option value="'+item.PERSON_EMAIL+'">'+item.PERSON_EMAIL+'</option>') : false;
-	/*
-	 * Add "billion official" roles to add and edit users page
-	 */
+	// Add "billion official" roles to add and edit users page
 	item.PERSON_ROLE === "BILLING OFFICIAL" ? $('#billingOfficialCardHolder').append('<option value="'+item.PERSON_EMAIL+'">'+item.PERSON_EMAIL+'</option>'): false;
 }
 
@@ -595,9 +582,9 @@ function getUserHtml(item){
  */
 function getUserPanesHtml(){
 	var e1 = $("#personRole option:selected").val();
-	e1 !== "CARD HOLDER" ? $("#attributes_main").hide() : $("#attributes_main").show();
-	e1 !== "CARD HOLDER" ? $("#billing_official_main").hide() : $("#billing_official_main").show();
-	e1 === "CARD HOLDER" ? $("#training_main").show() : e1 === "BILLING OFFICIAL" ? $("#training_main").show() : $("#training_main").hide(); 
+	e1 !== "CARD HOLDER" ? $("#attributes_main").fadeOut() : $("#attributes_main").fadeIn();
+	e1 !== "CARD HOLDER" ? $("#billing_official_main").fadeOut() : $("#billing_official_main").fadeIn();
+	e1 === "CARD HOLDER" ? $("#training_main").fadeIn() : e1 === "BILLING OFFICIAL" ? $("#training_main").fadeIn() : $("#training_main").fadeOut(); 
 }
 
 /*
@@ -623,18 +610,16 @@ function getFiscalInformation(jsonData,type){
 
 /*
  * Display pending step in the authorization process
- * @param {string} status
  */
 function stepForwardStatus(status,isJ6){
 	var forwardStatus;
 	for(var i = 0; stepStatus.length > i; i++ ){
 		//console.log(stepStatus[i].fwd);
-		isJ6 === 'Yes' ?   ( status === stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwdj6 : false) :
-							 status === stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwd   : false;
+		isJ6 === 'Yes' ?   ( 	status === stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwdj6 : false) : 
+								status === stepStatus[i].caseStep ? forwardStatus = stepStatus[i].fwd   : false;
 	}			
 	return forwardStatus;
 }
-
 
 /* 
  * Fetch all directorate for form consumption and data input standardization 
@@ -668,16 +653,6 @@ function getRole(){
  */
 var getUserName = function(){
 	return $().SPServices.SPGetCurrentUser({ fieldNames: ["Title", "Name"]});
-}
-
-/*
- * Provide 'status' colour for training status based on date and/or initial status of training 
- */
-function getStatus(trainingStatus, trainingDate){
-	if(trainingStatus == 'initial' || trainingDate == true){
-		trainigStatus = '<button type="button" class="btn btn-success">Success</button>';
-	}
-	return trainingStatus;
 }
 
 /*
@@ -761,4 +736,4 @@ function redirectUrl(urlAddress){
 	$('#budgetOfficerComments').keydown(function(){
 		$('#btnBudgetOfficerSign').prop("disabled", false);
 	});
- }	
+ }

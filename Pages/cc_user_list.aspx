@@ -30,7 +30,13 @@
 		<script src="../SiteAssets/js/appConfig.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/userFunctions.js" type="text/javascript"></script>
 		<script src="../SiteAssets/js/moneyCalculations.js" type="text/javascript"></script>
+		<script src="../SiteAssets/js/reportFrontPage.js" type="text/javascript"></script>
 		<link href="../SiteAssets/css/style.css" type="text/css" rel="stylesheet"/>
+		<script>
+			reportFrontPage();
+			//byAccountHtml();
+		</script>
+
 	</head>
 	<body class="loading">
 		<!-- START: BODY -->
@@ -58,47 +64,35 @@
 								<li class="nav-item"><a class="nav-link" href="#">Other</a></li>
 							</ul>
 							<div class="hr-divider mt-5 mb-3">
-								<h3 class="hr-divider-content hr-divider-heading">Credit Card Breakdown</h3>
+								<h3 class="hr-divider-content hr-divider-heading">Users Account Breakdown</h3>
 							</div>
 						</div>	
 					</nav>
 					
 					<!-- START: CHARTS -->
-					<div class="row text-center mt-5">
-						<div class="col-md-4 mb-4 mb-md-3">
-							<div class="w-3 mx-auto">
-								<canvas
-									class="ex-graph"
-									width="200" height="200"
-									data-chart="doughnut"
-									data-dataset="[230, 130]"
-									data-dataset-options="{ borderColor: '#252830', backgroundColor: ['#1ca8dd', '#1bc98e'] }"
-									data-labels="['Active', 'Inactive']">
-								</canvas>
+					<div class="row text-center">
+						<div class="col-lg-6">
+							<div class="w-3 mx-auto" id="accountCanvas">
+								<canvas	
+									class="ex-graph" width="350" height="350"                         
+									data-chart="doughnut"                         
+									data-dataset="[	10,10,10,13,30,130,13 ]"                         
+									data-dataset-options="{ borderColor: '#252830', backgroundColor: [ '#6EC7E9', '#FFD772', '#FF8B72', '#43B6E2', '#FFC943', '#1BC98E', '#43B6E2' ]}"                        data-labels="[	'Card Holders', 'Billing Official','Supply', 'Directors', 'Financial J8', 'IT J6', 'Other' ]">                    </canvas>
 							</div>
-							<strong class="text-muted">Active/Inactive</strong>
+							<strong class="text-muted">Roles</strong>
 						</div>
-						<div class="col-md-4 mb-4 mb-md-3">
+
+						<div class="col-lg-6">
 							<div class="w-3 mx-auto">
 								<canvas
 									class="ex-graph"
-									width="200" height="200"
+									width="300" height="300"
 									data-chart="doughnut"
-									data-dataset="[330,30]"
-									data-dataset-options="{ borderColor: '#252830', backgroundColor: ['#1ca8dd', '#1bc98e'] }"
-									data-labels="['CARD HOLDER', 'ORF']">
-								</canvas>
-							</div>
-							<strong class="text-muted">Card Type</strong>
-						</div>
-						<div class="col-md-4 mb-4 mb-md-3">
-							<div class="w-3 mx-auto">
-								<canvas
-									class="ex-graph"
-									width="200" height="200"
-									data-chart="doughnut"
-									data-dataset="[2,2,10,12]"
-									data-dataset-options="{ borderColor: '#252830', backgroundColor: ['#1ca8dd', '#1bc98e','1bc98e'] }"
+									data-dataset="[	2,10,12 ]"
+									data-dataset-options="{ 
+															borderColor: 	'#252830', 
+															backgroundColor: ['#6EC7E9', '#FFBC17','#43B6E2'] 
+														  }"
 									data-labels="['J1', 'J5', 'J6','J9']">
 								</canvas>
 							</div>
@@ -116,8 +110,8 @@
 						<div class="col-md-4">
 							<div class="statcard statcard-success">
 								<div class="p-3">
-									<span class="statcard-desc">Credit Limit</span>
-									<h2 class="statcard-number">1,293 <small class="delta-indicator delta-positive">5%</small></h2>
+									<span class="statcard-desc">Last 10 Purchases</span>
+									<h2 class="statcard-number">1,000 <small class="delta-indicator delta-positive">5%</small></h2>
 									<hr class="statcard-hr mb-0">
 								</div>
 								<canvas id="sparkline1" width="378" height="94" class="sparkline"
@@ -174,8 +168,8 @@
 							<div class="btn-toolbar dashhead-toolbar">
 								<div class="btn-toolbar-item">
 									<a class="sidebar-brand img-responsive" href="#">
-										<span style="display:none;"><asp:LoginName runat="server" id="loginName" FormatString="{0}"></asp:LoginName></span>
-										<span class="topTitle" id="command" style="display:none;">SOCEUR </span>
+										<span style="display:block;"><asp:LoginName runat="server" id="loginName" FormatString="{0}"></asp:LoginName></span>
+										<span class="topTitle" id="command" style="display:block;">SOCEUR </span>
 										<span id="cleanUser"></span>
 									</a>
 								</div>
@@ -238,6 +232,7 @@
 	<!-- JS CALLS -->
 	<script type="text/javascript">
 		getAllUser();
+		getCommand();
 	</script>
 	<!-- OVERLAY -->
 	<div class="modalLoad"><!-- MODAL PAGE--></div>	

@@ -330,7 +330,7 @@
 			/*
 			 * Load user all data this page is for new account and it should be empty.  
 			 */ 
-			getCommandData();	
+			getCommand();	
 			getDirectorate();
 			getRank();
 			getRole();
