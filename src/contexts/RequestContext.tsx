@@ -7,6 +7,7 @@ import {
 } from "../components/filters/RequestFilters";
 import { Observable } from "rxjs/internal/Observable";
 
+//the filters could probably be refactored into their own context and placed at the top of each page
 export type RequestContextType = {
   requests: Request[];
   updateRequests: (requests: Request[]) => void;

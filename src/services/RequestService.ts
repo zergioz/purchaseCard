@@ -2,9 +2,10 @@ import dal from "./dal";
 import { ISerializer } from "./ISerializer";
 import { JsonStringSerializer } from "./JsonStringSerializer";
 import { Observable } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
+import { convertToFriendly } from "../constants/StepStatus";
 
 export class RequestService {
   private dal: dal;
@@ -36,7 +37,7 @@ export class RequestService {
         requestorValidation: JSON.parse(item.REQUESTOR_VALIDATION),
         supplyValidation: JSON.parse(item.SUPPLY_VALIDATION),
         finalValidation: JSON.parse(item.FINAL_VALIDATION),
-        status: item.REQUEST_STATUS
+        status: convertToFriendly(item.REQUEST_STATUS)
       };
     } catch (e) {
       console.error(`Error parsing value in ccRequestTracker item`, e);

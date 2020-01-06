@@ -111,6 +111,8 @@ export const getStatusesByFriendlyName = (): StatusesByFriendlyName => {
   return statuses;
 };
 
+//statuses are stored in the db with the caseStep value
+//leaving this here for when we write to db
 export const convertToUgly = (friendlyName: string): string => {
   const status = StepStatus.find(
     status => status.friendlyName === friendlyName
@@ -131,10 +133,8 @@ export const groupByStatus = (requests: Request[]): number[] => {
     //group requests by their statuses
     const groups = groupBy(requests, (request: Request) => request.status);
 
-    //loop through each friendly status value, convert it to the ugly version, and count the requests
     statuses.map((statusValue: any, index: number) => {
-      const uglyStatusValue = convertToUgly(statusValue);
-      const requestsInStatus = groups.get(uglyStatusValue);
+      const requestsInStatus = groups.get(statusValue);
       const count = requestsInStatus ? requestsInStatus.length : 0;
       counts[index] = count;
     });

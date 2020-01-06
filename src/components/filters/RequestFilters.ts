@@ -1,7 +1,5 @@
-import { getStatusesByFriendlyName } from "../../constants/StepStatus";
 import { Request } from "../../services/models/Request";
 
-const statuses = getStatusesByFriendlyName();
 export interface IRequestFilters {
   directorate: string;
   status: string;
@@ -30,13 +28,6 @@ export const useRequestFiltering = (): IRequestFiltering => {
       .filter(request => directorateFilter(request, filters))
       .filter(request => keywordFilter(request, filters));
     return filteredRequests;
-  };
-
-  const compareStatus = (friendlyStatus: any, listItemStatus: any): boolean => {
-    const exactMatch = statuses[friendlyStatus]
-      ? statuses[friendlyStatus].caseStep
-      : undefined;
-    return listItemStatus == exactMatch;
   };
 
   const directorateFilter = (request: Request, filters: IRequestFilters) => {
@@ -75,11 +66,11 @@ export const useRequestFiltering = (): IRequestFiltering => {
   const statusFilter = (request: Request, filters: IRequestFilters) => {
     let match = false;
     if (filters.status == "All Open") {
-      match = request.status != "CLOSED";
+      match = request.status != "Closed";
     } else if (filters.status == "") {
       match = true;
     } else {
-      match = compareStatus(filters.status, request.status);
+      match = filters.status == request.status;
     }
     return match;
   };
