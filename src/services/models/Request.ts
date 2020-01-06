@@ -12,37 +12,12 @@ import { RequestorValidation } from "./RequestorValidation";
 import { SupplyValidation } from "./SupplyValidation";
 import { FinalValidation } from "./FinalValidation";
 import { SharepointUser } from "./SharepointUser";
+import { Item } from "@pnp/sp";
 
-export interface IRequest {
-  id?: number;
-  requestor?: SharepointUser;
-  requestField?: RequestField;
-  purchaseDetails?: PurchaseDetails;
-  budgetOfficerApproval?: BudgetOfficerApproval;
-  billingOfficialApproval?: BillingOfficialApproval;
-  j6Approval?: J6Approval;
-  pboApproval?: PboApproval;
-  directorateApproval?: DirectorateApproval;
-  j8Approval?: J8Approval;
-  cardholderValidation?: CardholderValidation;
-  requestorValidation?: RequestorValidation;
-  supplyValidation?: SupplyValidation;
-  finalValidation?: FinalValidation;
-  status?: string;
+export interface IRequestApprovals {
+  [key: string]: any;
 }
-export class Request implements IRequest {
-  @autoserialize
-  id?: number;
-
-  @autoserializeAs(SharepointUser)
-  requestor?: SharepointUser;
-
-  @autoserializeAs(RequestField)
-  requestField?: RequestField;
-
-  @autoserializeAs(PurchaseDetails)
-  purchaseDetails?: PurchaseDetails;
-
+export class RequestApprovals implements IRequestApprovals {
   @autoserializeAs(BudgetOfficerApproval)
   budgetOfficerApproval?: BudgetOfficerApproval;
 
@@ -72,7 +47,42 @@ export class Request implements IRequest {
 
   @autoserializeAs(FinalValidation)
   finalValidation?: FinalValidation;
+}
+
+export interface IRequest {
+  id?: number;
+  requestor?: SharepointUser;
+  requestField?: RequestField;
+  purchaseDetails?: PurchaseDetails;
+  status?: string;
+  approvals?: RequestApprovals;
+}
+
+export class Request implements IRequest {
+  @autoserialize
+  id?: number;
+
+  @autoserializeAs(SharepointUser)
+  requestor?: SharepointUser;
+
+  @autoserializeAs(RequestField)
+  requestField?: RequestField;
+
+  @autoserializeAs(PurchaseDetails)
+  purchaseDetails?: PurchaseDetails;
 
   @autoserialize
   status?: string;
+
+  @autoserializeAs(RequestApprovals)
+  approvals: RequestApprovals;
+
+  constructor(data: any = {}) {
+    this.id = data.id;
+    this.requestor = data.requestor || {};
+    this.requestField = data.requestField || {};
+    this.purchaseDetails = data.purchaseDetails || {};
+    this.status = data.status || "";
+    this.approvals = data.approvals || {};
+  }
 }

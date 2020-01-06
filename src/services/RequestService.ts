@@ -27,17 +27,19 @@ export class RequestService {
         requestor: item.Author,
         requestField: JSON.parse(item.REQUEST_FIELD),
         purchaseDetails: JSON.parse(item.PURCHASE_DETAILS),
-        budgetOfficerApproval: JSON.parse(item.BUDGET_OFFICER_APPROVAL),
-        billingOfficialApproval: JSON.parse(item.BILLING_OFFICIAL_APPROVAL),
-        j6Approval: JSON.parse(item.J6_APPROVAL),
-        pboApproval: JSON.parse(item.PBO_APPROVAL),
-        directorateApproval: JSON.parse(item.DIRECTORATE_APPROVAL),
-        j8Approval: JSON.parse(item.J8_APPROVAL),
-        cardholderValidation: JSON.parse(item.CARD_HOLDER_VALIDATION),
-        requestorValidation: JSON.parse(item.REQUESTOR_VALIDATION),
-        supplyValidation: JSON.parse(item.SUPPLY_VALIDATION),
-        finalValidation: JSON.parse(item.FINAL_VALIDATION),
-        status: convertToFriendly(item.REQUEST_STATUS)
+        status: convertToFriendly(item.REQUEST_STATUS),
+        approvals: {
+          directorateApproval: JSON.parse(item.DIRECTORATE_APPROVAL),
+          billingOfficialApproval: JSON.parse(item.BILLING_OFFICIAL_APPROVAL), //bo
+          j6Approval: JSON.parse(item.J6_APPROVAL),
+          pboApproval: JSON.parse(item.PBO_APPROVAL),
+          j8Approval: JSON.parse(item.J8_APPROVAL),
+          cardholderValidation: JSON.parse(item.CARD_HOLDER_VALIDATION),
+          requestorValidation: JSON.parse(item.REQUESTOR_VALIDATION),
+          supplyValidation: JSON.parse(item.SUPPLY_VALIDATION),
+          //budgetOfficerApproval: JSON.parse(item.BUDGET_OFFICER_APPROVAL), //pbofinal
+          finalValidation: JSON.parse(item.FINAL_VALIDATION) //bofinal
+        }
       };
     } catch (e) {
       console.error(`Error parsing value in ccRequestTracker item`, e);

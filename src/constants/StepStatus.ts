@@ -1,98 +1,159 @@
-import { Request } from "../services/models/Request";
+import { Request, IRequestApprovals } from "../services/models/Request";
 import { groupBy } from "../helpers/GroupBy";
 
 export interface IStatus {
+  stepName: string;
+  stepStatus: string;
+  stepArray: string[];
   caseStep: string;
   fwd: string;
   fwdj6: string;
   numerStep: number;
   friendlyName: string;
+  approvalName: string;
 }
 
 export const StepStatus: IStatus[] = [
   {
+    stepName: "",
+    stepStatus: "",
+    stepArray: [],
     caseStep: "DRAFT",
     fwd: "DRAFT",
     fwdj6: "DRAFT",
     numerStep: 1,
-    friendlyName: "Draft"
+    friendlyName: "Draft",
+    approvalName: ""
   },
   {
+    stepName: "",
+    stepStatus: "",
+    stepArray: [],
     caseStep: "SUBMITTED",
     fwd: "DIR APPROVAL",
     fwdj6: "DIR APPROVAL",
     numerStep: 2,
-    friendlyName: "Submitted"
+    friendlyName: "Submitted",
+    approvalName: ""
   },
   {
+    stepName: "directorate",
+    stepStatus: "DIRECTORATE_APPROVAL",
+    stepArray: [
+      "directorateComment",
+      "directorateStatus",
+      "directorateSignature"
+    ],
     caseStep: "DIRECTORATE_APPROVAL",
     fwd: "BO APPROVAL",
     fwdj6: "BO APPROVAL",
     numerStep: 3,
-    friendlyName: "Director"
+    friendlyName: "Director",
+    approvalName: "directorateApproval"
   },
   {
+    stepName: "bo",
+    stepStatus: "BILLING_OFFICIAL_APPROVAL",
+    stepArray: ["boComment", "boStatus", "boSignature"],
     caseStep: "BILLING_OFFICIAL_APPROVAL",
     fwd: "PBO APPROVAL",
     fwdj6: "J6 APPROVAL",
     numerStep: 4,
-    friendlyName: "Billing Official"
+    friendlyName: "Billing Official",
+    approvalName: "billingOfficialApproval"
   },
   {
+    stepName: "j6",
+    stepStatus: "J6_APPROVAL",
+    stepArray: ["j6Comment", "j6Status", "j6Signature"],
     caseStep: "J6_APPROVAL",
     fwd: "ERROR: SEE J69",
     fwdj6: "PBO APPROVAL",
     numerStep: 5,
-    friendlyName: "Tech Review"
+    friendlyName: "Tech Review",
+    approvalName: "j6Approval"
   },
   {
+    stepName: "pbo",
+    stepStatus: "PBO_APPROVAL",
+    stepArray: ["pboComment", "pboStatus", "pboSignature"],
     caseStep: "PBO_APPROVAL",
     fwd: "J8 APPROVAL",
     fwdj6: "J8 APPROVAL",
     numerStep: 6,
-    friendlyName: "PBO Approval"
+    friendlyName: "PBO Approval",
+    approvalName: "pboApproval"
   },
   {
+    stepName: "j8",
+    stepStatus: "J8_APPROVAL",
+    stepArray: ["j8Comment", "j8FiscalYear", "j8Quater", "j8Signature"],
     caseStep: "J8_APPROVAL",
     fwd: "CARD HOLDER VALIDATION",
     fwdj6: "CARD HOLDER VALIDATION",
     numerStep: 7,
-    friendlyName: "Finance"
+    friendlyName: "Finance",
+    approvalName: "j8Approval"
   },
   {
+    stepName: "cardholder",
+    stepStatus: "CARD_HOLDER_VALIDATION",
+    stepArray: [
+      "cardHolderComment",
+      "cardHolderTransactionId",
+      "cardHolderExecuted",
+      "cardHolderSignature"
+    ],
     caseStep: "CARD_HOLDER_VALIDATION",
     fwd: "REQUESTOR VALIDATION",
     fwdj6: "REQUESTOR VALIDATION",
     numerStep: 8,
-    friendlyName: "Cardholder"
+    friendlyName: "Cardholder",
+    approvalName: "cardholderValidation"
   },
   {
+    stepName: "requestor",
+    stepStatus: "REQUESTOR_VALIDATION",
+    stepArray: ["requestorComment", "requestorSignature"],
     caseStep: "REQUESTOR_VALIDATION",
     fwd: "SUPPLY VALIDATION",
     fwdj6: "SUPPLY VALIDATION",
     numerStep: 9.3,
-    friendlyName: "Requestor"
+    friendlyName: "Requestor",
+    approvalName: "requestorValidation"
   },
   {
+    stepName: "supply",
+    stepStatus: "SUPPLY_VALIDATION",
+    stepArray: ["supplyComment", "supplySignature"],
     caseStep: "SUPPLY_VALIDATION",
     fwd: "PENDING PBO FINAL",
     fwdj6: "PENDING PBO FINAL",
     numerStep: 9.6,
-    friendlyName: "Supply"
+    friendlyName: "Supply",
+    approvalName: "supplyValidation"
   },
   {
+    stepName: "j4",
+    stepStatus: "FINAL_VALIDATION",
+    stepArray: ["j4Comment", "j4Signature"],
     caseStep: "FINAL_VALIDATION",
     fwd: "PENDING CLOSING",
     fwdj6: "PENDING CLOSING",
     numerStep: 9.9,
-    friendlyName: "Final"
+    friendlyName: "Final",
+    approvalName: "finalValidation"
   },
   {
+    stepName: "",
+    stepStatus: "",
+    stepArray: [],
     caseStep: "CLOSED",
     fwd: "CLOSED",
     fwdj6: "CLOSED",
     numerStep: 10,
-    friendlyName: "Closed"
+    friendlyName: "Closed",
+    approvalName: ""
   }
 ];
 
@@ -140,4 +201,17 @@ export const groupByStatus = (requests: Request[]): number[] => {
     });
   }
   return counts;
+};
+
+//this takes a request and gets the approval info that was recorded at a specific status
+export const getApprovalHistoryForStatus = (
+  request: Request,
+  status: string
+): any => {
+  const statuses: StatusesByFriendlyName = getStatusesByFriendlyName();
+  const statusObj: IStatus = statuses[status];
+  const approvalKey = statusObj.approvalName;
+  const approvals: IRequestApprovals = request.approvals;
+  const approval: any = approvals ? approvals[approvalKey] : undefined;
+  return approval;
 };

@@ -43,11 +43,14 @@ export const useRequestFiltering = (): IRequestFiltering => {
   const fiscalYearFilter = (request: Request, filters: IRequestFilters) => {
     let match = false;
     if (filters.fiscalYear == "Empty") {
-      match = !request.j8Approval || !request.j8Approval.j8FiscalYear;
+      match =
+        !request.approvals["j8Approval"]! ||
+        !request.approvals["j8Approval"]!.j8FiscalYear;
     } else if (filters.fiscalYear == "") {
       match = true;
-    } else if (request.j8Approval) {
-      match = request.j8Approval.j8FiscalYear == filters.fiscalYear;
+    } else if (request.approvals["j8Approval"]!) {
+      match =
+        request.approvals["j8Approval"]!.j8FiscalYear == filters.fiscalYear;
     }
     return match;
   };

@@ -17,8 +17,9 @@ export const FiscalYearFilter: React.FC = () => {
   //group each request by year when the data is updated
   useEffect(() => {
     const groups = groupBy(context.requests, (request: Request) => {
-      return request.j8Approval && request.j8Approval.j8FiscalYear
-        ? request.j8Approval.j8FiscalYear
+      return request.approvals["j8Approval"] &&
+        request.approvals["j8Approval"]!.j8FiscalYear
+        ? request.approvals["j8Approval"]!.j8FiscalYear
         : "Empty";
     });
     const years = Array.from(groups.keys());
