@@ -23,4 +23,18 @@ export class RequestField {
   RequestCurrencyType?: string;
   @autoserialize
   RequestIsJ6?: string;
+
+  constructor(data: RequestField = {}) {
+    this.RequestCardType = data.RequestCardType || "";
+    this.RequestCardType = data.RequestCardType || "";
+    this.Requestor = data.Requestor || "";
+    this.RequestorCardHolderName = data.RequestorCardHolderName || "";
+    this.RequestorDSN = data.RequestorDSN || "";
+    this.RequestorDirectorate = data.RequestorDirectorate || "";
+    this.RequestDateofRequest = data.RequestDateofRequest || "";
+    this.RequestSource = data.RequestSource || "";
+    this.RequestJustification = data.RequestJustification || "";
+    this.RequestCurrencyType = data.RequestCurrencyType || "";
+    this.RequestIsJ6 = data.RequestIsJ6 || "";
+  }
 }
