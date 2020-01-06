@@ -59,7 +59,10 @@ export const StatusFilterProgressBar = () => {
       <div className="container-fluid-spacious">
         <div className="row">
           {statuses.map((value: string, index: number) => (
-            <div className="col-1 d-flex justify-content-center">
+            <div
+              className="col-1 d-flex justify-content-center"
+              key={`step-icon-${index}-${value}`}
+            >
               <StatusFilterProgressStepIcon index={index} value={value} />
             </div>
           ))}
@@ -77,7 +80,7 @@ export const StatusFilterProgressBar = () => {
         </div>
         <div className="row">
           {statuses.map((value: string, index: number) => (
-            <div className="col-1 text-center">
+            <div className="col-1 text-center" key={`step-${index}-${value}`}>
               <StatusFilterProgressStep index={index} value={value} />
             </div>
           ))}
