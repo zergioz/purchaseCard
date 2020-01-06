@@ -63,7 +63,9 @@ export const useRequestFiltering = (): IRequestFiltering => {
   };
 
   const requestorFilter = (request: Request, filters: IRequestFilters) => {
-    return filters.requestor == "" || request.requestor == filters.requestor;
+    return (
+      filters.requestor == "" || request.requestor!.Name == filters.requestor
+    );
   };
 
   const requestTypeFilter = (request: Request, filters: IRequestFilters) => {

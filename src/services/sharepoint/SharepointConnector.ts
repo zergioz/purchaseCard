@@ -38,9 +38,17 @@ export class SharepointConnector implements IDbConnector {
 
   /// queries all the rows of a sharepoint list
   readTable(params: IQueryParams): Observable<any> {
+    const selectDefaults =
+      "Author/Id,Author/Title,Author/Name,Author/EMail,Author/UserName,Author/FirstName,Author/LastName";
+    const expandDefaults = "Author";
     const tableName = params.tableName;
     const siteUrl = params.siteUrl;
-    const select = params.select || "";
+    const select = params.select
+      ? `${params.select},${selectDefaults}`
+      : selectDefaults;
+    const expand = params.expand
+      ? `${params.expand},${expandDefaults}`
+      : expandDefaults;
     const filter = params.whereClause || "";
     let web = sp.web;
     if (siteUrl) web = new Web(siteUrl);
@@ -49,6 +57,7 @@ export class SharepointConnector implements IDbConnector {
       web.lists
         .getByTitle(tableName)
         .items.select(select)
+        .expand(expand)
         .filter(filter)
         .top(10000)
         .get()

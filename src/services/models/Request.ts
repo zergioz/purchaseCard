@@ -11,10 +11,11 @@ import { CardholderValidation } from "./CardholderValidation";
 import { RequestorValidation } from "./RequestorValidation";
 import { SupplyValidation } from "./SupplyValidation";
 import { FinalValidation } from "./FinalValidation";
+import { SharepointUser } from "./SharepointUser";
 
 export interface IRequest {
   id?: number;
-  requestor?: string;
+  requestor?: SharepointUser;
   requestField?: RequestField;
   purchaseDetails?: PurchaseDetails;
   budgetOfficerApproval?: BudgetOfficerApproval;
@@ -33,8 +34,8 @@ export class Request implements IRequest {
   @autoserialize
   id?: number;
 
-  @autoserialize
-  requestor?: string;
+  @autoserializeAs(SharepointUser)
+  requestor?: SharepointUser;
 
   @autoserializeAs(RequestField)
   requestField?: RequestField;

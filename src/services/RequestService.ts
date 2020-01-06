@@ -2,7 +2,7 @@ import dal from "./dal";
 import { ISerializer } from "./ISerializer";
 import { JsonStringSerializer } from "./JsonStringSerializer";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
 import { convertToFriendly } from "../constants/StepStatus";
@@ -24,7 +24,7 @@ export class RequestService {
     try {
       parsed = {
         id: item.Id,
-        requestor: item.Title,
+        requestor: item.Author,
         requestField: JSON.parse(item.REQUEST_FIELD),
         purchaseDetails: JSON.parse(item.PURCHASE_DETAILS),
         budgetOfficerApproval: JSON.parse(item.BUDGET_OFFICER_APPROVAL),
@@ -47,9 +47,12 @@ export class RequestService {
   }
 
   read(filters?: string): Observable<Request[]> {
+    const select = `Id,Title,REQUEST_FIELD,PURCHASE_DETAILS,BUDGET_OFFICER_APPROVAL,BILLING_OFFICIAL_APPROVAL,J6_APPROVAL,PBO_APPROVAL,DIRECTORATE_APPROVAL,J8_APPROVAL,CARD_HOLDER_VALIDATION,REQUESTOR_VALIDATION,SUPPLY_VALIDATION,FINAL_VALIDATION,REQUEST_STATUS`;
+
     return this.dal
-      .getRowsWhere(this.listName, undefined, undefined, filters)
+      .getRowsWhere(this.listName, undefined, select, filters)
       .pipe(
+        tap((items: any) => console.log(items)),
         //parse nested json strings
         map((items: ccRequestTracker[]) => {
           return items.map(item => this.mapAndParse(item));
