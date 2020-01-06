@@ -6,6 +6,7 @@ export interface IRequestFilters {
   requestor: string;
   fiscalYear: string;
   keyword: string;
+  type: string;
 }
 export class RequestFilters implements IRequestFilters {
   directorate: string = "";
@@ -13,6 +14,7 @@ export class RequestFilters implements IRequestFilters {
   requestor: string = "";
   fiscalYear: string = "";
   keyword: string = "";
+  type: string = "";
 }
 
 interface IRequestFiltering {
@@ -22,6 +24,7 @@ interface IRequestFiltering {
 export const useRequestFiltering = (): IRequestFiltering => {
   const applyFilters = (filters: IRequestFilters, requests: Request[]) => {
     let filteredRequests: Request[] = requests
+      .filter(request => requestTypeFilter(request, filters))
       .filter(request => fiscalYearFilter(request, filters))
       .filter(request => requestorFilter(request, filters))
       .filter(request => statusFilter(request, filters))
@@ -61,6 +64,13 @@ export const useRequestFiltering = (): IRequestFiltering => {
 
   const requestorFilter = (request: Request, filters: IRequestFilters) => {
     return filters.requestor == "" || request.requestor == filters.requestor;
+  };
+
+  const requestTypeFilter = (request: Request, filters: IRequestFilters) => {
+    return (
+      filters.type == "" ||
+      (filters.type == "Technology" && request.requestField!.RequestIsJ6)
+    );
   };
 
   const statusFilter = (request: Request, filters: IRequestFilters) => {

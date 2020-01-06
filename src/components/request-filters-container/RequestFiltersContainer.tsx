@@ -8,6 +8,7 @@ import { StatusFilterTabs } from "../request-filters/StatusFilterTabs";
 import Media from "react-media";
 import { StatusFilter } from "../request-filters/StatusFilter";
 import { KeywordFilter } from "../request-filters/KeywordFilter";
+import { RequestTypeFilter } from "../request-filters/RequestTypeFilter";
 
 interface IProps {
   hide?: string[];
@@ -18,6 +19,7 @@ export const RequestFiltersContainer = (props: IProps) => {
   const hideStatusFilterTabs = hidden.has("StatusFilterTabs");
   const hideStatusFilterProgressBar = hidden.has("StatusFilterProgressBar");
   const hideDirectorate = hidden.has("DirectorateFilter");
+  const hideRequestType = hidden.has("RequestTypeFilter");
   const hideFiscalYear = hidden.has("FiscalYearFilter");
   const hideCard = hidden.has("Card");
 
@@ -45,8 +47,8 @@ export const RequestFiltersContainer = (props: IProps) => {
                       <ButtonGroup vertical={matches.small}>
                         {!hideStatus && <StatusFilter />}
                         {!hideDirectorate && <DirectorateFilter />}
+                        {!hideRequestType && <RequestTypeFilter />}
                         {!hideFiscalYear && <FiscalYearFilter />}
-
                         <ClearFiltersButton />
                       </ButtonGroup>
                     </Card.Body>
