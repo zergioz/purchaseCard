@@ -4,9 +4,10 @@ import SubmittedByMeModule from "./submitted-by-me";
 import RequestsByStatusModule from "./requests-by-status";
 import AllOpenRequestsModule from "./all-open-requests";
 
-const RequestsModuleComponent = AllOpenRequestsModule.routeProps.component;
+const AllOpenRequestsModuleComponent =
+  AllOpenRequestsModule.routeProps.component;
 const RequestsModule = () => {
-  return <RequestsModuleComponent></RequestsModuleComponent>;
+  return <AllOpenRequestsModuleComponent></AllOpenRequestsModuleComponent>;
 };
 
 export default {

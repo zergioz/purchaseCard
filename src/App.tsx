@@ -62,7 +62,7 @@ const App = () => {
                 <div className="col-md-12">
                   <Switch>
                     {makeRoutes()}
-                    <Redirect from="/" to="/requests/submitted-by-me" />
+                    <Redirect from="/" to="/requests" />
                   </Switch>
                 </div>
               </div>

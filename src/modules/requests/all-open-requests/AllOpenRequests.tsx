@@ -33,9 +33,7 @@ export const AllOpenRequests: React.FC = () => {
         </div>
         <div className="row">
           <div className="col-12">
-            <RequestFiltersContainer
-              hide={["StatusFilterTabs", "StatusFilterProgressBar"]}
-            />
+            <RequestFiltersContainer />
             <RequestTable />
           </div>
         </div>
