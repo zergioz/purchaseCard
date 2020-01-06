@@ -3,6 +3,7 @@ import RequestsByDirectorateModule from "./requests-by-directorate";
 import SubmittedByMeModule from "./submitted-by-me";
 import RequestsByStatusModule from "./requests-by-status";
 import AllOpenRequestsModule from "./all-open-requests";
+import RequestDetailsModule from "./details";
 
 const AllOpenRequestsModuleComponent =
   AllOpenRequestsModule.routeProps.component;
@@ -20,6 +21,7 @@ export default {
     SubmittedByMeModule,
     AllOpenRequestsModule,
     RequestsByStatusModule,
-    RequestsByDirectorateModule
+    RequestsByDirectorateModule,
+    RequestDetailsModule
   ]
 };
