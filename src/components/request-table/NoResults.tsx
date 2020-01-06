@@ -9,9 +9,7 @@ export const NoResults = () => {
         <Col>
           <Alert variant="success">
             <div className="d-flex justify-content-center">
-              <span className="mt-2">
-                There are no requests waiting in this queue.
-              </span>
+              <span className="mt-2 mr-2">There are no requests here.</span>
               <ClearFiltersButton />
             </div>
           </Alert>
