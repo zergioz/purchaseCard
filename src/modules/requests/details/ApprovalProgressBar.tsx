@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ProgressBar, Nav, Badge } from "react-bootstrap";
+import { ProgressBar } from "react-bootstrap";
 import "./ApprovalProgressBar.css";
 import {
   getStatusesByFriendlyName,
