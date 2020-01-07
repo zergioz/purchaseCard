@@ -48,8 +48,8 @@ const App = () => {
     <div>
       <UserProvider>
         <RequestProvider>
-          <TopNav></TopNav>
           <Router>
+            <TopNav></TopNav>
             <div className="container-fluid-spacious">
               <div className="row">
                 <div className="col-md-12">
