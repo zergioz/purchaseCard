@@ -29,7 +29,7 @@ interface IProps {
 }
 export const RequestDetails = (props: IProps) => {
   const context = useContext(RequestContext);
-  const [request, setRequest] = useState<Request | undefined>(undefined);
+  const [request, setRequest] = useState<Request>(new Request());
   const [details, setDetails] = useState<Detail[]>([]);
   const [attachments, setAttachments] = useState<any>([]);
   const [editing, setEditing] = useState<boolean>(false);
@@ -46,7 +46,9 @@ export const RequestDetails = (props: IProps) => {
   }, [context.requests]);
 
   useEffect(() => {
-    const request = context.requests.find(item => item.id == props.requestId);
+    const request =
+      context.requests.find(item => item.id == props.requestId) ||
+      new Request();
     const requestDetails =
       request && request.purchaseDetails ? request.purchaseDetails.Details : [];
     setRequest(request);

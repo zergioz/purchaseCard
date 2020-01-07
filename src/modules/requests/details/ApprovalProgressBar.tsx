@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  ProgressBar,
-  ButtonGroup,
-  Dropdown,
-  DropdownButton
-} from "react-bootstrap";
+import { ProgressBar } from "react-bootstrap";
 import "./ApprovalProgressBar.css";
 import { getStatusesByFriendlyName } from "../../../constants/StepStatus";
 import { useApprovalBadges } from "../../../components/approval-badge/ApprovalBadges";
 import { Request } from "../../../services/models/Request";
+import { ApprovalActionsButton } from "../../../components/approval/ApprovalActionsButton";
 
 interface IProps {
   request: Request;
@@ -20,7 +16,11 @@ export const ApprovalProgressBar = (props: IProps) => {
     statuses.indexOf(props.request.status || "")
   );
 
-  const badges = useApprovalBadges(props.request, false);
+  const badges = useApprovalBadges(props.request, "auto", false);
+
+  useEffect(() => {
+    if (props.request.status) setSelected(props.request.status);
+  }, [props.request]);
 
   useEffect(() => {
     let index = statuses.indexOf(selected);
@@ -29,7 +29,7 @@ export const ApprovalProgressBar = (props: IProps) => {
     setSelectedIndex(index);
   }, [selected]);
 
-  const StatusFilterProgressStepIcon = (props: any) => {
+  const ApprovalProgressStepIcon = (props: any) => {
     return (
       <div
         className={`progress-step ${
@@ -41,38 +41,20 @@ export const ApprovalProgressBar = (props: IProps) => {
     );
   };
 
-  const StatusFilterProgressStep = (props: any) => {
-    let actionElement = null;
-    if (props.active) {
-      actionElement = (
-        <Dropdown as={ButtonGroup} size="sm" className="mt-2">
-          <DropdownButton
-            variant="danger"
-            size="sm"
-            title="Actions"
-            id="approval-button"
-          >
-            <Dropdown.Item href="#/action-1">Sign</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Send to...</Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item href="#/action-2">Reject</Dropdown.Item>
-          </DropdownButton>
-        </Dropdown>
-      );
-    } else {
-      actionElement = badges[props.index];
-    }
+  const ApprovalProgressStep = (props: any) => {
     const activeStyle = {
       opacity: props.active ? "100%" : "70%",
       fontWeight: props.active ? 600 : 500
     };
+
     return (
       <>
         <p className="nowrap" style={{ ...activeStyle, whiteSpace: "pre" }}>
           {props.value}
         </p>
         <div className="mt-n3" style={activeStyle}>
-          {actionElement}
+          {props.active && <ApprovalActionsButton request={props.request} />}
+          {!props.active && badges[props.index]}
         </div>
       </>
     );
@@ -87,7 +69,7 @@ export const ApprovalProgressBar = (props: IProps) => {
               className="col-1 d-flex justify-content-center"
               key={`step-icon-${index}-${value}`}
             >
-              <StatusFilterProgressStepIcon index={index} value={value} />
+              <ApprovalProgressStepIcon index={index} value={value} />
             </div>
           ))}
         </div>
@@ -108,7 +90,7 @@ export const ApprovalProgressBar = (props: IProps) => {
               className="col-1 text-center pt-3"
               key={`step-${index}-${value}`}
             >
-              <StatusFilterProgressStep
+              <ApprovalProgressStep
                 index={index}
                 value={value}
                 active={value == props.request.status}
