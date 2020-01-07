@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { ProgressBar } from "react-bootstrap";
-import "./ApprovalProgressBar.css";
 import {
-  getStatusesByFriendlyName,
-  groupByStatus
-} from "../../../constants/StepStatus";
+  ProgressBar,
+  ButtonGroup,
+  Dropdown,
+  DropdownButton
+} from "react-bootstrap";
+import "./ApprovalProgressBar.css";
+import { getStatusesByFriendlyName } from "../../../constants/StepStatus";
 
 interface IProps {
   status: string;
@@ -37,9 +39,29 @@ export const ApprovalProgressBar = (props: IProps) => {
 
   const StatusFilterProgressStep = (props: any) => {
     return (
-      <span className="nowrap" style={{ whiteSpace: "pre" }}>
-        {props.value}
-      </span>
+      <>
+        <span className="nowrap" style={{ whiteSpace: "pre" }}>
+          {props.value}
+        </span>
+        <Dropdown
+          as={ButtonGroup}
+          hidden={!props.active}
+          size="sm"
+          className="mt-2"
+        >
+          <DropdownButton
+            variant="danger"
+            size="sm"
+            title="Actions"
+            id="approval-button"
+          >
+            <Dropdown.Item href="#/action-1">Approve</Dropdown.Item>
+            <Dropdown.Item href="#/action-2">Send to...</Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item href="#/action-2">Reject</Dropdown.Item>
+          </DropdownButton>
+        </Dropdown>
+      </>
     );
   };
 
@@ -73,7 +95,11 @@ export const ApprovalProgressBar = (props: IProps) => {
               className="col-1 text-center pt-3"
               key={`step-${index}-${value}`}
             >
-              <StatusFilterProgressStep index={index} value={value} />
+              <StatusFilterProgressStep
+                index={index}
+                value={value}
+                active={value == props.status}
+              />
             </div>
           ))}
         </div>
