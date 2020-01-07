@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar, Nav, Form, NavDropdown, Button } from "react-bootstrap";
 import modules from "../../modules";
+import { useLocation } from "react-router-dom";
 
 export const TopNav = () => {
+  const location = useLocation();
+
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Navbar.Brand href="#/">GPC Request System</Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-      <Navbar.Collapse id="responsive-navbar-nav">
+      {/* Min height leaves room for the big submit button */}
+      <Navbar.Collapse id="responsive-navbar-nav" style={{ minHeight: "48px" }}>
         <Nav className="mr-auto">
           {/* Create a link for each module exported from ./modules */}
           {modules.map((module: any) => {
@@ -66,6 +70,7 @@ export const TopNav = () => {
         </Nav>
         <Form inline>
           <Button
+            hidden={location.pathname.startsWith("/requests/details")}
             variant="success"
             href="../Pages/purchase_request.aspx"
             size="lg"
