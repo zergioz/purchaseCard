@@ -34,7 +34,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
       </td>
       <td>
         <div>
-          <ApprovalBadges request={props.request} />
+          <ApprovalBadges request={props.request} popoverPlacement="top" />
         </div>
         <div>{item.requestField!.RequestJustification}</div>
       </td>
