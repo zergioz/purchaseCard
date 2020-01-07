@@ -32,15 +32,14 @@ export const useApprovalBadges = (
   const statuses = Object.keys(getStatusesByFriendlyName());
 
   const badges = statuses.map(status => {
-    const approval = getApprovalHistoryForStatus(request, status);
-    let badgeText = status;
-    if (!statusText) badgeText = approval ? "Signed" : "Unsigned";
     if (hiddenBadges.has(status)) return;
+    const approval = getApprovalHistoryForStatus(request, status);
+    const signedOrUnsigned = approval ? "Signed" : "Unsigned";
     return (
       <ApprovalBadge
         key={status}
         approval={approval}
-        text={badgeText}
+        text={statusText ? status : signedOrUnsigned}
         placement={popoverPlacement}
       />
     );
