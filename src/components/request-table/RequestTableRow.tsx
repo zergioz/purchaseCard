@@ -1,6 +1,6 @@
 import React from "react";
 import { Request } from "../../services/models/Request";
-import { StepBadges } from "./StepBadges";
+import { ApprovalBadges } from "../approval-badge/ApprovalBadges";
 import { Link } from "react-router-dom";
 interface IProps {
   request: Request;
@@ -34,7 +34,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
       </td>
       <td>
         <div>
-          <StepBadges request={props.request} />
+          <ApprovalBadges request={props.request} />
         </div>
         <div>{item.requestField!.RequestJustification}</div>
       </td>
