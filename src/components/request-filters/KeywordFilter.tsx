@@ -15,7 +15,10 @@ export const KeywordFilter: React.FC = () => {
 
   //apply the filter when our state changes
   useEffect(() => {
-    if (context.filters.keyword !== selected) {
+    if (
+      context.filters.keyword !== selected &&
+      (selected === "" || selected.length >= 3)
+    ) {
       context.applyFilters({ ...context.filters, keyword: selected }, true);
     }
   }, [selected]);
@@ -55,7 +58,9 @@ export const KeywordFilter: React.FC = () => {
           type="text"
           value={selected}
           placeholder="Type a keyword to search"
-          onChange={(e: any) => onChangeSelection(e)}
+          onChange={(e: any) => {
+            onChangeSelection(e);
+          }}
         />
       </InputGroup>
       <div
