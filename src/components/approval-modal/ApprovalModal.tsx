@@ -19,6 +19,7 @@ const requestApprovalReducer = (
     case "reject":
       break;
     default:
+      console.log(`requestApprovalReducer: No action.`);
   }
   return nextRequest;
 };
@@ -32,20 +33,28 @@ interface IProps {
 export const ApprovalModal = (props: IProps) => {
   const [show, setShow] = useState(props.show);
   const [state, dispatch] = useReducer(requestApprovalReducer, props.request);
+  const [action, setAction] = useState(props.action);
   const { formInputs, setFormInputs, handleChange } = useFormInputHandler(
     props.action.formInputs
   );
 
   useEffect(() => {
-    console.log(state);
-  }, [state]);
+    console.log(`Updating action`, formInputs);
+    setAction({ ...action, formInputs: formInputs });
+  }, [formInputs]);
+
+  useEffect(() => {
+    console.log(`state`, state);
+    console.log(`props.request`, props.request);
+  }, [state, props.request]);
 
   useEffect(() => {
     setShow(props.show);
   }, [props.show]);
 
   const onActionButtonClicked = () => {
-    dispatch({ ...props.action, formInputs: formInputs });
+    console.log(`onActionButton`, formInputs);
+    dispatch(action);
   };
 
   return (
@@ -66,17 +75,14 @@ export const ApprovalModal = (props: IProps) => {
             <Alert variant={props.action.bootstrapClass}>
               {props.action.description}
             </Alert>
-            <props.action.form
-              action={props.action}
-              handleChange={handleChange}
-            />
+            <props.action.form action={action} handleChange={handleChange} />
           </Modal.Body>
           <Modal.Footer>
             <ButtonToolbar>
               <Button
                 className="m-1"
                 variant={props.action.bootstrapClass}
-                onClick={() => onActionButtonClicked()}
+                onClick={onActionButtonClicked}
               >
                 {props.action.verb}
               </Button>

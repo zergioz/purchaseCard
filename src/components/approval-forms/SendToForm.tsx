@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Row, Col, Form } from "react-bootstrap";
 import UserContext from "../../contexts/UserContext";
 import { ApprovalAction } from "../../constants/ApprovalActions";
@@ -11,6 +11,7 @@ interface IProps {
 export const SendToForm = (props: IProps) => {
   const choices = Object.keys(getStatusesByFriendlyName());
   const { user } = useContext(UserContext);
+
   return (
     <Form>
       <Row>
@@ -21,8 +22,9 @@ export const SendToForm = (props: IProps) => {
               as="select"
               name="status"
               onChange={props.handleChange}
+              value={props.action.formInputs.status}
             >
-              {choices.map(choice => {
+              {choices.map((choice, index) => {
                 return (
                   <option key={choice} value={choice}>
                     {choice}
@@ -41,6 +43,7 @@ export const SendToForm = (props: IProps) => {
               as="textarea"
               rows={3}
               name="comments"
+              value={props.action.formInputs.comments}
               onChange={props.handleChange}
             />
           </Form.Group>
@@ -53,9 +56,8 @@ export const SendToForm = (props: IProps) => {
             <Form.Control
               disabled
               type="text"
-              value={user!.Title}
               name="user"
-              onChange={props.handleChange}
+              value={user!.Title}
             />
           </Form.Group>
         </Col>

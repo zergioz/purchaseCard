@@ -94,6 +94,7 @@ export const ApprovalProgressBar = (props: IProps) => {
                 index={index}
                 value={value}
                 active={value == props.request.status}
+                request={props.request}
               />
             </div>
           ))}
