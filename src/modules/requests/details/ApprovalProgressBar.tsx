@@ -7,16 +7,20 @@ import {
 } from "react-bootstrap";
 import "./ApprovalProgressBar.css";
 import { getStatusesByFriendlyName } from "../../../constants/StepStatus";
+import { useApprovalBadges } from "../../../components/approval-badge/ApprovalBadges";
+import { Request } from "../../../services/models/Request";
 
 interface IProps {
-  status: string;
+  request: Request;
 }
 export const ApprovalProgressBar = (props: IProps) => {
   const statuses: string[] = Object.keys(getStatusesByFriendlyName());
-  const [selected, setSelected] = useState<string>(props.status);
+  const [selected, setSelected] = useState<string>(props.request.status || "");
   const [selectedIndex, setSelectedIndex] = useState<number>(
-    statuses.indexOf(props.status)
+    statuses.indexOf(props.request.status || "")
   );
+
+  const badges = useApprovalBadges(props.request, false);
 
   useEffect(() => {
     let index = statuses.indexOf(selected);
@@ -38,29 +42,38 @@ export const ApprovalProgressBar = (props: IProps) => {
   };
 
   const StatusFilterProgressStep = (props: any) => {
-    return (
-      <>
-        <span className="nowrap" style={{ whiteSpace: "pre" }}>
-          {props.value}
-        </span>
-        <Dropdown
-          as={ButtonGroup}
-          hidden={!props.active}
-          size="sm"
-          className="mt-2"
-        >
+    let actionElement = null;
+    if (props.active) {
+      actionElement = (
+        <Dropdown as={ButtonGroup} size="sm" className="mt-2">
           <DropdownButton
             variant="danger"
             size="sm"
             title="Actions"
             id="approval-button"
           >
-            <Dropdown.Item href="#/action-1">Approve</Dropdown.Item>
+            <Dropdown.Item href="#/action-1">Sign</Dropdown.Item>
             <Dropdown.Item href="#/action-2">Send to...</Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item href="#/action-2">Reject</Dropdown.Item>
           </DropdownButton>
         </Dropdown>
+      );
+    } else {
+      actionElement = badges[props.index];
+    }
+    const activeStyle = {
+      opacity: props.active ? "100%" : "70%",
+      fontWeight: props.active ? 600 : 500
+    };
+    return (
+      <>
+        <p className="nowrap" style={{ ...activeStyle, whiteSpace: "pre" }}>
+          {props.value}
+        </p>
+        <div className="mt-n3" style={activeStyle}>
+          {actionElement}
+        </div>
       </>
     );
   };
@@ -98,7 +111,7 @@ export const ApprovalProgressBar = (props: IProps) => {
               <StatusFilterProgressStep
                 index={index}
                 value={value}
-                active={value == props.status}
+                active={value == props.request.status}
               />
             </div>
           ))}

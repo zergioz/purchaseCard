@@ -6,14 +6,19 @@ import {
 } from "../../constants/StepStatus";
 import { ApprovalBadge } from "./ApprovalBadge";
 
-export const useApprovalBadges = (request: Request) => {
+export const useApprovalBadges = (
+  request: Request,
+  statusText: boolean = true
+) => {
   const hiddenBadges = new Set(["Draft", "Submitted", "Closed"]);
   const statuses = Object.keys(getStatusesByFriendlyName());
 
   const badges = statuses.map(status => {
     const approval = getApprovalHistoryForStatus(request, status);
+    let badgeText = status;
+    if (!statusText) badgeText = approval ? "Signed" : "Unsigned";
     if (hiddenBadges.has(status)) return;
-    return <ApprovalBadge key={status} approval={approval} status={status} />;
+    return <ApprovalBadge key={status} approval={approval} text={badgeText} />;
   });
 
   return badges;

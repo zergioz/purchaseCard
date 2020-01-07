@@ -73,7 +73,7 @@ export const RequestDetails = (props: IProps) => {
           <div className="container-fluid">
             <div className="row">
               <div className="col-12 mb-4 text-center">
-                <ApprovalProgressBar status={request.status || ""} />
+                <ApprovalProgressBar request={request} />
                 <hr />
               </div>
             </div>
