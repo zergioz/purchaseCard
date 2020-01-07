@@ -4,7 +4,7 @@ import "./ApprovalProgressBar.css";
 import { getStatusesByFriendlyName } from "../../../constants/StepStatus";
 import { useApprovalBadges } from "../../../components/approval-badge/ApprovalBadges";
 import { Request } from "../../../services/models/Request";
-import { ApprovalActionsButton } from "../../../components/approval/ApprovalActionsButton";
+import { ApprovalActionsButton } from "../../../components/approval-actions-button/ApprovalActionsButton";
 
 interface IProps {
   request: Request;

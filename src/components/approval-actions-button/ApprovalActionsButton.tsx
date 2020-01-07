@@ -1,49 +1,32 @@
 import React, { useState } from "react";
-import { SendToModal } from "../modal-send-to/SendToModal";
-import { ApproveRejectModal } from "../modal-approve-reject/ApproveRejectModal";
+import { ApprovalModal } from "../approval-modal/ApprovalModal";
 import { Request } from "../../services/models/Request";
 import { Dropdown, ButtonGroup, DropdownButton } from "react-bootstrap";
+import {
+  ApprovalAction,
+  ApprovalActions
+} from "../../constants/ApprovalActions";
 
 interface IProps {
   request: Request;
 }
 export const ApprovalActionsButton = (props: IProps) => {
-  const [sendToModalVisible, setSendToModalVisible] = useState<boolean>(false);
-  const [approveRejectModalVisible, setApproveRejectModalVisible] = useState<
-    boolean
-  >(false);
-  const [modalAction, setModalAction] = useState<string>("");
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalAction, setModalAction] = useState<ApprovalAction | undefined>();
 
   const onActionClicked = (action: string) => {
-    switch (action) {
-      case "approve":
-        setModalAction("approve");
-        setApproveRejectModalVisible(true);
-        break;
-      case "sendto":
-        setSendToModalVisible(true);
-        break;
-      case "reject":
-        setModalAction("reject");
-        setApproveRejectModalVisible(true);
-        break;
-      default:
-        return;
-    }
+    const approvalAction = ApprovalActions[action];
+    setModalAction(approvalAction);
+    setModalVisible(true);
   };
 
   return (
     <>
-      <SendToModal
-        request={props.request}
-        show={sendToModalVisible}
-        onExited={() => setSendToModalVisible(false)}
-      />
-      <ApproveRejectModal
+      <ApprovalModal
         request={props.request}
         action={modalAction}
-        show={approveRejectModalVisible}
-        onExited={() => setApproveRejectModalVisible(false)}
+        show={modalVisible}
+        onExited={() => setModalVisible(false)}
       />
       <Dropdown as={ButtonGroup} size="sm" className="mt-2">
         <DropdownButton
