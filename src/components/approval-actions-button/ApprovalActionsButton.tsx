@@ -12,7 +12,9 @@ interface IProps {
 }
 export const ApprovalActionsButton = (props: IProps) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [modalAction, setModalAction] = useState<ApprovalAction | undefined>();
+  const [modalAction, setModalAction] = useState<ApprovalAction>(
+    ApprovalActions["noop"]
+  );
 
   const onActionClicked = (action: string) => {
     const approvalAction = ApprovalActions[action];

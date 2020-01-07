@@ -1,23 +1,52 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { Request } from "../../services/models/Request";
-
 import { Modal, Button, ButtonToolbar, Alert } from "react-bootstrap";
-import UserContext from "../../contexts/UserContext";
 import { ApprovalAction } from "../../constants/ApprovalActions";
+import { useFormInputHandler } from "../approval-forms/ApprovalFormInputs";
+
+const requestApprovalReducer = (
+  request: Request,
+  action: ApprovalAction
+): Request => {
+  let nextRequest = request;
+  console.log(`reducer`, action);
+  switch (action.type) {
+    case "sendto":
+      nextRequest.status = action.formInputs.status;
+      break;
+    case "approve":
+      break;
+    case "reject":
+      break;
+    default:
+  }
+  return nextRequest;
+};
 
 interface IProps {
   request: Request;
-  action?: ApprovalAction;
+  action: ApprovalAction;
   show: boolean;
   onExited: () => void;
 }
 export const ApprovalModal = (props: IProps) => {
   const [show, setShow] = useState(props.show);
-  const { user } = useContext(UserContext);
+  const [state, dispatch] = useReducer(requestApprovalReducer, props.request);
+  const { formInputs, setFormInputs, handleChange } = useFormInputHandler(
+    props.action.formInputs
+  );
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
 
   useEffect(() => {
     setShow(props.show);
   }, [props.show]);
+
+  const onActionButtonClicked = () => {
+    dispatch({ ...props.action, formInputs: formInputs });
+  };
 
   return (
     <>
@@ -37,12 +66,19 @@ export const ApprovalModal = (props: IProps) => {
             <Alert variant={props.action.bootstrapClass}>
               {props.action.description}
             </Alert>
-            <props.action.form action={props.action} />
+            <props.action.form
+              action={props.action}
+              handleChange={handleChange}
+            />
           </Modal.Body>
           <Modal.Footer>
             <ButtonToolbar>
-              <Button className="m-1" variant="primary">
-                {props.action.action}
+              <Button
+                className="m-1"
+                variant={props.action.bootstrapClass}
+                onClick={() => onActionButtonClicked()}
+              >
+                {props.action.verb}
               </Button>
               <Button
                 className="m-1"

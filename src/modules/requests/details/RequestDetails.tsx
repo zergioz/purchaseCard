@@ -121,7 +121,7 @@ export const RequestDetails = (props: IProps) => {
                           <Form.Label>Card Type</Form.Label>
                           <Form.Control as="select">
                             {cardTypes.map(type => {
-                              return <option>{type}</option>;
+                              return <option key={type}>{type}</option>;
                             })}
                           </Form.Control>
                         </Form.Group>
@@ -184,7 +184,7 @@ export const RequestDetails = (props: IProps) => {
                           <Form.Label>Currency</Form.Label>
                           <Form.Control as="select">
                             {currencies.map(currency => {
-                              return <option>{currency}</option>;
+                              return <option key={currency}>{currency}</option>;
                             })}
                           </Form.Control>
                         </Form.Group>
@@ -216,7 +216,7 @@ export const RequestDetails = (props: IProps) => {
                           <Form.Label>Fiscal Year</Form.Label>
                           <Form.Control as="select">
                             {fiscalYears.map(year => {
-                              return <option>{year}</option>;
+                              return <option key={year}>{year}</option>;
                             })}
                           </Form.Control>
                         </Form.Group>
@@ -226,7 +226,7 @@ export const RequestDetails = (props: IProps) => {
                           <Form.Label>Quarter</Form.Label>
                           <Form.Control as="select">
                             {fiscalQuarters.map(quarter => {
-                              return <option>{quarter}</option>;
+                              return <option key={quarter}>{quarter}</option>;
                             })}
                           </Form.Control>
                         </Form.Group>
@@ -253,9 +253,9 @@ export const RequestDetails = (props: IProps) => {
                           </thead>
                           <tbody>
                             {details &&
-                              details.map(item => {
+                              details.map((item, index) => {
                                 return (
-                                  <tr>
+                                  <tr key={index}>
                                     <td>{item.requestQty}</td>
                                     <td>{item.requestDesc}</td>
                                     <td>{item.requestSrc}</td>
@@ -318,7 +318,9 @@ export const RequestDetails = (props: IProps) => {
                                       <Form.Group controlId="formGridState">
                                         <Form.Control as="select">
                                           {attachmentTypes.map(type => {
-                                            return <option>{type}</option>;
+                                            return (
+                                              <option key={type}>{type}</option>
+                                            );
                                           })}
                                         </Form.Control>
                                       </Form.Group>

@@ -6,6 +6,7 @@ import { getStatusesByFriendlyName } from "../../constants/StepStatus";
 
 interface IProps {
   action: ApprovalAction;
+  handleChange: (event: any) => void;
 }
 export const SendToForm = (props: IProps) => {
   const choices = Object.keys(getStatusesByFriendlyName());
@@ -16,9 +17,17 @@ export const SendToForm = (props: IProps) => {
         <Col>
           <Form.Group controlId="formGridState">
             <Form.Label>Choose a step</Form.Label>
-            <Form.Control as="select">
+            <Form.Control
+              as="select"
+              name="status"
+              onChange={props.handleChange}
+            >
               {choices.map(choice => {
-                return <option key={choice}>{choice}</option>;
+                return (
+                  <option key={choice} value={choice}>
+                    {choice}
+                  </option>
+                );
               })}
             </Form.Control>
           </Form.Group>
@@ -28,15 +37,26 @@ export const SendToForm = (props: IProps) => {
         <Col>
           <Form.Group controlId="ControlTextarea1">
             <Form.Label>Comments</Form.Label>
-            <Form.Control as="textarea" rows={3} />
+            <Form.Control
+              as="textarea"
+              rows={3}
+              name="comments"
+              onChange={props.handleChange}
+            />
           </Form.Group>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Form.Group controlId="formGroupEmail">
+          <Form.Group controlId="user">
             <Form.Label>{props.action.actor}</Form.Label>
-            <Form.Control disabled type="text" value={user!.Title} />
+            <Form.Control
+              disabled
+              type="text"
+              value={user!.Title}
+              name="user"
+              onChange={props.handleChange}
+            />
           </Form.Group>
         </Col>
       </Row>
