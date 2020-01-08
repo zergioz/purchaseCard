@@ -35,6 +35,7 @@ interface IProps {
   action: ApprovalAction;
   show: boolean;
   onExited: () => void;
+  onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
 }
 export const ApprovalModal = (props: IProps) => {
   const context = useContext(RequestContext);
@@ -60,10 +61,7 @@ export const ApprovalModal = (props: IProps) => {
   const onActionButtonClicked = () => {
     action.date = new Date();
     dispatch(action);
-    let nextRequests = context.requests;
-    let index = nextRequests.findIndex((old: Request) => old.id == state.id);
-    nextRequests[index] = state;
-    context.updateRequests(nextRequests);
+    props.onRequestUpdated(props.request, state);
     setShow(false);
   };
 

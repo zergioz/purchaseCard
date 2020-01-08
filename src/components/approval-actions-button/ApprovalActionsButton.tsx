@@ -7,6 +7,7 @@ import { ApprovalAction } from "../../services/models/ApprovalAction";
 
 interface IProps {
   request: Request;
+  onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
 }
 export const ApprovalActionsButton = (props: IProps) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -31,6 +32,7 @@ export const ApprovalActionsButton = (props: IProps) => {
           action={modalAction}
           show={modalVisible}
           onExited={onExited}
+          onRequestUpdated={props.onRequestUpdated}
         />
       )}
       <Dropdown as={ButtonGroup} size="sm" className="mt-2">
