@@ -1,3 +1,4 @@
+import { ApprovalAction } from "./ApprovalAction";
 import { BillingOfficialApproval } from "./BillingOfficialApproval";
 import { BudgetOfficerApproval } from "./BudgetOfficerApproval";
 import { CardholderValidation } from "./CardholderValidation";
@@ -16,6 +17,7 @@ import { Request } from "./Request";
 import { ccUser } from "./ccUser";
 
 export default [
+  ApprovalAction,
   BillingOfficialApproval,
   BudgetOfficerApproval,
   CardholderValidation,
