@@ -46,7 +46,7 @@ export const StepStatus: IStatus[] = [
     fwdj6: "DIR APPROVAL",
     numerStep: 2,
     friendlyName: "Director",
-    approvalName: ""
+    approvalName: "directorateApproval"
   },
   {
     stepName: "directorate",
@@ -61,7 +61,7 @@ export const StepStatus: IStatus[] = [
     fwdj6: "BO APPROVAL",
     numerStep: 3,
     friendlyName: "Billing Official",
-    approvalName: "directorateApproval"
+    approvalName: "billingOfficialApproval"
   },
   {
     stepName: "bo",
@@ -72,7 +72,7 @@ export const StepStatus: IStatus[] = [
     fwdj6: "J6 APPROVAL",
     numerStep: 4,
     friendlyName: "Tech Review",
-    approvalName: "billingOfficialApproval"
+    approvalName: "j6Approval"
   },
   {
     stepName: "j6",
@@ -83,7 +83,7 @@ export const StepStatus: IStatus[] = [
     fwdj6: "PBO APPROVAL",
     numerStep: 5,
     friendlyName: "PBO Approval",
-    approvalName: "j6Approval"
+    approvalName: "pboApproval"
   },
   {
     stepName: "pbo",
@@ -94,7 +94,7 @@ export const StepStatus: IStatus[] = [
     fwdj6: "J8 APPROVAL",
     numerStep: 6,
     friendlyName: "Finance",
-    approvalName: "pboApproval"
+    approvalName: "j8Approval"
   },
   {
     stepName: "j8",
@@ -105,7 +105,7 @@ export const StepStatus: IStatus[] = [
     fwdj6: "CARD HOLDER VALIDATION",
     numerStep: 7,
     friendlyName: "Cardholder",
-    approvalName: "j8Approval"
+    approvalName: "cardholderValidation"
   },
   {
     stepName: "cardholder",
@@ -121,7 +121,7 @@ export const StepStatus: IStatus[] = [
     fwdj6: "REQUESTOR VALIDATION",
     numerStep: 8,
     friendlyName: "Requestor",
-    approvalName: "cardholderValidation"
+    approvalName: "requestorValidation"
   },
   {
     stepName: "requestor",
@@ -132,7 +132,7 @@ export const StepStatus: IStatus[] = [
     fwdj6: "SUPPLY VALIDATION",
     numerStep: 9.3,
     friendlyName: "Supply",
-    approvalName: "requestorValidation"
+    approvalName: "supplyValidation"
   },
   {
     stepName: "supply",
@@ -143,7 +143,7 @@ export const StepStatus: IStatus[] = [
     fwdj6: "PENDING PBO FINAL",
     numerStep: 9.6,
     friendlyName: "PBO Final",
-    approvalName: "supplyValidation"
+    approvalName: "finalValidation"
   },
   {
     stepName: "j4",
@@ -154,7 +154,7 @@ export const StepStatus: IStatus[] = [
     fwdj6: "PENDING CLOSING",
     numerStep: 9.9,
     friendlyName: "BO Final",
-    approvalName: "finalValidation"
+    approvalName: "budgetOfficerApproval"
   },
   {
     stepName: "",
@@ -223,7 +223,12 @@ export const getApprovalHistoryForStatus = (
   const statuses: StatusesByFriendlyName = getStatusesByFriendlyName();
   const statusObj: IStatus = statuses[status];
   if (!statusObj) {
-    console.error("Invalid status", statusObj, status);
+    console.error(
+      "getApprovalHistoryForStatus(): Invalid status",
+      statusObj,
+      status,
+      request
+    );
   }
   const approvalKey = statusObj.approvalName;
   const approvals: IRequestApprovals = request.approvals;

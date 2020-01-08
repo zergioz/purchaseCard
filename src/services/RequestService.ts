@@ -37,7 +37,7 @@ export class RequestService {
           cardholderValidation: JSON.parse(item.CARD_HOLDER_VALIDATION),
           requestorValidation: JSON.parse(item.REQUESTOR_VALIDATION),
           supplyValidation: JSON.parse(item.SUPPLY_VALIDATION),
-          //budgetOfficerApproval: JSON.parse(item.BUDGET_OFFICER_APPROVAL), //pbofinal
+          budgetOfficerApproval: JSON.parse(item.BUDGET_OFFICER_APPROVAL), //pbofinal
           finalValidation: JSON.parse(item.FINAL_VALIDATION) //bofinal
         }
       };
