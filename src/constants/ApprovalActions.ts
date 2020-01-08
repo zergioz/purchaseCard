@@ -11,6 +11,7 @@ export const ApprovalActions: ApprovalActions = {
     type: "noop",
     actor: "NOOP",
     action: "NOOP",
+    date: new Date(),
     verb: "NOOP",
     description: "NOOP",
     form: "div",
@@ -22,6 +23,7 @@ export const ApprovalActions: ApprovalActions = {
     type: "sendto",
     actor: "Sent by",
     action: "Send to",
+    date: new Date(),
     verb: "Send",
     description:
       "You are sending this request to another step without signing it.",
@@ -38,6 +40,7 @@ export const ApprovalActions: ApprovalActions = {
     type: "approve",
     actor: "Approved by",
     action: "Approve",
+    date: new Date(),
     verb: "Approve",
     description:
       "You are approving this request and sending it to the next step.",
@@ -54,6 +57,7 @@ export const ApprovalActions: ApprovalActions = {
     type: "reject",
     actor: "Rejected by",
     action: "Reject",
+    date: new Date(),
     verb: "Reject",
     description: "You are rejecting this request and marking it as closed.",
     form: RequestApprovalForm,

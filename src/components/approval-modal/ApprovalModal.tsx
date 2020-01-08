@@ -3,6 +3,7 @@ import { Request } from "../../services/models/Request";
 import { Modal, Button, ButtonToolbar, Alert } from "react-bootstrap";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
 import { useByNameFormInputHandler } from "../approval-forms/FormInputHandler";
+import { getNextStatus } from "../../constants/StepStatus";
 
 const requestApprovalReducer = (
   request: Request,
@@ -15,16 +16,16 @@ const requestApprovalReducer = (
       nextRequest.status = action.formInputs["status"];
       break;
     case "approve":
-      nextRequest.status = action.formInputs["status"];
+      nextRequest.status = getNextStatus(request);
       break;
     case "reject":
-      nextRequest.status = action.formInputs["status"];
+      nextRequest.status = "Closed";
       break;
     default:
       console.log(`requestApprovalReducer: No action.`);
   }
   console.log(`nextRequest`, nextRequest);
-  nextRequest.history.push(action);
+  if (nextRequest.history) nextRequest.history.push(action);
   return nextRequest;
 };
 
@@ -55,6 +56,7 @@ export const ApprovalModal = (props: IProps) => {
   }, [props.show]);
 
   const onActionButtonClicked = () => {
+    action.date = new Date();
     dispatch(action);
     setShow(false);
   };

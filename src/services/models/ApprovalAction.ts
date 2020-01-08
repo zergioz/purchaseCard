@@ -17,6 +17,7 @@ export interface IApprovalAction {
   type: string;
   actor: string;
   action: string;
+  date: Date;
   verb: string;
   description: string;
   form: any;
@@ -39,6 +40,9 @@ export class ApprovalAction implements IApprovalAction {
   @autoserialize
   action: string;
 
+  @autoserializeAs(Date)
+  date: Date;
+
   @autoserialize
   verb: string;
 
@@ -59,6 +63,7 @@ export class ApprovalAction implements IApprovalAction {
     this.type = data.type || defaultAction.type;
     this.actor = data.actor || defaultAction.actor;
     this.action = data.action || defaultAction.action;
+    this.date = data.date || defaultAction.date;
     this.verb = data.verb || defaultAction.verb;
     this.description = data.description || defaultAction.description;
     this.form = data.form || defaultAction.form;
