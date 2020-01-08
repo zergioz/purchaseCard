@@ -29,31 +29,40 @@ interface IProps {
 }
 export const RequestDetails = (props: IProps) => {
   const context = useContext(RequestContext);
-  const [request, setRequest] = useState<Request>(new Request());
+  const [request, setRequest] = useState();
   const [details, setDetails] = useState<Detail[]>([]);
   const [attachments, setAttachments] = useState<any>([]);
   const [editing, setEditing] = useState<boolean>(false);
   const defaultFilters = new RequestFilters();
 
+  //start the db fetch
   useEffect(() => {
     const svc = new RequestService();
     context.subscribeTo(svc.read());
   }, []);
 
+  //apply the ID filter when results come back
   useEffect(() => {
+    defaultFilters.id = props.requestId;
     context.updatePageFilters(defaultFilters);
     context.applyFilters(defaultFilters, true);
   }, [context.requests]);
 
+  //update our state when the filter is applied
   useEffect(() => {
-    const request =
-      context.requests.find(item => item.id == props.requestId) ||
-      new Request();
+    const request = context.filteredRequests[0];
+    if (request) {
+      setRequest(request);
+    }
+  }, [context.filteredRequests]);
+
+  //update the purchase details when the request changes
+  //? get rid of this?
+  useEffect(() => {
     const requestDetails =
       request && request.purchaseDetails ? request.purchaseDetails.Details : [];
-    setRequest(request);
     setDetails(requestDetails || []);
-  }, [context.requests]);
+  }, [request]);
 
   const onSaveClicked = () => {
     setEditing(false);
@@ -75,7 +84,7 @@ export const RequestDetails = (props: IProps) => {
           <div className="container-fluid">
             <div className="row">
               <div className="col-12 mb-4 text-center">
-                <ApprovalProgressBar request={request} />
+                <ApprovalProgressBar />
                 <hr />
               </div>
             </div>

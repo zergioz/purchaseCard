@@ -1,6 +1,7 @@
 import { Request } from "../../services/models/Request";
 
 export interface IRequestFilters {
+  id: number;
   directorate: string;
   status: string;
   requestor: string;
@@ -9,6 +10,7 @@ export interface IRequestFilters {
   type: string;
 }
 export class RequestFilters implements IRequestFilters {
+  id: number = -1;
   directorate: string = "";
   status: string = "All Open";
   requestor: string = "";
@@ -24,6 +26,7 @@ interface IRequestFiltering {
 export const useRequestFiltering = (): IRequestFiltering => {
   const applyFilters = (filters: IRequestFilters, requests: Request[]) => {
     let filteredRequests: Request[] = requests
+      .filter(request => idFilter(request, filters))
       .filter(request => requestTypeFilter(request, filters))
       .filter(request => fiscalYearFilter(request, filters))
       .filter(request => requestorFilter(request, filters))
@@ -53,6 +56,10 @@ export const useRequestFiltering = (): IRequestFiltering => {
         request.approvals["j8Approval"]!.j8FiscalYear == filters.fiscalYear;
     }
     return match;
+  };
+
+  const idFilter = (request: Request, filters: IRequestFilters) => {
+    return filters.id == -1 || request.id == filters.id;
   };
 
   const keywordFilter = (request: Request, filters: IRequestFilters) => {
