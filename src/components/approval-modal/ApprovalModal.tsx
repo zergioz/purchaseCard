@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 import { Request } from "../../services/models/Request";
 import { Modal, Button, ButtonToolbar, Alert } from "react-bootstrap";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
 import { useByNameFormInputHandler } from "../approval-forms/FormInputHandler";
 import { getNextStatus } from "../../constants/StepStatus";
+import RequestContext from "../../contexts/RequestContext";
 
 const requestApprovalReducer = (
   request: Request,
@@ -36,6 +37,7 @@ interface IProps {
   onExited: () => void;
 }
 export const ApprovalModal = (props: IProps) => {
+  const context = useContext(RequestContext);
   const [show, setShow] = useState(props.show);
   const [state, dispatch] = useReducer(requestApprovalReducer, props.request);
   const [action, setAction] = useState(props.action);
@@ -58,6 +60,10 @@ export const ApprovalModal = (props: IProps) => {
   const onActionButtonClicked = () => {
     action.date = new Date();
     dispatch(action);
+    let nextRequests = context.requests;
+    let index = nextRequests.findIndex((old: Request) => old.id == state.id);
+    nextRequests[index] = state;
+    context.updateRequests(nextRequests);
     setShow(false);
   };
 

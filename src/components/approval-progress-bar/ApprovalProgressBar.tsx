@@ -11,22 +11,39 @@ interface IProps {
 }
 export const ApprovalProgressBar = (props: IProps) => {
   const statuses: string[] = Object.keys(getStatusesByFriendlyName());
-  const [selected, setSelected] = useState<string>(props.request.status || "");
-  const [selectedIndex, setSelectedIndex] = useState<number>(
-    statuses.indexOf(props.request.status || "")
-  );
+  const [request, setRequest] = useState(props.request);
+  const [locked, setLocked] = useState(false);
+  const [selected, setSelected] = useState(props.request.status);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const badges = useApprovalBadges(props.request, "auto", false);
+  const badges = useApprovalBadges(request, "auto", false);
 
+  //if the user signs, then the request status will update
+  //after that happens, lock this component so they can't sign again
   useEffect(() => {
-    if (props.request.status) setSelected(props.request.status);
+    if (props.request.status) {
+      if (selected && selected != props.request.status) {
+        setLocked(true);
+      }
+    }
   }, [props.request]);
 
+  //update current status if the request changes
   useEffect(() => {
-    let index = statuses.indexOf(selected);
-    //blank filter isn't in the list
-    index = index == -1 ? 0 : index;
-    setSelectedIndex(index);
+    if (props.request.status) {
+      setSelected(props.request.status);
+    }
+  }, [props.request]);
+
+  //when the request status changes, tell the progress bar where to go
+  useEffect(() => {
+    if (selected) {
+      let index = statuses.indexOf(selected);
+
+      //blank filter isn't in the list
+      index = index == -1 ? 0 : index;
+      setSelectedIndex(index);
+    }
   }, [selected]);
 
   const ApprovalProgressStepIcon = (props: any) => {
@@ -41,7 +58,14 @@ export const ApprovalProgressBar = (props: IProps) => {
     );
   };
 
-  const ApprovalProgressStep = (props: any) => {
+  interface IApprovalProgressStepProps {
+    index: number;
+    value: string;
+    active: boolean;
+    request: Request;
+    locked: boolean;
+  }
+  const ApprovalProgressStep = (props: IApprovalProgressStepProps) => {
     const activeStyle = {
       opacity: props.active ? "100%" : "70%",
       fontWeight: props.active ? 600 : 500
@@ -53,8 +77,10 @@ export const ApprovalProgressBar = (props: IProps) => {
           {props.value}
         </p>
         <div className="mt-n3" style={activeStyle}>
-          {props.active && <ApprovalActionsButton request={props.request} />}
-          {!props.active && badges[props.index]}
+          {props.active && !props.locked && (
+            <ApprovalActionsButton request={props.request} />
+          )}
+          {(!props.active || props.locked) && badges[props.index]}
         </div>
       </>
     );
@@ -95,6 +121,7 @@ export const ApprovalProgressBar = (props: IProps) => {
                 value={value}
                 active={value == props.request.status}
                 request={props.request}
+                locked={locked}
               />
             </div>
           ))}
