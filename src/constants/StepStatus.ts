@@ -222,15 +222,44 @@ export const getApprovalHistoryForStatus = (
 ): any => {
   const statuses: StatusesByFriendlyName = getStatusesByFriendlyName();
   const statusObj: IStatus = statuses[status];
+  if (!statusObj) {
+    console.error("Invalid status", statusObj, status);
+  }
   const approvalKey = statusObj.approvalName;
   const approvals: IRequestApprovals = request.approvals;
   const approval: any = approvals ? approvals[approvalKey] : undefined;
   return approval;
 };
 
-//this gets the next step that is required but no signature is present
-//may handle skipped approvals by going backward (due to bad data in db)
-export const getNextApprovalRequired = (
-  request: Request,
-  status: string
-): any => {};
+//this gets the next step that is required where no signature is currently present
+//the requestApprovalReducer uses this to detemine what comes next
+//handles skipped approvals by going backward if necessary
+export const getNextStatus = (request: Request): any => {
+  let next = request.status; //by default, keep it at the same step
+
+  const statuses = Object.keys(getStatusesByFriendlyName());
+
+  //loop through all possible statuses and check for signatures
+  for (let index in statuses) {
+    const status = statuses[index];
+    const approval = getApprovalHistoryForStatus(request, status);
+    const signed = approval ? true : false;
+
+    //this request hasn't been signed at this step
+    if (!signed) {
+      //draft status doesn't require a signature
+      if (status == "Draft") continue;
+
+      //stop at j6 only if it's required, otherwise keep looking
+      if (status == "Tech Review") {
+        if (!request.requestField!.RequestIsJ6) {
+          continue;
+        }
+      }
+      //found our next step
+      next = status;
+      break;
+    }
+  }
+  return next;
+};
