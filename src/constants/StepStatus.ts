@@ -1,6 +1,18 @@
 import { Request, IRequestApprovals } from "../services/models/Request";
 import { groupBy } from "../helpers/GroupBy";
 
+/*
+ * This stuff is all a big workaround to make the filtering interface
+ * play nicely with the existing jQuery submission form in production.
+ *
+ * The app was built around the StepStatus array which is a constant that was
+ * copied from production.  The steps are in order from 1 to 12
+ * and the only keys that really matter are "caseStep" - which matches the
+ * value that the old app puts into the Request "status" field - and
+ * "friendlyName" - which is what the react app uses as the display name
+ * for any particular step.
+ */
+
 export interface IStatus {
   stepName: string;
   stepStatus: string;
@@ -33,7 +45,7 @@ export const StepStatus: IStatus[] = [
     fwd: "DIR APPROVAL",
     fwdj6: "DIR APPROVAL",
     numerStep: 2,
-    friendlyName: "Submitted",
+    friendlyName: "Director",
     approvalName: ""
   },
   {
@@ -48,7 +60,7 @@ export const StepStatus: IStatus[] = [
     fwd: "BO APPROVAL",
     fwdj6: "BO APPROVAL",
     numerStep: 3,
-    friendlyName: "Director",
+    friendlyName: "Billing Official",
     approvalName: "directorateApproval"
   },
   {
@@ -59,7 +71,7 @@ export const StepStatus: IStatus[] = [
     fwd: "PBO APPROVAL",
     fwdj6: "J6 APPROVAL",
     numerStep: 4,
-    friendlyName: "Billing Official",
+    friendlyName: "Tech Review",
     approvalName: "billingOfficialApproval"
   },
   {
@@ -70,7 +82,7 @@ export const StepStatus: IStatus[] = [
     fwd: "ERROR: SEE J69",
     fwdj6: "PBO APPROVAL",
     numerStep: 5,
-    friendlyName: "Tech Review",
+    friendlyName: "PBO Approval",
     approvalName: "j6Approval"
   },
   {
@@ -81,7 +93,7 @@ export const StepStatus: IStatus[] = [
     fwd: "J8 APPROVAL",
     fwdj6: "J8 APPROVAL",
     numerStep: 6,
-    friendlyName: "PBO Approval",
+    friendlyName: "Finance",
     approvalName: "pboApproval"
   },
   {
@@ -92,7 +104,7 @@ export const StepStatus: IStatus[] = [
     fwd: "CARD HOLDER VALIDATION",
     fwdj6: "CARD HOLDER VALIDATION",
     numerStep: 7,
-    friendlyName: "Finance",
+    friendlyName: "Cardholder",
     approvalName: "j8Approval"
   },
   {
@@ -108,7 +120,7 @@ export const StepStatus: IStatus[] = [
     fwd: "REQUESTOR VALIDATION",
     fwdj6: "REQUESTOR VALIDATION",
     numerStep: 8,
-    friendlyName: "Cardholder",
+    friendlyName: "Requestor",
     approvalName: "cardholderValidation"
   },
   {
@@ -119,7 +131,7 @@ export const StepStatus: IStatus[] = [
     fwd: "SUPPLY VALIDATION",
     fwdj6: "SUPPLY VALIDATION",
     numerStep: 9.3,
-    friendlyName: "Requestor",
+    friendlyName: "Supply",
     approvalName: "requestorValidation"
   },
   {
@@ -130,7 +142,7 @@ export const StepStatus: IStatus[] = [
     fwd: "PENDING PBO FINAL",
     fwdj6: "PENDING PBO FINAL",
     numerStep: 9.6,
-    friendlyName: "Supply",
+    friendlyName: "PBO Final",
     approvalName: "supplyValidation"
   },
   {
@@ -141,7 +153,7 @@ export const StepStatus: IStatus[] = [
     fwd: "PENDING CLOSING",
     fwdj6: "PENDING CLOSING",
     numerStep: 9.9,
-    friendlyName: "Final",
+    friendlyName: "BO Final",
     approvalName: "finalValidation"
   },
   {
@@ -215,3 +227,10 @@ export const getApprovalHistoryForStatus = (
   const approval: any = approvals ? approvals[approvalKey] : undefined;
   return approval;
 };
+
+//this gets the next step that is required but no signature is present
+//may handle skipped approvals by going backward (due to bad data in db)
+export const getNextApprovalRequired = (
+  request: Request,
+  status: string
+): any => {};
