@@ -15,7 +15,7 @@ import {
 } from "react-bootstrap";
 import { FaTimes, FaPlus } from "react-icons/fa";
 import { Detail } from "../../../services/models/PurchaseDetails";
-import { ApprovalProgressBar } from "./ApprovalProgressBar";
+import { ApprovalProgressBar } from "../../../components/approval-progress-bar/ApprovalProgressBar";
 import { PersonDirectorates as directorates } from "../../../constants/PersonDirectorates";
 import { FundingSources } from "../../../constants/FundingSources";
 import { AttachmentTypes as attachmentTypes } from "../../../constants/AttachmentTypes";

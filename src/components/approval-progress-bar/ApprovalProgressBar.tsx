@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { ProgressBar } from "react-bootstrap";
 import "./ApprovalProgressBar.css";
-import { getStatusesByFriendlyName } from "../../../constants/StepStatus";
-import { useApprovalBadges } from "../../../components/approval-badge/ApprovalBadges";
-import { Request } from "../../../services/models/Request";
-import { ApprovalActionsButton } from "../../../components/approval-actions-button/ApprovalActionsButton";
+import { getStatusesByFriendlyName } from "../../constants/StepStatus";
+import { useApprovalBadges } from "../approval-badge/ApprovalBadges";
+import { Request } from "../../services/models/Request";
+import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 
 interface IProps {
   request: Request;
