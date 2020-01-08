@@ -1,26 +1,5 @@
-import { SendToForm } from "../components/approval-forms/SendToForm";
-import { SimpleApprovalForm } from "../components/approval-forms/SimpleApprovalForm";
-
-export interface ApprovalAction {
-  bootstrapClass:
-    | "primary"
-    | "secondary"
-    | "success"
-    | "danger"
-    | "warning"
-    | "info"
-    | "dark"
-    | "light"
-    | undefined;
-  type: string;
-  actor: string;
-  action: string;
-  verb: string;
-  actionPast: string;
-  description: string;
-  form: any;
-  formInputs: any;
-}
+import { RequestApprovalForm } from "../components/approval-forms/RequestApprovalForm";
+import { ApprovalAction } from "../services/models/ApprovalAction";
 
 export interface ApprovalActions {
   [key: string]: ApprovalAction;
@@ -28,49 +7,61 @@ export interface ApprovalActions {
 
 export const ApprovalActions: ApprovalActions = {
   noop: {
-    bootstrapClass: "info",
+    bootstrapClass: "warning",
     type: "noop",
-    actor: "Noone",
-    action: "Nothing",
-    verb: "Do nothing",
-    actionPast: "Did nothing",
-    description: "You are doing nothing",
+    actor: "NOOP",
+    action: "NOOP",
+    verb: "NOOP",
+    description: "NOOP",
     form: "div",
-    formInputs: {}
+    formInputs: {},
+    formInputsRequired: []
   },
   sendto: {
-    bootstrapClass: "info",
+    bootstrapClass: "primary",
     type: "sendto",
-    actor: "Sender",
+    actor: "Sent by",
     action: "Send to",
     verb: "Send",
-    actionPast: "Sent to",
     description:
       "You are sending this request to another step without signing it.",
-    form: SendToForm,
-    formInputs: {}
+    form: RequestApprovalForm,
+    formInputs: {
+      status: "Draft",
+      comments: "",
+      user: ""
+    },
+    formInputsRequired: ["status", "comments", "user"]
   },
   approve: {
     bootstrapClass: "success",
     type: "approve",
-    actor: "Approver",
+    actor: "Approved by",
     action: "Approve",
     verb: "Approve",
-    actionPast: "Approved",
     description:
       "You are approving this request and sending it to the next step.",
-    form: SimpleApprovalForm,
-    formInputs: {}
+    form: RequestApprovalForm,
+    formInputs: {
+      status: "",
+      comments: "",
+      user: ""
+    },
+    formInputsRequired: ["comments", "user"]
   },
   reject: {
     bootstrapClass: "danger",
     type: "reject",
-    actor: "Rejector",
+    actor: "Rejected by",
     action: "Reject",
     verb: "Reject",
-    actionPast: "Rejected",
     description: "You are rejecting this request and marking it as closed.",
-    form: SimpleApprovalForm,
-    formInputs: {}
+    form: RequestApprovalForm,
+    formInputs: {
+      status: "",
+      comments: "",
+      user: ""
+    },
+    formInputsRequired: ["comments", "user"]
   }
 };

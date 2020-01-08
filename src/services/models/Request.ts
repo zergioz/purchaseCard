@@ -12,7 +12,7 @@ import { RequestorValidation } from "./RequestorValidation";
 import { SupplyValidation } from "./SupplyValidation";
 import { FinalValidation } from "./FinalValidation";
 import { SharepointUser } from "./SharepointUser";
-import { Item } from "@pnp/sp";
+import { ApprovalAction } from "./ApprovalAction";
 
 export interface IRequestApprovals {
   [key: string]: any;
@@ -77,6 +77,9 @@ export class Request implements IRequest {
   @autoserializeAs(RequestApprovals)
   approvals: RequestApprovals;
 
+  @autoserializeAs(ApprovalAction)
+  history: ApprovalAction[];
+
   constructor(data: any = {}) {
     this.id = data.id;
     this.requestor = data.requestor || {};
@@ -84,5 +87,6 @@ export class Request implements IRequest {
     this.purchaseDetails = data.purchaseDetails || {};
     this.status = data.status || "";
     this.approvals = data.approvals || {};
+    this.history = data.history || [];
   }
 }

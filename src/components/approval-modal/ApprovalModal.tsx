@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { Request } from "../../services/models/Request";
 import { Modal, Button, ButtonToolbar, Alert } from "react-bootstrap";
-import { ApprovalAction } from "../../constants/ApprovalActions";
-import { useFormInputHandler } from "../approval-forms/ApprovalFormInputs";
+import { ApprovalAction } from "../../services/models/ApprovalAction";
+import { useByNameFormInputHandler } from "../approval-forms/FormInputHandler";
 
 const requestApprovalReducer = (
   request: Request,
@@ -12,15 +12,19 @@ const requestApprovalReducer = (
   console.log(`reducer`, action);
   switch (action.type) {
     case "sendto":
-      nextRequest.status = action.formInputs.status;
+      nextRequest.status = action.formInputs["status"];
       break;
     case "approve":
+      nextRequest.status = action.formInputs["status"];
       break;
     case "reject":
+      nextRequest.status = action.formInputs["status"];
       break;
     default:
       console.log(`requestApprovalReducer: No action.`);
   }
+  console.log(`nextRequest`, nextRequest);
+  nextRequest.history.push(action);
   return nextRequest;
 };
 
@@ -34,27 +38,25 @@ export const ApprovalModal = (props: IProps) => {
   const [show, setShow] = useState(props.show);
   const [state, dispatch] = useReducer(requestApprovalReducer, props.request);
   const [action, setAction] = useState(props.action);
-  const { formInputs, setFormInputs, handleChange } = useFormInputHandler(
-    props.action.formInputs
-  );
+  const {
+    formInputs: formOutputs,
+    handleChangeByName: handleChangeByName
+  } = useByNameFormInputHandler(props.action.formInputs);
 
+  //
   useEffect(() => {
-    console.log(`Updating action`, formInputs);
-    setAction({ ...action, formInputs: formInputs });
-  }, [formInputs]);
+    setAction({ ...action, formInputs: formOutputs });
+  }, [formOutputs]);
 
-  useEffect(() => {
-    console.log(`state`, state);
-    console.log(`props.request`, props.request);
-  }, [state, props.request]);
+  useEffect(() => {}, [state, props.request]);
 
   useEffect(() => {
     setShow(props.show);
   }, [props.show]);
 
   const onActionButtonClicked = () => {
-    console.log(`onActionButton`, formInputs);
     dispatch(action);
+    setShow(false);
   };
 
   return (
@@ -75,7 +77,10 @@ export const ApprovalModal = (props: IProps) => {
             <Alert variant={props.action.bootstrapClass}>
               {props.action.description}
             </Alert>
-            <props.action.form action={action} handleChange={handleChange} />
+            <props.action.form
+              action={action}
+              handleChange={handleChangeByName}
+            />
           </Modal.Body>
           <Modal.Footer>
             <ButtonToolbar>

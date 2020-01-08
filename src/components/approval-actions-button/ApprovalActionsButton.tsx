@@ -2,19 +2,15 @@ import React, { useState } from "react";
 import { ApprovalModal } from "../approval-modal/ApprovalModal";
 import { Request } from "../../services/models/Request";
 import { Dropdown, ButtonGroup, DropdownButton } from "react-bootstrap";
-import {
-  ApprovalAction,
-  ApprovalActions
-} from "../../constants/ApprovalActions";
+import { ApprovalActions } from "../../constants/ApprovalActions";
+import { ApprovalAction } from "../../services/models/ApprovalAction";
 
 interface IProps {
   request: Request;
 }
 export const ApprovalActionsButton = (props: IProps) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [modalAction, setModalAction] = useState<ApprovalAction>(
-    ApprovalActions["noop"]
-  );
+  const [modalAction, setModalAction] = useState<ApprovalAction | null>(null);
 
   const onActionClicked = (action: string) => {
     const approvalAction = ApprovalActions[action];
@@ -22,14 +18,21 @@ export const ApprovalActionsButton = (props: IProps) => {
     setModalVisible(true);
   };
 
+  const onExited = () => {
+    setModalVisible(false);
+    setModalAction(null);
+  };
+
   return (
     <>
-      <ApprovalModal
-        request={props.request}
-        action={modalAction}
-        show={modalVisible}
-        onExited={() => setModalVisible(false)}
-      />
+      {modalAction && (
+        <ApprovalModal
+          request={props.request}
+          action={modalAction}
+          show={modalVisible}
+          onExited={onExited}
+        />
+      )}
       <Dropdown as={ButtonGroup} size="sm" className="mt-2">
         <DropdownButton
           variant="danger"
