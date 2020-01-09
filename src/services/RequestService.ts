@@ -39,7 +39,8 @@ export class RequestService {
           supplyValidation: JSON.parse(item.SUPPLY_VALIDATION),
           budgetOfficerApproval: JSON.parse(item.BUDGET_OFFICER_APPROVAL), //pbofinal
           finalValidation: JSON.parse(item.FINAL_VALIDATION) //bofinal
-        }
+        },
+        history: []
       };
     } catch (e) {
       console.error(`Error parsing value in ccRequestTracker item`, e);

@@ -1,5 +1,8 @@
 import { autoserialize, autoserializeAs } from "cerialize";
-import { ApprovalActions } from "../../constants/ApprovalActions";
+import {
+  IApprovalActions,
+  ApprovalActions
+} from "../../constants/ApprovalActions";
 
 type BootstrapVariant =
   | "primary"
@@ -25,7 +28,7 @@ export interface IApprovalAction {
   formInputsRequired: string[];
 }
 
-const defaultAction = ApprovalActions["noop"];
+const defaultAction = { ...ApprovalActions["noop"] };
 
 export class ApprovalAction implements IApprovalAction {
   @autoserialize

@@ -23,6 +23,7 @@ import { CardTypes as cardTypes } from "../../../constants/CardTypes";
 import { Currencies as currencies } from "../../../constants/Currencies";
 import { FiscalYears as fiscalYears } from "../../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../../constants/FiscalQuarters";
+import { convertApprovalsToHistory } from "../../../helpers/ApprovalsToHistory";
 
 interface IProps {
   requestId: number;
@@ -72,7 +73,7 @@ export const RequestDetails = (props: IProps) => {
   };
 
   const onRequestUpdated = (oldRequest: Request, newRequest: Request) => {
-    console.log("requestDetails: Request updated");
+    context.updateRequest(oldRequest, newRequest);
   };
 
   return (
@@ -401,6 +402,13 @@ export const RequestDetails = (props: IProps) => {
             <hr />
             <div className="row">
               <div className="col-12">
+                <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>
+                  {JSON.stringify(
+                    convertApprovalsToHistory(request.approvals),
+                    null,
+                    2
+                  )}
+                </pre>
                 <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>
                   {JSON.stringify(request, null, 2)}
                 </pre>
