@@ -15,7 +15,7 @@ export const ApprovalProgressBar = () => {
   const [selected, setSelected] = useState(request.status);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const badges = useApprovalBadges(request, "auto", false);
+  const badges = useApprovalBadges(context.filteredRequests[0], "auto", false);
 
   //if the request changes, update it
   useEffect(() => {
@@ -37,9 +37,9 @@ export const ApprovalProgressBar = () => {
 
   const onRequestUpdated = (oldRequest: Request, newRequest: Request) => {
     console.log("Request updated", newRequest);
-    setLocked(true);
     setRequest(newRequest);
     setSelected(newRequest.status);
+    setLocked(true);
   };
 
   const ApprovalProgressStepIcon = (props: any) => {
