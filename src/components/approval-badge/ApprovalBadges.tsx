@@ -37,14 +37,12 @@ export const useApprovalBadges = (
     setBadges(recalcBadges);
   }, [request.status]);
 
-  const createBadges = (): any[] => {
-    let ret = [];
-    for (let i in statuses) {
-      const status = statuses[i];
-      if (hiddenBadges.has(status)) continue;
+  const createBadges = () => {
+    return statuses.map(status => {
+      if (hiddenBadges.has(status)) return;
       const approval = getApprovalHistoryForStatus(request, status);
       const signedOrUnsigned = approval ? "Signed" : "Unsigned";
-      ret.push(
+      return (
         <ApprovalBadge
           key={status}
           approval={approval}
@@ -52,8 +50,7 @@ export const useApprovalBadges = (
           placement={popoverPlacement}
         />
       );
-    }
-    return ret;
+    });
   };
 
   return badges;
