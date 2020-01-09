@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useReducer, useContext } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { Request } from "../../services/models/Request";
 import { Modal, Button, ButtonToolbar, Alert } from "react-bootstrap";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
-import { useByNameFormInputHandler } from "../approval-forms/FormInputHandler";
 import { getNextStatus } from "../../constants/StepStatus";
-import RequestContext from "../../contexts/RequestContext";
 
 const requestApprovalReducer = (
   request: Request,
@@ -15,12 +13,15 @@ const requestApprovalReducer = (
   switch (action.type) {
     case "sendto":
       nextRequest.status = action.formInputs["status"];
+      console.log("sendto", nextRequest.status);
       break;
     case "approve":
       nextRequest.status = getNextStatus(request);
+      console.log("approve", nextRequest.status);
       break;
     case "reject":
       nextRequest.status = "Closed";
+      console.log("reject", nextRequest.status);
       break;
     default:
       console.log(`requestApprovalReducer: No action.`);
@@ -38,32 +39,46 @@ interface IProps {
   onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
 }
 export const ApprovalModal = (props: IProps) => {
-  const context = useContext(RequestContext);
+  const [request, setRequest] = useState(props.request);
   const [show, setShow] = useState(props.show);
-  const [state, dispatch] = useReducer(requestApprovalReducer, props.request);
+  const [nextRequest, dispatch] = useReducer(
+    requestApprovalReducer,
+    props.request
+  );
   const [action, setAction] = useState(props.action);
-  const {
-    formInputs: formOutputs,
-    handleChangeByName: handleChangeByName
-  } = useByNameFormInputHandler(props.action.formInputs);
 
-  //
-  useEffect(() => {
-    setAction({ ...action, formInputs: formOutputs });
-  }, [formOutputs]);
-
-  useEffect(() => {}, [state, props.request]);
-
+  //show the modal
   useEffect(() => {
     setShow(props.show);
   }, [props.show]);
 
+  //when the form inputs change, update the action
+  const onApprovalFormInputsChanged = (inputs: any) => {
+    console.log(`onApprovalFormInputsChanged`, inputs);
+    setAction({ ...action, formInputs: inputs });
+  };
+
+  //when the save button is clicked, timestamp it and update the request
+  //also lock the progress bar so they cant do any more actions
   const onActionButtonClicked = () => {
+    console.log(`onActionButtonClicked`, action);
     action.date = new Date();
     dispatch(action);
-    props.onRequestUpdated(props.request, state);
     setShow(false);
   };
+
+  //request changes status after an action is dispatched - send the change up
+  useEffect(() => {
+    console.log(
+      `nextRequest changed`,
+      nextRequest.status,
+      props.request.status,
+      request.status
+    );
+    if (nextRequest.status != request.status) {
+      props.onRequestUpdated(request, nextRequest);
+    }
+  }, [nextRequest]);
 
   return (
     <>
@@ -85,7 +100,7 @@ export const ApprovalModal = (props: IProps) => {
             </Alert>
             <props.action.form
               action={action}
-              handleChange={handleChangeByName}
+              handleChange={onApprovalFormInputsChanged}
             />
           </Modal.Body>
           <Modal.Footer>
