@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import { ApprovalModal } from "../approval-modal/ApprovalModal";
 import { Request } from "../../services/models/Request";
 import { Dropdown, ButtonGroup, DropdownButton } from "react-bootstrap";
 import { ApprovalActions } from "../../constants/ApprovalActions";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
+import { ApprovalReducer } from "../../reducers/ApprovalReducer";
 
 interface IProps {
   request: Request;
@@ -12,13 +13,27 @@ interface IProps {
 export const ApprovalActionsButton = (props: IProps) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalAction, setModalAction] = useState<ApprovalAction | null>(null);
+  const [nextRequestState, dispatchApprovalAction] = useReducer(
+    ApprovalReducer,
+    props.request
+  );
 
+  //show the modal with the form specific to this action
   const onActionClicked = (action: string) => {
     const approvalAction = ApprovalActions[action];
     setModalAction(approvalAction);
     setModalVisible(true);
   };
 
+  //they closed the modal by hitting save, so dispatch the action
+  //and notify the parent component
+  const onActionFinalized = (action: ApprovalAction) => {
+    console.log("onActionFinalized", action);
+    dispatchApprovalAction(action);
+    props.onRequestUpdated(props.request, nextRequestState);
+  };
+
+  //modal closed, reset things for next use
   const onExited = () => {
     setModalVisible(false);
     setModalAction(null);
@@ -32,7 +47,7 @@ export const ApprovalActionsButton = (props: IProps) => {
           action={modalAction}
           show={modalVisible}
           onExited={onExited}
-          onRequestUpdated={props.onRequestUpdated}
+          onActionFinalized={onActionFinalized}
         />
       )}
       <Dropdown as={ButtonGroup} size="sm" className="mt-2">

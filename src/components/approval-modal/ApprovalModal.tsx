@@ -2,49 +2,16 @@ import React, { useState, useEffect, useReducer } from "react";
 import { Request } from "../../services/models/Request";
 import { Modal, Button, ButtonToolbar, Alert } from "react-bootstrap";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
-import { getNextStatus } from "../../constants/StepStatus";
-
-const requestApprovalReducer = (
-  request: Request,
-  action: ApprovalAction
-): Request => {
-  let nextRequest = request;
-  console.log(`reducer`, action);
-  switch (action.type) {
-    case "sendto":
-      nextRequest.status = action.formInputs["status"];
-      console.log("sendto", nextRequest.status);
-      break;
-    case "approve":
-      nextRequest.status = getNextStatus(request);
-      console.log("approve", nextRequest.status);
-      break;
-    case "reject":
-      nextRequest.status = "Closed";
-      console.log("reject", nextRequest.status);
-      break;
-    default:
-      console.log(`requestApprovalReducer: No action.`);
-  }
-  console.log(`nextRequest`, nextRequest);
-  if (nextRequest.history) nextRequest.history.push(action);
-  return nextRequest;
-};
 
 interface IProps {
   request: Request;
   action: ApprovalAction;
   show: boolean;
   onExited: () => void;
-  onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
+  onActionFinalized: (action: ApprovalAction) => void;
 }
 export const ApprovalModal = (props: IProps) => {
-  const [request, setRequest] = useState(props.request);
   const [show, setShow] = useState(props.show);
-  const [nextRequest, dispatch] = useReducer(
-    requestApprovalReducer,
-    props.request
-  );
   const [action, setAction] = useState(props.action);
 
   //show the modal
@@ -63,22 +30,9 @@ export const ApprovalModal = (props: IProps) => {
   const onActionButtonClicked = () => {
     console.log(`onActionButtonClicked`, action);
     action.date = new Date();
-    dispatch(action);
+    props.onActionFinalized(action);
     setShow(false);
   };
-
-  //request changes status after an action is dispatched - send the change up
-  useEffect(() => {
-    console.log(
-      `nextRequest changed`,
-      nextRequest.status,
-      props.request.status,
-      request.status
-    );
-    if (nextRequest.status != request.status) {
-      props.onRequestUpdated(request, nextRequest);
-    }
-  }, [nextRequest]);
 
   return (
     <>
