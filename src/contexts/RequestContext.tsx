@@ -17,6 +17,7 @@ export type RequestContextType = {
   filters: IRequestFilters;
   pageFilters: IRequestFilters;
   updatePageFilters: (filters: IRequestFilters) => void;
+  updateRequest: (oldRequest: Request, newRequest: Request) => void;
   applyFilters: (filters: IRequestFilters, update: boolean) => Request[];
 };
 
@@ -29,6 +30,7 @@ export const RequestContext = React.createContext<RequestContextType>({
   filters: new RequestFilters(),
   pageFilters: new RequestFilters(),
   updatePageFilters: (filters: IRequestFilters) => null,
+  updateRequest: (oldRequest: Request, newRequest: Request) => null,
   applyFilters: (filters: IRequestFilters, update: boolean) => []
 });
 
@@ -77,6 +79,14 @@ export const RequestProvider: React.FC = (props: any) => {
     return filteredRequests;
   };
 
+  const updateRequest = (oldRequest: Request, newRequest: Request) => {
+    const index = requests.indexOf(oldRequest);
+    let reqArray = requests;
+    reqArray[index] = newRequest;
+    updateRequests(reqArray);
+    applyRequestFilters(filters, false);
+  };
+
   return (
     <RequestContext.Provider
       value={{
@@ -88,6 +98,7 @@ export const RequestProvider: React.FC = (props: any) => {
         filters: filters,
         pageFilters: pageFilters,
         updatePageFilters: updatePageFilters,
+        updateRequest: updateRequest,
         applyFilters: applyRequestFilters
       }}
     >

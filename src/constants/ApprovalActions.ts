@@ -1,11 +1,11 @@
 import { RequestApprovalForm } from "../components/approval-forms/RequestApprovalForm";
 import { ApprovalAction } from "../services/models/ApprovalAction";
 
-export interface ApprovalActions {
+export interface IApprovalActions {
   [key: string]: ApprovalAction;
 }
 
-export const ApprovalActions: ApprovalActions = {
+export const ApprovalActions: IApprovalActions = {
   noop: {
     bootstrapClass: "warning",
     type: "noop",

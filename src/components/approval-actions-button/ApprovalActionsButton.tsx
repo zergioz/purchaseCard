@@ -1,10 +1,13 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer } from "react";
 import { ApprovalModal } from "../approval-modal/ApprovalModal";
 import { Request } from "../../services/models/Request";
 import { Dropdown, ButtonGroup, DropdownButton } from "react-bootstrap";
-import { ApprovalActions } from "../../constants/ApprovalActions";
-import { ApprovalAction } from "../../services/models/ApprovalAction";
+import {
+  ApprovalAction,
+  IApprovalAction
+} from "../../services/models/ApprovalAction";
 import { ApprovalReducer } from "../../reducers/ApprovalReducer";
+import { ApprovalActions } from "../../constants/ApprovalActions";
 
 interface IProps {
   request: Request;
@@ -20,7 +23,7 @@ export const ApprovalActionsButton = (props: IProps) => {
 
   //show the modal with the form specific to this action
   const onActionClicked = (action: string) => {
-    const approvalAction = ApprovalActions[action];
+    const approvalAction: IApprovalAction = ApprovalActions[action];
     setModalAction(approvalAction);
     setModalVisible(true);
   };
