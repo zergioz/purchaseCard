@@ -7,15 +7,19 @@ import { Request } from "../../services/models/Request";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 import RequestContext from "../../contexts/RequestContext";
 
-export const ApprovalProgressBar = () => {
+interface IProps {
+  locked: boolean;
+  onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
+}
+export const ApprovalProgressBar = (props: IProps) => {
   const context = useContext(RequestContext);
   const statuses: string[] = Object.keys(getStatusesByFriendlyName());
   const [request, setRequest] = useState<Request>(context.filteredRequests[0]);
-  const [locked, setLocked] = useState(false);
+  const [locked, setLocked] = useState(props.locked);
   const [selected, setSelected] = useState(request.status);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const badges = useApprovalBadges(context.filteredRequests[0], "auto", false);
+  const badges = useApprovalBadges(request, "auto", false);
 
   //if the request changes, update it
   useEffect(() => {
@@ -40,6 +44,9 @@ export const ApprovalProgressBar = () => {
     setRequest(newRequest);
     setSelected(newRequest.status);
     setLocked(true);
+    if (props.onRequestUpdated) {
+      props.onRequestUpdated(oldRequest, newRequest);
+    }
   };
 
   const ApprovalProgressStepIcon = (props: any) => {
