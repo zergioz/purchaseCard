@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Request } from "../../services/models/Request";
 import {
   getStatusesByFriendlyName,
@@ -30,20 +30,31 @@ export const useApprovalBadges = (
 ) => {
   const hiddenBadges = new Set(["Draft", "Submitted", "Closed"]);
   const statuses = Object.keys(getStatusesByFriendlyName());
+  const [badges, setBadges] = useState<Array<any>>([]);
 
-  const badges = statuses.map(status => {
-    if (hiddenBadges.has(status)) return;
-    const approval = getApprovalHistoryForStatus(request, status);
-    const signedOrUnsigned = approval ? "Signed" : "Unsigned";
-    return (
-      <ApprovalBadge
-        key={status}
-        approval={approval}
-        text={statusText ? status : signedOrUnsigned}
-        placement={popoverPlacement}
-      />
-    );
-  });
+  useEffect(() => {
+    const recalcBadges = createBadges();
+    setBadges(recalcBadges);
+  }, [request.status]);
+
+  const createBadges = (): any[] => {
+    let ret = [];
+    for (let i in statuses) {
+      const status = statuses[i];
+      if (hiddenBadges.has(status)) continue;
+      const approval = getApprovalHistoryForStatus(request, status);
+      const signedOrUnsigned = approval ? "Signed" : "Unsigned";
+      ret.push(
+        <ApprovalBadge
+          key={status}
+          approval={approval}
+          text={statusText ? status : signedOrUnsigned}
+          placement={popoverPlacement}
+        />
+      );
+    }
+    return ret;
+  };
 
   return badges;
 };
