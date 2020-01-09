@@ -7,7 +7,7 @@ import { useByNameFormInputHandler } from "./FormInputHandler";
 
 interface IProps {
   action: ApprovalAction;
-  handleChange: (event: any) => void;
+  handleChange: (formInputs: any) => void;
 }
 export const RequestApprovalForm = (props: IProps) => {
   const choices = Object.keys(getStatusesByFriendlyName());
@@ -21,10 +21,13 @@ export const RequestApprovalForm = (props: IProps) => {
 
   const handleChange = (e: any) => {
     handleChangeByName(e);
-    if (props.handleChange) {
-      props.handleChange(e);
-    }
   };
+
+  useEffect(() => {
+    if (props.handleChange) {
+      props.handleChange(formInputs);
+    }
+  }, [formInputs]);
 
   //when this form loads, put defaults into all the approval fields
   useEffect(() => {
