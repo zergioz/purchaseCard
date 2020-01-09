@@ -252,6 +252,9 @@ export const getNextStatus = (request: Request): any => {
 
     //this request hasn't been signed at this step
     if (!signed) {
+      //current status doesn't count - we want the next one
+      if (status == request.status) continue;
+
       //draft status doesn't require a signature
       if (status == "Draft") continue;
 
