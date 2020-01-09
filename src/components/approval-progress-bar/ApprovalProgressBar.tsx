@@ -1,32 +1,24 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { ProgressBar } from "react-bootstrap";
 import "./ApprovalProgressBar.css";
 import { getStatusesByFriendlyName } from "../../constants/StepStatus";
 import { useApprovalBadges } from "../approval-badge/ApprovalBadges";
 import { Request } from "../../services/models/Request";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
-import RequestContext from "../../contexts/RequestContext";
 
 interface IProps {
   locked: boolean;
+  request: Request;
   onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
 }
 export const ApprovalProgressBar = (props: IProps) => {
-  const context = useContext(RequestContext);
   const statuses: string[] = Object.keys(getStatusesByFriendlyName());
-  const [request, setRequest] = useState<Request>(context.filteredRequests[0]);
+  const [request, setRequest] = useState<Request>(props.request);
   const [locked, setLocked] = useState(props.locked);
   const [selected, setSelected] = useState(request.status);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const badges = useApprovalBadges(request, "auto", false);
-
-  //if the request changes, update it
-  useEffect(() => {
-    if (context.filteredRequests[0]) {
-      setRequest(context.filteredRequests[0]);
-    }
-  }, [context.filteredRequests[0]]);
 
   //when the request status changes, tell the progress bar where to go
   useEffect(() => {

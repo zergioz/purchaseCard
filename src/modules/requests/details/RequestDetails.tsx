@@ -71,6 +71,10 @@ export const RequestDetails = (props: IProps) => {
     setEditing(true);
   };
 
+  const onRequestUpdated = (oldRequest: Request, newRequest: Request) => {
+    console.log("requestDetails: Request updated");
+  };
+
   return (
     <>
       <div className="container">
@@ -84,7 +88,11 @@ export const RequestDetails = (props: IProps) => {
           <div className="container-fluid">
             <div className="row">
               <div className="col-12 mb-4 text-center">
-                <ApprovalProgressBar />
+                <ApprovalProgressBar
+                  request={request}
+                  locked={false}
+                  onRequestUpdated={onRequestUpdated}
+                />
                 <hr />
               </div>
             </div>
