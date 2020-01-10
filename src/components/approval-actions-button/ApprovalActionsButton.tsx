@@ -4,13 +4,15 @@ import { Request } from "../../services/models/Request";
 import { Dropdown, ButtonGroup, DropdownButton } from "react-bootstrap";
 import {
   ApprovalAction,
-  IApprovalAction
+  IApprovalAction,
+  BootstrapVariant
 } from "../../services/models/ApprovalAction";
 import { ApprovalReducer } from "../../reducers/ApprovalReducer";
 import { ApprovalActions } from "../../constants/ApprovalActions";
 
 interface IProps {
   request: Request;
+  variant: BootstrapVariant;
   onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
 }
 export const ApprovalActionsButton = (props: IProps) => {
@@ -55,7 +57,7 @@ export const ApprovalActionsButton = (props: IProps) => {
       )}
       <Dropdown as={ButtonGroup} size="sm" className="mt-2">
         <DropdownButton
-          variant="warning"
+          variant={props.variant}
           size="sm"
           title="Actions"
           id="approval-button"

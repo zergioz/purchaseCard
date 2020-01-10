@@ -1,7 +1,7 @@
 import { autoserialize, autoserializeAs } from "cerialize";
 import { ApprovalActions } from "../../constants/ApprovalActions";
 
-type BootstrapVariant =
+export type BootstrapVariant =
   | "primary"
   | "secondary"
   | "success"
