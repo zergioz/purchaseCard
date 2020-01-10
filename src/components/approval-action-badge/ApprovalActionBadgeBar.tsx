@@ -37,13 +37,15 @@ export const useActionBadges = (
   const createBadges = () => {
     return statuses.map(status => {
       if (hiddenBadges.has(status)) return;
+      const active = status == request.status;
       const action = request.getLastActionFor(status);
-      const signedOrUnsigned = action ? "Signed" : "Unsigned";
+      const signedOrUnsigned = action ? action.pastTense : "Unsigned";
       return (
         <ApprovalActionBadge
           key={status}
           action={action}
           text={statusText ? status : signedOrUnsigned}
+          active={active}
           placement={popoverPlacement}
         />
       );

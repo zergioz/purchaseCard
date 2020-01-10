@@ -79,7 +79,7 @@ export const parseApproval = (approval: any): ApprovalAction => {
       let decoded = decodeURIComponent(formInputs["userString"]);
       let result = decoded.split(" ON: ");
       let userStr = result[0].substring(11);
-      formInputs["userString"] = userStr;
+      formInputs["userString"] = userStr.substring(11); //i:0#.w|sof\\
       let dateStr = result[1];
       formInputs["dateString"] = date;
       date = new Date(dateStr);

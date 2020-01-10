@@ -55,7 +55,7 @@ export const ApprovalActionsButton = (props: IProps) => {
       )}
       <Dropdown as={ButtonGroup} size="sm" className="mt-2">
         <DropdownButton
-          variant="danger"
+          variant="warning"
           size="sm"
           title="Actions"
           id="approval-button"
