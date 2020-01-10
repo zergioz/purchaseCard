@@ -11,7 +11,12 @@ interface IProps {
   placement?: PopoverPlacement;
 }
 export const ApprovalActionBadge = (props: IProps) => {
-  const badgeStyle = { margin: "2px", padding: "5px", cursor: "pointer" };
+  const badgeStyle = {
+    margin: "2px",
+    padding: "5px",
+    cursor: "pointer",
+    opacity: props.action || props.active ? 1 : 0.5
+  };
   const badgeAction = props.action ? props.action.pastTense : "Not Signed";
   let badgeColor = props.action ? props.action.bootstrapClass : "secondary";
   badgeColor = props.active ? "warning" : badgeColor;
@@ -19,30 +24,27 @@ export const ApprovalActionBadge = (props: IProps) => {
   const popover = (
     <Popover id={props.text} style={{ maxWidth: "1000px" }}>
       <Popover.Title as="h3">{badgeAction}</Popover.Title>
-      <Popover.Content>
-        {props.action && (
-          <>
-            <Card style={{ width: "18rem" }}>
-              <Card.Body>
-                <Card.Subtitle>
-                  {props.action.formInputs["comments"] ||
-                    "No comments entered."}
-                  <br />
-                  <br />
-                </Card.Subtitle>
-                <Card.Subtitle>
-                  <span>{badgeAction} by: </span>
-                  <span className="font-weight-bold">
-                    {props.action.formInputs["user"]
-                      ? props.action.formInputs["user"].Title
-                      : props.action.formInputs["userString"]}
-                  </span>
-                </Card.Subtitle>
-              </Card.Body>
-            </Card>
-          </>
-        )}
-      </Popover.Content>
+      {props.action && (
+        <Popover.Content>
+          <Card style={{ width: "18rem" }}>
+            <Card.Body>
+              <Card.Subtitle>
+                {props.action.formInputs["comments"] || "No comments entered."}
+                <br />
+                <br />
+              </Card.Subtitle>
+              <Card.Subtitle>
+                <span>{badgeAction} by: </span>
+                <span className="font-weight-bold">
+                  {props.action.formInputs["user"]
+                    ? props.action.formInputs["user"].Title
+                    : props.action.formInputs["userString"]}
+                </span>
+              </Card.Subtitle>
+            </Card.Body>
+          </Card>
+        </Popover.Content>
+      )}
     </Popover>
   );
 
