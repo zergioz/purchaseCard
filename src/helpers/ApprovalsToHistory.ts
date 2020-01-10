@@ -93,13 +93,14 @@ export const parseApproval = (approval: any): ApprovalAction => {
 //try to get the legacy data into a usable format. match each legacy approval to its friendly status,
 //parse the date/signature, and stuff that info into a RequestApproval
 export const convertApprovalsToHistory = (approvals: IRequestApprovals) => {
-  let history: { [key: string]: IApprovalAction | undefined } = {};
+  let history: { [key: string]: IApprovalAction[] } = {};
   for (var key in approvals) {
     if (approvals.hasOwnProperty(key)) {
       const status = getStatusForApprovalName(key);
       const approval = getApprovalForStatus(status, approvals);
       let action: any = approval ? parseApproval(approval) : undefined;
-      history[status] = action;
+      history[status] = history[status] || [];
+      history[status].push(action);
     }
   }
 

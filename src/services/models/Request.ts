@@ -78,7 +78,7 @@ export class Request implements IRequest {
   approvals: RequestApprovals;
 
   @autoserializeAs(ApprovalAction)
-  history: { [key: string]: ApprovalAction };
+  history: { [key: string]: ApprovalAction[] };
 
   constructor(data: any = {}) {
     this.id = data.id;

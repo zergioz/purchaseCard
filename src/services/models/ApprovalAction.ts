@@ -1,8 +1,5 @@
 import { autoserialize, autoserializeAs } from "cerialize";
-import {
-  IApprovalActions,
-  ApprovalActions
-} from "../../constants/ApprovalActions";
+import { ApprovalActions } from "../../constants/ApprovalActions";
 
 type BootstrapVariant =
   | "primary"
