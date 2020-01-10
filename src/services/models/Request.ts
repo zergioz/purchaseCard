@@ -61,19 +61,19 @@ export interface IRequest {
 
 export class Request implements IRequest {
   @autoserialize
-  id?: number;
+  id: number;
 
   @autoserializeAs(SharepointUser)
-  requestor?: SharepointUser;
+  requestor: SharepointUser;
 
   @autoserializeAs(RequestField)
-  requestField?: RequestField;
+  requestField: RequestField;
 
   @autoserializeAs(PurchaseDetails)
-  purchaseDetails?: PurchaseDetails;
+  purchaseDetails: PurchaseDetails;
 
   @autoserialize
-  status?: string;
+  status: string;
 
   @autoserializeAs(RequestApprovals)
   approvals: RequestApprovals;
