@@ -40,7 +40,7 @@ export const useApprovalBadges = (
   const createBadges = () => {
     return statuses.map(status => {
       if (hiddenBadges.has(status)) return;
-      const approval = getApprovalHistoryForStatus(request, status);
+      const approval = request.getLastActionFor(status);
       const signedOrUnsigned = approval ? "Signed" : "Unsigned";
       return (
         <ApprovalBadge
