@@ -13,6 +13,7 @@ export const ApprovalActions: IApprovalActions = {
     action: "NOOP",
     date: new Date(),
     verb: "NOOP",
+    pastTense: "NOOP",
     description: "NOOP",
     form: "div",
     formInputs: {},
@@ -25,6 +26,7 @@ export const ApprovalActions: IApprovalActions = {
     action: "Send to",
     date: new Date(),
     verb: "Send",
+    pastTense: "Rerouted",
     description:
       "You are sending this request to another step without signing it.",
     form: RequestApprovalForm,
@@ -42,6 +44,7 @@ export const ApprovalActions: IApprovalActions = {
     action: "Approve",
     date: new Date(),
     verb: "Approve",
+    pastTense: "Approved",
     description:
       "You are approving this request and sending it to the next step.",
     form: RequestApprovalForm,
@@ -59,6 +62,7 @@ export const ApprovalActions: IApprovalActions = {
     action: "Reject",
     date: new Date(),
     verb: "Reject",
+    pastTense: "Rejected",
     description: "You are rejecting this request and marking it as closed.",
     form: RequestApprovalForm,
     formInputs: {

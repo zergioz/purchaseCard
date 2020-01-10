@@ -19,6 +19,7 @@ export interface IApprovalAction {
   action: string;
   date: Date;
   verb: string;
+  pastTense: string;
   description: string;
   form: any;
   formInputs: { [key: string]: any };
@@ -47,6 +48,9 @@ export class ApprovalAction implements IApprovalAction {
   verb: string;
 
   @autoserialize
+  pastTense: string;
+
+  @autoserialize
   description: string;
 
   @autoserialize
@@ -65,6 +69,7 @@ export class ApprovalAction implements IApprovalAction {
     this.action = data.action || defaultAction.action;
     this.date = data.date || defaultAction.date;
     this.verb = data.verb || defaultAction.verb;
+    this.pastTense = data.pastTense || defaultAction.pastTense;
     this.description = data.description || defaultAction.description;
     this.form = data.form || defaultAction.form;
     this.formInputs = data.formInputs || defaultAction.formInputs;

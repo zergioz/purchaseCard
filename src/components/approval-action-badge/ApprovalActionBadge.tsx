@@ -10,14 +10,19 @@ interface IProps {
 }
 export const ApprovalActionBadge = (props: IProps) => {
   const badgeStyle = { margin: "2px", padding: "5px", cursor: "pointer" };
+  const badgeTitle = props.action ? props.action.pastTense : "Not Signed";
 
   const popover = (
     <Popover id={props.text} style={{ maxWidth: "1000px" }}>
-      <Popover.Title as="h3">
-        {props.action ? "Signed" : "Not signed"}
-      </Popover.Title>
-      <Popover.Content hidden={!props.action}>
-        <pre>{JSON.stringify(props.action, null, 2)}</pre>
+      <Popover.Title as="h3">{badgeTitle}</Popover.Title>
+      <Popover.Content>
+        {props.action && (
+          <div>
+            {/* Actioned by:{" "}
+            {props.action!.formInputs["user"]!.Title ||
+              props.action!.formInputs["userString"]} */}
+          </div>
+        )}
       </Popover.Content>
     </Popover>
   );
@@ -29,7 +34,7 @@ export const ApprovalActionBadge = (props: IProps) => {
       overlay={popover}
     >
       <Badge
-        variant={props.action ? "success" : "secondary"}
+        variant={props.action ? props.action.bootstrapClass : "secondary"}
         style={badgeStyle}
       >
         {props.text}
