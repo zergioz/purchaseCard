@@ -9,8 +9,8 @@ export const ApprovalReducer = (
 ): Request => {
   let nextRequest = request;
   let nextStatus = request.status;
+  let nextHistory = request.history[request.status];
   if (request.status) {
-    nextRequest.history[request.status].push(action);
     switch (action.type) {
       case "sendto":
         nextStatus = action.formInputs["status"];
@@ -25,6 +25,7 @@ export const ApprovalReducer = (
         console.log(`requestApprovalReducer: No action.`);
     }
   }
+  nextHistory.push(action);
   nextRequest.status = nextStatus;
   return nextRequest;
 };
