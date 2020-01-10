@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ProgressBar } from "react-bootstrap";
 import "./ApprovalProgressBar.css";
 import { getStatusesByFriendlyName } from "../../constants/StepStatus";
-import { useApprovalBadges } from "../approval-action-badge/ApprovalBadges";
+import { useActionBadges } from "../approval-action-badge/ApprovalActionBadgeBar";
 import { Request } from "../../services/models/Request";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 
@@ -18,7 +18,7 @@ export const ApprovalProgressBar = (props: IProps) => {
   const [selected, setSelected] = useState(request.status);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const badges = useApprovalBadges(request, "auto", false);
+  const badges = useActionBadges(request, "auto", false);
 
   //when the request status changes, tell the progress bar where to go
   useEffect(() => {

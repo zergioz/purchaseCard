@@ -1,6 +1,6 @@
 import React from "react";
 import { Request } from "../../services/models/Request";
-import { ApprovalBadges } from "../approval-action-badge/ApprovalBadges";
+import { ApprovalActionBadgeBar } from "../approval-action-badge/ApprovalActionBadgeBar";
 import { Link } from "react-router-dom";
 interface IProps {
   request: Request;
@@ -34,7 +34,10 @@ export const RequestTableRow: React.FC<IProps> = props => {
       </td>
       <td>
         <div>
-          <ApprovalBadges request={props.request} popoverPlacement="top" />
+          <ApprovalActionBadgeBar
+            request={props.request}
+            popoverPlacement="top"
+          />
         </div>
         <div>{item.requestField!.RequestJustification}</div>
       </td>

@@ -20,7 +20,7 @@ export type PopoverPlacement =
   | "left"
   | "left-start";
 
-export const useApprovalBadges = (
+export const useActionBadges = (
   request: Request,
   popoverPlacement: PopoverPlacement,
   statusText: boolean = true
@@ -57,7 +57,7 @@ interface IProps {
   request: Request;
   popoverPlacement: PopoverPlacement;
 }
-export const ApprovalBadges = (props: IProps) => {
-  const badges = useApprovalBadges(props.request, props.popoverPlacement);
+export const ApprovalActionBadgeBar = (props: IProps) => {
+  const badges = useActionBadges(props.request, props.popoverPlacement);
   return <div style={{ display: "inline" }}>{badges}</div>;
 };

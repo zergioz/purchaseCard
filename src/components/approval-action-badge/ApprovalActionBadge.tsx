@@ -1,6 +1,6 @@
 import React from "react";
 import { OverlayTrigger, Badge, Popover } from "react-bootstrap";
-import { PopoverPlacement } from "./ApprovalBadges";
+import { PopoverPlacement } from "./ApprovalActionBadgeBar";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
 
 interface IProps {
