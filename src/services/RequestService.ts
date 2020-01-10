@@ -6,6 +6,7 @@ import { map, tap } from "rxjs/operators";
 import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
 import { convertToFriendly } from "../constants/StepStatus";
+import { convertApprovalsToHistory } from "../helpers/ApprovalsToHistory";
 
 export class RequestService {
   private dal: dal;
@@ -22,25 +23,28 @@ export class RequestService {
   mapAndParse(item: ccRequestTracker): any {
     let parsed = {};
     try {
+      let approvals = {
+        directorateApproval: JSON.parse(item.DIRECTORATE_APPROVAL),
+        billingOfficialApproval: JSON.parse(item.BILLING_OFFICIAL_APPROVAL), //bo
+        j6Approval: JSON.parse(item.J6_APPROVAL),
+        pboApproval: JSON.parse(item.PBO_APPROVAL),
+        j8Approval: JSON.parse(item.J8_APPROVAL),
+        cardholderValidation: JSON.parse(item.CARD_HOLDER_VALIDATION),
+        requestorValidation: JSON.parse(item.REQUESTOR_VALIDATION),
+        supplyValidation: JSON.parse(item.SUPPLY_VALIDATION),
+        budgetOfficerApproval: JSON.parse(item.BUDGET_OFFICER_APPROVAL), //pbofinal
+        finalValidation: JSON.parse(item.FINAL_VALIDATION) //bofinal
+      };
       parsed = {
         id: item.Id,
         requestor: item.Author,
         requestField: JSON.parse(item.REQUEST_FIELD),
         purchaseDetails: JSON.parse(item.PURCHASE_DETAILS),
         status: convertToFriendly(item.REQUEST_STATUS),
-        approvals: {
-          directorateApproval: JSON.parse(item.DIRECTORATE_APPROVAL),
-          billingOfficialApproval: JSON.parse(item.BILLING_OFFICIAL_APPROVAL), //bo
-          j6Approval: JSON.parse(item.J6_APPROVAL),
-          pboApproval: JSON.parse(item.PBO_APPROVAL),
-          j8Approval: JSON.parse(item.J8_APPROVAL),
-          cardholderValidation: JSON.parse(item.CARD_HOLDER_VALIDATION),
-          requestorValidation: JSON.parse(item.REQUESTOR_VALIDATION),
-          supplyValidation: JSON.parse(item.SUPPLY_VALIDATION),
-          budgetOfficerApproval: JSON.parse(item.BUDGET_OFFICER_APPROVAL), //pbofinal
-          finalValidation: JSON.parse(item.FINAL_VALIDATION) //bofinal
-        },
-        history: []
+        approvals: approvals,
+        history: item.History
+          ? JSON.parse(item.History)
+          : convertApprovalsToHistory(approvals)
       };
     } catch (e) {
       console.error(`Error parsing value in ccRequestTracker item`, e);

@@ -40,6 +40,7 @@ export interface ccRequestTracker {
   Attachments: boolean;
   GUID: string;
   Author: SharepointUser;
+  History: string;
 }
 
 export interface AttachmentFiles {

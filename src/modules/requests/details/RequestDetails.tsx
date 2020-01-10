@@ -403,13 +403,6 @@ export const RequestDetails = (props: IProps) => {
             <div className="row">
               <div className="col-12">
                 <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>
-                  {JSON.stringify(
-                    convertApprovalsToHistory(request.approvals),
-                    null,
-                    2
-                  )}
-                </pre>
-                <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>
                   {JSON.stringify(request, null, 2)}
                 </pre>
               </div>
