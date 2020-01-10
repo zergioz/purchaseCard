@@ -8,24 +8,23 @@ export const ApprovalReducer = (
   action: ApprovalAction
 ): Request => {
   let nextRequest = request;
-  console.log(`reducer`, action);
-  switch (action.type) {
-    case "sendto":
-      nextRequest.status = action.formInputs["status"];
-      console.log("sendto", nextRequest.status);
-      break;
-    case "approve":
-      nextRequest.status = getNextStatus(request);
-      console.log("approve", nextRequest.status);
-      break;
-    case "reject":
-      nextRequest.status = "Closed";
-      console.log("reject", nextRequest.status);
-      break;
-    default:
-      console.log(`requestApprovalReducer: No action.`);
+  let nextStatus = request.status;
+  if (request.status) {
+    nextRequest.history[request.status] = action;
+    switch (action.type) {
+      case "sendto":
+        nextStatus = action.formInputs["status"];
+        break;
+      case "approve":
+        nextStatus = getNextStatus(request);
+        break;
+      case "reject":
+        nextStatus = "Closed";
+        break;
+      default:
+        console.log(`requestApprovalReducer: No action.`);
+    }
   }
-  console.log(`nextRequest`, nextRequest);
-  if (nextRequest.history) nextRequest.history.push(action);
+  nextRequest.status = nextStatus;
   return nextRequest;
 };
