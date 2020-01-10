@@ -68,7 +68,9 @@ export class RequestService {
         map((items: any[]) => {
           let deserialized: Array<Request> = [];
           items.forEach(item => {
-            deserialized.push(this.serializer.deserialize(item, Request));
+            deserialized.push(
+              new Request(this.serializer.deserialize(item, Request))
+            );
           });
           return deserialized;
         })
