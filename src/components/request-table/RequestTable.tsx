@@ -6,6 +6,7 @@ import RequestContext from "../../contexts/RequestContext";
 import { NoResults } from "./NoResults";
 import { LoadingResults } from "./LoadingResults";
 import { useRequestFiltering } from "../filters/RequestFilters";
+import { ApprovalActionBadge } from "../approval-action-badge/ApprovalActionBadge";
 
 interface IProps {
   items?: Request[];
@@ -31,6 +32,7 @@ export const RequestTable = (props: IProps) => {
               <Table striped hover style={{ marginTop: "5px" }}>
                 <thead>
                   <tr>
+                    <th></th>
                     <th>Id</th>
                     <th>Directorate</th>
                     <th>Requestor</th>

@@ -14,6 +14,12 @@ export const RequestTableRow: React.FC<IProps> = props => {
   return (
     <tr>
       <td>
+        <ApprovalActionsButton
+          request={item}
+          onRequestUpdated={onRequestUpdated}
+        />
+      </td>
+      <td>
         {/* <a href={`Pages/purchase_request.aspx?id=${item.id}`}>{item.id}</a> */}
         <Link to={`/requests/details/${item.id}`}>{item.id}</Link>
       </td>
@@ -42,12 +48,6 @@ export const RequestTableRow: React.FC<IProps> = props => {
       </td>
       <td>{item.requestField!.RequestDateofRequest}</td>
       <td>{item.status}</td>
-      <td>
-        <ApprovalActionsButton
-          request={item}
-          onRequestUpdated={onRequestUpdated}
-        />
-      </td>
     </tr>
   );
 };
