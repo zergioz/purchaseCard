@@ -98,9 +98,11 @@ export const convertApprovalsToHistory = (approvals: IRequestApprovals) => {
     if (approvals.hasOwnProperty(key)) {
       const status = getStatusForApprovalName(key);
       const approval = getApprovalForStatus(status, approvals);
-      let action: any = approval ? parseApproval(approval) : undefined;
+      let action: any = approval ? parseApproval(approval) : null;
       history[status] = history[status] || [];
-      history[status].push(action);
+      if (action) {
+        history[status].push(action);
+      }
     }
   }
 
