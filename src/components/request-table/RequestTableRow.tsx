@@ -1,6 +1,6 @@
 import React from "react";
 import { Request } from "../../services/models/Request";
-import { ApprovalBadges } from "../approval-badge/ApprovalBadges";
+import { ApprovalBadges } from "../approval-action-badge/ApprovalBadges";
 import { Link } from "react-router-dom";
 interface IProps {
   request: Request;

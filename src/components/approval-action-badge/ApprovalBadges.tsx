@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Request } from "../../services/models/Request";
-import {
-  getStatusesByFriendlyName,
-  getApprovalHistoryForStatus
-} from "../../constants/StepStatus";
-import { ApprovalBadge } from "./ApprovalBadge";
+import { getStatusesByFriendlyName } from "../../constants/StepStatus";
+import { ApprovalActionBadge } from "./ApprovalActionBadge";
 
 export type PopoverPlacement =
   | "auto-start"
@@ -40,12 +37,12 @@ export const useApprovalBadges = (
   const createBadges = () => {
     return statuses.map(status => {
       if (hiddenBadges.has(status)) return;
-      const approval = request.getLastActionFor(status);
-      const signedOrUnsigned = approval ? "Signed" : "Unsigned";
+      const action = request.getLastActionFor(status);
+      const signedOrUnsigned = action ? "Signed" : "Unsigned";
       return (
-        <ApprovalBadge
+        <ApprovalActionBadge
           key={status}
-          approval={approval}
+          action={action}
           text={statusText ? status : signedOrUnsigned}
           placement={popoverPlacement}
         />

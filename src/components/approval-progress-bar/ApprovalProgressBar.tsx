@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ProgressBar } from "react-bootstrap";
 import "./ApprovalProgressBar.css";
 import { getStatusesByFriendlyName } from "../../constants/StepStatus";
-import { useApprovalBadges } from "../approval-badge/ApprovalBadges";
+import { useApprovalBadges } from "../approval-action-badge/ApprovalBadges";
 import { Request } from "../../services/models/Request";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 
