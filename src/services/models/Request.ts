@@ -13,6 +13,7 @@ import { SupplyValidation } from "./SupplyValidation";
 import { FinalValidation } from "./FinalValidation";
 import { SharepointUser } from "./SharepointUser";
 import { ApprovalAction } from "./ApprovalAction";
+import { compareDesc } from "date-fns";
 
 export interface IRequestApprovals {
   [key: string]: any;
@@ -87,6 +88,20 @@ export class Request implements IRequest {
     this.purchaseDetails = data.purchaseDetails || {};
     this.status = data.status || "";
     this.approvals = data.approvals || {};
-    this.history = data.history || [];
+    this.history = data.history || {};
+  }
+
+  public getSortedHistoryDescendingFor(status: string): ApprovalAction[] {
+    const sortedHist = this.history[status].sort((a, b) =>
+      compareDesc(a.date, b.date)
+    );
+    return sortedHist;
+  }
+
+  public getLastActionFor(status: string): ApprovalAction | null {
+    let action = null;
+    const sortedDesc = this.getSortedHistoryDescendingFor(status);
+    action = sortedDesc[0] || null;
+    return action;
   }
 }
