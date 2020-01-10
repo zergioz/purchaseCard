@@ -17,7 +17,10 @@ export const ApprovalActionBadge = (props: IProps) => {
     cursor: "pointer",
     opacity: props.action || props.active ? 1 : 0.5
   };
-  const badgeAction = props.action ? props.action.pastTense : "Not Signed";
+
+  let badgeAction = props.action ? props.action.pastTense : "Not seen";
+  badgeAction = props.active ? "Pending review" : badgeAction;
+
   let badgeColor = props.action ? props.action.bootstrapClass : "secondary";
   badgeColor = props.active ? "warning" : badgeColor;
 
