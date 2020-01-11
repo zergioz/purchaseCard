@@ -3,6 +3,7 @@ import { Request } from "../../services/models/Request";
 import { ApprovalActionBadgeBar } from "../approval-action-badge/ApprovalActionBadgeBar";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 import { Button, ButtonToolbar } from "react-bootstrap";
+import { RequestTableDateCell } from "./RequestTableDateCell";
 interface IProps {
   request: Request;
 }
@@ -36,7 +37,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
       </td>
       <td>{item.requestField!.RequestorDirectorate}</td>
       <td>{`${item.requestor!.FirstName} ${item.requestor!.LastName}`}</td>
-      <td>{item.requestField!.RequestorCardHolderName}</td>
+      <td>{item.requestField!.RequestorCardHolderName!.split("@")[0]}</td>
       <td>
         {item.approvals["j8Approval"]!
           ? item.approvals["j8Approval"]!.j8FiscalYear
@@ -56,7 +57,9 @@ export const RequestTableRow: React.FC<IProps> = props => {
         </div>
         <div>{item.requestField!.RequestJustification}</div>
       </td>
-      <td>{item.requestField!.RequestDateofRequest}</td>
+      <td>
+        <RequestTableDateCell date={item.created} />
+      </td>
     </tr>
   );
 };
