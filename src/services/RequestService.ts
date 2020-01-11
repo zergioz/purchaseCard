@@ -7,6 +7,7 @@ import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
 import { convertToFriendly } from "../constants/StepStatus";
 import { convertApprovalsToHistory } from "../helpers/ApprovalsToHistory";
+import parseISO from "date-fns/parseISO";
 
 export class RequestService {
   private dal: dal;
@@ -44,7 +45,8 @@ export class RequestService {
         approvals: approvals,
         history: item.History
           ? JSON.parse(item.History)
-          : convertApprovalsToHistory(approvals)
+          : convertApprovalsToHistory(approvals),
+        created: parseISO(item.Created)
       };
     } catch (e) {
       console.error(`Error parsing value in ccRequestTracker item`, e);
@@ -54,7 +56,7 @@ export class RequestService {
   }
 
   read(filters?: string): Observable<Request[]> {
-    const select = `Id,Title,REQUEST_FIELD,PURCHASE_DETAILS,BUDGET_OFFICER_APPROVAL,BILLING_OFFICIAL_APPROVAL,J6_APPROVAL,PBO_APPROVAL,DIRECTORATE_APPROVAL,J8_APPROVAL,CARD_HOLDER_VALIDATION,REQUESTOR_VALIDATION,SUPPLY_VALIDATION,FINAL_VALIDATION,REQUEST_STATUS`;
+    const select = `Id,Title,Created,REQUEST_FIELD,PURCHASE_DETAILS,BUDGET_OFFICER_APPROVAL,BILLING_OFFICIAL_APPROVAL,J6_APPROVAL,PBO_APPROVAL,DIRECTORATE_APPROVAL,J8_APPROVAL,CARD_HOLDER_VALIDATION,REQUESTOR_VALIDATION,SUPPLY_VALIDATION,FINAL_VALIDATION,REQUEST_STATUS`;
 
     return this.dal
       .getRowsWhere(this.listName, undefined, select, filters)
@@ -64,6 +66,7 @@ export class RequestService {
         map((items: ccRequestTracker[]) => {
           return items.map(item => this.mapAndParse(item));
         }),
+        //tap((items: any) => console.log(items)),
         //hydrate each into an instance of the Request class
         map((items: any[]) => {
           let deserialized: Array<Request> = [];
@@ -74,6 +77,7 @@ export class RequestService {
           });
           return deserialized;
         })
+        //tap((items: any) => console.log(items))
       );
   }
 }

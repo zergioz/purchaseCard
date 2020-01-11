@@ -81,6 +81,9 @@ export class Request implements IRequest {
   @autoserializeAs(ApprovalAction)
   history: { [key: string]: ApprovalAction[] };
 
+  @autoserializeAs(Date)
+  created: Date;
+
   constructor(data: any = {}) {
     this.id = data.id;
     this.requestor = data.requestor || {};
@@ -89,6 +92,7 @@ export class Request implements IRequest {
     this.status = data.status || "";
     this.approvals = data.approvals || {};
     this.history = data.history || {};
+    this.created = new Date(data.created) || new Date();
   }
 
   public getSortedHistoryDescendingFor(status: string): ApprovalAction[] {
