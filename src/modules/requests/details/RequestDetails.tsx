@@ -105,7 +105,12 @@ export const RequestDetails = (props: IProps) => {
                   <Form.Group className="bg-secondary p-3">
                     <Row>
                       <Col>
-                        <h2 className="text-light">GPC Request Form</h2>
+                        <h2 className="text-white">
+                          GPC Request{" "}
+                          <span className="h1 font-weight-lighter text-light">
+                            #{request.id}
+                          </span>
+                        </h2>
                       </Col>
                       <Col className="d-flex justify-content-end">
                         <ButtonToolbar className="text-right">
