@@ -5,14 +5,15 @@ import { Dropdown, ButtonGroup, DropdownButton } from "react-bootstrap";
 import {
   ApprovalAction,
   IApprovalAction,
-  BootstrapVariant
+  BootstrapButtonVariant
 } from "../../services/models/ApprovalAction";
 import { ApprovalReducer } from "../../reducers/ApprovalReducer";
 import { ApprovalActions } from "../../constants/ApprovalActions";
 
 interface IProps {
   request: Request;
-  variant: BootstrapVariant;
+  variant: BootstrapButtonVariant;
+  className?: string;
   onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
 }
 export const ApprovalActionsButton = (props: IProps) => {
@@ -55,13 +56,15 @@ export const ApprovalActionsButton = (props: IProps) => {
           onActionFinalized={onActionFinalized}
         />
       )}
-      <Dropdown as={ButtonGroup} size="sm" className="mt-2">
-        <DropdownButton
-          variant={props.variant}
-          size="sm"
-          title="Actions"
-          id="approval-button"
-        >
+      <Dropdown
+        as={ButtonGroup}
+        size="sm"
+        className={`${props.className} mt-2`}
+      >
+        <Dropdown.Toggle variant={props.variant} size="sm" id="approval-button">
+          Actions
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
           <Dropdown.Item onClick={() => onActionClicked("approve")}>
             Approve
           </Dropdown.Item>
@@ -72,7 +75,7 @@ export const ApprovalActionsButton = (props: IProps) => {
           <Dropdown.Item onClick={() => onActionClicked("reject")}>
             Reject
           </Dropdown.Item>
-        </DropdownButton>
+        </Dropdown.Menu>
       </Dropdown>
     </>
   );
