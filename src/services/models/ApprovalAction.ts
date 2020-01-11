@@ -1,6 +1,25 @@
 import { autoserialize, autoserializeAs } from "cerialize";
 import { ApprovalActions } from "../../constants/ApprovalActions";
 
+export type BootstrapButtonVariant =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "danger"
+  | "warning"
+  | "info"
+  | "dark"
+  | "light"
+  | "outline-primary"
+  | "outline-secondary"
+  | "outline-success"
+  | "outline-danger"
+  | "outline-warning"
+  | "outline-info"
+  | "outline-dark"
+  | "outline-light"
+  | undefined;
+
 export type BootstrapVariant =
   | "primary"
   | "secondary"
