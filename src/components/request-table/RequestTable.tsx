@@ -33,11 +33,9 @@ export const RequestTable = (props: IProps) => {
                 <thead>
                   <tr>
                     <th className="action-button-col"></th>
-                    <th>Directorate</th>
-                    <th>Requestor</th>
-                    <th>Cardholder</th>
-                    <th>FY</th>
-                    <th>Qt</th>
+                    <th className="text-center">Directorate</th>
+                    <th>Requestor/Cardholder</th>
+                    <th>FY/Qt</th>
                     <th>Justification</th>
                     <th>Submitted</th>
                   </tr>

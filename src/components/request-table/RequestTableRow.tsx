@@ -36,15 +36,21 @@ export const RequestTableRow: React.FC<IProps> = props => {
         {/* <a href={`Pages/purchase_request.aspx?id=${item.id}`}>{item.id}</a> */}
         {/* <Link to={`/requests/details/${item.id}`}>Open #{item.id}</Link> */}
       </td>
-      <td>{item.requestField!.RequestorDirectorate}</td>
-      <td>{`${item.requestor!.FirstName} ${item.requestor!.LastName}`}</td>
-      <td>{item.requestField!.RequestorCardHolderName!.split("@")[0]}</td>
+      <td className="text-center">{item.requestField!.RequestorDirectorate}</td>
+      <td>
+        <small className="text-secondary">Requestor</small>
+        <br />
+        {`${item.requestor!.FirstName} ${item.requestor!.LastName}`}
+        <br />
+        <small className="text-secondary">Cardholder</small>
+        <br />
+        {item.requestField!.RequestorCardHolderName!.split("@")[0]}
+      </td>
       <td>
         {item.approvals["j8Approval"]!
           ? item.approvals["j8Approval"]!.j8FiscalYear
           : ""}
-      </td>
-      <td>
+        <br />
         {item.approvals["j8Approval"]!
           ? item.approvals["j8Approval"]!.j8Quater
           : ""}
