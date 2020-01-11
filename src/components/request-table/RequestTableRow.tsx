@@ -1,8 +1,8 @@
 import React from "react";
 import { Request } from "../../services/models/Request";
 import { ApprovalActionBadgeBar } from "../approval-action-badge/ApprovalActionBadgeBar";
-import { Link } from "react-router-dom";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
+import { Button, ButtonToolbar } from "react-bootstrap";
 interface IProps {
   request: Request;
 }
@@ -14,16 +14,26 @@ export const RequestTableRow: React.FC<IProps> = props => {
   return (
     <tr>
       <td>
-        <ApprovalActionsButton
-          request={item}
-          onRequestUpdated={onRequestUpdated}
-        />
-      </td>
-      <td>
-        {/* <a href={`Pages/purchase_request.aspx?id=${item.id}`}>{item.id}</a> */}
-        <Link to={`/requests/details/${item.id}`}>{item.id}</Link>
-      </td>
+        <ButtonToolbar>
+          <Button
+            className="w-100"
+            variant="primary"
+            size="sm"
+            href={`#/requests/details/${item.id}`}
+          >
+            View #{item.id}
+          </Button>
+          <ApprovalActionsButton
+            className="w-100"
+            variant="outline-danger"
+            request={item}
+            onRequestUpdated={onRequestUpdated}
+          />
+        </ButtonToolbar>
 
+        {/* <a href={`Pages/purchase_request.aspx?id=${item.id}`}>{item.id}</a> */}
+        {/* <Link to={`/requests/details/${item.id}`}>Open #{item.id}</Link> */}
+      </td>
       <td>{item.requestField!.RequestorDirectorate}</td>
       <td>{`${item.requestor!.FirstName} ${item.requestor!.LastName}`}</td>
       <td>{item.requestField!.RequestorCardHolderName}</td>
@@ -47,7 +57,6 @@ export const RequestTableRow: React.FC<IProps> = props => {
         <div>{item.requestField!.RequestJustification}</div>
       </td>
       <td>{item.requestField!.RequestDateofRequest}</td>
-      <td>{item.status}</td>
     </tr>
   );
 };
