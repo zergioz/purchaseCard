@@ -68,6 +68,7 @@ export const useRequestFiltering = (): IRequestFiltering => {
       keyword == "" ||
       JSON.stringify(request)
         .toLowerCase()
+        .concat(`#${request.id}`) //in case user searches for #109
         .includes(keyword)
     );
   };
