@@ -4,6 +4,7 @@ import { ApprovalActionBadgeBar } from "../approval-action-badge/ApprovalActionB
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 import { Button, ButtonToolbar } from "react-bootstrap";
 import { RequestTableDateCell } from "./RequestTableDateCell";
+import "./RequestTable.css";
 interface IProps {
   request: Request;
 }
@@ -14,7 +15,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
   };
   return (
     <tr>
-      <td>
+      <td className="action-button-col">
         <ButtonToolbar>
           <Button
             className="w-100"
