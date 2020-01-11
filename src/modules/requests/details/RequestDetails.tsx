@@ -23,8 +23,6 @@ import { CardTypes as cardTypes } from "../../../constants/CardTypes";
 import { Currencies as currencies } from "../../../constants/Currencies";
 import { FiscalYears as fiscalYears } from "../../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../../constants/FiscalQuarters";
-import { convertApprovalsToHistory } from "../../../helpers/ApprovalsToHistory";
-
 interface IProps {
   requestId: number;
 }
