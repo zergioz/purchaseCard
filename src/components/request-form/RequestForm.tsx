@@ -18,11 +18,12 @@ import "./DatePicker.css";
 import { parseISO, format } from "date-fns";
 interface IProps {
   request: Request;
+  editing?: boolean;
 }
 export const RequestForm = (props: IProps) => {
   const [request, setRequest] = useState<Request>(props.request);
   const [attachments, setAttachments] = useState<any>([]);
-  const [editing, setEditing] = useState<boolean>(false);
+  const [editing, setEditing] = useState<boolean>(props.editing === true);
 
   const onSaveClicked = () => {
     setEditing(false);

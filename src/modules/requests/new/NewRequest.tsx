@@ -6,7 +6,6 @@ import { LoadingResults } from "../../../components/request-table/LoadingResults
 import { Alert, Button } from "react-bootstrap";
 import { ApprovalProgressBar } from "../../../components/approval-progress-bar/ApprovalProgressBar";
 import { RequestForm } from "../../../components/request-form/RequestForm";
-import { RequestFilters } from "../../../components/filters/RequestFilters";
 import UserContext from "../../../contexts/UserContext";
 
 export const NewRequest = () => {
@@ -53,7 +52,7 @@ export const NewRequest = () => {
           <div className="container">
             <div className="row">
               <div className="col-12 m-2">
-                <RequestForm request={request} />
+                <RequestForm request={request} editing={true} />
               </div>
             </div>
             <div className="row">
