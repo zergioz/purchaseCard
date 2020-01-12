@@ -64,6 +64,7 @@ export const TopNav = () => {
             });
             return links;
           })}
+          <Nav.Link href="./Pages/cc_user_list.aspx">Users</Nav.Link>
           <Nav.Link href="../Shared%20Documents/Forms/AllItems.aspx">
             Help
           </Nav.Link>
