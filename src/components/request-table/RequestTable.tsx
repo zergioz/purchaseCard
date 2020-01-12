@@ -24,7 +24,7 @@ export const RequestTable = (props: IProps) => {
         <div className="container-fluid-spacious">
           <div className="row">
             <div className="col-md-12 text-center">
-              <span>{`Showing ${items.length} of ${pageItems.length} requests`}</span>
+              <small className="text-secondary">{`Showing ${items.length} of ${pageItems.length} requests`}</small>
             </div>
           </div>
           <div className="row">
