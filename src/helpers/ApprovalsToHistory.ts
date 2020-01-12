@@ -35,10 +35,10 @@ export const getApprovalForStatus = (
 
 //yeah.
 export const parseApproval = (approval: any): ApprovalAction => {
-  let type: string, formInputs: any, date: Date;
+  let type: string, formInputs: any, date: string;
   type = "noop";
   formInputs = {};
-  date = new Date();
+  date = new Date().toISOString();
 
   if (approval) {
     if (
@@ -82,14 +82,18 @@ export const parseApproval = (approval: any): ApprovalAction => {
       formInputs["userString"] = userStr.substring(11); //i:0#.w|sof\\
       let dateStr = result[1];
       formInputs["dateString"] = date;
-      date = new Date(dateStr);
+
+      //2020-01-12T19:20:19.149Z will cause date-fns to puke
+      date = dateStr
+        ? new Date(dateStr).toISOString()
+        : new Date().toISOString();
     } catch (e) {
       console.error(`parseApproval`, e);
     }
   }
   return {
     ...ApprovalActions[type],
-    date: date.toISOString(),
+    date: date,
     formInputs: formInputs
   };
 };
@@ -110,7 +114,9 @@ export const convertApprovalsToHistory = (approvals: IRequestApprovals) => {
         }
       }
     }
-  } catch (e) {}
+  } catch (e) {
+    console.log(`convertApprovalsToHistory(): ${e}`);
+  }
 
   return history;
 };
