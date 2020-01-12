@@ -14,6 +14,7 @@ interface IProps {
   request: Request;
   variant: BootstrapButtonVariant;
   className?: string;
+  disabled?: boolean;
   onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
 }
 export const ApprovalActionsButton = (props: IProps) => {
@@ -61,7 +62,12 @@ export const ApprovalActionsButton = (props: IProps) => {
         size="sm"
         className={`${props.className} mt-2`}
       >
-        <Dropdown.Toggle variant={props.variant} size="sm" id="approval-button">
+        <Dropdown.Toggle
+          disabled={props.disabled}
+          variant={props.variant}
+          size="sm"
+          id="approval-button"
+        >
           Actions
         </Dropdown.Toggle>
         <Dropdown.Menu>

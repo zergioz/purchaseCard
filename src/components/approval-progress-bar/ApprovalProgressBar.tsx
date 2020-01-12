@@ -74,6 +74,7 @@ export const ApprovalProgressBar = (props: IProps) => {
         <div className="mt-n3" style={activeStyle}>
           {props.active && !props.locked && (
             <ApprovalActionsButton
+              disabled={request.status == "Closed"}
               variant="danger"
               request={request}
               onRequestUpdated={onRequestUpdated}
