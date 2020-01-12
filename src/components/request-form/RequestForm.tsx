@@ -11,7 +11,12 @@ import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters
 import { FaTimes, FaPlus } from "react-icons/fa";
 import { Detail } from "../../services/models/PurchaseDetails";
 import { Formik } from "formik";
-
+import ReactDatePicker, {
+  DatePickerProps
+} from "react-date-picker/dist/entry.nostyle";
+import "./DatePicker.css";
+import { parseISO, format } from "date-fns";
+import { useByNameFormInputHandler } from "../approval-forms/FormInputHandler";
 interface IProps {
   request: Request;
 }
@@ -30,7 +35,13 @@ export const RequestForm = (props: IProps) => {
   const onEditClicked = () => {
     setEditing(true);
   };
+
   const onSubmit = () => {};
+
+  const DatePicker = (props: DatePickerProps) => {
+    return <ReactDatePicker {...props} />;
+  };
+
   return (
     <>
       <Formik initialValues={request} onSubmit={onSubmit}>
@@ -75,6 +86,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Control
                       type="text"
                       disabled
+                      readOnly
                       value={request.author.Title}
                     />
                   </Form.Group>
@@ -104,7 +116,16 @@ export const RequestForm = (props: IProps) => {
                   </Form.Group>
                   <Form.Group controlId="formGroupEmail">
                     <Form.Label>Request Date</Form.Label>
-                    <Form.Control type="text" placeholder="Enter email" />
+                    <Form.Control
+                      type="text"
+                      value={format(
+                        parseISO(request.created),
+                        "MM/dd/yyyy"
+                      ).toUpperCase()}
+                      name="created"
+                      readOnly
+                      disabled
+                    />
                   </Form.Group>
                 </Col>
                 <Col>
@@ -218,9 +239,8 @@ export const RequestForm = (props: IProps) => {
                   <Form.Group controlId="formGroupEmail">
                     <Form.Label>Execution Date</Form.Label>
                     <Form.Control
-                      type="text"
+                      as={DatePicker}
                       name="requestField.executionDate"
-                      placeholder="Enter email"
                       value={request.requestField.executionDate}
                     />
                   </Form.Group>
