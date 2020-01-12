@@ -14,8 +14,7 @@ export type RequestContextType = {
   updateRequests: (requests: Request[]) => void;
   subscribeTo: (
     observable: Observable<Request[] | Request>,
-    action: "create" | "read" | "update" | "delete",
-    overrideCaching?: boolean
+    action: "create" | "read" | "update" | "delete"
   ) => void;
   filteredRequests: Request[];
   loading: boolean;
@@ -31,8 +30,7 @@ export const RequestContext = React.createContext<RequestContextType>({
   updateRequests: (requests: Request[]) => null,
   subscribeTo: (
     observable: Observable<Request[] | Request>,
-    action: "create" | "read" | "update" | "delete",
-    overrideCaching?: boolean
+    action: "create" | "read" | "update" | "delete"
   ) => null,
   filteredRequests: [],
   loading: true,
@@ -64,16 +62,12 @@ export const RequestProvider: React.FC = (props: any) => {
   //what type of action was taken
   const subscribeTo = (
     observable: Observable<Request[] | Request>,
-    action: "create" | "read" | "update" | "delete",
-    overrideCaching?: boolean
+    action: "create" | "read" | "update" | "delete"
   ) => {
-    //! we'll eventually need to remove this caching ability
-    if (requests.length > 0 && !overrideCaching) return;
-
     updateLoading(true);
 
     observable.subscribe(response => {
-      let currentRequests = requests;
+      let currentRequests = [...requests];
       let singleItem = !Array.isArray(response);
       switch (action) {
         case "create":
@@ -99,10 +93,7 @@ export const RequestProvider: React.FC = (props: any) => {
         case "update":
           //find the item and replace it with the updated one
           if (singleItem) {
-            currentRequests.map(
-              req => [response as Request].find(r => r.id === req.id) || req
-            );
-            updateRequests(currentRequests);
+            updateRequest(response as Request, response as Request);
           } else {
             console.warn(
               "RequestContext.subscribeTo(): Tried to do a bulk update"
@@ -147,10 +138,14 @@ export const RequestProvider: React.FC = (props: any) => {
   };
 
   const updateRequest = (oldRequest: Request, newRequest: Request) => {
-    const index = requests.indexOf(oldRequest);
-    let reqArray = requests;
-    reqArray[index] = newRequest;
-    updateRequests(reqArray);
+    let currentRequests = [...requests];
+    const index = currentRequests.findIndex(r => r.id === oldRequest.id);
+    if (index > -1) {
+      console.log("Replacing", currentRequests[index], newRequest);
+      //currentRequests.splice(index, 1, newRequest);
+      currentRequests[index] = newRequest;
+    }
+    updateRequests(currentRequests);
     applyRequestFilters(filters, false);
   };
 
