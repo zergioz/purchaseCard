@@ -34,8 +34,9 @@ export const ApprovalActionBadge = (props: IProps) => {
             <Card.Body>
               <Card.Subtitle className="mb-4">
                 <span className="h5">
-                  {props.action.formInputs["comments"] ||
-                    "No comments entered."}
+                  {props.action.formInputs["comments"] || (
+                    <span className="text-secondary">No comments entered</span>
+                  )}
                 </span>
               </Card.Subtitle>
               <Card.Subtitle>
