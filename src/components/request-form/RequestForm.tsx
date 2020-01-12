@@ -345,7 +345,12 @@ export const RequestForm = (props: IProps) => {
                                 <td>{item.requestTotal}</td>
                                 <td>
                                   <span className="text-danger">
-                                    <FaTimes style={{ cursor: "pointer" }} />
+                                    <FaTimes
+                                      style={{
+                                        cursor: "pointer",
+                                        display: editing ? "inherit" : "none"
+                                      }}
+                                    />
                                   </span>
                                 </td>
                               </tr>
