@@ -22,7 +22,7 @@ export class RequestField {
   @autoserialize
   RequestCurrencyType?: string;
   @autoserialize
-  RequestIsJ6?: string;
+  RequestIsJ6: string;
   @autoserialize
   fiscalYear: string;
   @autoserialize
@@ -43,7 +43,7 @@ export class RequestField {
     this.RequestSource = data.RequestSource || "";
     this.RequestJustification = data.RequestJustification || "";
     this.RequestCurrencyType = data.RequestCurrencyType || "";
-    this.RequestIsJ6 = data.RequestIsJ6 || "";
+    this.RequestIsJ6 = data.RequestIsJ6 === "Yes" ? "Yes" : "No";
     this.fiscalYear = data.fiscalYear || "";
     this.fiscalQuarter = data.fiscalQuarter || "";
     this.transactionId = data.transactionId || "";

@@ -91,7 +91,7 @@ export class Request implements IRequest {
   constructor(data: any = {}) {
     this.id = data.id;
     this.requestor = data.requestor || {};
-    this.requestField = data.requestField || {};
+    this.requestField = new RequestField(data.requestField || {});
     this.purchaseDetails = data.purchaseDetails || {};
     this.status = data.status || "";
     this.approvals = data.approvals || {};

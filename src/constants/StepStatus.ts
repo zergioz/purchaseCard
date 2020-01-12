@@ -260,7 +260,7 @@ export const getNextStatus = (request: Request): any => {
 
       //stop at j6 only if it's required, otherwise keep looking
       if (status == "Tech Review") {
-        if (!request.requestField!.RequestIsJ6) {
+        if (request.requestField.RequestIsJ6 === "No") {
           continue;
         }
       }
