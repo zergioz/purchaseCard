@@ -240,27 +240,28 @@ export const getApprovalHistoryForStatus = (
 //the requestApprovalReducer uses this to detemine what comes next
 //handles skipped approvals by going backward if necessary
 export const getNextStatus = (request: Request): any => {
-  let next = request.status; //by default, keep it at the same step
+  let nextRequest = new Request({ ...request });
+  let next = nextRequest.status; //by default, keep it at the same step
 
   const statuses = Object.keys(getStatusesByFriendlyName());
 
   //loop through all possible statuses and check for signatures
   for (let index in statuses) {
     const status = statuses[index];
-    const approval = getApprovalHistoryForStatus(request, status);
+    const approval = getApprovalHistoryForStatus(nextRequest, status);
     const signed = approval ? true : false;
 
     //this request hasn't been signed at this step
     if (!signed) {
       //current status doesn't count - we want the next one
-      if (status == request.status) continue;
+      if (status == nextRequest.status) continue;
 
       //draft status doesn't require a signature
       if (status == "Draft") continue;
 
       //stop at j6 only if it's required, otherwise keep looking
       if (status == "Tech Review") {
-        if (request.requestField.RequestIsJ6 === "No") {
+        if (nextRequest.requestField.RequestIsJ6 === "No") {
           continue;
         }
       }
