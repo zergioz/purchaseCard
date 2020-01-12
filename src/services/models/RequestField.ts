@@ -23,8 +23,16 @@ export class RequestField {
   RequestCurrencyType?: string;
   @autoserialize
   RequestIsJ6?: string;
+  @autoserialize
+  fiscalYear: string;
+  @autoserialize
+  fiscalQuarter: string;
+  @autoserialize
+  transactionId: string;
+  @autoserialize
+  executionDate: string;
 
-  constructor(data: RequestField = {}) {
+  constructor(data: any = {}) {
     this.RequestCardType = data.RequestCardType || "";
     this.RequestCardType = data.RequestCardType || "";
     this.Requestor = data.Requestor || "";
@@ -36,5 +44,9 @@ export class RequestField {
     this.RequestJustification = data.RequestJustification || "";
     this.RequestCurrencyType = data.RequestCurrencyType || "";
     this.RequestIsJ6 = data.RequestIsJ6 || "";
+    this.fiscalYear = data.fiscalYear || "";
+    this.fiscalQuarter = data.fiscalQuarter || "";
+    this.transactionId = data.transactionId || "";
+    this.executionDate = data.executionDate || "";
   }
 }

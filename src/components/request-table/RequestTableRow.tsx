@@ -49,13 +49,9 @@ export const RequestTableRow: React.FC<IProps> = props => {
           : ""}
       </td>
       <td>
-        {item.approvals["j8Approval"]!
-          ? item.approvals["j8Approval"]!.j8FiscalYear
-          : ""}
+        {item.requestField.fiscalYear || ""}
         <br />
-        {item.approvals["j8Approval"]!
-          ? item.approvals["j8Approval"]!.j8Quater
-          : ""}
+        {item.requestField.fiscalQuarter || ""}
       </td>
       <td>
         <div>

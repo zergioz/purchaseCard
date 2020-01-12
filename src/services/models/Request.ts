@@ -75,6 +75,7 @@ export class Request implements IRequest {
   @autoserialize
   status: string;
 
+  //legacy approvals are stored here
   @autoserializeAs(RequestApprovals)
   approvals: RequestApprovals;
 

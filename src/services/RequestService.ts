@@ -7,7 +7,6 @@ import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
 import { convertToFriendly } from "../constants/StepStatus";
 import { convertApprovalsToHistory } from "../helpers/ApprovalsToHistory";
-import parseISO from "date-fns/parseISO";
 
 export class RequestService {
   private dal: dal;
@@ -20,7 +19,17 @@ export class RequestService {
     this.listName = "ccRequestTracker";
   }
 
-  //doing this because some of the data written to the DB was not done with JSON.stringify
+  /*
+  * doing all this re-shaping because this app was built on a pre-existing non-optimal
+  * schema.  after we're up and running we probably need to write some migrations
+  * to dump our production data into a new list.
+
+  * the existing list is full of multiline text fields which are not filterable with SP
+  * rest queries.  to get around this we are currently pulling all data and doing filtering
+  * on the client side.  with the current volume of gpc requests, this will get bad very quickly.
+  */
+
+  //todo: write some migrations and dump all of our data into a new list with correctly typed fields
   mapAndParse(item: ccRequestTracker): any {
     let parsed = {};
     try {
@@ -36,10 +45,58 @@ export class RequestService {
         budgetOfficerApproval: JSON.parse(item.BUDGET_OFFICER_APPROVAL), //pbofinal
         finalValidation: JSON.parse(item.FINAL_VALIDATION) //bofinal
       };
+
+      /* RESHAPING
+       * in the old app, some form field data was stored nested
+       * in the legacy approvals object (above).
+       *
+       * if this is the case, pull these 4 fields out and store them with
+       * the rest of the form data for consistency
+       */
+      let requestField = JSON.parse(item.REQUEST_FIELD);
+      requestField = {
+        ...requestField,
+        fiscalYear:
+          requestField.fiscalYear ||
+          (approvals.j8Approval && approvals.j8Approval.j8FiscalYear)
+            ? approvals.j8Approval.j8FiscalYear
+            : "",
+        fiscalQuarter:
+          requestField.fiscalQuarter ||
+          (approvals.j8Approval && approvals.j8Approval.j8Quater)
+            ? approvals.j8Approval.j8Quater
+            : "",
+        transactionId:
+          requestField.transactionId ||
+          (approvals.cardholderValidation &&
+            approvals.cardholderValidation.cardHolderTransactionId)
+            ? approvals.cardholderValidation.cardHolderTransactionId
+            : "",
+        executionDate:
+          requestField.executionDate ||
+          (approvals.cardholderValidation &&
+            approvals.cardholderValidation.cardHolderExecuted)
+            ? approvals.cardholderValidation.cardHolderExecuted
+            : ""
+      };
+
+      /*
+       * this is the core data that we care about on a request.
+       *
+       * the gpc specific fields are stored in the requestField and purchaseDetails objects.
+       *
+       * future versions of this app
+       * used for other purposes should probably break requestField and purchaseDetails out
+       * and store that stuff in its own list which is referenced from here.
+       *
+       * then a "Request" could be repurposed for any type of form/packet that needs to go through
+       * a pipeline of approvals
+       */
+      //todo: store requestField and purchaseDetails stuff in their own list, reference the item id from here
       parsed = {
         id: item.Id,
         requestor: item.Author,
-        requestField: JSON.parse(item.REQUEST_FIELD),
+        requestField: requestField,
         purchaseDetails: JSON.parse(item.PURCHASE_DETAILS),
         status: convertToFriendly(item.REQUEST_STATUS),
         approvals: approvals,
