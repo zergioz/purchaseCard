@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { RequestTableRow } from "./RequestTableRow";
 import { Request } from "../../services/models/Request";
 import { Table } from "react-bootstrap";
@@ -10,12 +10,18 @@ import "./RequestTable.css";
 
 interface IProps {
   items?: Request[];
+  onRequestUpdated?: (oldRequest: Request, newRequest: Request) => void;
 }
 export const RequestTable = (props: IProps) => {
   const context = useContext(RequestContext);
   const { applyFilters } = useRequestFiltering();
   const items = props.items || context.filteredRequests;
   const pageItems = applyFilters(context.pageFilters, context.requests);
+
+  const onRequestUpdated = (oldRequest: Request, newRequest: Request) => {
+    if (props.onRequestUpdated) props.onRequestUpdated(oldRequest, newRequest);
+    context.updateRequest(oldRequest, newRequest);
+  };
 
   return (
     <>
@@ -45,6 +51,7 @@ export const RequestTable = (props: IProps) => {
                     <RequestTableRow
                       request={item}
                       key={index}
+                      onRequestUpdated={onRequestUpdated}
                     ></RequestTableRow>
                   ))}
                 </tbody>

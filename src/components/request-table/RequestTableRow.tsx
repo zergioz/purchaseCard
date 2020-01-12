@@ -7,11 +7,12 @@ import { RequestTableDateCell } from "./RequestTableDateCell";
 import "./RequestTable.css";
 interface IProps {
   request: Request;
+  onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
 }
 export const RequestTableRow: React.FC<IProps> = props => {
   const item: Request = props.request;
   const onRequestUpdated = (oldRequest: Request, newRequest: Request) => {
-    console.log("Request updated", newRequest);
+    props.onRequestUpdated(oldRequest, newRequest);
   };
   return (
     <tr>
