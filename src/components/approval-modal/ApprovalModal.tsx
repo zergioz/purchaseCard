@@ -29,7 +29,7 @@ export const ApprovalModal = (props: IProps) => {
   //also lock the progress bar so they cant do any more actions
   const onActionButtonClicked = () => {
     console.log(`onActionButtonClicked`, action);
-    action.date = new Date();
+    action.date = new Date().toISOString();
     props.onActionFinalized(action);
     setShow(false);
   };

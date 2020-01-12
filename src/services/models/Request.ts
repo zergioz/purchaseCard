@@ -96,9 +96,8 @@ export class Request implements IRequest {
   }
 
   public getSortedHistoryDescendingFor(status: string): ApprovalAction[] {
-    const sortedHist = this.history[status].sort((a, b) =>
-      compareDesc(parseISO(a.date), parseISO(b.date))
-    );
+    const sortedHist = this.history[status] || [];
+    sortedHist.sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)));
     return sortedHist;
   }
 

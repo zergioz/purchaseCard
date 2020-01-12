@@ -44,7 +44,9 @@ export const RequestTableRow: React.FC<IProps> = props => {
         <br />
         <small className="text-secondary">Cardholder</small>
         <br />
-        {item.requestField!.RequestorCardHolderName!.split("@")[0]}
+        {item.requestField.RequestorCardHolderName
+          ? item.requestField.RequestorCardHolderName.split("@")[0]
+          : ""}
       </td>
       <td>
         {item.approvals["j8Approval"]!

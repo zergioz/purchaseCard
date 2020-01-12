@@ -87,7 +87,11 @@ export const parseApproval = (approval: any): ApprovalAction => {
       console.error(`parseApproval`, e);
     }
   }
-  return { ...ApprovalActions[type], date: date, formInputs: formInputs };
+  return {
+    ...ApprovalActions[type],
+    date: date.toISOString(),
+    formInputs: formInputs
+  };
 };
 
 //try to get the legacy data into a usable format. match each legacy approval to its friendly status,
