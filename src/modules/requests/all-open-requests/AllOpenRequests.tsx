@@ -12,7 +12,7 @@ export const AllOpenRequests: React.FC = () => {
 
   useEffect(() => {
     const svc = new RequestService();
-    context.subscribeTo(svc.read(), true);
+    context.subscribeTo(svc.read(), "read", true);
   }, []);
 
   useEffect(() => {

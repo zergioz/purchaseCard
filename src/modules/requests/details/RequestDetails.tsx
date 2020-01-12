@@ -19,7 +19,7 @@ export const RequestDetails = (props: IProps) => {
   //start the db fetch
   useEffect(() => {
     const svc = new RequestService();
-    context.subscribeTo(svc.read());
+    context.subscribeTo(svc.read(), "read");
   }, []);
 
   //apply the ID filter when results come back

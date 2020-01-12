@@ -16,7 +16,7 @@ export const RequestsByStatus: React.FC<IProps> = props => {
 
   useEffect(() => {
     const svc = new RequestService();
-    context.subscribeTo(svc.read());
+    context.subscribeTo(svc.read(), "read");
   }, []);
 
   useEffect(() => {

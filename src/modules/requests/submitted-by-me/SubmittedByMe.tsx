@@ -13,7 +13,7 @@ export const SubmittedByMe: React.FC = () => {
 
   useEffect(() => {
     const svc = new RequestService();
-    context.subscribeTo(svc.read());
+    context.subscribeTo(svc.read(), "read");
   }, []);
 
   useEffect(() => {

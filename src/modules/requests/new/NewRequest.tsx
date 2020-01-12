@@ -17,7 +17,7 @@ export const NewRequest = () => {
   useEffect(() => {
     const svc = new RequestService();
     const obs = svc.createDraft();
-    context.subscribeTo(obs, true);
+    context.subscribeTo(obs, "create", true);
     obs.subscribe(request => {
       setRequest(request);
     });

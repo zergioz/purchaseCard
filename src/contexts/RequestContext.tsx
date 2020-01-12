@@ -6,6 +6,7 @@ import {
   useRequestFiltering
 } from "../components/filters/RequestFilters";
 import { Observable } from "rxjs/internal/Observable";
+import { FaBreadSlice } from "react-icons/fa";
 
 //the filters could probably be refactored into their own context and placed at the top of each page
 export type RequestContextType = {
@@ -13,6 +14,7 @@ export type RequestContextType = {
   updateRequests: (requests: Request[]) => void;
   subscribeTo: (
     observable: Observable<Request[] | Request>,
+    action: "create" | "read" | "update" | "delete",
     overrideCaching?: boolean
   ) => void;
   filteredRequests: Request[];
@@ -29,6 +31,7 @@ export const RequestContext = React.createContext<RequestContextType>({
   updateRequests: (requests: Request[]) => null,
   subscribeTo: (
     observable: Observable<Request[] | Request>,
+    action: "create" | "read" | "update" | "delete",
     overrideCaching?: boolean
   ) => null,
   filteredRequests: [],
@@ -57,24 +60,71 @@ export const RequestProvider: React.FC = (props: any) => {
 
   const { applyFilters } = useRequestFiltering();
 
+  //subscribes to an observable and updates the requests in the context depending on
+  //what type of action was taken
   const subscribeTo = (
     observable: Observable<Request[] | Request>,
+    action: "create" | "read" | "update" | "delete",
     overrideCaching?: boolean
   ) => {
-    //! this app doesn't write to the db yet, so one fetch per session is enough (for now)
-    //! we'll eventually need to remove this line
+    //! we'll eventually need to remove this caching ability
     if (requests.length > 0 && !overrideCaching) return;
 
     updateLoading(true);
+
     observable.subscribe(response => {
-      if (!Array.isArray(response)) {
-        //we just created a request, so add it to what we already have
-        let currentRequests = requests;
-        currentRequests.push(response);
-        updateRequests(currentRequests);
-      } else {
-        //replace the whole array
-        updateRequests(response);
+      let currentRequests = requests;
+      let singleItem = !Array.isArray(response);
+      switch (action) {
+        case "create":
+          if (singleItem) {
+            //we just created a request, so add the new item to what we already have
+            currentRequests.push(response as Request);
+            updateRequests(currentRequests);
+          } else {
+            console.warn(
+              "RequestContext.subscribeTo(): Tried to do a bulk create"
+            );
+          }
+        case "read":
+          if (singleItem) {
+            console.warn(
+              "RequestContext.subscribeTo(): Tried to read a single item from the DB"
+            );
+          } else {
+            //replace the whole array
+            updateRequests(response as Request[]);
+          }
+          break;
+        case "update":
+          //find the item and replace it with the updated one
+          if (singleItem) {
+            currentRequests.map(
+              req => [response as Request].find(r => r.id === req.id) || req
+            );
+            updateRequests(currentRequests);
+          } else {
+            console.warn(
+              "RequestContext.subscribeTo(): Tried to do a bulk update"
+            );
+          }
+        case "delete":
+          //find the item and remove it
+          if (singleItem) {
+            const index = currentRequests.findIndex(
+              r => r.id === (response as Request).id
+            );
+            if (index > -1) {
+              currentRequests.splice(index, 1);
+            }
+            updateRequests(currentRequests);
+          } else {
+            console.warn(
+              "RequestContext.subscribeTo(): Tried to do a bulk delete"
+            );
+          }
+        default:
+          break;
       }
 
       //debounce so the status filter doesn't flicker

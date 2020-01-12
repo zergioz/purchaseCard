@@ -16,7 +16,7 @@ export const RequestsByDirectorate: React.FC<IProps> = props => {
   //get data on mount
   useEffect(() => {
     const svc = new RequestService();
-    context.subscribeTo(svc.read());
+    context.subscribeTo(svc.read(), "read");
   }, []);
 
   //when the data comes back or the directorate changes, refilter
