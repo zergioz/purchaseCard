@@ -36,28 +36,28 @@ export class RequestService {
       let approvals = {
         directorateApproval: item.DIRECTORATE_APPROVAL
           ? JSON.parse(item.DIRECTORATE_APPROVAL)
-          : {},
+          : null,
         billingOfficialApproval: item.BILLING_OFFICIAL_APPROVAL
           ? JSON.parse(item.BILLING_OFFICIAL_APPROVAL)
-          : {}, //bo
-        j6Approval: item.J6_APPROVAL ? JSON.parse(item.J6_APPROVAL) : {},
-        pboApproval: item.PBO_APPROVAL ? JSON.parse(item.PBO_APPROVAL) : {},
-        j8Approval: item.J8_APPROVAL ? JSON.parse(item.J8_APPROVAL) : {},
+          : null, //bo
+        j6Approval: item.J6_APPROVAL ? JSON.parse(item.J6_APPROVAL) : null,
+        pboApproval: item.PBO_APPROVAL ? JSON.parse(item.PBO_APPROVAL) : null,
+        j8Approval: item.J8_APPROVAL ? JSON.parse(item.J8_APPROVAL) : null,
         cardholderValidation: item.CARD_HOLDER_VALIDATION
           ? JSON.parse(item.CARD_HOLDER_VALIDATION)
-          : {},
+          : null,
         requestorValidation: item.REQUESTOR_VALIDATION
           ? JSON.parse(item.REQUESTOR_VALIDATION)
-          : {},
+          : null,
         supplyValidation: item.SUPPLY_VALIDATION
           ? JSON.parse(item.SUPPLY_VALIDATION)
-          : {},
+          : null,
         budgetOfficerApproval: item.BUDGET_OFFICER_APPROVAL
           ? JSON.parse(item.BUDGET_OFFICER_APPROVAL)
-          : {}, //pbofinal
+          : null, //pbofinal
         finalValidation: item.FINAL_VALIDATION
           ? JSON.parse(item.FINAL_VALIDATION)
-          : {} //bofinal
+          : null //bofinal
       };
 
       /* RESHAPING
