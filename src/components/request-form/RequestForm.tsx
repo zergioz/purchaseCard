@@ -16,7 +16,6 @@ import ReactDatePicker, {
 } from "react-date-picker/dist/entry.nostyle";
 import "./DatePicker.css";
 import { parseISO, format } from "date-fns";
-import { useByNameFormInputHandler } from "../approval-forms/FormInputHandler";
 interface IProps {
   request: Request;
 }
@@ -25,16 +24,17 @@ export const RequestForm = (props: IProps) => {
   const [attachments, setAttachments] = useState<any>([]);
   const [editing, setEditing] = useState<boolean>(false);
 
-  useEffect(() => {
-    setRequest(props.request);
-  }, [props.request]);
-
   const onSaveClicked = () => {
     setEditing(false);
   };
+
   const onEditClicked = () => {
     setEditing(true);
   };
+
+  useEffect(() => {
+    setRequest(props.request);
+  }, [props.request]);
 
   const onSubmit = () => {};
 
@@ -94,6 +94,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Card Type</Form.Label>
                     <Form.Control
                       as="select"
+                      disabled={!editing}
                       name="requestField.RequestCardType"
                       value={request.requestField.RequestCardType}
                     >
@@ -110,6 +111,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Cardholder</Form.Label>
                     <Form.Control
                       type="text"
+                      disabled={!editing}
                       name="requestField.RequestorCardHolderName"
                       value={request.requestField.RequestorCardHolderName}
                     />
@@ -133,6 +135,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Requestor DSN</Form.Label>
                     <Form.Control
                       type="text"
+                      disabled={!editing}
                       name="requestField.RequestorDSN"
                       placeholder="Enter a phone number"
                       value={request.requestField.RequestorDSN}
@@ -142,6 +145,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Directorate</Form.Label>
                     <Form.Control
                       as="select"
+                      disabled={!editing}
                       name="requestField.RequestorDirectorate"
                       value={request.requestField.RequestorDirectorate}
                     >
@@ -158,6 +162,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Funding</Form.Label>
                     <Form.Control
                       as="select"
+                      disabled={!editing}
                       name="requestField.RequestSource"
                       value={request.requestField.RequestSource}
                     >
@@ -178,6 +183,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Justification</Form.Label>
                     <Form.Control
                       as="textarea"
+                      disabled={!editing}
                       rows={4}
                       name="requestField.RequestJustification"
                       value={request.requestField.RequestJustification}
@@ -193,6 +199,7 @@ export const RequestForm = (props: IProps) => {
                     </Form.Label>
                     <Form.Control
                       as="select"
+                      disabled={!editing}
                       name="requestField.RequestIsJ6"
                       value={request.requestField.RequestIsJ6}
                     >
@@ -206,6 +213,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Currency</Form.Label>
                     <Form.Control
                       as="select"
+                      disabled={!editing}
                       name="requestField.RequestCurrencyType"
                       value={request.requestField.RequestCurrencyType}
                     >
@@ -229,6 +237,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Transaction ID</Form.Label>
                     <Form.Control
                       type="text"
+                      disabled={!editing}
                       placeholder="Enter Transaction ID"
                       name="requestField.transactionId"
                       value={request.requestField.transactionId}
@@ -240,7 +249,9 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Execution Date</Form.Label>
                     <Form.Control
                       as={DatePicker}
+                      disabled={!editing}
                       name="requestField.executionDate"
+                      className={!editing ? "date-picker-locked" : ""}
                       value={request.requestField.executionDate}
                     />
                   </Form.Group>
@@ -255,6 +266,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Fiscal Year</Form.Label>
                     <Form.Control
                       as="select"
+                      disabled={!editing}
                       name="requestField.fiscalYear"
                       value={request.requestField.fiscalYear}
                     >
@@ -273,6 +285,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Quarter</Form.Label>
                     <Form.Control
                       as="select"
+                      disabled={!editing}
                       name="requestField.fiscalQuarter"
                       value={request.requestField.fiscalQuarter}
                     >
@@ -321,12 +334,12 @@ export const RequestForm = (props: IProps) => {
                                 <td>{item.requestCost}</td>
                                 <td>
                                   <Form.Group controlId="formBasicCheckbox">
-                                    <Form.Check type="checkbox" />
+                                    <Form.Check type="checkbox" disabled />
                                   </Form.Group>
                                 </td>
                                 <td>
                                   <Form.Group controlId="formBasicCheckbox">
-                                    <Form.Check type="checkbox" />
+                                    <Form.Check type="checkbox" disabled />
                                   </Form.Group>
                                 </td>
                                 <td>{item.requestTotal}</td>
@@ -343,7 +356,7 @@ export const RequestForm = (props: IProps) => {
                     <tfoot>
                       <tr>
                         <td colSpan={9} align="right">
-                          <Button variant="outline-primary">
+                          <Button variant="outline-primary" disabled={!editing}>
                             <FaPlus /> Add
                           </Button>
                         </td>
@@ -396,7 +409,9 @@ export const RequestForm = (props: IProps) => {
                     <tfoot>
                       <tr>
                         <td colSpan={3} align="right">
-                          <Button variant="outline-primary">Upload</Button>
+                          <Button variant="outline-primary" disabled={!editing}>
+                            Upload
+                          </Button>
                         </td>
                       </tr>
                     </tfoot>

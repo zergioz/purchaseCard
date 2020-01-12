@@ -1,3 +1,6 @@
+.date-picker-locked {
+  background-color: #e9ecef !important;
+}
 .react-date-picker {
   display: inline-flex;
   position: relative;
