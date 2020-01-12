@@ -5,7 +5,6 @@ import { RequestFilters } from "../../../components/filters/RequestFilters";
 import { RequestService } from "../../../services";
 import { LoadingResults } from "../../../components/request-table/LoadingResults";
 import { Alert, Button } from "react-bootstrap";
-import { Detail } from "../../../services/models/PurchaseDetails";
 import { ApprovalProgressBar } from "../../../components/approval-progress-bar/ApprovalProgressBar";
 import { RequestForm } from "../../../components/request-form/RequestForm";
 
@@ -15,9 +14,6 @@ interface IProps {
 export const RequestDetails = (props: IProps) => {
   const context = useContext(RequestContext);
   const [request, setRequest] = useState();
-  const [details, setDetails] = useState<Detail[]>([]);
-  const [attachments, setAttachments] = useState<any>([]);
-  const [editing, setEditing] = useState<boolean>(false);
   const defaultFilters = new RequestFilters();
 
   //start the db fetch
@@ -73,14 +69,6 @@ export const RequestDetails = (props: IProps) => {
                 <RequestForm request={request} />
               </div>
             </div>
-            <div className="row">
-              <div className="col-12">
-                <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>
-                  {" "}
-                </pre>
-              </div>
-            </div>
-            <hr />
             <div className="row">
               <div className="col-12">
                 <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>
