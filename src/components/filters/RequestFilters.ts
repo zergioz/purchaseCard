@@ -82,7 +82,8 @@ export const useRequestFiltering = (): IRequestFiltering => {
   const requestTypeFilter = (request: Request, filters: IRequestFilters) => {
     return (
       filters.type == "" ||
-      (filters.type == "Technology" && request.requestField!.RequestIsJ6)
+      (filters.type == "Technology" &&
+        request.requestField.RequestIsJ6 === "Yes")
     );
   };
 
