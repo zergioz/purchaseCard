@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Request } from "../../services/models/Request";
 import { Form, Row, Col, ButtonToolbar, Button, Table } from "react-bootstrap";
 import { FundingSources } from "../../constants/FundingSources";
@@ -10,11 +10,13 @@ import { FiscalYears as fiscalYears } from "../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters";
 import { FaTimes, FaPlus } from "react-icons/fa";
 import { Detail } from "../../services/models/PurchaseDetails";
+import UserContext from "../../contexts/UserContext";
 
 interface IProps {
   request: Request;
 }
 export const RequestForm = (props: IProps) => {
+  const { user } = useContext(UserContext);
   const [request, setRequest] = useState<Request>(props.request);
   const [attachments, setAttachments] = useState<any>([]);
   const [editing, setEditing] = useState<boolean>(false);
@@ -32,7 +34,7 @@ export const RequestForm = (props: IProps) => {
 
   return (
     <>
-      {request && (
+      {request && user && (
         <Form>
           <Form.Group className="bg-secondary p-3">
             <Row>
@@ -70,7 +72,11 @@ export const RequestForm = (props: IProps) => {
               <Col>
                 <Form.Group controlId="formGroupEmail">
                   <Form.Label>Requestor</Form.Label>
-                  <Form.Control type="text" placeholder="Enter email" />
+                  <Form.Control
+                    type="text"
+                    disabled
+                    value={request.author.Title}
+                  />
                 </Form.Group>
                 <Form.Group controlId="formGridState">
                   <Form.Label>Card Type</Form.Label>

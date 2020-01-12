@@ -84,6 +84,9 @@ export class Request implements IRequest {
   @autoserialize
   created: string;
 
+  @autoserializeAs(SharepointUser)
+  author: SharepointUser;
+
   constructor(data: any = {}) {
     this.id = data.id;
     this.requestor = data.requestor || {};
@@ -93,6 +96,7 @@ export class Request implements IRequest {
     this.approvals = data.approvals || {};
     this.history = data.history || {};
     this.created = data.created || new Date().toISOString();
+    this.author = data.author || new SharepointUser();
   }
 
   public getSortedHistoryDescendingFor(status: string): ApprovalAction[] {
