@@ -82,10 +82,15 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Card Type</Form.Label>
                     <Form.Control
                       as="select"
-                      name="requestField.RequestorCardType"
+                      name="requestField.RequestCardType"
+                      value={request.requestField.RequestCardType}
                     >
                       {cardTypes.map((type: string) => {
-                        return <option key={type}>{type}</option>;
+                        return (
+                          <option value={type} key={type}>
+                            {type}
+                          </option>
+                        );
                       })}
                     </Form.Control>
                   </Form.Group>
@@ -94,6 +99,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Control
                       type="text"
                       name="requestField.RequestorCardHolderName"
+                      value={request.requestField.RequestorCardHolderName}
                     />
                   </Form.Group>
                   <Form.Group controlId="formGroupEmail">
@@ -108,6 +114,7 @@ export const RequestForm = (props: IProps) => {
                       type="text"
                       name="requestField.RequestorDSN"
                       placeholder="Enter a phone number"
+                      value={request.requestField.RequestorDSN}
                     />
                   </Form.Group>
                   <Form.Group controlId="formGridState">
@@ -115,17 +122,30 @@ export const RequestForm = (props: IProps) => {
                     <Form.Control
                       as="select"
                       name="requestField.RequestorDirectorate"
+                      value={request.requestField.RequestorDirectorate}
                     >
                       {directorates.map((directorate: string) => {
-                        return <option key={directorate}>{directorate}</option>;
+                        return (
+                          <option value={directorate} key={directorate}>
+                            {directorate}
+                          </option>
+                        );
                       })}
                     </Form.Control>
                   </Form.Group>
                   <Form.Group controlId="formGridState">
                     <Form.Label>Funding</Form.Label>
-                    <Form.Control as="select" name="requestField.RequestSource">
+                    <Form.Control
+                      as="select"
+                      name="requestField.RequestSource"
+                      value={request.requestField.RequestSource}
+                    >
                       {FundingSources.map(src => {
-                        return <option key={src}>{src}</option>;
+                        return (
+                          <option value={src} key={src}>
+                            {src}
+                          </option>
+                        );
                       })}
                     </Form.Control>
                   </Form.Group>
@@ -139,6 +159,7 @@ export const RequestForm = (props: IProps) => {
                       as="textarea"
                       rows={4}
                       name="requestField.RequestJustification"
+                      value={request.requestField.RequestJustification}
                     />
                   </Form.Group>
                 </Col>
@@ -149,9 +170,13 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>
                       Includes hardware, software, or IT services
                     </Form.Label>
-                    <Form.Control as="select" name="requestField.RequestIsJ6">
-                      <option>Yes</option>
-                      <option>No</option>
+                    <Form.Control
+                      as="select"
+                      name="requestField.RequestIsJ6"
+                      value={request.requestField.RequestIsJ6}
+                    >
+                      <option value={"Yes"}>Yes</option>
+                      <option value={"No"}>No</option>
                     </Form.Control>
                   </Form.Group>
                 </Col>
@@ -161,9 +186,14 @@ export const RequestForm = (props: IProps) => {
                     <Form.Control
                       as="select"
                       name="requestField.RequestCurrencyType"
+                      value={request.requestField.RequestCurrencyType}
                     >
                       {currencies.map((currency: string) => {
-                        return <option key={currency}>{currency}</option>;
+                        return (
+                          <option value={currency} key={currency}>
+                            {currency}
+                          </option>
+                        );
                       })}
                     </Form.Control>
                   </Form.Group>
@@ -180,6 +210,7 @@ export const RequestForm = (props: IProps) => {
                       type="text"
                       placeholder="Enter Transaction ID"
                       name="requestField.transactionId"
+                      value={request.requestField.transactionId}
                     />
                   </Form.Group>
                 </Col>
@@ -190,6 +221,7 @@ export const RequestForm = (props: IProps) => {
                       type="text"
                       name="requestField.executionDate"
                       placeholder="Enter email"
+                      value={request.requestField.executionDate}
                     />
                   </Form.Group>
                 </Col>
@@ -201,9 +233,17 @@ export const RequestForm = (props: IProps) => {
                 <Col>
                   <Form.Group controlId="formGroupEmail">
                     <Form.Label>Fiscal Year</Form.Label>
-                    <Form.Control as="select" name="requestField.fiscalYear">
+                    <Form.Control
+                      as="select"
+                      name="requestField.fiscalYear"
+                      value={request.requestField.fiscalYear}
+                    >
                       {fiscalYears.map((year: any) => {
-                        return <option key={year}>{year}</option>;
+                        return (
+                          <option value={year} key={year}>
+                            {year}
+                          </option>
+                        );
                       })}
                     </Form.Control>
                   </Form.Group>
@@ -211,9 +251,17 @@ export const RequestForm = (props: IProps) => {
                 <Col>
                   <Form.Group controlId="formGroupEmail">
                     <Form.Label>Quarter</Form.Label>
-                    <Form.Control as="select" name="requestField.fiscalQuarter">
+                    <Form.Control
+                      as="select"
+                      name="requestField.fiscalQuarter"
+                      value={request.requestField.fiscalQuarter}
+                    >
                       {fiscalQuarters.map((quarter: string) => {
-                        return <option key={quarter}>{quarter}</option>;
+                        return (
+                          <option value={quarter} key={quarter}>
+                            {quarter}
+                          </option>
+                        );
                       })}
                     </Form.Control>
                   </Form.Group>
@@ -307,7 +355,11 @@ export const RequestForm = (props: IProps) => {
                                 <Form.Group controlId="formGridState">
                                   <Form.Control as="select">
                                     {attachmentTypes.map(type => {
-                                      return <option key={type}>{type}</option>;
+                                      return (
+                                        <option value={type} key={type}>
+                                          {type}
+                                        </option>
+                                      );
                                     })}
                                   </Form.Control>
                                 </Form.Group>

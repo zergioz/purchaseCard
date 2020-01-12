@@ -11,4 +11,8 @@ export interface IRequestField {
   RequestJustification: string;
   RequestCurrencyType: string;
   RequestIsJ6: string;
+  fiscalYear: string;
+  fiscalQuarter: string;
+  transactionId: string;
+  executionDate: string;
 }
