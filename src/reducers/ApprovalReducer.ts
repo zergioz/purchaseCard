@@ -9,7 +9,7 @@ export const ApprovalReducer = (
 ): Request => {
   let nextRequest = request;
   let nextStatus = request.status;
-  let nextHistory = request.history[request.status];
+  let nextHistory = request.history[request.status] || [];
   if (request.status) {
     switch (action.type) {
       case "sendto":
