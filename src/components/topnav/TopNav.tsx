@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Navbar, Nav, Form, NavDropdown, Button } from "react-bootstrap";
 import modules from "../../modules";
 import { useLocation } from "react-router-dom";
@@ -71,9 +71,13 @@ export const TopNav = () => {
         </Nav>
         <Form inline>
           <Button
-            hidden={location.pathname.startsWith("/requests/details")}
+            hidden={
+              location.pathname.startsWith("/requests/details") ||
+              location.pathname.startsWith("/requests/new")
+            }
             variant="success"
-            href="../Pages/purchase_request.aspx"
+            href="#/requests/new"
+            //href="../Pages/purchase_request.aspx"
             size="lg"
           >
             Submit Request

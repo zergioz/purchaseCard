@@ -15,6 +15,15 @@ export interface ccRequestTracker {
   Folder: AttachmentFiles;
   ParentList: AttachmentFiles;
   FileSystemObjectType: number;
+  ContentTypeId: string;
+  ID: number;
+  Modified: string;
+  Created: string;
+  AuthorId: number;
+  EditorId: number;
+  OData__UIVersionString: string;
+  Attachments: boolean;
+  GUID: string;
   Id: number;
   Title: string;
   REQUEST_FIELD: string;
@@ -30,15 +39,6 @@ export interface ccRequestTracker {
   SUPPLY_VALIDATION: string;
   FINAL_VALIDATION: string;
   REQUEST_STATUS: string;
-  ContentTypeId: string;
-  ID: number;
-  Modified: string;
-  Created: string;
-  AuthorId: number;
-  EditorId: number;
-  OData__UIVersionString: string;
-  Attachments: boolean;
-  GUID: string;
   Author: SharepointUser;
   History: string;
 }

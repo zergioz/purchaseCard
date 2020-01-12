@@ -34,16 +34,30 @@ export class RequestService {
     let parsed = {};
     try {
       let approvals = {
-        directorateApproval: JSON.parse(item.DIRECTORATE_APPROVAL),
-        billingOfficialApproval: JSON.parse(item.BILLING_OFFICIAL_APPROVAL), //bo
-        j6Approval: JSON.parse(item.J6_APPROVAL),
-        pboApproval: JSON.parse(item.PBO_APPROVAL),
-        j8Approval: JSON.parse(item.J8_APPROVAL),
-        cardholderValidation: JSON.parse(item.CARD_HOLDER_VALIDATION),
-        requestorValidation: JSON.parse(item.REQUESTOR_VALIDATION),
-        supplyValidation: JSON.parse(item.SUPPLY_VALIDATION),
-        budgetOfficerApproval: JSON.parse(item.BUDGET_OFFICER_APPROVAL), //pbofinal
-        finalValidation: JSON.parse(item.FINAL_VALIDATION) //bofinal
+        directorateApproval: item.DIRECTORATE_APPROVAL
+          ? JSON.parse(item.DIRECTORATE_APPROVAL)
+          : {},
+        billingOfficialApproval: item.BILLING_OFFICIAL_APPROVAL
+          ? JSON.parse(item.BILLING_OFFICIAL_APPROVAL)
+          : {}, //bo
+        j6Approval: item.J6_APPROVAL ? JSON.parse(item.J6_APPROVAL) : {},
+        pboApproval: item.PBO_APPROVAL ? JSON.parse(item.PBO_APPROVAL) : {},
+        j8Approval: item.J8_APPROVAL ? JSON.parse(item.J8_APPROVAL) : {},
+        cardholderValidation: item.CARD_HOLDER_VALIDATION
+          ? JSON.parse(item.CARD_HOLDER_VALIDATION)
+          : {},
+        requestorValidation: item.REQUESTOR_VALIDATION
+          ? JSON.parse(item.REQUESTOR_VALIDATION)
+          : {},
+        supplyValidation: item.SUPPLY_VALIDATION
+          ? JSON.parse(item.SUPPLY_VALIDATION)
+          : {},
+        budgetOfficerApproval: item.BUDGET_OFFICER_APPROVAL
+          ? JSON.parse(item.BUDGET_OFFICER_APPROVAL)
+          : {}, //pbofinal
+        finalValidation: item.FINAL_VALIDATION
+          ? JSON.parse(item.FINAL_VALIDATION)
+          : {} //bofinal
       };
 
       /* RESHAPING
@@ -53,7 +67,9 @@ export class RequestService {
        * if this is the case, pull these 4 fields out and store them with
        * the rest of the form data for consistency
        */
-      let requestField = JSON.parse(item.REQUEST_FIELD);
+      let requestField = item.REQUEST_FIELD
+        ? JSON.parse(item.REQUEST_FIELD)
+        : {};
       requestField = {
         ...requestField,
         fiscalYear:
@@ -97,7 +113,9 @@ export class RequestService {
         id: item.Id,
         requestor: item.Author,
         requestField: requestField,
-        purchaseDetails: JSON.parse(item.PURCHASE_DETAILS),
+        purchaseDetails: item.PURCHASE_DETAILS
+          ? JSON.parse(item.PURCHASE_DETAILS)
+          : {},
         status: convertToFriendly(item.REQUEST_STATUS),
         approvals: approvals,
         history: item.History
@@ -137,5 +155,37 @@ export class RequestService {
         })
         //tap((items: any) => console.log(items))
       );
+  }
+
+  createDraft(): Observable<Request> {
+    const requestData = {
+      // REQUEST_FIELD: {},
+      // PURCHASE_DETAILS: {},
+      // BUDGET_OFFICER_APPROVAL: {},
+      // BILLING_OFFICIAL_APPROVAL: {},
+      // J6_APPROVAL: {},
+      // PBO_APPROVAL: {},
+      // DIRECTORATE_APPROVAL: {},
+      // J8_APPROVAL: {},
+      // CARD_HOLDER_VALIDATION: {},
+      // REQUESTOR_VALIDATION: {},
+      // SUPPLY_VALIDATION: {},
+      // FINAL_VALIDATION: {},
+      REQUEST_STATUS: "DRAFT"
+    };
+    return this.dal.createRow(this.listName, requestData).pipe(
+      //tap((items: any) => console.log(items)),
+      //parse nested json strings
+      map((item: any) => this.mapAndParse(item.data)),
+      //tap((items: any) => console.log(items)),
+      //hydrate each into an instance of the Request class
+      map((item: any) => {
+        let deserialized: Request = new Request(
+          this.serializer.deserialize(item, Request)
+        );
+        return deserialized;
+      })
+      //tap((items: any) => console.log(items))
+    );
   }
 }

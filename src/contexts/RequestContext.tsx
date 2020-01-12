@@ -11,7 +11,10 @@ import { Observable } from "rxjs/internal/Observable";
 export type RequestContextType = {
   requests: Request[];
   updateRequests: (requests: Request[]) => void;
-  subscribeTo: (observable: Observable<Request[]>) => void;
+  subscribeTo: (
+    observable: Observable<Request[] | Request>,
+    overrideCaching?: boolean
+  ) => void;
   filteredRequests: Request[];
   loading: boolean;
   filters: IRequestFilters;
@@ -24,7 +27,10 @@ export type RequestContextType = {
 export const RequestContext = React.createContext<RequestContextType>({
   requests: [],
   updateRequests: (requests: Request[]) => null,
-  subscribeTo: (observable: Observable<Request[]>) => null,
+  subscribeTo: (
+    observable: Observable<Request[] | Request>,
+    overrideCaching?: boolean
+  ) => null,
   filteredRequests: [],
   loading: true,
   filters: new RequestFilters(),
@@ -51,14 +57,25 @@ export const RequestProvider: React.FC = (props: any) => {
 
   const { applyFilters } = useRequestFiltering();
 
-  const subscribeTo = (observable: Observable<Request[]>) => {
+  const subscribeTo = (
+    observable: Observable<Request[] | Request>,
+    overrideCaching?: boolean
+  ) => {
     //! this app doesn't write to the db yet, so one fetch per session is enough (for now)
     //! we'll eventually need to remove this line
-    if (requests.length > 0) return;
+    if (requests.length > 0 && !overrideCaching) return;
 
     updateLoading(true);
-    observable.subscribe(requests => {
-      updateRequests(requests);
+    observable.subscribe(response => {
+      if (!Array.isArray(response)) {
+        //we just created a request, so add it to what we already have
+        let currentRequests = requests;
+        currentRequests.push(response);
+        updateRequests(currentRequests);
+      } else {
+        //replace the whole array
+        updateRequests(response);
+      }
 
       //debounce so the status filter doesn't flicker
       setTimeout(() => {

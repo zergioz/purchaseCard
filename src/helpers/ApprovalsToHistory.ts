@@ -98,17 +98,19 @@ export const parseApproval = (approval: any): ApprovalAction => {
 //parse the date/signature, and stuff that info into a RequestApproval
 export const convertApprovalsToHistory = (approvals: IRequestApprovals) => {
   let history: { [key: string]: IApprovalAction[] } = {};
-  for (var key in approvals) {
-    if (approvals.hasOwnProperty(key)) {
-      const status = getStatusForApprovalName(key);
-      const approval = getApprovalForStatus(status, approvals);
-      let action: any = approval ? parseApproval(approval) : null;
-      history[status] = history[status] || [];
-      if (action) {
-        history[status].push(action);
+  try {
+    for (var key in approvals) {
+      if (approvals.hasOwnProperty(key)) {
+        const status = getStatusForApprovalName(key);
+        const approval = getApprovalForStatus(status, approvals);
+        let action: any = approval ? parseApproval(approval) : null;
+        history[status] = history[status] || [];
+        if (action) {
+          history[status].push(action);
+        }
       }
     }
-  }
+  } catch (e) {}
 
   return history;
 };
