@@ -46,7 +46,7 @@ export class RequestService {
         history: item.History
           ? JSON.parse(item.History)
           : convertApprovalsToHistory(approvals),
-        created: parseISO(item.Created)
+        created: item.Created
       };
     } catch (e) {
       console.error(`Error parsing value in ccRequestTracker item`, e);

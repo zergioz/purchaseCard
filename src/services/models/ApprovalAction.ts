@@ -36,7 +36,7 @@ export interface IApprovalAction {
   type: string;
   actor: string;
   action: string;
-  date: Date;
+  date: string;
   verb: string;
   pastTense: string;
   description: string;
@@ -60,8 +60,8 @@ export class ApprovalAction implements IApprovalAction {
   @autoserialize
   action: string;
 
-  @autoserializeAs(Date)
-  date: Date;
+  @autoserialize
+  date: string;
 
   @autoserialize
   verb: string;

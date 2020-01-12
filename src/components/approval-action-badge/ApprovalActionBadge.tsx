@@ -3,6 +3,7 @@ import { OverlayTrigger, Badge, Popover, Card } from "react-bootstrap";
 import { PopoverPlacement } from "./ApprovalActionBadgeBar";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
 import { FiClock } from "react-icons/fi";
+import { RequestTableDateCell } from "../request-table/RequestTableDateCell";
 
 interface IProps {
   action: ApprovalAction | null;
@@ -31,18 +32,26 @@ export const ApprovalActionBadge = (props: IProps) => {
         <Popover.Content>
           <Card style={{ width: "18rem" }}>
             <Card.Body>
-              <Card.Subtitle>
-                {props.action.formInputs["comments"] || "No comments entered."}
-                <br />
-                <br />
+              <Card.Subtitle className="mb-4">
+                <span className="h5">
+                  {props.action.formInputs["comments"] ||
+                    "No comments entered."}
+                </span>
               </Card.Subtitle>
               <Card.Subtitle>
-                <span>{badgeAction} by: </span>
-                <span className="font-weight-bold">
-                  {props.action.formInputs["user"]
-                    ? props.action.formInputs["user"].Title
-                    : props.action.formInputs["userString"]}
-                </span>
+                <div>
+                  <span>{badgeAction} by: </span>
+                  <span className="font-weight-bold">
+                    {props.action.formInputs["user"]
+                      ? props.action.formInputs["user"].Title
+                      : props.action.formInputs["userString"]}
+                  </span>
+                  <br />
+                  <br />
+                  <small className="float-right">
+                    <RequestTableDateCell dateISOString={props.action.date} />
+                  </small>
+                </div>
               </Card.Subtitle>
             </Card.Body>
           </Card>

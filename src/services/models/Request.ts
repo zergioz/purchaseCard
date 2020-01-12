@@ -13,7 +13,7 @@ import { SupplyValidation } from "./SupplyValidation";
 import { FinalValidation } from "./FinalValidation";
 import { SharepointUser } from "./SharepointUser";
 import { ApprovalAction } from "./ApprovalAction";
-import { compareDesc } from "date-fns";
+import { compareDesc, parseISO } from "date-fns";
 
 export interface IRequestApprovals {
   [key: string]: any;
@@ -81,8 +81,8 @@ export class Request implements IRequest {
   @autoserializeAs(ApprovalAction)
   history: { [key: string]: ApprovalAction[] };
 
-  @autoserializeAs(Date)
-  created: Date;
+  @autoserialize
+  created: string;
 
   constructor(data: any = {}) {
     this.id = data.id;
@@ -92,12 +92,12 @@ export class Request implements IRequest {
     this.status = data.status || "";
     this.approvals = data.approvals || {};
     this.history = data.history || {};
-    this.created = new Date(data.created) || new Date();
+    this.created = data.created || new Date().toISOString();
   }
 
   public getSortedHistoryDescendingFor(status: string): ApprovalAction[] {
     const sortedHist = this.history[status].sort((a, b) =>
-      compareDesc(a.date, b.date)
+      compareDesc(parseISO(a.date), parseISO(b.date))
     );
     return sortedHist;
   }
