@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Request } from "../../services/models/Request";
 import { ApprovalActionBadgeBar } from "../approval-action-badge/ApprovalActionBadgeBar";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
@@ -16,6 +16,13 @@ export const RequestTableRow: React.FC<IProps> = props => {
   const svc = new RequestService();
   const [item, setItem] = useState<Request>(props.request);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const noActions = new Set(["Draft", "Closed"]);
+  const hideActions = noActions.has(item.status);
+
+  useEffect(() => {
+    setItem(props.request);
+  }, [props.request]);
 
   const onRequestUpdated = (newRequest: Request) => {
     props.onRequestUpdated(newRequest);
@@ -68,14 +75,16 @@ export const RequestTableRow: React.FC<IProps> = props => {
               View #{item.id}
             </span>
           </Button>
-          <ApprovalActionsButton
-            className="w-100"
-            variant="outline-danger"
-            request={item}
-            onRequestUpdated={onRequestUpdated}
-            loading={loading}
-            disabled={loading}
-          />
+          {!hideActions && (
+            <ApprovalActionsButton
+              className="w-100"
+              variant="outline-danger"
+              request={item}
+              onRequestUpdated={onRequestUpdated}
+              loading={loading}
+              disabled={loading}
+            />
+          )}
         </ButtonToolbar>
       </td>
       <td className="text-center">{item.requestField!.RequestorDirectorate}</td>
@@ -97,10 +106,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
       </td>
       <td>
         <div>
-          <ApprovalActionBadgeBar
-            request={props.request}
-            popoverPlacement="top"
-          />
+          <ApprovalActionBadgeBar request={item} popoverPlacement="top" />
         </div>
         <div>{item.requestField!.RequestJustification}</div>
       </td>
