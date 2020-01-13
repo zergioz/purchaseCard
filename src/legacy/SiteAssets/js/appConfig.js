@@ -7,7 +7,8 @@ var userId;
 /* Development variables */
 var fileExt		= ".aspx";
 //var siteUrl		= "http://localhost:8080/cc";
-var siteUrl		= "https://soceur.sof.socom.mil/app/GPC";
+//var siteUrl		= "https://soceur.sof.socom.mil/app/GPC";
+var siteUrl = "../";
 /*
  * Request variables
  */
