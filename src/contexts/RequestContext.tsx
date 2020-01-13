@@ -66,63 +66,73 @@ export const RequestProvider: React.FC = (props: any) => {
   ) => {
     updateLoading(true);
 
-    observable.subscribe(response => {
-      let currentRequests = [...requests];
-      let singleItem = !Array.isArray(response);
-      switch (action) {
-        case "create":
-          if (singleItem) {
-            //we just created a request, so add the new item to what we already have
-            currentRequests.push(response as Request);
-            updateRequests(currentRequests);
-          } else {
-            console.warn(
-              "RequestContext.subscribeTo(): Tried to do a bulk create"
-            );
-          }
-        case "read":
-          if (singleItem) {
-            console.warn(
-              "RequestContext.subscribeTo(): Tried to read a single item from the DB"
-            );
-          } else {
-            //replace the whole array
-            updateRequests(response as Request[]);
-          }
-          break;
-        case "update":
-          //find the item and replace it with the updated one
-          if (singleItem) {
-            updateRequest(response as Request, response as Request);
-          } else {
-            console.warn(
-              "RequestContext.subscribeTo(): Tried to do a bulk update"
-            );
-          }
-        case "delete":
-          //find the item and remove it
-          if (singleItem) {
-            const index = currentRequests.findIndex(
-              r => r.id === (response as Request).id
-            );
-            if (index > -1) {
-              currentRequests.splice(index, 1);
+    observable.subscribe(
+      response => {
+        let currentRequests = [...requests];
+        let singleItem = !Array.isArray(response);
+        switch (action) {
+          case "create":
+            if (singleItem) {
+              //we just created a request, so add the new item to what we already have
+              currentRequests.push(response as Request);
+              updateRequests(currentRequests);
+            } else {
+              console.warn(
+                "RequestContext.subscribeTo(): Tried to do a bulk create"
+              );
             }
-            updateRequests(currentRequests);
-          } else {
-            console.warn(
-              "RequestContext.subscribeTo(): Tried to do a bulk delete"
-            );
-          }
-        default:
-          break;
+          case "read":
+            if (singleItem) {
+              console.warn(
+                "RequestContext.subscribeTo(): Tried to read a single item from the DB"
+              );
+            } else {
+              //replace the whole array
+              updateRequests(response as Request[]);
+            }
+            break;
+          case "update":
+            //find the item and replace it with the updated one
+            if (singleItem) {
+              updateRequest(response as Request, response as Request);
+            } else {
+              console.warn(
+                "RequestContext.subscribeTo(): Tried to do a bulk update"
+              );
+            }
+          case "delete":
+            //find the item and remove it
+            if (singleItem) {
+              const index = currentRequests.findIndex(
+                r => r.id === (response as Request).id
+              );
+              if (index > -1) {
+                currentRequests.splice(index, 1);
+              }
+              updateRequests(currentRequests);
+            } else {
+              console.warn(
+                "RequestContext.subscribeTo(): Tried to do a bulk delete"
+              );
+            }
+          default:
+            break;
+        }
+      },
+      (error: any) => {
+        console.error(`RequestContext.subscribeTo(): `, error);
+        //debounce so the status filter doesn't flicker
+        setTimeout(() => {
+          updateLoading(false);
+        }, 500);
+      },
+      () => {
+        //debounce so the status filter doesn't flicker
+        setTimeout(() => {
+          updateLoading(false);
+        }, 500);
       }
-
-      //debounce so the status filter doesn't flicker
-      setTimeout(() => {
-        updateLoading(false);
-      }, 500);
-    });
+    );
   };
 
   const applyRequestFilters = (
