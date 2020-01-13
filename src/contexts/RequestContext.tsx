@@ -21,7 +21,7 @@ export type RequestContextType = {
   filters: IRequestFilters;
   pageFilters: IRequestFilters;
   updatePageFilters: (filters: IRequestFilters) => void;
-  updateRequest: (oldRequest: Request, newRequest: Request) => void;
+  updateRequest: (newRequest: Request) => void;
   applyFilters: (filters: IRequestFilters, update: boolean) => Request[];
 };
 
@@ -37,7 +37,7 @@ export const RequestContext = React.createContext<RequestContextType>({
   filters: new RequestFilters(),
   pageFilters: new RequestFilters(),
   updatePageFilters: (filters: IRequestFilters) => null,
-  updateRequest: (oldRequest: Request, newRequest: Request) => null,
+  updateRequest: (newRequest: Request) => null,
   applyFilters: (filters: IRequestFilters, update: boolean) => []
 });
 
@@ -94,7 +94,7 @@ export const RequestProvider: React.FC = (props: any) => {
           case "update":
             //find the item and replace it with the updated one
             if (singleItem) {
-              updateRequest(response as Request, response as Request);
+              updateRequest(response as Request);
             } else {
               console.warn(
                 "RequestContext.subscribeTo(): Tried to do a bulk update"
@@ -147,12 +147,11 @@ export const RequestProvider: React.FC = (props: any) => {
     return filteredRequests;
   };
 
-  const updateRequest = (oldRequest: Request, newRequest: Request) => {
+  const updateRequest = (newRequest: Request) => {
     let currentRequests = [...requests];
-    const index = currentRequests.findIndex(r => r.id === oldRequest.id);
+    const index = currentRequests.findIndex(r => r.id === newRequest.id);
     if (index > -1) {
       console.log("Replacing", currentRequests[index], newRequest);
-      //currentRequests.splice(index, 1, newRequest);
       currentRequests[index] = newRequest;
     }
     updateRequests(currentRequests);

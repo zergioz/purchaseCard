@@ -37,8 +37,8 @@ export const RequestDetails = (props: IProps) => {
     }
   }, [context.filteredRequests]);
 
-  const onRequestUpdated = (oldRequest: Request, newRequest: Request) => {
-    context.updateRequest(oldRequest, newRequest);
+  const onRequestUpdated = (newRequest: Request) => {
+    context.updateRequest(newRequest);
   };
 
   return (

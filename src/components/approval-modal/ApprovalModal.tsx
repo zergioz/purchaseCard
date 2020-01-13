@@ -49,7 +49,13 @@ export const ApprovalModal = (props: IProps) => {
             <Modal.Title id="send-to-modal">{props.action.action}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Alert variant={props.action.bootstrapClass}>
+            {/* <Alert variant={props.action.bootstrapClass}> */}
+            <Alert variant="danger">
+              <b>
+                Only use this function if you are trying to fix request that is
+                stuck!
+              </b>
+              <br />
               {props.action.description}
             </Alert>
             <props.action.form

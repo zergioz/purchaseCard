@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
-import { convertToFriendly } from "../constants/StepStatus";
+import { convertToFriendly, convertToUgly } from "../constants/StepStatus";
 import { convertApprovalsToHistory } from "../helpers/ApprovalsToHistory";
 
 export class RequestService {
@@ -132,7 +132,7 @@ export class RequestService {
   }
 
   read(filters?: string): Observable<Request[]> {
-    const select = `Id,Title,Created,REQUEST_FIELD,PURCHASE_DETAILS,BUDGET_OFFICER_APPROVAL,BILLING_OFFICIAL_APPROVAL,J6_APPROVAL,PBO_APPROVAL,DIRECTORATE_APPROVAL,J8_APPROVAL,CARD_HOLDER_VALIDATION,REQUESTOR_VALIDATION,SUPPLY_VALIDATION,FINAL_VALIDATION,REQUEST_STATUS`;
+    const select = `Id,Title,Created,REQUEST_FIELD,PURCHASE_DETAILS,BUDGET_OFFICER_APPROVAL,BILLING_OFFICIAL_APPROVAL,J6_APPROVAL,PBO_APPROVAL,DIRECTORATE_APPROVAL,J8_APPROVAL,CARD_HOLDER_VALIDATION,REQUESTOR_VALIDATION,SUPPLY_VALIDATION,FINAL_VALIDATION,REQUEST_STATUS,History`;
 
     return this.dal
       .getRowsWhere(this.listName, undefined, select, filters)
@@ -174,6 +174,30 @@ export class RequestService {
       REQUEST_STATUS: "DRAFT"
     };
     return this.dal.createRow(this.listName, requestData).pipe(
+      //tap((items: any) => console.log(items)),
+      //parse nested json strings
+      map((item: any) => this.mapAndParse(item.data)),
+      //tap((items: any) => console.log(items)),
+      //hydrate each into an instance of the Request class
+      map((item: any) => {
+        let deserialized: Request = new Request(
+          this.serializer.deserialize(item, Request)
+        );
+        return deserialized;
+      })
+      //tap((items: any) => console.log(items))
+    );
+  }
+
+  //! quick fix to give them a "Send To" option while we're still using the old form
+  update(request: Request): Observable<Request> {
+    const requestData = {
+      Id: request.id,
+      REQUEST_STATUS: convertToUgly(request.status),
+      History: JSON.stringify(request.history || {})
+    };
+    console.log(`Updating`, requestData);
+    return this.dal.updateRow(this.listName, requestData).pipe(
       //tap((items: any) => console.log(items)),
       //parse nested json strings
       map((item: any) => this.mapAndParse(item.data)),

@@ -9,7 +9,7 @@ import { ApprovalActionsButton } from "../approval-actions-button/ApprovalAction
 interface IProps {
   locked: boolean;
   request: Request;
-  onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
+  onRequestUpdated: (newRequest: Request) => void;
 }
 export const ApprovalProgressBar = (props: IProps) => {
   const statuses: string[] = Object.keys(getStatusesByFriendlyName());
@@ -31,13 +31,13 @@ export const ApprovalProgressBar = (props: IProps) => {
     }
   }, [selected]);
 
-  const onRequestUpdated = (oldRequest: Request, newRequest: Request) => {
+  const onRequestUpdated = (newRequest: Request) => {
     console.log("Request updated", newRequest);
     setRequest(newRequest);
     setSelected(newRequest.status);
     setLocked(true);
     if (props.onRequestUpdated) {
-      props.onRequestUpdated(oldRequest, newRequest);
+      props.onRequestUpdated(newRequest);
     }
   };
 
