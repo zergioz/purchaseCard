@@ -32,7 +32,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
       obs.subscribe(
         () => {
           setItem(newRequest);
-          context.updateRequest(newRequest);
+          //context.updateRequest(newRequest);
           setLoading(false);
         },
         error => {
