@@ -52,8 +52,8 @@ export const ApprovalModal = (props: IProps) => {
             {/* <Alert variant={props.action.bootstrapClass}> */}
             <Alert variant="danger">
               <b>
-                Only use this function if you are trying to fix request that is
-                stuck!
+                Only use this function if you are trying to fix a request that
+                is stuck!
               </b>
               <br />
               {props.action.description}
