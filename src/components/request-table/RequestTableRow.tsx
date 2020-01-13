@@ -17,14 +17,14 @@ export const RequestTableRow: React.FC<IProps> = props => {
   return (
     <tr>
       <td className="action-button-col">
-        <ButtonToolbar>
+        {/* <ButtonToolbar>
           <Button
             className="w-100"
             variant="primary"
             size="sm"
             href={`#/requests/details/${item.id}`}
           >
-            View #{item.id}
+            <span className="nowrap">View #{item.id}</span>
           </Button>
           <ApprovalActionsButton
             className="w-100"
@@ -32,10 +32,19 @@ export const RequestTableRow: React.FC<IProps> = props => {
             request={item}
             onRequestUpdated={onRequestUpdated}
           />
+        </ButtonToolbar> */}
+        <ButtonToolbar>
+          <Button
+            className="w-100"
+            variant="primary"
+            size="sm"
+            href={`Pages/purchase_request.aspx?id=${item.id}`}
+          >
+            <span className="nowrap" style={{ whiteSpace: "pre" }}>
+              View #{item.id}
+            </span>
+          </Button>
         </ButtonToolbar>
-
-        {/* <a href={`Pages/purchase_request.aspx?id=${item.id}`}>{item.id}</a> */}
-        {/* <Link to={`/requests/details/${item.id}`}>Open #{item.id}</Link> */}
       </td>
       <td className="text-center">{item.requestField!.RequestorDirectorate}</td>
       <td>

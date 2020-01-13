@@ -76,8 +76,8 @@ export const TopNav = () => {
               location.pathname.startsWith("/requests/new")
             }
             variant="success"
-            href="#/requests/new"
-            //href="../Pages/purchase_request.aspx"
+            //href="#/requests/new"
+            href="./Pages/purchase_request.aspx"
             size="lg"
           >
             Submit Request
