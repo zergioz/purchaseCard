@@ -48,28 +48,12 @@ export const RequestTableRow: React.FC<IProps> = props => {
   return (
     <tr>
       <td className="action-button-col">
-        {/* <ButtonToolbar>
-          <Button
-            className="w-100"
-            variant="primary"
-            size="sm"
-            href={`#/requests/details/${item.id}`}
-          >
-            <span className="nowrap">View #{item.id}</span>
-          </Button>
-          <ApprovalActionsButton
-            className="w-100"
-            variant="outline-danger"
-            request={item}
-            onRequestUpdated={onRequestUpdated}
-          />
-        </ButtonToolbar> */}
         <ButtonToolbar>
           <Button
             className="w-100"
             variant="primary"
             size="sm"
-            href={`Pages/purchase_request.aspx?id=${item.id}`}
+            href={`#/requests/details/${item.id}`}
           >
             <span className="nowrap" style={{ whiteSpace: "pre" }}>
               View #{item.id}

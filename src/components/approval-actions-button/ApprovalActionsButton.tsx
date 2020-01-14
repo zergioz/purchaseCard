@@ -92,16 +92,16 @@ export const ApprovalActionsButton = (props: IProps) => {
           Actions
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          {/* <Dropdown.Item onClick={() => onActionClicked("approve")}>
+          <Dropdown.Item onClick={() => onActionClicked("approve")}>
             Approve
-          </Dropdown.Item> */}
+          </Dropdown.Item>
           <Dropdown.Item onClick={() => onActionClicked("sendto")}>
             Send to...
           </Dropdown.Item>
-          {/* <Dropdown.Divider />
+          <Dropdown.Divider />
           <Dropdown.Item onClick={() => onActionClicked("reject")}>
             Reject
-          </Dropdown.Item> */}
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     </>
