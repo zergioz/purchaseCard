@@ -1,12 +1,7 @@
 import React, { useState, useReducer, useEffect } from "react";
 import { ApprovalModal } from "../approval-modal/ApprovalModal";
 import { Request } from "../../services/models/Request";
-import {
-  Dropdown,
-  ButtonGroup,
-  DropdownButton,
-  Spinner
-} from "react-bootstrap";
+import { Dropdown, ButtonGroup, Spinner } from "react-bootstrap";
 import {
   ApprovalAction,
   IApprovalAction,
