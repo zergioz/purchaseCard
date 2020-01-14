@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Badge, Nav, DropdownButton, Dropdown } from "react-bootstrap";
+import { DropdownButton, Dropdown } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import {
   getStatusesByFriendlyName,
@@ -22,16 +22,19 @@ export const useStatusFilter = (): IStatusFilter => {
 
   //when other filters are applied, recalculate the badges we should be showing in this component
   useEffect(() => {
-    //todo: skip this calculation if only the status filter changed
-    const allOtherFilters = { ...context.filters, status: "" };
-    const matches = context.applyFilters(allOtherFilters, false);
-    const counts = groupByStatus(matches);
-    setBadges(counts);
+    if (context.filters.status != selected) {
+      const allOtherFilters = { ...context.filters, status: "" };
+      const matches = context.applyFilters(allOtherFilters, false);
+      const counts = groupByStatus(matches);
+      setBadges(counts);
+    }
   }, [context.filters]);
 
   //if the status filter changes, update our state
   useEffect(() => {
-    setSelected(context.filters.status);
+    if (context.filters.status != selected) {
+      setSelected(context.filters.status);
+    }
   }, [context.filters]);
 
   //if the state of this component changes, then apply the filters
