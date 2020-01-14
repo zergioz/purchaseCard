@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { RequestTableRow } from "./RequestTableRow";
 import { Request } from "../../services/models/Request";
 import { Table } from "react-bootstrap";
@@ -7,20 +7,22 @@ import { NoResults } from "./NoResults";
 import { LoadingResults } from "./LoadingResults";
 import { useRequestFiltering } from "../filters/RequestFilters";
 import "./RequestTable.css";
+import { RequestService } from "../../services";
 
 interface IProps {
   items?: Request[];
-  onRequestUpdated?: (oldRequest: Request, newRequest: Request) => void;
+  onRequestUpdated?: (newRequest: Request) => void;
 }
 export const RequestTable = (props: IProps) => {
+  const svc = new RequestService();
   const context = useContext(RequestContext);
   const { applyFilters } = useRequestFiltering();
   const items = props.items || context.filteredRequests;
   const pageItems = applyFilters(context.pageFilters, context.requests);
 
-  const onRequestUpdated = (oldRequest: Request, newRequest: Request) => {
-    if (props.onRequestUpdated) props.onRequestUpdated(oldRequest, newRequest);
-    context.updateRequest(oldRequest, newRequest);
+  const onRequestUpdated = (newRequest: Request) => {
+    if (props.onRequestUpdated) props.onRequestUpdated(newRequest);
+    //context.subscribeTo(svc.update(newRequest), "update");
   };
 
   return (

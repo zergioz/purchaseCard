@@ -32,7 +32,7 @@ export const TopNav = () => {
                     key={`nav-${submodule.routeProps.path}`}
                   >
                     <NavDropdown.Item
-                      href={`/#${submodule.routeProps.path}`}
+                      href={`#${submodule.routeProps.path}`}
                       key={`nav-${submodule.routeProps.path}`}
                     >
                       All
@@ -41,7 +41,7 @@ export const TopNav = () => {
                     {submodule.links.map((link: any) => {
                       return (
                         <NavDropdown.Item
-                          href={`/#${link.routeProps.path}`}
+                          href={`#${link.routeProps.path}`}
                           key={`nav-${link.routeProps.path}`}
                         >
                           {link.name}
@@ -53,7 +53,7 @@ export const TopNav = () => {
               } else {
                 link = (
                   <Nav.Link
-                    href={`/#${submodule.routeProps.path}`}
+                    href={`#${submodule.routeProps.path}`}
                     key={`nav-${submodule.routeProps.path}`}
                   >
                     {submodule.name}
@@ -65,7 +65,7 @@ export const TopNav = () => {
             return links;
           })}
           <Nav.Link href="./Pages/cc_user_list.aspx">Users</Nav.Link>
-          <Nav.Link href="../Shared%20Documents/Forms/AllItems.aspx">
+          <Nav.Link href="./Shared%20Documents/Forms/AllItems.aspx">
             Help
           </Nav.Link>
         </Nav>
@@ -76,8 +76,8 @@ export const TopNav = () => {
               location.pathname.startsWith("/requests/new")
             }
             variant="success"
-            href="#/requests/new"
-            //href="../Pages/purchase_request.aspx"
+            //href="#/requests/new"
+            href="./Pages/purchase_request.aspx"
             size="lg"
           >
             Submit Request

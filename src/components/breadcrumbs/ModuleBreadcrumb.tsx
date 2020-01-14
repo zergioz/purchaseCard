@@ -10,7 +10,7 @@ export const ModuleBreadcrumb = (props: IProps) => {
   const href =
     location.pathname === props.module.routeProps.path
       ? undefined
-      : `/#${props.module.routeProps.path}`;
+      : `#${props.module.routeProps.path}`;
   const active =
     location.pathname === props.module.routeProps.path ? true : undefined;
 

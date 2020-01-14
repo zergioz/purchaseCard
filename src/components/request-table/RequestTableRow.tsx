@@ -1,30 +1,61 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Request } from "../../services/models/Request";
 import { ApprovalActionBadgeBar } from "../approval-action-badge/ApprovalActionBadgeBar";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 import { Button, ButtonToolbar } from "react-bootstrap";
 import { RequestTableDateCell } from "./RequestTableDateCell";
 import "./RequestTable.css";
+import RequestContext from "../../contexts/RequestContext";
+import { RequestService } from "../../services";
 interface IProps {
   request: Request;
-  onRequestUpdated: (oldRequest: Request, newRequest: Request) => void;
+  onRequestUpdated: (newRequest: Request) => void;
 }
 export const RequestTableRow: React.FC<IProps> = props => {
-  const item: Request = props.request;
-  const onRequestUpdated = (oldRequest: Request, newRequest: Request) => {
-    props.onRequestUpdated(oldRequest, newRequest);
+  const context = useContext(RequestContext);
+  const svc = new RequestService();
+  const [item, setItem] = useState<Request>(props.request);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const noActions = new Set(["Draft", "Closed"]);
+  const hideActions = noActions.has(item.status);
+
+  useEffect(() => {
+    setItem(props.request);
+  }, [props.request]);
+
+  const onRequestUpdated = (newRequest: Request) => {
+    props.onRequestUpdated(newRequest);
+    if (item.status !== newRequest.status) {
+      let obs = svc.update(newRequest);
+      setLoading(true);
+      obs.subscribe(
+        () => {
+          setItem(newRequest);
+          //context.updateRequest(newRequest);
+          setLoading(false);
+        },
+        error => {
+          console.error(`Error updating request in table row.`, error);
+          setLoading(false);
+        },
+        () => {
+          setLoading(false);
+        }
+      );
+    }
   };
   return (
     <tr>
       <td className="action-button-col">
-        <ButtonToolbar>
+        {/* <ButtonToolbar>
           <Button
             className="w-100"
             variant="primary"
             size="sm"
             href={`#/requests/details/${item.id}`}
           >
-            View #{item.id}
+            <span className="nowrap">View #{item.id}</span>
           </Button>
           <ApprovalActionsButton
             className="w-100"
@@ -32,10 +63,29 @@ export const RequestTableRow: React.FC<IProps> = props => {
             request={item}
             onRequestUpdated={onRequestUpdated}
           />
+        </ButtonToolbar> */}
+        <ButtonToolbar>
+          <Button
+            className="w-100"
+            variant="primary"
+            size="sm"
+            href={`Pages/purchase_request.aspx?id=${item.id}`}
+          >
+            <span className="nowrap" style={{ whiteSpace: "pre" }}>
+              View #{item.id}
+            </span>
+          </Button>
+          {!hideActions && (
+            <ApprovalActionsButton
+              className="w-100"
+              variant="outline-danger"
+              request={item}
+              onRequestUpdated={onRequestUpdated}
+              loading={loading}
+              disabled={loading}
+            />
+          )}
         </ButtonToolbar>
-
-        {/* <a href={`Pages/purchase_request.aspx?id=${item.id}`}>{item.id}</a> */}
-        {/* <Link to={`/requests/details/${item.id}`}>Open #{item.id}</Link> */}
       </td>
       <td className="text-center">{item.requestField!.RequestorDirectorate}</td>
       <td>
@@ -56,10 +106,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
       </td>
       <td>
         <div>
-          <ApprovalActionBadgeBar
-            request={props.request}
-            popoverPlacement="top"
-          />
+          <ApprovalActionBadgeBar request={item} popoverPlacement="top" />
         </div>
         <div>{item.requestField!.RequestJustification}</div>
       </td>
