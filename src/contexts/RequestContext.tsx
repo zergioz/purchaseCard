@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Request } from "../services/models/Request";
 import {
   IRequestFilters,
@@ -6,7 +6,6 @@ import {
   useRequestFiltering
 } from "../components/filters/RequestFilters";
 import { Observable } from "rxjs/internal/Observable";
-import { FaBreadSlice } from "react-icons/fa";
 
 //the filters could probably be refactored into their own context and placed at the top of each page
 export type RequestContextType = {
@@ -136,16 +135,27 @@ export const RequestProvider: React.FC = (props: any) => {
   };
 
   const applyRequestFilters = (
-    filters: IRequestFilters,
+    newFilters: IRequestFilters,
     update: boolean = true
   ) => {
-    let filteredRequests: Request[] = applyFilters(filters, requests);
+    let filteredRequests: Request[] = applyFilters(newFilters, requests);
     if (update) {
-      updateFilteredRequests(filteredRequests);
-      updateFilters(filters);
+      //updateFilteredRequests(filteredRequests);
+      console.log(`about to apply filters: `, newFilters);
+      updateFilters(newFilters);
     }
     return filteredRequests;
   };
+
+  useEffect(() => {
+    console.log(`requests changed, filtering`);
+    updateFilteredRequests(applyFilters(filters, requests));
+  }, [requests]);
+
+  useEffect(() => {
+    console.log(`filters changed, filtering`);
+    updateFilteredRequests(applyFilters(filters, requests));
+  }, [filters]);
 
   const updateRequest = (newRequest: Request) => {
     let currentRequests = [...requests];
@@ -155,7 +165,7 @@ export const RequestProvider: React.FC = (props: any) => {
       currentRequests[index] = newRequest;
     }
     updateRequests(currentRequests);
-    applyRequestFilters(filters, false);
+    //applyRequestFilters(filters, true);
   };
 
   return (
