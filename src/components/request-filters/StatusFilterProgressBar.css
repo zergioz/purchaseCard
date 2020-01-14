@@ -1,0 +1,23 @@
+.progress-step {
+  color: white;
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+  background-color: rgb(211, 211, 211);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  margin-bottom: -23px;
+}
+
+.progress-step.accomplished {
+  background-color: #007bff;
+}
+
+.progress-step.current {
+  color: black;
+  background-color: #f7f7f7;
+  border: 3px solid #007bff;
+}

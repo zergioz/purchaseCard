@@ -1,0 +1,66 @@
+{
+  "name": "purchase-card",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@pnp/common": "^1.3.7",
+    "@pnp/graph": "^1.3.7",
+    "@pnp/logging": "^1.3.7",
+    "@pnp/odata": "^1.3.7",
+    "@pnp/sp": "^1.3.7",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jquery": "^3.3.31",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-router-dom": "^5.1.3",
+    "@types/sharepoint": "^2016.1.6",
+    "bootstrap": "^4.4.1",
+    "cerialize": "^0.1.18",
+    "date-fns": "^2.8.1",
+    "formik": "^2.1.1",
+    "react": "^16.12.0",
+    "react-app-polyfill": "^1.0.5",
+    "react-bootstrap": "^1.0.0-beta.16",
+    "react-date-picker": "^7.10.0",
+    "react-dom": "^16.12.0",
+    "react-icons": "^3.8.0",
+    "react-media": "^1.10.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.2.0",
+    "rxjs": "^6.5.3",
+    "yup": "^0.28.0"
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.0",
+    "sp-rest-proxy": "^2.10.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "proxy": "node ./proxy/index.js",
+    "dev": "concurrently \"npm run proxy\" \"npm run start\""
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      "ie 11",
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "ie 11",
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "homepage": "./",
+  "proxy": "http://localhost:8080"
+}
