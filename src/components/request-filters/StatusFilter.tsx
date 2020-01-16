@@ -20,20 +20,18 @@ export const useStatusFilter = (): IStatusFilter => {
   const [selected, setSelected] = useState<string>(context.filters.status);
   const statuses: string[] = Object.keys(getStatusesByFriendlyName());
 
-  //when other filters are applied, recalculate the badges we should be showing in this component
+  //recalc the counts when the requests change
   useEffect(() => {
-    if (context.filters.status != selected) {
-      const allOtherFilters = { ...context.filters, status: "" };
-      const matches = context.applyFilters(allOtherFilters, false);
-      const counts = groupByStatus(matches);
-      setBadges(counts);
-    }
-  }, [context.filters]);
+    recountItems();
+  }, [context.requests]);
 
-  //if the status filter changes, update our state
+  //when our filter changes, update our state.
+  //when other filters change, recalculate the badges we should be showing
   useEffect(() => {
     if (context.filters.status != selected) {
       setSelected(context.filters.status);
+    } else {
+      recountItems();
     }
   }, [context.filters]);
 
@@ -43,6 +41,13 @@ export const useStatusFilter = (): IStatusFilter => {
       context.applyFilters({ ...context.filters, status: selected }, true);
     }
   }, [selected]);
+
+  const recountItems = () => {
+    const allOtherFilters = { ...context.filters, status: "" };
+    const matches = context.applyFilters(allOtherFilters, false);
+    const counts = groupByStatus(matches);
+    setBadges(counts);
+  };
 
   const onChangeSelection = (status: string) => {
     //the filter will bounce back if they try to change it during loading, so prevent that
