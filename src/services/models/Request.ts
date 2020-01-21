@@ -14,6 +14,7 @@ import { FinalValidation } from "./FinalValidation";
 import { SharepointUser } from "./SharepointUser";
 import { ApprovalAction } from "./ApprovalAction";
 import { compareDesc, parseISO } from "date-fns";
+import * as Yup from "yup";
 
 export interface IRequestApprovals {
   [key: string]: any;
@@ -52,11 +53,11 @@ export class RequestApprovals implements IRequestApprovals {
 
 export interface IRequest {
   id?: number;
-  requestor?: SharepointUser;
-  requestField?: RequestField;
-  purchaseDetails?: PurchaseDetails;
-  status?: string;
-  approvals?: RequestApprovals;
+  requestor: SharepointUser;
+  requestField: RequestField;
+  purchaseDetails: PurchaseDetails;
+  status: string;
+  approvals: RequestApprovals;
 }
 
 export class Request implements IRequest {
@@ -111,5 +112,27 @@ export class Request implements IRequest {
     const sortedDesc = this.getSortedHistoryDescendingFor(status);
     action = sortedDesc[0] || null;
     return action;
+  }
+
+  public getValidationSchema(): Yup.ObjectSchema {
+    const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+    return Yup.object({
+      RequestCardType: Yup.string().required("Required"),
+      RequestorCardHolderName: Yup.string().required("Required"),
+      RequestorDSN: Yup.string()
+        .required("Required")
+        .matches(phoneRegExp, "DSN number is not valid"),
+      RequestorDirectorate: Yup.string().required("Required"),
+      RequestDateofRequest: Yup.string().required("Required"),
+      RequestSource: Yup.string().required("Required"),
+      RequestJustification: Yup.string().required("Required"),
+      RequestCurrencyType: Yup.string().required("Required"),
+      RequestIsJ6: Yup.string().required("Required"),
+      fiscalYear: Yup.string().required("Required"),
+      fiscalQuarter: Yup.string().required("Required"),
+      transactionId: Yup.string().required("Required"),
+      executionDate: Yup.string().required("Required")
+    });
   }
 }

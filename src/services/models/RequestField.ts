@@ -4,23 +4,23 @@ import { autoserialize } from "cerialize";
 
 export class RequestField {
   @autoserialize
-  RequestCardType?: string;
+  RequestCardType: string;
   @autoserialize
-  Requestor?: string;
+  Requestor: string;
   @autoserialize
-  RequestorCardHolderName?: string;
+  RequestorCardHolderName: string;
   @autoserialize
-  RequestorDSN?: string;
+  RequestorDSN: string;
   @autoserialize
-  RequestorDirectorate?: string;
+  RequestorDirectorate: string;
   @autoserialize
-  RequestDateofRequest?: string;
+  RequestDateofRequest: string;
   @autoserialize
-  RequestSource?: string;
+  RequestSource: string;
   @autoserialize
-  RequestJustification?: string;
+  RequestJustification: string;
   @autoserialize
-  RequestCurrencyType?: string;
+  RequestCurrencyType: string;
   @autoserialize
   RequestIsJ6: string;
   @autoserialize
