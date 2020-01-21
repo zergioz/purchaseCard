@@ -16,10 +16,10 @@ import ReactDatePicker, {
 } from "react-date-picker/dist/entry.nostyle";
 import "./DatePicker.css";
 import { parseISO, format } from "date-fns";
-import { useToasts } from "react-toast-notifications";
 
 interface IProps {
   request: Request;
+  onRequestUpdated: (newRequest: Request) => void;
   editing?: boolean;
 }
 export const RequestForm = (props: IProps) => {
@@ -27,11 +27,9 @@ export const RequestForm = (props: IProps) => {
   const [attachments, setAttachments] = useState<any>([]);
   const [editing, setEditing] = useState<boolean>(props.editing === true);
 
-  const { addToast } = useToasts();
-
   const onSaveClicked = () => {
     setEditing(false);
-    addToast("Saved", { appearance: "success", autoDismiss: true });
+    props.onRequestUpdated(request);
   };
 
   const onEditClicked = () => {

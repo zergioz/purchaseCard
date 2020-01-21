@@ -159,18 +159,6 @@ export class RequestService {
 
   createDraft(): Observable<Request> {
     const requestData = {
-      // REQUEST_FIELD: {},
-      // PURCHASE_DETAILS: {},
-      // BUDGET_OFFICER_APPROVAL: {},
-      // BILLING_OFFICIAL_APPROVAL: {},
-      // J6_APPROVAL: {},
-      // PBO_APPROVAL: {},
-      // DIRECTORATE_APPROVAL: {},
-      // J8_APPROVAL: {},
-      // CARD_HOLDER_VALIDATION: {},
-      // REQUESTOR_VALIDATION: {},
-      // SUPPLY_VALIDATION: {},
-      // FINAL_VALIDATION: {},
       REQUEST_STATUS: "DRAFT"
     };
     return this.dal.createRow(this.listName, requestData).pipe(
@@ -189,14 +177,19 @@ export class RequestService {
     );
   }
 
-  //! quick fix to give them a "Send To" option while we're still using the old form
   update(request: Request): Observable<Request> {
+    //ignore all the legacy approval/validation fields because that information was parsed into the history
+    //field when this item was read out of the DB and hydrated into a Request object
     const requestData = {
       Id: request.id,
+      REQUEST_FIELD: JSON.stringify(request.requestField || {}),
+      PURCHASE_DETAILS: JSON.stringify(request.purchaseDetails || {}),
       REQUEST_STATUS: convertToUgly(request.status),
       History: JSON.stringify(request.history || {})
-    };
+    } as ccRequestTracker;
+
     console.log(`Updating`, requestData);
+
     return this.dal.updateRow(this.listName, requestData).pipe(
       //tap((items: any) => console.log(items)),
       //parse nested json strings
