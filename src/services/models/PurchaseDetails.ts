@@ -4,22 +4,36 @@ import { autoserialize, autoserializeAs } from "cerialize";
 
 export class Detail {
   @autoserialize
-  requestQty?: string;
+  requestQty: string;
   @autoserialize
-  requestDesc?: string;
+  requestDesc: string;
   @autoserialize
-  requestSrc?: string;
+  requestSrc: string;
   @autoserialize
-  requestDdForm?: boolean;
+  requestDdForm: boolean;
   @autoserialize
-  requestDaForm?: boolean;
+  requestDaForm: boolean;
   @autoserialize
-  requestCost?: string;
+  requestCost: string;
   @autoserialize
-  requestTotal?: string;
+  requestTotal: string;
+
+  constructor(data: any = {}) {
+    this.requestQty = data.requestQty || "";
+    this.requestDesc = data.requestDesc || "";
+    this.requestSrc = data.requestSrc || "";
+    this.requestDdForm = data.requestDdForm === true ? true : false;
+    this.requestDaForm = data.requestDaForm === true ? true : false;
+    this.requestCost = data.requestCost || "";
+    this.requestTotal = data.requestTotal || "";
+  }
 }
 
 export class PurchaseDetails {
   @autoserializeAs(Detail)
-  Details?: Detail[];
+  Details: Detail[];
+
+  constructor(data: any = {}) {
+    this.Details = data.details || [];
+  }
 }

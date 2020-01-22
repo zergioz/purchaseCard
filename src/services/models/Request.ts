@@ -94,7 +94,7 @@ export class Request implements IRequest {
     this.id = data.id;
     this.requestor = data.requestor || {};
     this.requestField = new RequestField(data.requestField || {});
-    this.purchaseDetails = data.purchaseDetails || {};
+    this.purchaseDetails = new PurchaseDetails(data.purchaseDetails || {});
     this.status = data.status || "";
     this.approvals = data.approvals || {};
     this.history = data.history || {};
