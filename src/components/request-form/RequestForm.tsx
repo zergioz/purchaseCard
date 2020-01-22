@@ -10,6 +10,7 @@ import { FiscalYears as fiscalYears } from "../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters";
 import { FaTimes, FaPlus } from "react-icons/fa";
 import { Detail } from "../../services/models/PurchaseDetails";
+import { ValidationErrorModal } from "./ValidationErrorModal";
 import { useFormik } from "formik";
 import ReactDatePicker, {
   DatePickerProps
@@ -26,27 +27,45 @@ export const RequestForm = (props: IProps) => {
   const [request, setRequest] = useState<Request>(props.request);
   const [attachments, setAttachments] = useState<any>([]);
   const [editing, setEditing] = useState<boolean>(props.editing === true);
+  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
 
   const formik = useFormik({
     initialValues: {
       ...request.requestField
     },
     onSubmit: values => {
-      console.log(values);
+      updateRequest(values);
+      formik.setSubmitting(false);
+      formik.setErrors({});
+      formik.setTouched({});
     },
     validationSchema: new Request().getValidationSchema()
   });
 
-  const onSaveClicked = () => {
+  const updateRequest = (values: any) => {
     setEditing(false);
     const updatedRequest = new Request({
       ...request,
-      requestField: formik.values
+      requestField: values
     });
     setRequest(updatedRequest);
     props.onRequestUpdated(updatedRequest);
   };
 
+  const onSaveClicked = () => {
+    if (!formik.isValid) {
+      setErrorModalVisible(true);
+    }
+
+    formik.handleSubmit();
+  };
+
+  const onCancelClicked = () => {
+    formik.resetForm();
+    setEditing(false);
+  };
+
+  //unlocks the form fields
   const onEditClicked = () => {
     setEditing(true);
   };
@@ -55,26 +74,32 @@ export const RequestForm = (props: IProps) => {
     setRequest(props.request);
   }, [props.request]);
 
-  //make formik work with custom react date picker
+  //this is a wrapper for the react-date-picker control so that it works with Formik and React-Bootstrap
   //todo: remove hardcoded executionDate field name
   const DatePicker = (props: DatePickerProps) => {
     const makeSingleDate = (date: Date | Date[] | undefined) => {
       let singleDate = Array.isArray(date) ? date[0] : date;
-      singleDate = singleDate || new Date();
       return singleDate;
     };
 
     const handleDateChanged = (date: Date | Date[]) => {
       const singleDate = makeSingleDate(date);
       console.log(singleDate);
-      formik.setFieldValue("executionDate", singleDate.toISOString());
-      formik.setTouched({ ...formik.touched, executionDate: true }, true);
+      formik.setFieldTouched("executionDate", true, true);
+      formik.setFieldValue(
+        "executionDate",
+        singleDate ? singleDate.toISOString() : undefined
+      );
     };
 
     return (
       <ReactDatePicker
         onChange={handleDateChanged}
-        value={parseISO(formik.values.executionDate)}
+        value={
+          formik.values.executionDate
+            ? parseISO(formik.values.executionDate)
+            : undefined
+        }
         {...props}
       />
     );
@@ -82,6 +107,10 @@ export const RequestForm = (props: IProps) => {
 
   return (
     <>
+      <ValidationErrorModal
+        show={errorModalVisible}
+        onHide={() => setErrorModalVisible(false)}
+      />
       {request && (
         <Form noValidate>
           <Form.Group className="bg-secondary p-3">
@@ -97,6 +126,7 @@ export const RequestForm = (props: IProps) => {
               <Col className="d-flex justify-content-end">
                 <ButtonToolbar className="text-right">
                   <Button
+                    className="m-1"
                     variant="outline-light"
                     hidden={editing}
                     onClick={() => onEditClicked()}
@@ -104,6 +134,15 @@ export const RequestForm = (props: IProps) => {
                     Edit this request
                   </Button>
                   <Button
+                    className="m-1"
+                    variant="outline-light"
+                    hidden={!editing}
+                    onClick={() => onCancelClicked()}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="m-1"
                     variant="primary"
                     hidden={!editing}
                     onClick={() => onSaveClicked()}
@@ -391,6 +430,134 @@ export const RequestForm = (props: IProps) => {
               </Col>
             </Row>
           </Form.Group>
+
+          <Form.Group className="p-3 bg-light">
+            <legend>Line Items</legend>
+            <Row>
+              <Col>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Quantity</th>
+                      <th>Description</th>
+                      <th>Vendor</th>
+                      <th>Unit Cost</th>
+                      <th>Rate</th>
+                      <th>DD-250</th>
+                      <th>DA-2062</th>
+                      <th>Total</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {request &&
+                      request.purchaseDetails &&
+                      request.purchaseDetails.Details &&
+                      request.purchaseDetails.Details.map(
+                        (item: Detail, index: number) => {
+                          return (
+                            <tr key={index}>
+                              <td>{item.requestQty}</td>
+                              <td>{item.requestDesc}</td>
+                              <td>{item.requestSrc}</td>
+                              <td>{item.requestCost}</td>
+                              <td>{item.requestCost}</td>
+                              <td>
+                                <Form.Group>
+                                  <Form.Check type="checkbox" disabled />
+                                </Form.Group>
+                              </td>
+                              <td>
+                                <Form.Group>
+                                  <Form.Check type="checkbox" disabled />
+                                </Form.Group>
+                              </td>
+                              <td>{item.requestTotal}</td>
+                              <td>
+                                <span className="text-danger">
+                                  <FaTimes
+                                    style={{
+                                      cursor: "pointer",
+                                      display: editing ? "inherit" : "none"
+                                    }}
+                                  />
+                                </span>
+                              </td>
+                            </tr>
+                          );
+                        }
+                      )}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colSpan={9} align="right">
+                        <Button variant="outline-primary" disabled={!editing}>
+                          <FaPlus /> Add
+                        </Button>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </Table>
+              </Col>
+            </Row>
+          </Form.Group>
+          <Form.Group className="bg-light p-3">
+            <legend>Attachments</legend>
+            <Row>
+              <Col>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>File name</th>
+                      <th>Type</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {attachments &&
+                      attachments.map((attachment: any) => {
+                        return (
+                          <tr>
+                            <td>{attachment.name}</td>
+                            <td>
+                              <Form.Group>
+                                <Form.Control
+                                  className="custom-select"
+                                  as="select"
+                                >
+                                  <option value={""}>Select one</option>
+                                  {attachmentTypes.map(type => {
+                                    return (
+                                      <option value={type} key={type}>
+                                        {type}
+                                      </option>
+                                    );
+                                  })}
+                                </Form.Control>
+                              </Form.Group>
+                            </td>
+                            <td>
+                              <span className="text-danger">
+                                <FaTimes style={{ cursor: "pointer" }} />
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colSpan={3} align="right">
+                        <Button variant="outline-primary" disabled={!editing}>
+                          Upload
+                        </Button>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </Table>
+              </Col>
+            </Row>
+          </Form.Group>
           <Form.Group className="bg-light p-3">
             <legend>Execution Info</legend>
             <Row>
@@ -523,133 +690,6 @@ export const RequestForm = (props: IProps) => {
               </Col>
             </Row>
           </Form.Group>
-          <Form.Group className="p-3 bg-light">
-            <legend>Line Items</legend>
-            <Row>
-              <Col>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>Quantity</th>
-                      <th>Description</th>
-                      <th>Vendor</th>
-                      <th>Unit Cost</th>
-                      <th>Rate</th>
-                      <th>DD-250</th>
-                      <th>DA-2062</th>
-                      <th>Total</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {request &&
-                      request.purchaseDetails &&
-                      request.purchaseDetails.Details &&
-                      request.purchaseDetails.Details.map(
-                        (item: Detail, index: number) => {
-                          return (
-                            <tr key={index}>
-                              <td>{item.requestQty}</td>
-                              <td>{item.requestDesc}</td>
-                              <td>{item.requestSrc}</td>
-                              <td>{item.requestCost}</td>
-                              <td>{item.requestCost}</td>
-                              <td>
-                                <Form.Group>
-                                  <Form.Check type="checkbox" disabled />
-                                </Form.Group>
-                              </td>
-                              <td>
-                                <Form.Group>
-                                  <Form.Check type="checkbox" disabled />
-                                </Form.Group>
-                              </td>
-                              <td>{item.requestTotal}</td>
-                              <td>
-                                <span className="text-danger">
-                                  <FaTimes
-                                    style={{
-                                      cursor: "pointer",
-                                      display: editing ? "inherit" : "none"
-                                    }}
-                                  />
-                                </span>
-                              </td>
-                            </tr>
-                          );
-                        }
-                      )}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colSpan={9} align="right">
-                        <Button variant="outline-primary" disabled={!editing}>
-                          <FaPlus /> Add
-                        </Button>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </Table>
-              </Col>
-            </Row>
-          </Form.Group>
-          <Form.Group className="bg-light p-3">
-            <legend>Attachments</legend>
-            <Row>
-              <Col>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>File name</th>
-                      <th>Type</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {attachments &&
-                      attachments.map((attachment: any) => {
-                        return (
-                          <tr>
-                            <td>{attachment.name}</td>
-                            <td>
-                              <Form.Group>
-                                <Form.Control
-                                  className="custom-select"
-                                  as="select"
-                                >
-                                  <option value={""}>Select one</option>
-                                  {attachmentTypes.map(type => {
-                                    return (
-                                      <option value={type} key={type}>
-                                        {type}
-                                      </option>
-                                    );
-                                  })}
-                                </Form.Control>
-                              </Form.Group>
-                            </td>
-                            <td>
-                              <span className="text-danger">
-                                <FaTimes style={{ cursor: "pointer" }} />
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colSpan={3} align="right">
-                        <Button variant="outline-primary" disabled={!editing}>
-                          Upload
-                        </Button>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </Table>
-              </Col>
-            </Row>
-          </Form.Group>
           <Form.Group className="bg-secondary p-3">
             <Row>
               <Col className="pt-2">
@@ -660,6 +700,7 @@ export const RequestForm = (props: IProps) => {
               <Col className="d-flex justify-content-end">
                 <ButtonToolbar className="text-right">
                   <Button
+                    className="m-1"
                     variant="outline-light"
                     hidden={editing}
                     onClick={() => onEditClicked()}
@@ -667,6 +708,15 @@ export const RequestForm = (props: IProps) => {
                     Edit this request
                   </Button>
                   <Button
+                    className="m-1"
+                    variant="outline-light"
+                    hidden={!editing}
+                    onClick={() => onCancelClicked()}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    className="m-1"
                     variant="primary"
                     hidden={!editing}
                     onClick={() => onSaveClicked()}
