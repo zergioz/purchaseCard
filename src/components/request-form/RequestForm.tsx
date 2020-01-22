@@ -39,7 +39,12 @@ export const RequestForm = (props: IProps) => {
 
   const onSaveClicked = () => {
     setEditing(false);
-    props.onRequestUpdated(request);
+    const updatedRequest = new Request({
+      ...request,
+      requestField: formik.values
+    });
+    setRequest(updatedRequest);
+    props.onRequestUpdated(updatedRequest);
   };
 
   const onEditClicked = () => {
@@ -51,18 +56,28 @@ export const RequestForm = (props: IProps) => {
   }, [props.request]);
 
   //make formik work with custom react date picker
+  //todo: remove hardcoded executionDate field name
   const DatePicker = (props: DatePickerProps) => {
-    const handleDateBlur = (...params: any[]) => {
-      console.log(params);
+    const makeSingleDate = (date: Date | Date[] | undefined) => {
+      let singleDate = Array.isArray(date) ? date[0] : date;
+      singleDate = singleDate || new Date();
+      return singleDate;
     };
 
     const handleDateChanged = (date: Date | Date[]) => {
-      const d = Array.isArray(date) ? date[0] : date;
-      console.log(d);
-      formik.setFieldValue("executionDate", d);
+      const singleDate = makeSingleDate(date);
+      console.log(singleDate);
+      formik.setFieldValue("executionDate", singleDate.toISOString());
       formik.setTouched({ ...formik.touched, executionDate: true }, true);
     };
-    return <ReactDatePicker onChange={handleDateChanged} {...props} />;
+
+    return (
+      <ReactDatePicker
+        onChange={handleDateChanged}
+        value={parseISO(formik.values.executionDate)}
+        {...props}
+      />
+    );
   };
 
   return (
@@ -415,7 +430,6 @@ export const RequestForm = (props: IProps) => {
                     className={!editing ? "date-picker-locked" : ""}
                     name="executionDate"
                     id="executionDate"
-                    value={formik.values.executionDate}
                     isInvalid={
                       !!(
                         formik.touched.executionDate &&
