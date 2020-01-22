@@ -7,6 +7,8 @@ import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
 import { convertToFriendly, convertToUgly } from "../constants/StepStatus";
 import { convertApprovalsToHistory } from "../helpers/ApprovalsToHistory";
+import { RequestField } from "./models/RequestField";
+import { PurchaseDetails } from "./models/PurchaseDetails";
 
 export class RequestService {
   private dal: dal;
@@ -72,28 +74,28 @@ export class RequestService {
         : {};
       requestField = {
         ...requestField,
-        fiscalYear:
-          requestField.fiscalYear ||
-          (approvals.j8Approval && approvals.j8Approval.j8FiscalYear)
-            ? approvals.j8Approval.j8FiscalYear
-            : "",
-        fiscalQuarter:
-          requestField.fiscalQuarter ||
-          (approvals.j8Approval && approvals.j8Approval.j8Quater)
-            ? approvals.j8Approval.j8Quater
-            : "",
-        transactionId:
-          requestField.transactionId ||
-          (approvals.cardholderValidation &&
-            approvals.cardholderValidation.cardHolderTransactionId)
-            ? approvals.cardholderValidation.cardHolderTransactionId
-            : "",
-        executionDate:
-          requestField.executionDate ||
-          (approvals.cardholderValidation &&
-            approvals.cardholderValidation.cardHolderExecuted)
-            ? approvals.cardholderValidation.cardHolderExecuted
-            : ""
+        fiscalYear: requestField.fiscalYear
+          ? requestField.fiscalYear
+          : approvals.j8Approval && approvals.j8Approval.j8FiscalYear
+          ? approvals.j8Approval.j8FiscalYear
+          : "",
+        fiscalQuarter: requestField.fiscalQuarter
+          ? requestField.fiscalQuarter
+          : approvals.j8Approval && approvals.j8Approval.j8Quater
+          ? approvals.j8Approval.j8Quater
+          : "",
+        transactionId: requestField.transactionId
+          ? requestField.transactionId
+          : approvals.cardholderValidation &&
+            approvals.cardholderValidation.cardHolderTransactionId
+          ? approvals.cardholderValidation.cardHolderTransactionId
+          : "",
+        executionDate: requestField.executionDate
+          ? requestField.executionDate
+          : approvals.cardholderValidation &&
+            approvals.cardholderValidation.cardHolderExecuted
+          ? approvals.cardholderValidation.cardHolderExecuted
+          : ""
       };
 
       /*
@@ -142,7 +144,7 @@ export class RequestService {
         map((items: ccRequestTracker[]) => {
           return items.map(item => this.mapAndParse(item));
         }),
-        //tap((items: any) => console.log(items)),
+        tap((items: any) => console.log(items)),
         //hydrate each into an instance of the Request class
         map((items: any[]) => {
           let deserialized: Array<Request> = [];
@@ -152,8 +154,8 @@ export class RequestService {
             );
           });
           return deserialized;
-        })
-        //tap((items: any) => console.log(items))
+        }),
+        tap((items: any) => console.log(items))
       );
   }
 
@@ -182,27 +184,20 @@ export class RequestService {
     //field when this item was read out of the DB and hydrated into a Request object
     const requestData = {
       Id: request.id,
-      REQUEST_FIELD: JSON.stringify(request.requestField || {}),
-      PURCHASE_DETAILS: JSON.stringify(request.purchaseDetails || {}),
+      REQUEST_FIELD: this.serializer.serialize(
+        request.requestField || {},
+        RequestField
+      ),
+      PURCHASE_DETAILS: this.serializer.serialize(
+        request.purchaseDetails || {},
+        PurchaseDetails
+      ),
       REQUEST_STATUS: convertToUgly(request.status),
       History: JSON.stringify(request.history || {})
     } as ccRequestTracker;
 
     console.log(`Updating`, requestData);
 
-    return this.dal.updateRow(this.listName, requestData).pipe(
-      //tap((items: any) => console.log(items)),
-      //parse nested json strings
-      map((item: any) => this.mapAndParse(item.data)),
-      //tap((items: any) => console.log(items)),
-      //hydrate each into an instance of the Request class
-      map((item: any) => {
-        let deserialized: Request = new Request(
-          this.serializer.deserialize(item, Request)
-        );
-        return deserialized;
-      })
-      //tap((items: any) => console.log(items))
-    );
+    return this.dal.updateRow(this.listName, requestData);
   }
 }
