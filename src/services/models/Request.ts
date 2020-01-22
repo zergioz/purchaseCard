@@ -137,9 +137,9 @@ export class Request implements IRequest {
       RequestCurrencyType: Yup.string().required("Required"),
       RequestIsJ6: Yup.string().required("Required"),
       fiscalYear: Yup.string().required("Required"),
-      fiscalQuarter: Yup.string().required("Required"),
-      transactionId: Yup.string().required("Required"),
-      executionDate: Yup.string().required("Required")
+      fiscalQuarter: Yup.string().required("Required")
+      //transactionId: Yup.string().required("Required"),
+      //executionDate: Yup.string().required("Required")
     });
   }
 }
