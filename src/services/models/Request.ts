@@ -15,6 +15,7 @@ import { SharepointUser } from "./SharepointUser";
 import { ApprovalAction } from "./ApprovalAction";
 import { compareDesc, parseISO } from "date-fns";
 import * as Yup from "yup";
+import { ApprovalActions } from "../../constants/ApprovalActions";
 
 export interface IRequestApprovals {
   [key: string]: any;
@@ -107,11 +108,17 @@ export class Request implements IRequest {
     return sortedHist;
   }
 
-  public getLastActionFor(status: string): ApprovalAction | null {
-    let action = null;
+  public getLastActionFor(
+    status: string,
+    actionTypes: string[] = Object.keys(ApprovalActions)
+  ): ApprovalAction | null {
+    const actionsToMatch = new Set(actionTypes);
+    let lastAction = null;
     const sortedDesc = this.getSortedHistoryDescendingFor(status);
-    action = sortedDesc[0] || null;
-    return action;
+    lastAction = sortedDesc.find((action: ApprovalAction) =>
+      actionsToMatch.has(action.type)
+    );
+    return lastAction || null;
   }
 
   public getValidationSchema(): Yup.ObjectSchema {
