@@ -131,7 +131,6 @@ export class Request implements IRequest {
         .required("Required")
         .matches(phoneRegExp, "DSN number is not valid"),
       RequestorDirectorate: Yup.string().required("Required"),
-      RequestDateofRequest: Yup.string().required("Required"),
       RequestSource: Yup.string().required("Required"),
       RequestJustification: Yup.string().required("Required"),
       RequestCurrencyType: Yup.string().required("Required"),

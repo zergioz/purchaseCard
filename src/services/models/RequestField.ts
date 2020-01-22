@@ -14,8 +14,6 @@ export class RequestField {
   @autoserialize
   RequestorDirectorate: string;
   @autoserialize
-  RequestDateofRequest: string;
-  @autoserialize
   RequestSource: string;
   @autoserialize
   RequestJustification: string;
@@ -39,7 +37,6 @@ export class RequestField {
     this.RequestorCardHolderName = data.RequestorCardHolderName || "";
     this.RequestorDSN = data.RequestorDSN || "";
     this.RequestorDirectorate = data.RequestorDirectorate || "";
-    this.RequestDateofRequest = data.RequestDateofRequest || "";
     this.RequestSource = data.RequestSource || "";
     this.RequestJustification = data.RequestJustification || "";
     this.RequestCurrencyType = data.RequestCurrencyType || "";

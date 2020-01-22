@@ -6,7 +6,6 @@ export interface IRequestField {
   RequestorCardHolderName: string;
   RequestorDSN: string;
   RequestorDirectorate: string;
-  RequestDateofRequest: string;
   RequestSource: string;
   RequestJustification: string;
   RequestCurrencyType: string;
