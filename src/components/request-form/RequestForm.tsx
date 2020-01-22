@@ -638,6 +638,11 @@ export const RequestForm = (props: IProps) => {
           </Form.Group>
           <Form.Group className="bg-secondary p-3">
             <Row>
+              <Col className="pt-2">
+                <span className="text-white">
+                  Save your changes and then sign at the top of this page.
+                </span>
+              </Col>
               <Col className="d-flex justify-content-end">
                 <ButtonToolbar className="text-right">
                   <Button
