@@ -50,8 +50,19 @@ export const RequestForm = (props: IProps) => {
     setRequest(props.request);
   }, [props.request]);
 
+  //make formik work with custom react date picker
   const DatePicker = (props: DatePickerProps) => {
-    return <ReactDatePicker {...props} />;
+    const handleDateBlur = (...params: any[]) => {
+      console.log(params);
+    };
+
+    const handleDateChanged = (date: Date | Date[]) => {
+      const d = Array.isArray(date) ? date[0] : date;
+      console.log(d);
+      formik.setFieldValue("executionDate", d);
+      formik.setTouched({ ...formik.touched, executionDate: true }, true);
+    };
+    return <ReactDatePicker onChange={handleDateChanged} {...props} />;
   };
 
   return (
@@ -104,18 +115,22 @@ export const RequestForm = (props: IProps) => {
                 <Form.Group>
                   <Form.Label>Card Type</Form.Label>
                   <Form.Control
+                    className="custom-select"
                     as="select"
                     disabled={!editing}
-                    name="RequestCardType"
-                    id="RequestCardType"
-                    value={formik.values.RequestCardType}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    {...formik.getFieldProps("RequestCardType")}
+                    isInvalid={
+                      !!(
+                        formik.touched.RequestCardType &&
+                        formik.errors.RequestCardType
+                      )
+                    }
                     isValid={
                       formik.touched.RequestCardType &&
                       !formik.errors.RequestCardType
                     }
                   >
+                    <option value={""}>Select one</option>
                     {cardTypes.map((type: string) => {
                       return (
                         <option value={type} key={type}>
@@ -124,24 +139,36 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  <Form.Control.Feedback>
-                    {formik.touched.RequestCardType &&
-                    formik.errors.RequestCardType ? (
-                      <div>{formik.errors.RequestCardType}</div>
-                    ) : null}
-                  </Form.Control.Feedback>
+                  {formik.touched.RequestCardType &&
+                  formik.errors.RequestCardType ? (
+                    <small className="text-danger">
+                      {formik.errors.RequestCardType}
+                    </small>
+                  ) : null}
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Cardholder</Form.Label>
                   <Form.Control
                     type="text"
                     disabled={!editing}
-                    name="RequestorCardHolderName"
-                    id="RequestorCardHolderName"
-                    value={formik.values.RequestorCardHolderName}
-                    onChange={formik.handleChange}
+                    {...formik.getFieldProps("RequestorCardHolderName")}
+                    isInvalid={
+                      !!(
+                        formik.touched.RequestorCardHolderName &&
+                        formik.errors.RequestorCardHolderName
+                      )
+                    }
+                    isValid={
+                      formik.touched.RequestorCardHolderName &&
+                      !formik.errors.RequestorCardHolderName
+                    }
                   />
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  {formik.touched.RequestorCardHolderName &&
+                  formik.errors.RequestorCardHolderName ? (
+                    <small className="text-danger">
+                      {formik.errors.RequestorCardHolderName}
+                    </small>
+                  ) : null}
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Request Date</Form.Label>
@@ -155,7 +182,6 @@ export const RequestForm = (props: IProps) => {
                     readOnly
                     disabled
                   />
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                 </Form.Group>
               </Col>
               <Col>
@@ -166,6 +192,15 @@ export const RequestForm = (props: IProps) => {
                     disabled={!editing}
                     placeholder="Enter a phone number"
                     {...formik.getFieldProps("RequestorDSN")}
+                    isInvalid={
+                      !!(
+                        formik.touched.RequestorDSN &&
+                        formik.errors.RequestorDSN
+                      )
+                    }
+                    isValid={
+                      formik.touched.RequestorDSN && !formik.errors.RequestorDSN
+                    }
                   />
                   {formik.touched.RequestorDSN && formik.errors.RequestorDSN ? (
                     <small className="text-danger">
@@ -176,10 +211,22 @@ export const RequestForm = (props: IProps) => {
                 <Form.Group>
                   <Form.Label>Directorate</Form.Label>
                   <Form.Control
+                    className="custom-select"
                     as="select"
                     disabled={!editing}
                     {...formik.getFieldProps("RequestorDirectorate")}
+                    isInvalid={
+                      !!(
+                        formik.touched.RequestorDirectorate &&
+                        formik.errors.RequestorDirectorate
+                      )
+                    }
+                    isValid={
+                      formik.touched.RequestorDirectorate &&
+                      !formik.errors.RequestorDirectorate
+                    }
                   >
+                    <option value={""}>Select one</option>
                     {directorates.map((directorate: string) => {
                       return (
                         <option value={directorate} key={directorate}>
@@ -188,15 +235,32 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  {formik.touched.RequestorDirectorate &&
+                  formik.errors.RequestorDirectorate ? (
+                    <small className="text-danger">
+                      {formik.errors.RequestorDirectorate}
+                    </small>
+                  ) : null}
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Funding</Form.Label>
                   <Form.Control
+                    className="custom-select"
                     as="select"
                     disabled={!editing}
                     {...formik.getFieldProps("RequestSource")}
+                    isInvalid={
+                      !!(
+                        formik.touched.RequestSource &&
+                        formik.errors.RequestSource
+                      )
+                    }
+                    isValid={
+                      formik.touched.RequestSource &&
+                      !formik.errors.RequestSource
+                    }
                   >
+                    <option value={""}>Select one</option>
                     {FundingSources.map(src => {
                       return (
                         <option value={src} key={src}>
@@ -205,7 +269,12 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  {formik.touched.RequestSource &&
+                  formik.errors.RequestSource ? (
+                    <small className="text-danger">
+                      {formik.errors.RequestSource}
+                    </small>
+                  ) : null}
                 </Form.Group>
               </Col>
             </Row>
@@ -218,8 +287,23 @@ export const RequestForm = (props: IProps) => {
                     disabled={!editing}
                     rows={4}
                     {...formik.getFieldProps("RequestJustification")}
+                    isInvalid={
+                      !!(
+                        formik.touched.RequestJustification &&
+                        formik.errors.RequestJustification
+                      )
+                    }
+                    isValid={
+                      formik.touched.RequestJustification &&
+                      !formik.errors.RequestJustification
+                    }
                   />
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  {formik.touched.RequestJustification &&
+                  formik.errors.RequestJustification ? (
+                    <small className="text-danger">
+                      {formik.errors.RequestJustification}
+                    </small>
+                  ) : null}
                 </Form.Group>
               </Col>
             </Row>
@@ -230,24 +314,50 @@ export const RequestForm = (props: IProps) => {
                     Includes hardware, software, or IT services
                   </Form.Label>
                   <Form.Control
+                    className="custom-select"
                     as="select"
                     disabled={!editing}
                     {...formik.getFieldProps("RequestIsJ6")}
+                    isInvalid={
+                      !!(
+                        formik.touched.RequestIsJ6 && formik.errors.RequestIsJ6
+                      )
+                    }
+                    isValid={
+                      formik.touched.RequestIsJ6 && !formik.errors.RequestIsJ6
+                    }
                   >
+                    <option value={""}>Select one</option>
                     <option value={"Yes"}>Yes</option>
                     <option value={"No"}>No</option>
                   </Form.Control>
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  {formik.touched.RequestIsJ6 && formik.errors.RequestIsJ6 ? (
+                    <small className="text-danger">
+                      {formik.errors.RequestIsJ6}
+                    </small>
+                  ) : null}
                 </Form.Group>
               </Col>
               <Col>
                 <Form.Group>
                   <Form.Label>Currency</Form.Label>
                   <Form.Control
+                    className="custom-select"
                     as="select"
                     disabled={!editing}
                     {...formik.getFieldProps("RequestCurrencyType")}
+                    isInvalid={
+                      !!(
+                        formik.touched.RequestCurrencyType &&
+                        formik.errors.RequestCurrencyType
+                      )
+                    }
+                    isValid={
+                      formik.touched.RequestCurrencyType &&
+                      !formik.errors.RequestCurrencyType
+                    }
                   >
+                    <option value={""}>Select one</option>
                     {currencies.map((currency: string) => {
                       return (
                         <option value={currency} key={currency}>
@@ -256,7 +366,12 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  {formik.touched.RequestCurrencyType &&
+                  formik.errors.RequestCurrencyType ? (
+                    <small className="text-danger">
+                      {formik.errors.RequestCurrencyType}
+                    </small>
+                  ) : null}
                 </Form.Group>
               </Col>
             </Row>
@@ -272,8 +387,23 @@ export const RequestForm = (props: IProps) => {
                     disabled={!editing}
                     placeholder="Enter Transaction ID"
                     {...formik.getFieldProps("transactionId")}
+                    isInvalid={
+                      !!(
+                        formik.touched.transactionId &&
+                        formik.errors.transactionId
+                      )
+                    }
+                    isValid={
+                      formik.touched.transactionId &&
+                      !formik.errors.transactionId
+                    }
                   />
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  {formik.touched.transactionId &&
+                  formik.errors.transactionId ? (
+                    <small className="text-danger">
+                      {formik.errors.transactionId}
+                    </small>
+                  ) : null}
                 </Form.Group>
               </Col>
               <Col>
@@ -283,9 +413,26 @@ export const RequestForm = (props: IProps) => {
                     as={DatePicker}
                     disabled={!editing}
                     className={!editing ? "date-picker-locked" : ""}
-                    {...formik.getFieldProps("executionDate")}
+                    name="executionDate"
+                    id="executionDate"
+                    value={formik.values.executionDate}
+                    isInvalid={
+                      !!(
+                        formik.touched.executionDate &&
+                        formik.errors.executionDate
+                      )
+                    }
+                    isValid={
+                      formik.touched.executionDate &&
+                      !formik.errors.executionDate
+                    }
                   />
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  {formik.touched.executionDate &&
+                  formik.errors.executionDate ? (
+                    <small className="text-danger">
+                      {formik.errors.executionDate}
+                    </small>
+                  ) : null}
                 </Form.Group>
               </Col>
             </Row>
@@ -297,10 +444,18 @@ export const RequestForm = (props: IProps) => {
                 <Form.Group>
                   <Form.Label>Fiscal Year</Form.Label>
                   <Form.Control
+                    className="custom-select"
                     as="select"
                     disabled={!editing}
                     {...formik.getFieldProps("fiscalYear")}
+                    isInvalid={
+                      !!(formik.touched.fiscalYear && formik.errors.fiscalYear)
+                    }
+                    isValid={
+                      formik.touched.fiscalYear && !formik.errors.fiscalYear
+                    }
                   >
+                    <option value={""}>Select one</option>
                     {fiscalYears.map((year: any) => {
                       return (
                         <option value={year} key={year}>
@@ -309,17 +464,33 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  {formik.touched.fiscalYear && formik.errors.fiscalYear ? (
+                    <small className="text-danger">
+                      {formik.errors.fiscalYear}
+                    </small>
+                  ) : null}
                 </Form.Group>
               </Col>
               <Col>
                 <Form.Group>
                   <Form.Label>Quarter</Form.Label>
                   <Form.Control
+                    className="custom-select"
                     as="select"
                     disabled={!editing}
                     {...formik.getFieldProps("fiscalQuarter")}
+                    isInvalid={
+                      !!(
+                        formik.touched.fiscalQuarter &&
+                        formik.errors.fiscalQuarter
+                      )
+                    }
+                    isValid={
+                      formik.touched.fiscalQuarter &&
+                      !formik.errors.fiscalQuarter
+                    }
                   >
+                    <option value={""}>Select one</option>
                     {fiscalQuarters.map((quarter: string) => {
                       return (
                         <option value={quarter} key={quarter}>
@@ -328,7 +499,12 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                  {formik.touched.fiscalQuarter &&
+                  formik.errors.fiscalQuarter ? (
+                    <small className="text-danger">
+                      {formik.errors.fiscalQuarter}
+                    </small>
+                  ) : null}
                 </Form.Group>
               </Col>
             </Row>
@@ -423,7 +599,11 @@ export const RequestForm = (props: IProps) => {
                             <td>{attachment.name}</td>
                             <td>
                               <Form.Group>
-                                <Form.Control as="select">
+                                <Form.Control
+                                  className="custom-select"
+                                  as="select"
+                                >
+                                  <option value={""}>Select one</option>
                                   {attachmentTypes.map(type => {
                                     return (
                                       <option value={type} key={type}>
