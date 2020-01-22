@@ -52,7 +52,11 @@ export const NewRequest = () => {
           <div className="container">
             <div className="row">
               <div className="col-12 m-2">
-                <RequestForm request={request} editing={true} />
+                <RequestForm
+                  request={request}
+                  editing={true}
+                  onRequestUpdated={onRequestUpdated}
+                />
               </div>
             </div>
             <div className="row">
