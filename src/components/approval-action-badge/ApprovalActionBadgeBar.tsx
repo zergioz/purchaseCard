@@ -38,7 +38,7 @@ export const useActionBadges = (
     return statuses.map(status => {
       if (hiddenBadges.has(status)) return;
       const active = status == request.status;
-      const action = request.getLastActionFor(status);
+      const action = request.getLastActionFor(status, ["approve", "reject"]);
       const signedOrUnsigned = action ? action.pastTense : "Unsigned";
       return (
         <ApprovalActionBadge
