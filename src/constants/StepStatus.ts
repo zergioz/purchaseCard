@@ -228,12 +228,10 @@ export const getNextStatus = (request: Request): any => {
   //loop through all possible statuses and check for signatures
   for (let index in statuses) {
     const status = statuses[index];
-    const lastAction = request.getLastActionFor(status);
-    const wasApproved =
-      lastAction && lastAction.type == "approve" ? true : false;
+    const lastApproval = request.getLastActionFor(status, ["approve"]);
 
     //this request hasn't been approved at this step
-    if (!wasApproved) {
+    if (!lastApproval) {
       //current status doesn't count - we want the next one
       if (status == nextRequest.status) continue;
 
