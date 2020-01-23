@@ -40,7 +40,10 @@ export const RequestDetails = (props: IProps) => {
   }, [context.filteredRequests]);
 
   const onRequestUpdated = (newRequest: Request) => {
-    //if (request.status !== newRequest.status) {
+    addToast(`Saving...`, {
+      appearance: "info",
+      autoDismiss: true
+    });
     let obs = svc.update(newRequest);
     obs.subscribe(
       () => {
@@ -57,7 +60,6 @@ export const RequestDetails = (props: IProps) => {
       },
       () => {}
     );
-    //}
   };
 
   return (
@@ -91,6 +93,21 @@ export const RequestDetails = (props: IProps) => {
                 />
               </div>
             </div>
+          </div>
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-12 mb-4 text-center">
+                <hr />
+                <br />
+                <ApprovalProgressBar
+                  request={request}
+                  locked={false}
+                  onRequestUpdated={onRequestUpdated}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="container">
             <div className="row">
               <div className="col-12">
                 <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>

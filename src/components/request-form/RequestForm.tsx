@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Request } from "../../services/models/Request";
 import { Form, Row, Col, ButtonToolbar, Button, Table } from "react-bootstrap";
 import { FundingSources } from "../../constants/FundingSources";
@@ -9,14 +9,17 @@ import { Currencies as currencies } from "../../constants/Currencies";
 import { FiscalYears as fiscalYears } from "../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters";
 import { FaTimes, FaPlus } from "react-icons/fa";
-import { Detail } from "../../services/models/PurchaseDetails";
+import { Detail, PurchaseDetails } from "../../services/models/PurchaseDetails";
 import { ValidationErrorModal } from "./ValidationErrorModal";
 import { useFormik } from "formik";
+import { LineItemForm } from "./LineItemForm";
 import ReactDatePicker, {
   DatePickerProps
 } from "react-date-picker/dist/entry.nostyle";
 import "./DatePicker.css";
 import { parseISO, format } from "date-fns";
+import { ConfirmationModal } from "./ConfirmationModal";
+import { RequestField } from "../../services/models/RequestField";
 
 interface IProps {
   request: Request;
@@ -24,6 +27,7 @@ interface IProps {
   editing?: boolean;
 }
 export const RequestForm = (props: IProps) => {
+  const [discardModalOpen, setDiscardModalOpen] = useState<boolean>(false);
   const [request, setRequest] = useState<Request>(props.request);
   const [attachments, setAttachments] = useState<any>([]);
   const [editing, setEditing] = useState<boolean>(props.editing === true);
@@ -31,7 +35,8 @@ export const RequestForm = (props: IProps) => {
 
   const formik = useFormik({
     initialValues: {
-      ...request.requestField
+      ...request.requestField,
+      purchaseDetails: request.purchaseDetails.Details
     },
     onSubmit: values => {
       updateRequest(values);
@@ -44,9 +49,11 @@ export const RequestForm = (props: IProps) => {
 
   const updateRequest = (values: any) => {
     setEditing(false);
+    //todo: use nested initial values and rename all our controls.  formik can handle it
     const updatedRequest = new Request({
       ...request,
-      requestField: values
+      requestField: { ...values, purchaseDetails: undefined },
+      purchaseDetails: { Details: values.purchaseDetails }
     });
     setRequest(updatedRequest);
     props.onRequestUpdated(updatedRequest);
@@ -137,7 +144,7 @@ export const RequestForm = (props: IProps) => {
                     className="m-1"
                     variant="outline-light"
                     hidden={!editing}
-                    onClick={() => onCancelClicked()}
+                    onClick={() => setDiscardModalOpen(true)}
                   >
                     Cancel
                   </Button>
@@ -441,8 +448,7 @@ export const RequestForm = (props: IProps) => {
                       <th>Quantity</th>
                       <th>Description</th>
                       <th>Vendor</th>
-                      <th>Unit Cost</th>
-                      <th>Rate</th>
+                      <th>Unit Cost/Rate</th>
                       <th>DD-250</th>
                       <th>DA-2062</th>
                       <th>Total</th>
@@ -450,40 +456,28 @@ export const RequestForm = (props: IProps) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {request &&
-                      request.purchaseDetails &&
-                      request.purchaseDetails.Details &&
-                      request.purchaseDetails.Details.map(
+                    {formik.values.purchaseDetails &&
+                      formik.values.purchaseDetails.map(
                         (item: Detail, index: number) => {
                           return (
-                            <tr key={index}>
-                              <td>{item.requestQty}</td>
-                              <td>{item.requestDesc}</td>
-                              <td>{item.requestSrc}</td>
-                              <td>{item.requestCost}</td>
-                              <td>{item.requestCost}</td>
-                              <td>
-                                <Form.Group>
-                                  <Form.Check type="checkbox" disabled />
-                                </Form.Group>
-                              </td>
-                              <td>
-                                <Form.Group>
-                                  <Form.Check type="checkbox" disabled />
-                                </Form.Group>
-                              </td>
-                              <td>{item.requestTotal}</td>
-                              <td>
-                                <span className="text-danger">
-                                  <FaTimes
-                                    style={{
-                                      cursor: "pointer",
-                                      display: editing ? "inherit" : "none"
-                                    }}
-                                  />
-                                </span>
-                              </td>
-                            </tr>
+                            <LineItemForm
+                              key={item.id}
+                              item={item}
+                              editing={editing}
+                              onDeleteClicked={item => {
+                                const array = formik.values.purchaseDetails.filter(
+                                  i => i.id !== item.id
+                                );
+                                formik.setFieldValue("purchaseDetails", array);
+                              }}
+                              onChange={changedItem => {
+                                const array = [
+                                  ...formik.values.purchaseDetails
+                                ];
+                                array[array.indexOf(item)] = changedItem;
+                                formik.setFieldValue("purchaseDetails", array);
+                              }}
+                            />
                           );
                         }
                       )}
@@ -491,7 +485,16 @@ export const RequestForm = (props: IProps) => {
                   <tfoot>
                     <tr>
                       <td colSpan={9} align="right">
-                        <Button variant="outline-primary" disabled={!editing}>
+                        <Button
+                          variant="outline-primary"
+                          disabled={!editing}
+                          onClick={() => {
+                            formik.setFieldValue("purchaseDetails", [
+                              ...formik.values.purchaseDetails,
+                              new Detail()
+                            ]);
+                          }}
+                        >
                           <FaPlus /> Add
                         </Button>
                       </td>
@@ -692,11 +695,6 @@ export const RequestForm = (props: IProps) => {
           </Form.Group>
           <Form.Group className="bg-secondary p-3">
             <Row>
-              <Col className="pt-2">
-                <span className="text-white">
-                  Save your changes and then sign at the top of this page.
-                </span>
-              </Col>
               <Col className="d-flex justify-content-end">
                 <ButtonToolbar className="text-right">
                   <Button
@@ -711,7 +709,7 @@ export const RequestForm = (props: IProps) => {
                     className="m-1"
                     variant="outline-light"
                     hidden={!editing}
-                    onClick={() => onCancelClicked()}
+                    onClick={() => setDiscardModalOpen(true)}
                   >
                     Cancel
                   </Button>
@@ -729,6 +727,15 @@ export const RequestForm = (props: IProps) => {
           </Form.Group>
         </Form>
       )}
+      <ConfirmationModal
+        open={discardModalOpen}
+        onHide={() => setDiscardModalOpen(false)}
+        onConfirm={() => onCancelClicked()}
+        title="Discard Changes"
+        body="Are you sure you want to discard your changes?"
+        confirmText="Yes"
+        cancelText="No"
+      />
     </>
   );
 };
