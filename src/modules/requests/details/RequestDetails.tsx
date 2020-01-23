@@ -27,6 +27,7 @@ export const RequestDetails = (props: IProps) => {
   //apply the ID filter when results come back
   useEffect(() => {
     defaultFilters.id = props.requestId;
+    defaultFilters.status = "";
     context.updatePageFilters(defaultFilters);
     context.applyFilters(defaultFilters, true);
   }, [context.requests]);

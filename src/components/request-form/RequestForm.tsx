@@ -31,7 +31,6 @@ export const RequestForm = (props: IProps) => {
   const [request, setRequest] = useState<Request>(props.request);
   const [editing, setEditing] = useState<boolean>(props.editing === true);
   const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
-
   const { user } = useContext(UserContext);
 
   const formik = useFormik({
