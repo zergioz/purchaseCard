@@ -59,7 +59,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
               View #{item.id}
             </span>
           </Button>
-          {!hideActions && (
+          {/* {!hideActions && (
             <ApprovalActionsButton
               className="w-100"
               variant="outline-danger"
@@ -68,7 +68,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
               loading={loading}
               disabled={loading}
             />
-          )}
+          )} */}
         </ButtonToolbar>
       </td>
       <td className="text-center">{item.requestField!.RequestorDirectorate}</td>
