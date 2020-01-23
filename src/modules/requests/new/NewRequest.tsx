@@ -7,15 +7,17 @@ import { Alert, Button } from "react-bootstrap";
 import { ApprovalProgressBar } from "../../../components/approval-progress-bar/ApprovalProgressBar";
 import { RequestForm } from "../../../components/request-form/RequestForm";
 import UserContext from "../../../contexts/UserContext";
+import { useToasts } from "react-toast-notifications";
 
 export const NewRequest = () => {
+  const { addToast } = useToasts();
   const context = useContext(RequestContext);
   const { user } = useContext(UserContext);
   const [request, setRequest] = useState();
+  const svc = new RequestService();
 
   //start the db call to create a new draft
   useEffect(() => {
-    const svc = new RequestService();
     const obs = svc.createDraft();
     context.subscribeTo(obs, "create");
     obs.subscribe(request => {
@@ -24,7 +26,26 @@ export const NewRequest = () => {
   }, []);
 
   const onRequestUpdated = (newRequest: Request) => {
-    context.updateRequest(newRequest);
+    addToast(`Saving...`, {
+      appearance: "info",
+      autoDismiss: true
+    });
+    let obs = svc.update(newRequest);
+    obs.subscribe(
+      () => {
+        setRequest(newRequest);
+        context.updateRequest(newRequest);
+        addToast("Saved", { appearance: "success", autoDismiss: true });
+      },
+      error => {
+        console.error(`Error updating request.`, error);
+        addToast(`Error while saving!`, {
+          appearance: "error",
+          autoDismiss: false
+        });
+      },
+      () => {}
+    );
   };
 
   return (
