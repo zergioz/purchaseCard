@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Detail } from "../../services/models/PurchaseDetails";
-import { Form } from "react-bootstrap";
+import { Form, InputGroup } from "react-bootstrap";
 import { FaTimes } from "react-icons/fa";
 import { useFormik } from "formik";
 import { ConfirmationModal } from "./ConfirmationModal";
@@ -8,6 +8,7 @@ import { ConfirmationModal } from "./ConfirmationModal";
 interface IProps {
   item: Detail;
   editing: boolean;
+  currency: string;
   onDeleteClicked: (item: Detail) => void;
   onChange: (values: Detail) => void;
 }
@@ -38,7 +39,7 @@ export const LineItemForm = (props: IProps) => {
   return (
     <>
       <tr>
-        <td className="p-1" style={{ width: "10%" }}>
+        <td className="p-1" style={{ width: "8%" }}>
           <Form.Group>
             <Form.Control
               type="number"
@@ -90,21 +91,32 @@ export const LineItemForm = (props: IProps) => {
         </td>
         <td className="p-1" style={{ width: "15%" }}>
           <Form.Group>
-            <Form.Control
-              type="number"
-              disabled={!props.editing}
-              {...formik.getFieldProps("requestCost")}
-              isInvalid={
-                !!(formik.touched.requestCost && formik.errors.requestCost)
-              }
-              isValid={formik.touched.requestCost && !formik.errors.requestCost}
-            />
-            {formik.touched.requestCost && formik.errors.requestCost ? (
-              <small className="text-danger">{formik.errors.requestCost}</small>
-            ) : null}
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend>
+                <InputGroup.Text>
+                  {props.currency == "Euro" ? "€" : "$"}
+                </InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                type="number"
+                disabled={!props.editing}
+                {...formik.getFieldProps("requestCost")}
+                isInvalid={
+                  !!(formik.touched.requestCost && formik.errors.requestCost)
+                }
+                isValid={
+                  formik.touched.requestCost && !formik.errors.requestCost
+                }
+              />
+              {formik.touched.requestCost && formik.errors.requestCost ? (
+                <small className="text-danger">
+                  {formik.errors.requestCost}
+                </small>
+              ) : null}
+            </InputGroup>
           </Form.Group>
         </td>
-        <td className="text-center p-1">
+        <td className="text-center p-1" style={{ width: "5%" }}>
           <Form.Group>
             <Form.Check
               type="checkbox"
@@ -125,7 +137,7 @@ export const LineItemForm = (props: IProps) => {
             ) : null}
           </Form.Group>
         </td>
-        <td className="text-center p-1">
+        <td className="text-center p-1" style={{ width: "5%" }}>
           <Form.Group>
             <Form.Check
               type="checkbox"
@@ -146,24 +158,31 @@ export const LineItemForm = (props: IProps) => {
             ) : null}
           </Form.Group>
         </td>
-        <td className="p-1" style={{ width: "10%" }}>
+        <td className="p-1" style={{ width: "15%" }}>
           <Form.Group>
-            <Form.Control
-              type="number"
-              disabled={!props.editing}
-              {...formik.getFieldProps("requestTotal")}
-              isInvalid={
-                !!(formik.touched.requestTotal && formik.errors.requestTotal)
-              }
-              isValid={
-                formik.touched.requestTotal && !formik.errors.requestTotal
-              }
-            />
-            {formik.touched.requestTotal && formik.errors.requestTotal ? (
-              <small className="text-danger">
-                {formik.errors.requestTotal}
-              </small>
-            ) : null}
+            <InputGroup className="mb-3">
+              <InputGroup.Prepend>
+                <InputGroup.Text>
+                  {props.currency == "Euro" ? "€" : "$"}
+                </InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                type="number"
+                disabled={!props.editing}
+                {...formik.getFieldProps("requestTotal")}
+                isInvalid={
+                  !!(formik.touched.requestTotal && formik.errors.requestTotal)
+                }
+                isValid={
+                  formik.touched.requestTotal && !formik.errors.requestTotal
+                }
+              />
+              {formik.touched.requestTotal && formik.errors.requestTotal ? (
+                <small className="text-danger">
+                  {formik.errors.requestTotal}
+                </small>
+              ) : null}
+            </InputGroup>
           </Form.Group>
         </td>
         <td className="p-1">

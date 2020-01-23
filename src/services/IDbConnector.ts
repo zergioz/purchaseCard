@@ -9,4 +9,5 @@ export interface IDbConnector {
   deleteRow(params: IQueryParams): Observable<any>;
   searchUsers(params: IQueryParams): Observable<any>;
   getCurrentUser(): Observable<any>;
+  uploadAttachment(params: IQueryParams): Observable<any>;
 }

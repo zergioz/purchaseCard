@@ -107,7 +107,7 @@ export const RequestDetails = (props: IProps) => {
               </div>
             </div>
           </div>
-          <div className="container">
+          {/* <div className="container">
             <div className="row">
               <div className="col-12">
                 <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>
@@ -115,7 +115,7 @@ export const RequestDetails = (props: IProps) => {
                 </pre>
               </div>
             </div>
-          </div>
+          </div> */}
         </>
       )}
       {!context.loading && !request && (

@@ -65,4 +65,22 @@ export default class dal {
 
     return this.db.searchUsers(params);
   }
+
+  uploadAttachment(
+    listName: string,
+    id: number,
+    fileName: string,
+    file: string | Blob | ArrayBuffer,
+    siteUrl?: string
+  ) {
+    const params = {
+      siteUrl: siteUrl,
+      tableName: listName,
+      id: id,
+      fileName: fileName,
+      file: file
+    } as IQueryParams;
+
+    return this.db.uploadAttachment(params);
+  }
 }

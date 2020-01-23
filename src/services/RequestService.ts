@@ -200,4 +200,12 @@ export class RequestService {
 
     return this.dal.updateRow(this.listName, requestData);
   }
+
+  uploadAttachment(
+    request: Request,
+    fileName: string,
+    file: string | Blob | ArrayBuffer
+  ) {
+    return this.dal.uploadAttachment(this.listName, request.id, fileName, file);
+  }
 }

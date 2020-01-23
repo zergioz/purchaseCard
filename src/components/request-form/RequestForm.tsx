@@ -11,6 +11,7 @@ import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters
 import { FaTimes, FaPlus } from "react-icons/fa";
 import { Detail, PurchaseDetails } from "../../services/models/PurchaseDetails";
 import { ValidationErrorModal } from "./ValidationErrorModal";
+import { UploadAttachmentModal } from "./UploadAttachmentModal";
 import { useFormik } from "formik";
 import { LineItemForm } from "./LineItemForm";
 import ReactDatePicker, {
@@ -28,10 +29,13 @@ interface IProps {
 }
 export const RequestForm = (props: IProps) => {
   const [discardModalOpen, setDiscardModalOpen] = useState<boolean>(false);
+  const [attachmentModalOpen, setAttachmentModalOpen] = useState<boolean>(
+    false
+  );
   const [request, setRequest] = useState<Request>(props.request);
   const [attachments, setAttachments] = useState<any>([]);
   const [editing, setEditing] = useState<boolean>(props.editing === true);
-  const [errorModalVisible, setErrorModalVisible] = useState<boolean>(false);
+  const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
 
   const formik = useFormik({
     initialValues: {
@@ -61,7 +65,7 @@ export const RequestForm = (props: IProps) => {
 
   const onSaveClicked = () => {
     if (!formik.isValid) {
-      setErrorModalVisible(true);
+      setErrorModalOpen(true);
     }
 
     formik.handleSubmit();
@@ -115,8 +119,8 @@ export const RequestForm = (props: IProps) => {
   return (
     <>
       <ValidationErrorModal
-        show={errorModalVisible}
-        onHide={() => setErrorModalVisible(false)}
+        show={errorModalOpen}
+        onHide={() => setErrorModalOpen(false)}
       />
       {request && (
         <Form noValidate>
@@ -449,8 +453,16 @@ export const RequestForm = (props: IProps) => {
                       <th>Description</th>
                       <th>Vendor</th>
                       <th>Unit Cost/Rate</th>
-                      <th>DD-250</th>
-                      <th>DA-2062</th>
+                      <th>
+                        DD
+                        <br />
+                        250
+                      </th>
+                      <th>
+                        DA
+                        <br />
+                        2062
+                      </th>
                       <th>Total</th>
                       <th></th>
                     </tr>
@@ -463,6 +475,9 @@ export const RequestForm = (props: IProps) => {
                             <LineItemForm
                               key={item.id}
                               item={item}
+                              currency={
+                                formik.values.RequestCurrencyType || "Dollar"
+                              }
                               editing={editing}
                               onDeleteClicked={item => {
                                 const array = formik.values.purchaseDetails.filter(
@@ -551,7 +566,10 @@ export const RequestForm = (props: IProps) => {
                   <tfoot>
                     <tr>
                       <td colSpan={3} align="right">
-                        <Button variant="outline-primary" disabled={!editing}>
+                        <Button
+                          variant="outline-primary"
+                          onClick={() => setAttachmentModalOpen(true)}
+                        >
                           Upload
                         </Button>
                       </td>
@@ -561,7 +579,7 @@ export const RequestForm = (props: IProps) => {
               </Col>
             </Row>
           </Form.Group>
-          <Form.Group className="bg-light p-3">
+          {/* <Form.Group className="bg-light p-3">
             <legend>Execution Info</legend>
             <Row>
               <Col>
@@ -692,7 +710,7 @@ export const RequestForm = (props: IProps) => {
                 </Form.Group>
               </Col>
             </Row>
-          </Form.Group>
+          </Form.Group> */}
           <Form.Group className="bg-secondary p-3">
             <Row>
               <Col className="d-flex justify-content-end">
@@ -727,6 +745,12 @@ export const RequestForm = (props: IProps) => {
           </Form.Group>
         </Form>
       )}
+      <UploadAttachmentModal
+        open={attachmentModalOpen}
+        onHide={() => setAttachmentModalOpen(false)}
+        request={request}
+        onUploadSuccessful={(file: File, type: string) => {}}
+      />
       <ConfirmationModal
         open={discardModalOpen}
         onHide={() => setDiscardModalOpen(false)}
