@@ -94,19 +94,6 @@ export const RequestDetails = (props: IProps) => {
               </div>
             </div>
           </div>
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-12 mb-4 text-center">
-                <hr />
-                <br />
-                <ApprovalProgressBar
-                  request={request}
-                  locked={false}
-                  onRequestUpdated={onRequestUpdated}
-                />
-              </div>
-            </div>
-          </div>
           {/* <div className="container">
             <div className="row">
               <div className="col-12">

@@ -59,13 +59,13 @@ export const NewRequest = () => {
                 />
               </div>
             </div>
-            <div className="row">
+            {/* <div className="row">
               <div className="col-12">
                 <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>
                   {JSON.stringify(request, null, 2)}
                 </pre>
               </div>
-            </div>
+            </div> */}
           </div>
         </>
       )}

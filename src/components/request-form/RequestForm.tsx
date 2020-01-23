@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Request } from "../../services/models/Request";
 import { Form, Row, Col, ButtonToolbar, Button, Table } from "react-bootstrap";
 import { FundingSources } from "../../constants/FundingSources";
@@ -7,8 +7,8 @@ import { CardTypes as cardTypes } from "../../constants/CardTypes";
 import { Currencies as currencies } from "../../constants/Currencies";
 import { FiscalYears as fiscalYears } from "../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters";
-import { FaTimes, FaPlus } from "react-icons/fa";
-import { Detail, PurchaseDetails } from "../../services/models/PurchaseDetails";
+import { FaPlus } from "react-icons/fa";
+import { Detail } from "../../services/models/PurchaseDetails";
 import { ValidationErrorModal } from "./ValidationErrorModal";
 import { useFormik } from "formik";
 import { LineItemForm } from "./LineItemForm";
@@ -18,8 +18,8 @@ import ReactDatePicker, {
 import "./DatePicker.css";
 import { parseISO, format } from "date-fns";
 import { ConfirmationModal } from "./ConfirmationModal";
-import { RequestField } from "../../services/models/RequestField";
 import { RequestAttachmentsTable } from "./RequestAttachmentsTable";
+import UserContext from "../../contexts/UserContext";
 
 interface IProps {
   request: Request;
@@ -31,6 +31,8 @@ export const RequestForm = (props: IProps) => {
   const [request, setRequest] = useState<Request>(props.request);
   const [editing, setEditing] = useState<boolean>(props.editing === true);
   const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
+
+  const { user } = useContext(UserContext);
 
   const formik = useFormik({
     initialValues: {
@@ -169,7 +171,7 @@ export const RequestForm = (props: IProps) => {
                     type="text"
                     disabled
                     readOnly
-                    value={request.author.Title}
+                    value={request.author.Title || user!.Title}
                   />
                 </Form.Group>
                 <Form.Group>
@@ -655,6 +657,12 @@ export const RequestForm = (props: IProps) => {
           </Form.Group>
           <Form.Group className="bg-secondary p-3">
             <Row>
+              <Col className="pt-2">
+                <span className="text-white">
+                  Use the Actions button at the top of the page to sign this
+                  form.
+                </span>
+              </Col>
               <Col className="d-flex justify-content-end">
                 <ButtonToolbar className="text-right">
                   <Button

@@ -5,7 +5,7 @@ import { Table, Form, Button } from "react-bootstrap";
 import { RequestService } from "../../services/RequestService";
 import { AttachmentTypes as attachmentTypes } from "../../constants/AttachmentTypes";
 import { UploadAttachmentModal } from "./UploadAttachmentModal";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaPaperclip } from "react-icons/fa";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { useToasts } from "react-toast-notifications";
 interface IProps {
@@ -68,6 +68,7 @@ export const RequestAttachmentsTable = (props: IProps) => {
       <Table>
         <thead>
           <tr>
+            <th></th>
             <th>File name</th>
             <th>Type</th>
             <th></th>
@@ -80,6 +81,9 @@ export const RequestAttachmentsTable = (props: IProps) => {
               const attachmentType = split[0];
               return (
                 <tr key={attachment.FileName}>
+                  <td style={{ width: "1%" }}>
+                    <FaPaperclip className="text-secondary" />
+                  </td>
                   <td>
                     <a href={`${attachment.ServerRelativeUrl}`}>
                       {attachment.FileName}
