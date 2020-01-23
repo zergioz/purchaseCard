@@ -116,7 +116,7 @@ export const RequestAttachmentsTable = (props: IProps) => {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={3} align="right">
+            <td colSpan={4} align="right">
               <Button
                 disabled={!props.editing}
                 variant="outline-primary"
