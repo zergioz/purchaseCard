@@ -18,8 +18,8 @@ export const AllOpenRequests: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    //context.updatePageFilters(defaultFilters);
-    //context.applyFilters(defaultFilters, true);
+    context.updatePageFilters(defaultFilters);
+    context.applyFilters(defaultFilters, false);
   }, [context.requests]);
 
   return (
