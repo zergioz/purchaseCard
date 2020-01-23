@@ -1,7 +1,7 @@
 import dal from "./dal";
 import { ISerializer } from "./ISerializer";
 import { JsonStringSerializer } from "./JsonStringSerializer";
-import { Observable } from "rxjs";
+import { Observable, from } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
@@ -207,5 +207,13 @@ export class RequestService {
     file: string | Blob | ArrayBuffer
   ) {
     return this.dal.uploadAttachment(this.listName, request.id, fileName, file);
+  }
+
+  getAttachments(request: Request) {
+    return this.dal.getAttachments(this.listName, request.id);
+  }
+
+  deleteAttachment(request: Request, fileName: string) {
+    return this.dal.deleteAttachment(this.listName, request.id, fileName);
   }
 }

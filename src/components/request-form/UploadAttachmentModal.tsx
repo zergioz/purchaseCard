@@ -11,12 +11,13 @@ import { RequestService } from "../../services";
 import { Request } from "../../services/models/Request";
 import { AttachmentTypes as attachmentTypes } from "../../constants/AttachmentTypes";
 import { getRandomString } from "@pnp/common";
+import { Attachment } from "../../services/models/SharepointAttachments";
 
 interface IProps {
   open: boolean;
   onHide: () => void;
   request: Request;
-  onUploadSuccessful: (file: File, type: string) => void;
+  onUploadSuccessful: (attachment: Attachment) => void;
 }
 
 export const UploadAttachmentModal = (props: IProps) => {
@@ -46,23 +47,25 @@ export const UploadAttachmentModal = (props: IProps) => {
   };
 
   //adds some random characters before the file extension so sharepoint
-  //doesn't complain if there's another file with the same name
-  const addRandomString = (fileName: string): string => {
-    let split = fileName.split(".");
-    let ext = split.pop();
-    let oldFileName = split.join(".");
-    return `${oldFileName}_${getRandomString(8).toLowerCase()}.${ext}`;
+  //doesn't complain if there's another file with the same name.
+  //coincidentally this is also where we store the file type...
+  //just to keep things the same as the legacy app
+  const renameFile = (fileName: string, fileType: string): string => {
+    const split = fileName.split(".");
+    const ext = split.pop();
+    const name = split.join(".");
+    const rand = getRandomString(8).toLowerCase();
+    return `${fileType}-${name}-${rand}.${ext}`;
   };
 
   const uploadClicked = () => {
     if (selectedFile) {
       setUploading(true);
-      const fileName = addRandomString(selectedFile.name);
+      const fileName = renameFile(selectedFile.name, selectedType);
       svc.uploadAttachment(props.request, fileName, selectedFile).subscribe(
         result => {
-          console.log(result);
           setUploading(false);
-          props.onUploadSuccessful(selectedFile, selectedType);
+          props.onUploadSuccessful(result.data as Attachment);
           props.onHide();
         },
         error => {
@@ -133,7 +136,7 @@ export const UploadAttachmentModal = (props: IProps) => {
         <Button
           variant="primary"
           onClick={() => uploadClicked()}
-          disabled={uploading || !selectedFile}
+          disabled={uploading || !selectedFile || !selectedType}
         >
           {uploading && (
             <Spinner

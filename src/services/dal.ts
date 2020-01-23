@@ -83,4 +83,30 @@ export default class dal {
 
     return this.db.uploadAttachment(params);
   }
+
+  getAttachments(listName: string, id: number, siteUrl?: string) {
+    const params = {
+      siteUrl: siteUrl,
+      tableName: listName,
+      id: id
+    } as IQueryParams;
+
+    return this.db.getAttachments(params);
+  }
+
+  deleteAttachment(
+    listName: string,
+    id: number,
+    fileName: string,
+    siteUrl?: string
+  ) {
+    const params = {
+      siteUrl: siteUrl,
+      tableName: listName,
+      id: id,
+      fileName: fileName
+    } as IQueryParams;
+
+    return this.db.deleteAttachment(params);
+  }
 }

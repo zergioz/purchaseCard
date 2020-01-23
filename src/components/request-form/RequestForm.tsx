@@ -3,7 +3,6 @@ import { Request } from "../../services/models/Request";
 import { Form, Row, Col, ButtonToolbar, Button, Table } from "react-bootstrap";
 import { FundingSources } from "../../constants/FundingSources";
 import { PersonDirectorates as directorates } from "../../constants/PersonDirectorates";
-import { AttachmentTypes as attachmentTypes } from "../../constants/AttachmentTypes";
 import { CardTypes as cardTypes } from "../../constants/CardTypes";
 import { Currencies as currencies } from "../../constants/Currencies";
 import { FiscalYears as fiscalYears } from "../../constants/FiscalYears";
@@ -11,7 +10,6 @@ import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters
 import { FaTimes, FaPlus } from "react-icons/fa";
 import { Detail, PurchaseDetails } from "../../services/models/PurchaseDetails";
 import { ValidationErrorModal } from "./ValidationErrorModal";
-import { UploadAttachmentModal } from "./UploadAttachmentModal";
 import { useFormik } from "formik";
 import { LineItemForm } from "./LineItemForm";
 import ReactDatePicker, {
@@ -21,6 +19,7 @@ import "./DatePicker.css";
 import { parseISO, format } from "date-fns";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { RequestField } from "../../services/models/RequestField";
+import { RequestAttachmentsTable } from "./RequestAttachmentsTable";
 
 interface IProps {
   request: Request;
@@ -29,11 +28,7 @@ interface IProps {
 }
 export const RequestForm = (props: IProps) => {
   const [discardModalOpen, setDiscardModalOpen] = useState<boolean>(false);
-  const [attachmentModalOpen, setAttachmentModalOpen] = useState<boolean>(
-    false
-  );
   const [request, setRequest] = useState<Request>(props.request);
-  const [attachments, setAttachments] = useState<any>([]);
   const [editing, setEditing] = useState<boolean>(props.editing === true);
   const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
 
@@ -441,7 +436,6 @@ export const RequestForm = (props: IProps) => {
               </Col>
             </Row>
           </Form.Group>
-
           <Form.Group className="p-3 bg-light">
             <legend>Line Items</legend>
             <Row>
@@ -523,63 +517,11 @@ export const RequestForm = (props: IProps) => {
             <legend>Attachments</legend>
             <Row>
               <Col>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>File name</th>
-                      <th>Type</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {attachments &&
-                      attachments.map((attachment: any) => {
-                        return (
-                          <tr>
-                            <td>{attachment.name}</td>
-                            <td>
-                              <Form.Group>
-                                <Form.Control
-                                  className="custom-select"
-                                  as="select"
-                                >
-                                  <option value={""}>Select one</option>
-                                  {attachmentTypes.map(type => {
-                                    return (
-                                      <option value={type} key={type}>
-                                        {type}
-                                      </option>
-                                    );
-                                  })}
-                                </Form.Control>
-                              </Form.Group>
-                            </td>
-                            <td>
-                              <span className="text-danger">
-                                <FaTimes style={{ cursor: "pointer" }} />
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colSpan={3} align="right">
-                        <Button
-                          variant="outline-primary"
-                          onClick={() => setAttachmentModalOpen(true)}
-                        >
-                          Upload
-                        </Button>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </Table>
+                <RequestAttachmentsTable editing={editing} request={request} />
               </Col>
             </Row>
           </Form.Group>
-          {/* <Form.Group className="bg-light p-3">
+          <Form.Group className="bg-light p-3">
             <legend>Execution Info</legend>
             <Row>
               <Col>
@@ -710,7 +652,7 @@ export const RequestForm = (props: IProps) => {
                 </Form.Group>
               </Col>
             </Row>
-          </Form.Group> */}
+          </Form.Group>
           <Form.Group className="bg-secondary p-3">
             <Row>
               <Col className="d-flex justify-content-end">
@@ -745,12 +687,7 @@ export const RequestForm = (props: IProps) => {
           </Form.Group>
         </Form>
       )}
-      <UploadAttachmentModal
-        open={attachmentModalOpen}
-        onHide={() => setAttachmentModalOpen(false)}
-        request={request}
-        onUploadSuccessful={(file: File, type: string) => {}}
-      />
+
       <ConfirmationModal
         open={discardModalOpen}
         onHide={() => setDiscardModalOpen(false)}
