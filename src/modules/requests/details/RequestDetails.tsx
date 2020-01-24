@@ -77,11 +77,7 @@ export const RequestDetails = (props: IProps) => {
           <div className="container-fluid">
             <div className="row">
               <div className="col-12 mb-4 text-center">
-                <ApprovalProgressBar
-                  request={request}
-                  locked={false}
-                  onRequestUpdated={onRequestUpdated}
-                />
+                <ApprovalProgressBar request={request} locked={editing} />
                 <hr />
               </div>
             </div>

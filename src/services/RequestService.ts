@@ -196,8 +196,6 @@ export class RequestService {
       History: JSON.stringify(request.history || {})
     } as ccRequestTracker;
 
-    console.log(`Updating`, requestData);
-
     return this.dal.updateRow(this.listName, requestData);
   }
 

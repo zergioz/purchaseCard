@@ -22,6 +22,7 @@ import { RequestAttachmentsTable } from "./RequestAttachmentsTable";
 import UserContext from "../../contexts/UserContext";
 import RoleContext from "../../contexts/RoleContext";
 import { Role } from "../../services/models/Role";
+import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 
 interface IProps {
   request: Request;
@@ -184,7 +185,7 @@ export const RequestForm = (props: IProps) => {
                 </h2>
               </Col>
               <Col className="d-flex justify-content-end">
-                <ButtonToolbar className="text-right">
+                <ButtonToolbar className="text-right h-50">
                   <Button
                     disabled={!canEdit}
                     className="m-1"
@@ -210,6 +211,13 @@ export const RequestForm = (props: IProps) => {
                   >
                     Save Changes
                   </Button>
+                  <ApprovalActionsButton
+                    className="p-1"
+                    disabled={!canEdit || props.editing}
+                    variant="danger"
+                    request={request}
+                    onRequestUpdated={props.onRequestUpdated}
+                  />
                 </ButtonToolbar>
               </Col>
             </Row>
@@ -750,8 +758,7 @@ export const RequestForm = (props: IProps) => {
             <Row>
               <Col className="pt-2">
                 <span className="text-white">
-                  To sign this form, use the Actions button at the top of the
-                  page.
+                  Use the actions button to sign this form.
                 </span>
               </Col>
               <Col className="d-flex justify-content-end">
@@ -781,6 +788,13 @@ export const RequestForm = (props: IProps) => {
                   >
                     Save Changes
                   </Button>
+                  <ApprovalActionsButton
+                    className="p-1"
+                    disabled={!canEdit || props.editing}
+                    variant="danger"
+                    request={request}
+                    onRequestUpdated={props.onRequestUpdated}
+                  />
                 </ButtonToolbar>
               </Col>
             </Row>
