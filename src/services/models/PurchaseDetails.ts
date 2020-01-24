@@ -9,6 +9,7 @@ export class Detail {
   id: string;
   @autoserialize
   requestQty: number;
+
   @autoserialize
   requestDesc: string;
   @autoserialize
@@ -24,7 +25,7 @@ export class Detail {
 
   constructor(data: any = {}) {
     this.id = data.id || getRandomString(8);
-    this.requestQty = data.requestQty || 0;
+    this.requestQty = parseInt(data.requestQty) || 0;
     this.requestDesc = data.requestDesc || "";
     this.requestSrc = data.requestSrc || "";
     this.requestDdForm =

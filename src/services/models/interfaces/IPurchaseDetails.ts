@@ -5,11 +5,11 @@ export interface IPurchaseDetails {
 }
 
 interface IDetail {
-  requestQty: string;
+  requestQty: number;
   requestDesc: string;
   requestSrc: string;
   requestDdForm: string;
   requestDaForm: string;
-  requestCost: string;
-  requestTotal: string;
+  requestCost: number;
+  requestTotal: number;
 }

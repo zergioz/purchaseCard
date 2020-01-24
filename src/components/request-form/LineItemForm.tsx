@@ -14,19 +14,28 @@ interface IProps {
 }
 export const LineItemForm = (props: IProps) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [item, setItem] = useState<Detail>(props.item);
   const formik = useFormik({
     initialValues: {
-      ...props.item
+      ...item
     },
-    onSubmit: values => {},
-    validationSchema: new Detail().getValidationSchema()
+    onSubmit: values => {}
+    //validationSchema: new Detail().getValidationSchema()
   });
 
-  //call the outside onChange handler when the formik values change
-  //todo: use actual formik subform logic to do this
+  //auto total the line
   useEffect(() => {
+    formik.setFieldValue(
+      "requestTotal",
+      formik.values.requestCost * formik.values.requestQty
+    );
+  }, [formik.values.requestCost, formik.values.requestQty]);
+
+  //call the outside onChange handler when user leaves any field
+  //todo: use actual formik subform logic to do this
+  const handleBlur = (e: any) => {
     props.onChange(new Detail(formik.values));
-  }, [formik.values]);
+  };
 
   //when the editing state changes, reset the validation on this line
   //todo: validation errors on this subform should actually stop the submission
@@ -42,17 +51,15 @@ export const LineItemForm = (props: IProps) => {
         <td className="p-1" style={{ width: "8%" }}>
           <Form.Group>
             <Form.Control
-              type="number"
+              type="text"
               disabled={!props.editing}
-              {...formik.getFieldProps("requestQty")}
-              isInvalid={
-                !!(formik.touched.requestQty && formik.errors.requestQty)
-              }
-              isValid={formik.touched.requestQty && !formik.errors.requestQty}
+              name="requestQty"
+              id="requestQty"
+              value={formik.values.requestQty.toString()}
+              onChange={formik.handleChange}
+              pattern="[0-9]*"
+              onBlur={handleBlur}
             />
-            {formik.touched.requestQty && formik.errors.requestQty ? (
-              <small className="text-danger">{formik.errors.requestQty}</small>
-            ) : null}
           </Form.Group>
         </td>
         <td className="p-1">
@@ -60,16 +67,13 @@ export const LineItemForm = (props: IProps) => {
             <Form.Control
               type="text"
               disabled={!props.editing}
-              {...formik.getFieldProps("requestDesc")}
+              id="requestDesc"
+              name="requestDesc"
+              value={formik.values.requestDesc}
+              onChange={formik.handleChange}
+              onBlur={handleBlur}
               placeholder="Description"
-              isInvalid={
-                !!(formik.touched.requestDesc && formik.errors.requestDesc)
-              }
-              isValid={formik.touched.requestDesc && !formik.errors.requestDesc}
             />
-            {formik.touched.requestDesc && formik.errors.requestDesc ? (
-              <small className="text-danger">{formik.errors.requestDesc}</small>
-            ) : null}
           </Form.Group>
         </td>
         <td className="p-1">
@@ -77,16 +81,13 @@ export const LineItemForm = (props: IProps) => {
             <Form.Control
               type="text"
               disabled={!props.editing}
-              {...formik.getFieldProps("requestSrc")}
+              id="requestSrc"
+              name="requestSrc"
+              value={formik.values.requestSrc}
+              onChange={formik.handleChange}
+              onBlur={handleBlur}
               placeholder="Source"
-              isInvalid={
-                !!(formik.touched.requestSrc && formik.errors.requestSrc)
-              }
-              isValid={formik.touched.requestSrc && !formik.errors.requestSrc}
             />
-            {formik.touched.requestSrc && formik.errors.requestSrc ? (
-              <small className="text-danger">{formik.errors.requestSrc}</small>
-            ) : null}
           </Form.Group>
         </td>
         <td className="p-1" style={{ width: "15%" }}>
@@ -98,21 +99,15 @@ export const LineItemForm = (props: IProps) => {
                 </InputGroup.Text>
               </InputGroup.Prepend>
               <Form.Control
-                type="number"
+                type="text"
+                pattern="[0-9]*"
                 disabled={!props.editing}
-                {...formik.getFieldProps("requestCost")}
-                isInvalid={
-                  !!(formik.touched.requestCost && formik.errors.requestCost)
-                }
-                isValid={
-                  formik.touched.requestCost && !formik.errors.requestCost
-                }
+                id="requestCost"
+                name="requestCost"
+                value={formik.values.requestCost.toString()}
+                onChange={formik.handleChange}
+                onBlur={handleBlur}
               />
-              {formik.touched.requestCost && formik.errors.requestCost ? (
-                <small className="text-danger">
-                  {formik.errors.requestCost}
-                </small>
-              ) : null}
             </InputGroup>
           </Form.Group>
         </td>
@@ -122,19 +117,11 @@ export const LineItemForm = (props: IProps) => {
               type="checkbox"
               disabled={!props.editing}
               checked={formik.values.requestDdForm === true ? true : false}
-              {...formik.getFieldProps("requestDdForm")}
-              isInvalid={
-                !!(formik.touched.requestDdForm && formik.errors.requestDdForm)
-              }
-              isValid={
-                formik.touched.requestDdForm && !formik.errors.requestDdForm
-              }
+              id="requestDdForm"
+              name="requestDdForm"
+              onChange={formik.handleChange}
+              onBlur={handleBlur}
             />
-            {formik.touched.requestDdForm && formik.errors.requestDdForm ? (
-              <small className="text-danger">
-                {formik.errors.requestDdForm}
-              </small>
-            ) : null}
           </Form.Group>
         </td>
         <td className="text-center p-1" style={{ width: "5%" }}>
@@ -143,19 +130,11 @@ export const LineItemForm = (props: IProps) => {
               type="checkbox"
               disabled={!props.editing}
               checked={formik.values.requestDaForm === true ? true : false}
-              {...formik.getFieldProps("requestDaForm")}
-              isInvalid={
-                !!(formik.touched.requestDaForm && formik.errors.requestDaForm)
-              }
-              isValid={
-                formik.touched.requestDaForm && !formik.errors.requestDaForm
-              }
+              id="requestDaForm"
+              name="requestDaForm"
+              onChange={formik.handleChange}
+              onBlur={handleBlur}
             />
-            {formik.touched.requestDaForm && formik.errors.requestDaForm ? (
-              <small className="text-danger">
-                {formik.errors.requestDaForm}
-              </small>
-            ) : null}
           </Form.Group>
         </td>
         <td className="p-1" style={{ width: "15%" }}>
@@ -168,20 +147,13 @@ export const LineItemForm = (props: IProps) => {
               </InputGroup.Prepend>
               <Form.Control
                 type="number"
-                disabled={!props.editing}
-                {...formik.getFieldProps("requestTotal")}
-                isInvalid={
-                  !!(formik.touched.requestTotal && formik.errors.requestTotal)
-                }
-                isValid={
-                  formik.touched.requestTotal && !formik.errors.requestTotal
-                }
+                disabled={true}
+                id="requestTotal"
+                name="requestTotal"
+                value={formik.values.requestTotal.toString()}
+                onChange={formik.handleChange}
+                onBlur={handleBlur}
               />
-              {formik.touched.requestTotal && formik.errors.requestTotal ? (
-                <small className="text-danger">
-                  {formik.errors.requestTotal}
-                </small>
-              ) : null}
             </InputGroup>
           </Form.Group>
         </td>
