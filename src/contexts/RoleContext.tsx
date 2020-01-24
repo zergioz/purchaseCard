@@ -15,7 +15,7 @@ export const RoleContext = React.createContext<RoleContextType>({
 export const RoleProvider: React.FC = (props: any) => {
   const [roles, updateRoles] = useState<Role[]>([]);
 
-  if (!roles) {
+  if (roles.length == 0) {
     svc.read().subscribe(response => {
       updateRoles(response);
     });

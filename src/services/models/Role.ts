@@ -28,15 +28,15 @@ export class Role {
 
   constructor(data: any = {}) {
     this.id = data.id || 0;
-    this.active = data.personActive || "NO";
-    this.attributes = data.personAttributes || {};
-    this.directorate = data.personDirectorate || "";
-    this.email = data.personEmail || "";
-    this.firstName = data.personFirstName || "";
-    this.lastName = data.personLastName || "";
-    this.rank = data.personRank || "";
-    this.role = data.personRole || "";
-    this.training = data.personTraining || "";
+    this.active = data.active || "NO";
+    this.attributes = data.attributes || {};
+    this.directorate = data.directorate || "";
+    this.email = data.email || "";
+    this.firstName = data.firstName || "";
+    this.lastName = data.lastName || "";
+    this.rank = data.rank || "";
+    this.role = data.role || "";
+    this.training = data.training || "";
     this.pseudoName = data.pseudoName || "";
   }
 }

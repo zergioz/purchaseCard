@@ -20,6 +20,8 @@ import { parseISO, format } from "date-fns";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { RequestAttachmentsTable } from "./RequestAttachmentsTable";
 import UserContext from "../../contexts/UserContext";
+import RoleContext from "../../contexts/RoleContext";
+import { Role } from "../../services/models/Role";
 
 interface IProps {
   request: Request;
@@ -32,6 +34,11 @@ export const RequestForm = (props: IProps) => {
   const [editing, setEditing] = useState<boolean>(props.editing === true);
   const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
   const { user } = useContext(UserContext);
+  const { roles } = useContext(RoleContext);
+
+  const cardholders = roles.filter(
+    role => role.role === "CARD HOLDER" && role.active === "YES"
+  );
 
   const canEdit = request.status !== "Closed";
 
@@ -234,7 +241,8 @@ export const RequestForm = (props: IProps) => {
                 <Form.Group>
                   <Form.Label>Cardholder</Form.Label>
                   <Form.Control
-                    type="text"
+                    className="custom-select"
+                    as="select"
                     disabled={!editing}
                     {...formik.getFieldProps("RequestorCardHolderName")}
                     isInvalid={
@@ -247,7 +255,19 @@ export const RequestForm = (props: IProps) => {
                       formik.touched.RequestorCardHolderName &&
                       !formik.errors.RequestorCardHolderName
                     }
-                  />
+                  >
+                    <option value={""}>Select one</option>
+                    {cardholders.map((role: Role) => {
+                      return (
+                        <option
+                          value={role.email}
+                          key={`role-${role.id}-${role.lastName}`}
+                        >
+                          {`${role.rank} ${role.firstName} ${role.lastName}`}
+                        </option>
+                      );
+                    })}
+                  </Form.Control>
                   {formik.touched.RequestorCardHolderName &&
                   formik.errors.RequestorCardHolderName ? (
                     <small className="text-danger">
@@ -492,7 +512,7 @@ export const RequestForm = (props: IProps) => {
                         (item: Detail, index: number) => {
                           return (
                             <LineItemForm
-                              key={item.id}
+                              key={`${item.requestDesc}-${item.id}`}
                               item={item}
                               currency={
                                 formik.values.RequestCurrencyType || "Dollar"
