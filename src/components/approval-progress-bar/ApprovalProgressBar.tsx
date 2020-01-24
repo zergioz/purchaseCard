@@ -4,21 +4,22 @@ import "./ApprovalProgressBar.css";
 import { getStatusesByFriendlyName } from "../../constants/StepStatus";
 import { useActionBadges } from "../approval-action-badge/ApprovalActionBadgeBar";
 import { Request } from "../../services/models/Request";
-import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 
 interface IProps {
   locked: boolean;
   request: Request;
-  onRequestUpdated: (newRequest: Request) => void;
 }
 export const ApprovalProgressBar = (props: IProps) => {
   const statuses: string[] = Object.keys(getStatusesByFriendlyName());
-  const [request, setRequest] = useState<Request>(props.request);
   const [locked, setLocked] = useState(props.locked);
-  const [selected, setSelected] = useState(request.status);
+  const [selected, setSelected] = useState(props.request.status);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const badges = useActionBadges(request, "auto", false);
+  const badges = useActionBadges(props.request, "auto", false);
+
+  useEffect(() => {
+    setLocked(props.locked);
+  }, [props.locked]);
 
   //when the request status changes, tell the progress bar where to go
   useEffect(() => {
@@ -31,15 +32,9 @@ export const ApprovalProgressBar = (props: IProps) => {
     }
   }, [selected]);
 
-  const onRequestUpdated = (newRequest: Request) => {
-    console.log("Request updated", newRequest);
-    setRequest(newRequest);
-    setSelected(newRequest.status);
-    setLocked(true);
-    if (props.onRequestUpdated) {
-      props.onRequestUpdated(newRequest);
-    }
-  };
+  useEffect(() => {
+    setSelected(props.request.status);
+  }, [props.request.status]);
 
   const ApprovalProgressStepIcon = (props: any) => {
     return (
@@ -72,15 +67,7 @@ export const ApprovalProgressBar = (props: IProps) => {
           {props.value}
         </p>
         <div className="mt-n3" style={activeStyle}>
-          {props.active && !props.locked && (
-            <ApprovalActionsButton
-              disabled={request.status == "Closed"}
-              variant="danger"
-              request={request}
-              onRequestUpdated={onRequestUpdated}
-            />
-          )}
-          {(!props.active || props.locked) && badges[props.index]}
+          {badges[props.index]}
         </div>
       </>
     );
@@ -88,7 +75,7 @@ export const ApprovalProgressBar = (props: IProps) => {
 
   return (
     <>
-      {request && (
+      {props.request && (
         <div className="container-fluid-spacious">
           <div className="row">
             {statuses.map((value: string, index: number) => (
@@ -120,8 +107,8 @@ export const ApprovalProgressBar = (props: IProps) => {
                 <ApprovalProgressStep
                   index={index}
                   value={value}
-                  active={value == request.status}
-                  request={request}
+                  active={value == props.request.status}
+                  request={props.request}
                   locked={locked}
                 />
               </div>

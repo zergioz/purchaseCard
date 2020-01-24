@@ -16,6 +16,7 @@ interface IProps {
   className?: string;
   disabled?: boolean;
   loading?: boolean;
+  hidden?: boolean;
   onRequestUpdated: (newRequest: Request) => void;
 }
 export const ApprovalActionsButton = (props: IProps) => {
@@ -64,12 +65,9 @@ export const ApprovalActionsButton = (props: IProps) => {
           onActionFinalized={onActionFinalized}
         />
       )}
-      <Dropdown
-        as={ButtonGroup}
-        size="sm"
-        className={`${props.className} mt-2`}
-      >
+      <Dropdown as={ButtonGroup} size="sm" className={`${props.className}`}>
         <Dropdown.Toggle
+          hidden={props.hidden}
           disabled={props.disabled}
           variant={props.variant}
           size="sm"

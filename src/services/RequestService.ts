@@ -144,7 +144,7 @@ export class RequestService {
         map((items: ccRequestTracker[]) => {
           return items.map(item => this.mapAndParse(item));
         }),
-        tap((items: any) => console.log(items)),
+        //tap((items: any) => console.log(items)),
         //hydrate each into an instance of the Request class
         map((items: any[]) => {
           let deserialized: Array<Request> = [];
@@ -154,8 +154,8 @@ export class RequestService {
             );
           });
           return deserialized;
-        }),
-        tap((items: any) => console.log(items))
+        })
+        //tap((items: any) => console.log(items))
       );
   }
 
@@ -195,8 +195,6 @@ export class RequestService {
       REQUEST_STATUS: convertToUgly(request.status),
       History: JSON.stringify(request.history || {})
     } as ccRequestTracker;
-
-    console.log(`Updating`, requestData);
 
     return this.dal.updateRow(this.listName, requestData);
   }

@@ -14,7 +14,6 @@ import { SupplyValidation } from "./SupplyValidation";
 import { PersonAttributes } from "./PersonAttributes";
 import { PersonTraining } from "./PersonTraining";
 import { Request } from "./Request";
-import { ccUser } from "./ccUser";
 
 export default [
   ApprovalAction,
@@ -32,6 +31,5 @@ export default [
   SupplyValidation,
   PersonAttributes,
   PersonTraining,
-  Request,
-  ccUser
+  Request
 ];

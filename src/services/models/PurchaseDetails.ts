@@ -27,8 +27,14 @@ export class Detail {
     this.requestQty = data.requestQty || 0;
     this.requestDesc = data.requestDesc || "";
     this.requestSrc = data.requestSrc || "";
-    this.requestDdForm = data.requestDdForm === true ? true : false;
-    this.requestDaForm = data.requestDaForm === true ? true : false;
+    this.requestDdForm =
+      data.requestDdForm === "true" || data.requestDdForm === true
+        ? true
+        : false;
+    this.requestDaForm =
+      data.requestDaForm === "true" || data.requestDaForm === true
+        ? true
+        : false;
     this.requestCost = data.requestCost || 0;
     this.requestTotal = data.requestTotal || 0;
   }

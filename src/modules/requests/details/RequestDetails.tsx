@@ -17,6 +17,7 @@ export const RequestDetails = (props: IProps) => {
   const svc = new RequestService();
   const context = useContext(RequestContext);
   const [request, setRequest] = useState();
+  const [editing, setEditing] = useState<boolean>(false);
   const defaultFilters = new RequestFilters();
 
   //start the db fetch
@@ -76,11 +77,7 @@ export const RequestDetails = (props: IProps) => {
           <div className="container-fluid">
             <div className="row">
               <div className="col-12 mb-4 text-center">
-                <ApprovalProgressBar
-                  request={request}
-                  locked={false}
-                  onRequestUpdated={onRequestUpdated}
-                />
+                <ApprovalProgressBar request={request} locked={editing} />
                 <hr />
               </div>
             </div>
@@ -91,6 +88,8 @@ export const RequestDetails = (props: IProps) => {
                 <RequestForm
                   onRequestUpdated={onRequestUpdated}
                   request={request}
+                  editing={editing}
+                  setEditing={setEditing}
                 />
               </div>
             </div>

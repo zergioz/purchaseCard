@@ -121,7 +121,7 @@ export const LineItemForm = (props: IProps) => {
             <Form.Check
               type="checkbox"
               disabled={!props.editing}
-              checked={formik.values.requestDdForm}
+              checked={formik.values.requestDdForm === true ? true : false}
               {...formik.getFieldProps("requestDdForm")}
               isInvalid={
                 !!(formik.touched.requestDdForm && formik.errors.requestDdForm)
@@ -142,7 +142,7 @@ export const LineItemForm = (props: IProps) => {
             <Form.Check
               type="checkbox"
               disabled={!props.editing}
-              checked={formik.values.requestDaForm}
+              checked={formik.values.requestDaForm === true ? true : false}
               {...formik.getFieldProps("requestDaForm")}
               isInvalid={
                 !!(formik.touched.requestDaForm && formik.errors.requestDaForm)

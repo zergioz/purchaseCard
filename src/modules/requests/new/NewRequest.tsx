@@ -15,6 +15,7 @@ export const NewRequest = () => {
   const { user } = useContext(UserContext);
   const [request, setRequest] = useState();
   const svc = new RequestService();
+  const [editing, setEditing] = useState<boolean>(true);
 
   //start the db call to create a new draft
   useEffect(() => {
@@ -61,11 +62,7 @@ export const NewRequest = () => {
           <div className="container-fluid">
             <div className="row">
               <div className="col-12 mb-4 text-center">
-                <ApprovalProgressBar
-                  request={request}
-                  locked={false}
-                  onRequestUpdated={onRequestUpdated}
-                />
+                <ApprovalProgressBar request={request} locked={editing} />
                 <hr />
               </div>
             </div>
@@ -75,7 +72,8 @@ export const NewRequest = () => {
               <div className="col-12 m-2">
                 <RequestForm
                   request={request}
-                  editing={true}
+                  editing={editing}
+                  setEditing={setEditing}
                   onRequestUpdated={onRequestUpdated}
                 />
               </div>

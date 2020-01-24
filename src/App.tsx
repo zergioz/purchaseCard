@@ -9,6 +9,7 @@ import modules from "./modules";
 import { TopNav } from "./components/topnav/TopNav";
 import { RequestProvider } from "./contexts/RequestContext";
 import { UserProvider } from "./contexts/UserContext";
+import { RoleProvider } from "./contexts/RoleContext";
 import { Breadcrumbs } from "./components/breadcrumbs/Breadcrumbs";
 import { ToastProvider } from "react-toast-notifications";
 
@@ -49,28 +50,30 @@ const App = () => {
     <div>
       <UserProvider>
         <RequestProvider>
-          <ToastProvider>
-            <Router>
-              <TopNav></TopNav>
-              <div className="container-fluid-spacious">
-                <div className="row">
-                  <div className="col-md-12">
-                    <Breadcrumbs />
+          <RoleProvider>
+            <ToastProvider>
+              <Router>
+                <TopNav></TopNav>
+                <div className="container-fluid-spacious">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <Breadcrumbs />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="container-fluid">
-                <div className="row">
-                  <div className="col-md-12">
-                    <Switch>
-                      {makeRoutes()}
-                      <Redirect from="/" to="/requests" />
-                    </Switch>
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <Switch>
+                        {makeRoutes()}
+                        <Redirect from="/" to="/requests" />
+                      </Switch>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Router>
-          </ToastProvider>
+              </Router>
+            </ToastProvider>
+          </RoleProvider>
         </RequestProvider>
       </UserProvider>
     </div>
