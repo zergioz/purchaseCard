@@ -36,9 +36,17 @@ export const RequestForm = (props: IProps) => {
   const { user } = useContext(UserContext);
   const { roles } = useContext(RoleContext);
 
-  const cardholders = roles.filter(
-    role => role.role === "CARD HOLDER" && role.active === "YES"
-  );
+  const cardholders = roles
+    .filter(role => role.role === "CARD HOLDER" && role.active === "YES")
+    .sort((a: Role, b: Role) => {
+      if (a.directorate < b.directorate) {
+        return -1;
+      }
+      if (a.directorate > b.directorate) {
+        return 1;
+      }
+      return 0;
+    });
 
   const canEdit = request.status !== "Closed";
 
@@ -263,7 +271,7 @@ export const RequestForm = (props: IProps) => {
                           value={role.email}
                           key={`role-${role.id}-${role.lastName}`}
                         >
-                          {`${role.rank} ${role.firstName} ${role.lastName}`}
+                          {`[${role.directorate}] ${role.firstName} ${role.lastName}`}
                         </option>
                       );
                     })}
@@ -712,8 +720,8 @@ export const RequestForm = (props: IProps) => {
             <Row>
               <Col className="pt-2">
                 <span className="text-white">
-                  Use the Actions button at the top of the page to sign this
-                  form.
+                  To sign this form, use the Actions button at the top of the
+                  page.
                 </span>
               </Col>
               <Col className="d-flex justify-content-end">
