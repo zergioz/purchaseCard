@@ -10,6 +10,7 @@ import { TopNav } from "./components/topnav/TopNav";
 import { RequestProvider } from "./contexts/RequestContext";
 import { UserProvider } from "./contexts/UserContext";
 import { Breadcrumbs } from "./components/breadcrumbs/Breadcrumbs";
+import { ToastProvider } from "react-toast-notifications";
 
 const App = () => {
   const makeRoutes = () => {
@@ -48,26 +49,28 @@ const App = () => {
     <div>
       <UserProvider>
         <RequestProvider>
-          <Router>
-            <TopNav></TopNav>
-            <div className="container-fluid-spacious">
-              <div className="row">
-                <div className="col-md-12">
-                  <Breadcrumbs />
+          <ToastProvider>
+            <Router>
+              <TopNav></TopNav>
+              <div className="container-fluid-spacious">
+                <div className="row">
+                  <div className="col-md-12">
+                    <Breadcrumbs />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-md-12">
-                  <Switch>
-                    {makeRoutes()}
-                    <Redirect from="/" to="/requests" />
-                  </Switch>
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col-md-12">
+                    <Switch>
+                      {makeRoutes()}
+                      <Redirect from="/" to="/requests" />
+                    </Switch>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Router>
+            </Router>
+          </ToastProvider>
         </RequestProvider>
       </UserProvider>
     </div>

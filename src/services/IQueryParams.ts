@@ -11,4 +11,6 @@ export interface IQueryParams {
   select: string;
   expand: string;
   whereClause: string;
+  fileName: string;
+  file: string | Blob | ArrayBuffer;
 }

@@ -7,24 +7,27 @@ import { LoadingResults } from "../../../components/request-table/LoadingResults
 import { Alert, Button } from "react-bootstrap";
 import { ApprovalProgressBar } from "../../../components/approval-progress-bar/ApprovalProgressBar";
 import { RequestForm } from "../../../components/request-form/RequestForm";
+import { useToasts } from "react-toast-notifications";
 
 interface IProps {
   requestId: number;
 }
 export const RequestDetails = (props: IProps) => {
+  const { addToast } = useToasts();
+  const svc = new RequestService();
   const context = useContext(RequestContext);
   const [request, setRequest] = useState();
   const defaultFilters = new RequestFilters();
 
   //start the db fetch
   useEffect(() => {
-    const svc = new RequestService();
     context.subscribeTo(svc.read(), "read");
   }, []);
 
   //apply the ID filter when results come back
   useEffect(() => {
     defaultFilters.id = props.requestId;
+    defaultFilters.status = "";
     context.updatePageFilters(defaultFilters);
     context.applyFilters(defaultFilters, true);
   }, [context.requests]);
@@ -38,7 +41,26 @@ export const RequestDetails = (props: IProps) => {
   }, [context.filteredRequests]);
 
   const onRequestUpdated = (newRequest: Request) => {
-    context.updateRequest(newRequest);
+    addToast(`Saving...`, {
+      appearance: "info",
+      autoDismiss: true
+    });
+    let obs = svc.update(newRequest);
+    obs.subscribe(
+      () => {
+        setRequest(newRequest);
+        context.updateRequest(newRequest);
+        addToast("Saved", { appearance: "success", autoDismiss: true });
+      },
+      error => {
+        console.error(`Error updating request.`, error);
+        addToast(`Error while saving!`, {
+          appearance: "error",
+          autoDismiss: false
+        });
+      },
+      () => {}
+    );
   };
 
   return (
@@ -66,9 +88,14 @@ export const RequestDetails = (props: IProps) => {
           <div className="container">
             <div className="row">
               <div className="col-12 m-2">
-                <RequestForm request={request} />
+                <RequestForm
+                  onRequestUpdated={onRequestUpdated}
+                  request={request}
+                />
               </div>
             </div>
+          </div>
+          {/* <div className="container">
             <div className="row">
               <div className="col-12">
                 <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>
@@ -76,7 +103,7 @@ export const RequestDetails = (props: IProps) => {
                 </pre>
               </div>
             </div>
-          </div>
+          </div> */}
         </>
       )}
       {!context.loading && !request && (

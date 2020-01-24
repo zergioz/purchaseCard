@@ -32,7 +32,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
       obs.subscribe(
         () => {
           setItem(newRequest);
-          //context.updateRequest(newRequest);
+          context.updateRequest(newRequest);
           setLoading(false);
         },
         error => {
@@ -48,34 +48,18 @@ export const RequestTableRow: React.FC<IProps> = props => {
   return (
     <tr>
       <td className="action-button-col">
-        {/* <ButtonToolbar>
+        <ButtonToolbar>
           <Button
             className="w-100"
             variant="primary"
             size="sm"
             href={`#/requests/details/${item.id}`}
           >
-            <span className="nowrap">View #{item.id}</span>
-          </Button>
-          <ApprovalActionsButton
-            className="w-100"
-            variant="outline-danger"
-            request={item}
-            onRequestUpdated={onRequestUpdated}
-          />
-        </ButtonToolbar> */}
-        <ButtonToolbar>
-          <Button
-            className="w-100"
-            variant="primary"
-            size="sm"
-            href={`Pages/purchase_request.aspx?id=${item.id}`}
-          >
             <span className="nowrap" style={{ whiteSpace: "pre" }}>
               View #{item.id}
             </span>
           </Button>
-          {!hideActions && (
+          {/* {!hideActions && (
             <ApprovalActionsButton
               className="w-100"
               variant="outline-danger"
@@ -84,7 +68,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
               loading={loading}
               disabled={loading}
             />
-          )}
+          )} */}
         </ButtonToolbar>
       </td>
       <td className="text-center">{item.requestField!.RequestorDirectorate}</td>

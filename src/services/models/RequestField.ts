@@ -4,23 +4,21 @@ import { autoserialize } from "cerialize";
 
 export class RequestField {
   @autoserialize
-  RequestCardType?: string;
+  RequestCardType: string;
   @autoserialize
-  Requestor?: string;
+  Requestor: string;
   @autoserialize
-  RequestorCardHolderName?: string;
+  RequestorCardHolderName: string;
   @autoserialize
-  RequestorDSN?: string;
+  RequestorDSN: string;
   @autoserialize
-  RequestorDirectorate?: string;
+  RequestorDirectorate: string;
   @autoserialize
-  RequestDateofRequest?: string;
+  RequestSource: string;
   @autoserialize
-  RequestSource?: string;
+  RequestJustification: string;
   @autoserialize
-  RequestJustification?: string;
-  @autoserialize
-  RequestCurrencyType?: string;
+  RequestCurrencyType: string;
   @autoserialize
   RequestIsJ6: string;
   @autoserialize
@@ -39,7 +37,6 @@ export class RequestField {
     this.RequestorCardHolderName = data.RequestorCardHolderName || "";
     this.RequestorDSN = data.RequestorDSN || "";
     this.RequestorDirectorate = data.RequestorDirectorate || "";
-    this.RequestDateofRequest = data.RequestDateofRequest || "";
     this.RequestSource = data.RequestSource || "";
     this.RequestJustification = data.RequestJustification || "";
     this.RequestCurrencyType = data.RequestCurrencyType || "";

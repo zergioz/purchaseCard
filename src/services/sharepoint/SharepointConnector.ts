@@ -127,4 +127,34 @@ export class SharepointConnector implements IDbConnector {
   getCurrentUser(): Observable<any> {
     return from(sp.web.currentUser.get());
   }
+
+  uploadAttachment(params: IQueryParams): Observable<any> {
+    const siteUrl = params.siteUrl;
+    const listName = params.tableName;
+    let web = sp.web;
+    if (siteUrl) web = new Web(siteUrl);
+
+    let item = web.lists.getByTitle(listName).items.getById(params.id);
+    return from(item.attachmentFiles.add(params.fileName, params.file));
+  }
+
+  getAttachments(params: IQueryParams): Observable<any> {
+    const siteUrl = params.siteUrl;
+    const listName = params.tableName;
+    let web = sp.web;
+    if (siteUrl) web = new Web(siteUrl);
+
+    let item = web.lists.getByTitle(listName).items.getById(params.id);
+    return from(item.attachmentFiles.get());
+  }
+
+  deleteAttachment(params: IQueryParams): Observable<any> {
+    const siteUrl = params.siteUrl;
+    const listName = params.tableName;
+    let web = sp.web;
+    if (siteUrl) web = new Web(siteUrl);
+
+    let item = web.lists.getByTitle(listName).items.getById(params.id);
+    return from(item.attachmentFiles.getByName(params.fileName).recycle());
+  }
 }

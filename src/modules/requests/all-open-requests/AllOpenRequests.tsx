@@ -12,12 +12,14 @@ export const AllOpenRequests: React.FC = () => {
 
   useEffect(() => {
     const svc = new RequestService();
-    context.subscribeTo(svc.read(), "read");
+    const obs = svc.read();
+    context.subscribeTo(obs, "read");
+    context.applyFilters(defaultFilters, true);
   }, []);
 
   useEffect(() => {
     context.updatePageFilters(defaultFilters);
-    context.applyFilters(defaultFilters, true);
+    context.applyFilters(defaultFilters, false);
   }, [context.requests]);
 
   return (

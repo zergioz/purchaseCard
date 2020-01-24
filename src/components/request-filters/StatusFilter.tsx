@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Badge, Nav, DropdownButton, Dropdown } from "react-bootstrap";
+import { DropdownButton, Dropdown } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import {
   getStatusesByFriendlyName,
@@ -20,18 +20,19 @@ export const useStatusFilter = (): IStatusFilter => {
   const [selected, setSelected] = useState<string>(context.filters.status);
   const statuses: string[] = Object.keys(getStatusesByFriendlyName());
 
-  //when other filters are applied, recalculate the badges we should be showing in this component
+  //recalc the counts when the requests change
   useEffect(() => {
-    //todo: skip this calculation if only the status filter changed
-    const allOtherFilters = { ...context.filters, status: "" };
-    const matches = context.applyFilters(allOtherFilters, false);
-    const counts = groupByStatus(matches);
-    setBadges(counts);
-  }, [context.filters]);
+    recountItems();
+  }, [context.requests]);
 
-  //if the status filter changes, update our state
+  //when our filter changes, update our state.
+  //when other filters change, recalculate the badges we should be showing
   useEffect(() => {
-    setSelected(context.filters.status);
+    if (context.filters.status != selected) {
+      setSelected(context.filters.status);
+    } else {
+      recountItems();
+    }
   }, [context.filters]);
 
   //if the state of this component changes, then apply the filters
@@ -40,6 +41,13 @@ export const useStatusFilter = (): IStatusFilter => {
       context.applyFilters({ ...context.filters, status: selected }, true);
     }
   }, [selected]);
+
+  const recountItems = () => {
+    const allOtherFilters = { ...context.filters, status: "" };
+    const matches = context.applyFilters(allOtherFilters, false);
+    const counts = groupByStatus(matches);
+    setBadges(counts);
+  };
 
   const onChangeSelection = (status: string) => {
     //the filter will bounce back if they try to change it during loading, so prevent that

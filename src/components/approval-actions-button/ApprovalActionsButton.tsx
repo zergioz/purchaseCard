@@ -1,12 +1,7 @@
 import React, { useState, useReducer, useEffect } from "react";
 import { ApprovalModal } from "../approval-modal/ApprovalModal";
 import { Request } from "../../services/models/Request";
-import {
-  Dropdown,
-  ButtonGroup,
-  DropdownButton,
-  Spinner
-} from "react-bootstrap";
+import { Dropdown, ButtonGroup, Spinner, Badge } from "react-bootstrap";
 import {
   ApprovalAction,
   IApprovalAction,
@@ -92,16 +87,16 @@ export const ApprovalActionsButton = (props: IProps) => {
           Actions
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          {/* <Dropdown.Item onClick={() => onActionClicked("approve")}>
-            Approve
-          </Dropdown.Item> */}
+          <Dropdown.Item onClick={() => onActionClicked("approve")}>
+            Approve &amp; Sign
+          </Dropdown.Item>
           <Dropdown.Item onClick={() => onActionClicked("sendto")}>
             Send to...
           </Dropdown.Item>
-          {/* <Dropdown.Divider />
+          <Dropdown.Divider />
           <Dropdown.Item onClick={() => onActionClicked("reject")}>
-            Reject
-          </Dropdown.Item> */}
+            Reject &amp; Close
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     </>

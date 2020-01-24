@@ -1,5 +1,6 @@
 import { Request, IRequestApprovals } from "../services/models/Request";
 import { groupBy } from "../helpers/GroupBy";
+import { ApprovalAction } from "../services/models/ApprovalAction";
 
 /*
  * This stuff is all a big workaround to make the filtering interface
@@ -215,27 +216,6 @@ export const groupByStatus = (requests: Request[]): number[] => {
   return counts;
 };
 
-//this takes a request and gets the approval info that was recorded at a specific status
-export const getApprovalHistoryForStatus = (
-  request: Request,
-  status: string
-): any => {
-  const statuses: StatusesByFriendlyName = getStatusesByFriendlyName();
-  const statusObj: IStatus = statuses[status];
-  if (!statusObj) {
-    console.error(
-      "getApprovalHistoryForStatus(): Invalid status",
-      statusObj,
-      status,
-      request
-    );
-  }
-  const approvalKey = statusObj.approvalName;
-  const approvals: IRequestApprovals = request.approvals;
-  const approval: any = approvals ? approvals[approvalKey] : undefined;
-  return approval;
-};
-
 //this gets the next step that is required where no signature is currently present
 //the requestApprovalReducer uses this to detemine what comes next
 //handles skipped approvals by going backward if necessary
@@ -248,11 +228,10 @@ export const getNextStatus = (request: Request): any => {
   //loop through all possible statuses and check for signatures
   for (let index in statuses) {
     const status = statuses[index];
-    const approval = getApprovalHistoryForStatus(nextRequest, status);
-    const signed = approval ? true : false;
+    const lastApproval = request.getLastActionFor(status, ["approve"]);
 
-    //this request hasn't been signed at this step
-    if (!signed) {
+    //this request hasn't been approved at this step
+    if (!lastApproval) {
       //current status doesn't count - we want the next one
       if (status == nextRequest.status) continue;
 

@@ -1,12 +1,14 @@
 import dal from "./dal";
 import { ISerializer } from "./ISerializer";
 import { JsonStringSerializer } from "./JsonStringSerializer";
-import { Observable } from "rxjs";
+import { Observable, from } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
 import { convertToFriendly, convertToUgly } from "../constants/StepStatus";
 import { convertApprovalsToHistory } from "../helpers/ApprovalsToHistory";
+import { RequestField } from "./models/RequestField";
+import { PurchaseDetails } from "./models/PurchaseDetails";
 
 export class RequestService {
   private dal: dal;
@@ -72,28 +74,28 @@ export class RequestService {
         : {};
       requestField = {
         ...requestField,
-        fiscalYear:
-          requestField.fiscalYear ||
-          (approvals.j8Approval && approvals.j8Approval.j8FiscalYear)
-            ? approvals.j8Approval.j8FiscalYear
-            : "",
-        fiscalQuarter:
-          requestField.fiscalQuarter ||
-          (approvals.j8Approval && approvals.j8Approval.j8Quater)
-            ? approvals.j8Approval.j8Quater
-            : "",
-        transactionId:
-          requestField.transactionId ||
-          (approvals.cardholderValidation &&
-            approvals.cardholderValidation.cardHolderTransactionId)
-            ? approvals.cardholderValidation.cardHolderTransactionId
-            : "",
-        executionDate:
-          requestField.executionDate ||
-          (approvals.cardholderValidation &&
-            approvals.cardholderValidation.cardHolderExecuted)
-            ? approvals.cardholderValidation.cardHolderExecuted
-            : ""
+        fiscalYear: requestField.fiscalYear
+          ? requestField.fiscalYear
+          : approvals.j8Approval && approvals.j8Approval.j8FiscalYear
+          ? approvals.j8Approval.j8FiscalYear
+          : "",
+        fiscalQuarter: requestField.fiscalQuarter
+          ? requestField.fiscalQuarter
+          : approvals.j8Approval && approvals.j8Approval.j8Quater
+          ? approvals.j8Approval.j8Quater
+          : "",
+        transactionId: requestField.transactionId
+          ? requestField.transactionId
+          : approvals.cardholderValidation &&
+            approvals.cardholderValidation.cardHolderTransactionId
+          ? approvals.cardholderValidation.cardHolderTransactionId
+          : "",
+        executionDate: requestField.executionDate
+          ? requestField.executionDate
+          : approvals.cardholderValidation &&
+            approvals.cardholderValidation.cardHolderExecuted
+          ? approvals.cardholderValidation.cardHolderExecuted
+          : ""
       };
 
       /*
@@ -142,7 +144,7 @@ export class RequestService {
         map((items: ccRequestTracker[]) => {
           return items.map(item => this.mapAndParse(item));
         }),
-        //tap((items: any) => console.log(items)),
+        tap((items: any) => console.log(items)),
         //hydrate each into an instance of the Request class
         map((items: any[]) => {
           let deserialized: Array<Request> = [];
@@ -152,25 +154,13 @@ export class RequestService {
             );
           });
           return deserialized;
-        })
-        //tap((items: any) => console.log(items))
+        }),
+        tap((items: any) => console.log(items))
       );
   }
 
   createDraft(): Observable<Request> {
     const requestData = {
-      // REQUEST_FIELD: {},
-      // PURCHASE_DETAILS: {},
-      // BUDGET_OFFICER_APPROVAL: {},
-      // BILLING_OFFICIAL_APPROVAL: {},
-      // J6_APPROVAL: {},
-      // PBO_APPROVAL: {},
-      // DIRECTORATE_APPROVAL: {},
-      // J8_APPROVAL: {},
-      // CARD_HOLDER_VALIDATION: {},
-      // REQUESTOR_VALIDATION: {},
-      // SUPPLY_VALIDATION: {},
-      // FINAL_VALIDATION: {},
       REQUEST_STATUS: "DRAFT"
     };
     return this.dal.createRow(this.listName, requestData).pipe(
@@ -189,27 +179,41 @@ export class RequestService {
     );
   }
 
-  //! quick fix to give them a "Send To" option while we're still using the old form
   update(request: Request): Observable<Request> {
+    //ignore all the legacy approval/validation fields because that information was parsed into the history
+    //field when this item was read out of the DB and hydrated into a Request object
     const requestData = {
       Id: request.id,
+      REQUEST_FIELD: this.serializer.serialize(
+        request.requestField || {},
+        RequestField
+      ),
+      PURCHASE_DETAILS: this.serializer.serialize(
+        request.purchaseDetails || {},
+        PurchaseDetails
+      ),
       REQUEST_STATUS: convertToUgly(request.status),
       History: JSON.stringify(request.history || {})
-    };
+    } as ccRequestTracker;
+
     console.log(`Updating`, requestData);
-    return this.dal.updateRow(this.listName, requestData).pipe(
-      //tap((items: any) => console.log(items)),
-      //parse nested json strings
-      map((item: any) => this.mapAndParse(item.data)),
-      //tap((items: any) => console.log(items)),
-      //hydrate each into an instance of the Request class
-      map((item: any) => {
-        let deserialized: Request = new Request(
-          this.serializer.deserialize(item, Request)
-        );
-        return deserialized;
-      })
-      //tap((items: any) => console.log(items))
-    );
+
+    return this.dal.updateRow(this.listName, requestData);
+  }
+
+  uploadAttachment(
+    request: Request,
+    fileName: string,
+    file: string | Blob | ArrayBuffer
+  ) {
+    return this.dal.uploadAttachment(this.listName, request.id, fileName, file);
+  }
+
+  getAttachments(request: Request) {
+    return this.dal.getAttachments(this.listName, request.id);
+  }
+
+  deleteAttachment(request: Request, fileName: string) {
+    return this.dal.deleteAttachment(this.listName, request.id, fileName);
   }
 }
