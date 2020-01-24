@@ -115,6 +115,21 @@ export const RequestForm = (props: IProps) => {
     setEditing(true);
   };
 
+  //calculates total cost of all the line items
+  const formatTotal = (): string => {
+    const formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: formik.values.RequestCurrencyType === "Euro" ? "EUR" : "USD",
+      minimumFractionDigits: 2
+    });
+    const items = formik.values.purchaseDetails;
+    let sum = 0;
+    for (var i = 0; i < items.length; i++) {
+      sum += items[i].requestTotal;
+    }
+    return formatter.format(sum);
+  };
+
   useEffect(() => {
     setRequest(props.request);
   }, [props.request]);
@@ -545,6 +560,18 @@ export const RequestForm = (props: IProps) => {
                       )}
                   </tbody>
                   <tfoot>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <th>
+                        <span className="pl-3">{formatTotal()}</span>
+                      </th>
+                      <td></td>
+                    </tr>
                     <tr>
                       <td colSpan={9} align="right">
                         <Button
