@@ -26,12 +26,12 @@ import { Role } from "../../services/models/Role";
 interface IProps {
   request: Request;
   onRequestUpdated: (newRequest: Request) => void;
-  editing?: boolean;
+  editing: boolean;
+  setEditing: (editing: boolean) => void;
 }
 export const RequestForm = (props: IProps) => {
   const [discardModalOpen, setDiscardModalOpen] = useState<boolean>(false);
   const [request, setRequest] = useState<Request>(props.request);
-  const [editing, setEditing] = useState<boolean>(props.editing === true);
   const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
   const { user } = useContext(UserContext);
   const { roles } = useContext(RoleContext);
@@ -86,7 +86,7 @@ export const RequestForm = (props: IProps) => {
   });
 
   const updateRequest = (values: any) => {
-    setEditing(false);
+    props.setEditing(false);
     //todo: use nested initial values and rename all our controls.  formik can handle it
     const updatedRequest = new Request({
       ...request,
@@ -107,12 +107,12 @@ export const RequestForm = (props: IProps) => {
 
   const onCancelClicked = () => {
     formik.resetForm();
-    setEditing(false);
+    props.setEditing(false);
   };
 
   //unlocks the form fields
   const onEditClicked = () => {
-    setEditing(true);
+    props.setEditing(true);
   };
 
   //calculates total cost of all the line items
@@ -189,7 +189,7 @@ export const RequestForm = (props: IProps) => {
                     disabled={!canEdit}
                     className="m-1"
                     variant="outline-light"
-                    hidden={editing}
+                    hidden={props.editing}
                     onClick={() => onEditClicked()}
                   >
                     Edit this request
@@ -197,7 +197,7 @@ export const RequestForm = (props: IProps) => {
                   <Button
                     className="m-1"
                     variant="outline-light"
-                    hidden={!editing}
+                    hidden={!props.editing}
                     onClick={() => setDiscardModalOpen(true)}
                   >
                     Cancel
@@ -205,7 +205,7 @@ export const RequestForm = (props: IProps) => {
                   <Button
                     className="m-1"
                     variant="primary"
-                    hidden={!editing}
+                    hidden={!props.editing}
                     onClick={() => onSaveClicked()}
                   >
                     Save Changes
@@ -232,7 +232,7 @@ export const RequestForm = (props: IProps) => {
                   <Form.Control
                     className="custom-select"
                     as="select"
-                    disabled={!editing}
+                    disabled={!props.editing}
                     {...formik.getFieldProps("RequestCardType")}
                     isInvalid={
                       !!(
@@ -266,7 +266,7 @@ export const RequestForm = (props: IProps) => {
                   <Form.Control
                     className="custom-select"
                     as="select"
-                    disabled={!editing}
+                    disabled={!props.editing}
                     {...formik.getFieldProps("RequestorCardHolderName")}
                     isInvalid={
                       !!(
@@ -317,7 +317,7 @@ export const RequestForm = (props: IProps) => {
                   <Form.Label>Requestor DSN</Form.Label>
                   <Form.Control
                     type="text"
-                    disabled={!editing}
+                    disabled={!props.editing}
                     placeholder="Enter a phone number"
                     {...formik.getFieldProps("RequestorDSN")}
                     isInvalid={
@@ -341,7 +341,7 @@ export const RequestForm = (props: IProps) => {
                   <Form.Control
                     className="custom-select"
                     as="select"
-                    disabled={!editing}
+                    disabled={!props.editing}
                     {...formik.getFieldProps("RequestorDirectorate")}
                     isInvalid={
                       !!(
@@ -375,7 +375,7 @@ export const RequestForm = (props: IProps) => {
                   <Form.Control
                     className="custom-select"
                     as="select"
-                    disabled={!editing}
+                    disabled={!props.editing}
                     {...formik.getFieldProps("RequestSource")}
                     isInvalid={
                       !!(
@@ -412,7 +412,7 @@ export const RequestForm = (props: IProps) => {
                   <Form.Label>Justification</Form.Label>
                   <Form.Control
                     as="textarea"
-                    disabled={!editing}
+                    disabled={!props.editing}
                     rows={4}
                     {...formik.getFieldProps("RequestJustification")}
                     isInvalid={
@@ -444,7 +444,7 @@ export const RequestForm = (props: IProps) => {
                   <Form.Control
                     className="custom-select"
                     as="select"
-                    disabled={!editing}
+                    disabled={!props.editing}
                     {...formik.getFieldProps("RequestIsJ6")}
                     isInvalid={
                       !!(
@@ -472,7 +472,7 @@ export const RequestForm = (props: IProps) => {
                   <Form.Control
                     className="custom-select"
                     as="select"
-                    disabled={!editing}
+                    disabled={!props.editing}
                     {...formik.getFieldProps("RequestCurrencyType")}
                     isInvalid={
                       !!(
@@ -540,7 +540,7 @@ export const RequestForm = (props: IProps) => {
                               currency={
                                 formik.values.RequestCurrencyType || "Dollar"
                               }
-                              editing={editing}
+                              editing={props.editing}
                               onDeleteClicked={item => {
                                 const array = formik.values.purchaseDetails.filter(
                                   i => i.id !== item.id
@@ -576,7 +576,7 @@ export const RequestForm = (props: IProps) => {
                       <td colSpan={9} align="right">
                         <Button
                           variant="outline-primary"
-                          disabled={!editing}
+                          disabled={!props.editing}
                           onClick={() => {
                             formik.setFieldValue("purchaseDetails", [
                               ...formik.values.purchaseDetails,
@@ -597,7 +597,10 @@ export const RequestForm = (props: IProps) => {
             <legend>Attachments</legend>
             <Row>
               <Col>
-                <RequestAttachmentsTable editing={editing} request={request} />
+                <RequestAttachmentsTable
+                  editing={props.editing}
+                  request={request}
+                />
               </Col>
             </Row>
           </Form.Group>
@@ -612,7 +615,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Transaction ID</Form.Label>
                     <Form.Control
                       type="text"
-                      disabled={!editing}
+                      disabled={!props.editing}
                       placeholder="Enter Transaction ID"
                       {...formik.getFieldProps("transactionId")}
                       isInvalid={
@@ -639,8 +642,8 @@ export const RequestForm = (props: IProps) => {
                     <Form.Label>Execution Date</Form.Label>
                     <Form.Control
                       as={DatePicker}
-                      disabled={!editing}
-                      className={!editing ? "date-picker-locked" : ""}
+                      disabled={!props.editing}
+                      className={!props.editing ? "date-picker-locked" : ""}
                       name="executionDate"
                       id="executionDate"
                       isInvalid={
@@ -677,7 +680,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Control
                       className="custom-select"
                       as="select"
-                      disabled={!editing}
+                      disabled={!props.editing}
                       {...formik.getFieldProps("fiscalYear")}
                       isInvalid={
                         !!(
@@ -710,7 +713,7 @@ export const RequestForm = (props: IProps) => {
                     <Form.Control
                       className="custom-select"
                       as="select"
-                      disabled={!editing}
+                      disabled={!props.editing}
                       {...formik.getFieldProps("fiscalQuarter")}
                       isInvalid={
                         !!(
@@ -757,7 +760,7 @@ export const RequestForm = (props: IProps) => {
                     disabled={!canEdit}
                     className="m-1"
                     variant="outline-light"
-                    hidden={editing}
+                    hidden={props.editing}
                     onClick={() => onEditClicked()}
                   >
                     Edit this request
@@ -765,7 +768,7 @@ export const RequestForm = (props: IProps) => {
                   <Button
                     className="m-1"
                     variant="outline-light"
-                    hidden={!editing}
+                    hidden={!props.editing}
                     onClick={() => setDiscardModalOpen(true)}
                   >
                     Cancel
@@ -773,7 +776,7 @@ export const RequestForm = (props: IProps) => {
                   <Button
                     className="m-1"
                     variant="primary"
-                    hidden={!editing}
+                    hidden={!props.editing}
                     onClick={() => onSaveClicked()}
                   >
                     Save Changes
