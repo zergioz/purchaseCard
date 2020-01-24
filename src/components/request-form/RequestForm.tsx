@@ -33,6 +33,29 @@ export const RequestForm = (props: IProps) => {
   const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
   const { user } = useContext(UserContext);
 
+  const canEdit = request.status !== "Closed";
+
+  //show cardholder fields in these statuses
+  const cardholderFieldStatuses = new Set([
+    "Cardholder",
+    "Requestor",
+    "Supply",
+    "PBO Final",
+    "BO Final",
+    "Closed"
+  ]);
+
+  //show j8 fields in these statuses
+  const j8FieldStatuses = new Set([
+    "Finance",
+    "Cardholder",
+    "Requestor",
+    "Supply",
+    "PBO Final",
+    "BO Final",
+    "Closed"
+  ]);
+
   const formik = useFormik({
     initialValues: {
       ...request.requestField,
@@ -133,6 +156,7 @@ export const RequestForm = (props: IProps) => {
               <Col className="d-flex justify-content-end">
                 <ButtonToolbar className="text-right">
                   <Button
+                    disabled={!canEdit}
                     className="m-1"
                     variant="outline-light"
                     hidden={editing}
@@ -522,138 +546,148 @@ export const RequestForm = (props: IProps) => {
               </Col>
             </Row>
           </Form.Group>
-          <Form.Group className="bg-light p-3">
-            <legend>Execution Info</legend>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Transaction ID</Form.Label>
-                  <Form.Control
-                    type="text"
-                    disabled={!editing}
-                    placeholder="Enter Transaction ID"
-                    {...formik.getFieldProps("transactionId")}
-                    isInvalid={
-                      !!(
+          {cardholderFieldStatuses.has(request.status) && (
+            <Form.Group className="bg-light p-3">
+              <legend>
+                Cardholder Data <small>(Cardholder Only)</small>
+              </legend>
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Transaction ID</Form.Label>
+                    <Form.Control
+                      type="text"
+                      disabled={!editing}
+                      placeholder="Enter Transaction ID"
+                      {...formik.getFieldProps("transactionId")}
+                      isInvalid={
+                        !!(
+                          formik.touched.transactionId &&
+                          formik.errors.transactionId
+                        )
+                      }
+                      isValid={
                         formik.touched.transactionId &&
-                        formik.errors.transactionId
-                      )
-                    }
-                    isValid={
-                      formik.touched.transactionId &&
-                      !formik.errors.transactionId
-                    }
-                  />
-                  {formik.touched.transactionId &&
-                  formik.errors.transactionId ? (
-                    <small className="text-danger">
-                      {formik.errors.transactionId}
-                    </small>
-                  ) : null}
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Execution Date</Form.Label>
-                  <Form.Control
-                    as={DatePicker}
-                    disabled={!editing}
-                    className={!editing ? "date-picker-locked" : ""}
-                    name="executionDate"
-                    id="executionDate"
-                    isInvalid={
-                      !!(
+                        !formik.errors.transactionId
+                      }
+                    />
+                    {formik.touched.transactionId &&
+                    formik.errors.transactionId ? (
+                      <small className="text-danger">
+                        {formik.errors.transactionId}
+                      </small>
+                    ) : null}
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Execution Date</Form.Label>
+                    <Form.Control
+                      as={DatePicker}
+                      disabled={!editing}
+                      className={!editing ? "date-picker-locked" : ""}
+                      name="executionDate"
+                      id="executionDate"
+                      isInvalid={
+                        !!(
+                          formik.touched.executionDate &&
+                          formik.errors.executionDate
+                        )
+                      }
+                      isValid={
                         formik.touched.executionDate &&
-                        formik.errors.executionDate
-                      )
-                    }
-                    isValid={
-                      formik.touched.executionDate &&
-                      !formik.errors.executionDate
-                    }
-                  />
-                  {formik.touched.executionDate &&
-                  formik.errors.executionDate ? (
-                    <small className="text-danger">
-                      {formik.errors.executionDate}
-                    </small>
-                  ) : null}
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form.Group>
-          <Form.Group className="bg-light p-3">
-            <legend>J8 Data</legend>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Fiscal Year</Form.Label>
-                  <Form.Control
-                    className="custom-select"
-                    as="select"
-                    disabled={!editing}
-                    {...formik.getFieldProps("fiscalYear")}
-                    isInvalid={
-                      !!(formik.touched.fiscalYear && formik.errors.fiscalYear)
-                    }
-                    isValid={
-                      formik.touched.fiscalYear && !formik.errors.fiscalYear
-                    }
-                  >
-                    <option value={""}>Select one</option>
-                    {fiscalYears.map((year: any) => {
-                      return (
-                        <option value={year} key={year}>
-                          {year}
-                        </option>
-                      );
-                    })}
-                  </Form.Control>
-                  {formik.touched.fiscalYear && formik.errors.fiscalYear ? (
-                    <small className="text-danger">
-                      {formik.errors.fiscalYear}
-                    </small>
-                  ) : null}
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>Quarter</Form.Label>
-                  <Form.Control
-                    className="custom-select"
-                    as="select"
-                    disabled={!editing}
-                    {...formik.getFieldProps("fiscalQuarter")}
-                    isInvalid={
-                      !!(
+                        !formik.errors.executionDate
+                      }
+                    />
+                    {formik.touched.executionDate &&
+                    formik.errors.executionDate ? (
+                      <small className="text-danger">
+                        {formik.errors.executionDate}
+                      </small>
+                    ) : null}
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form.Group>
+          )}
+          {j8FieldStatuses.has(request.status) && (
+            <Form.Group className="bg-light p-3">
+              <legend>
+                J8 Data <small>(J8 Only)</small>
+              </legend>
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Fiscal Year</Form.Label>
+                    <Form.Control
+                      className="custom-select"
+                      as="select"
+                      disabled={!editing}
+                      {...formik.getFieldProps("fiscalYear")}
+                      isInvalid={
+                        !!(
+                          formik.touched.fiscalYear && formik.errors.fiscalYear
+                        )
+                      }
+                      isValid={
+                        formik.touched.fiscalYear && !formik.errors.fiscalYear
+                      }
+                    >
+                      <option value={""}>Select one</option>
+                      {fiscalYears.map((year: any) => {
+                        return (
+                          <option value={year} key={year}>
+                            {year}
+                          </option>
+                        );
+                      })}
+                    </Form.Control>
+                    {formik.touched.fiscalYear && formik.errors.fiscalYear ? (
+                      <small className="text-danger">
+                        {formik.errors.fiscalYear}
+                      </small>
+                    ) : null}
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Quarter</Form.Label>
+                    <Form.Control
+                      className="custom-select"
+                      as="select"
+                      disabled={!editing}
+                      {...formik.getFieldProps("fiscalQuarter")}
+                      isInvalid={
+                        !!(
+                          formik.touched.fiscalQuarter &&
+                          formik.errors.fiscalQuarter
+                        )
+                      }
+                      isValid={
                         formik.touched.fiscalQuarter &&
-                        formik.errors.fiscalQuarter
-                      )
-                    }
-                    isValid={
-                      formik.touched.fiscalQuarter &&
-                      !formik.errors.fiscalQuarter
-                    }
-                  >
-                    <option value={""}>Select one</option>
-                    {fiscalQuarters.map((quarter: string) => {
-                      return (
-                        <option value={quarter} key={quarter}>
-                          {quarter}
-                        </option>
-                      );
-                    })}
-                  </Form.Control>
-                  {formik.touched.fiscalQuarter &&
-                  formik.errors.fiscalQuarter ? (
-                    <small className="text-danger">
-                      {formik.errors.fiscalQuarter}
-                    </small>
-                  ) : null}
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form.Group>
+                        !formik.errors.fiscalQuarter
+                      }
+                    >
+                      <option value={""}>Select one</option>
+                      {fiscalQuarters.map((quarter: string) => {
+                        return (
+                          <option value={quarter} key={quarter}>
+                            {quarter}
+                          </option>
+                        );
+                      })}
+                    </Form.Control>
+                    {formik.touched.fiscalQuarter &&
+                    formik.errors.fiscalQuarter ? (
+                      <small className="text-danger">
+                        {formik.errors.fiscalQuarter}
+                      </small>
+                    ) : null}
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form.Group>
+          )}
           <Form.Group className="bg-secondary p-3">
             <Row>
               <Col className="pt-2">
@@ -665,6 +699,7 @@ export const RequestForm = (props: IProps) => {
               <Col className="d-flex justify-content-end">
                 <ButtonToolbar className="text-right">
                   <Button
+                    disabled={!canEdit}
                     className="m-1"
                     variant="outline-light"
                     hidden={editing}
