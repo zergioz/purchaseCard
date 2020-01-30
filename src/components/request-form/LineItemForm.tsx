@@ -122,6 +122,7 @@ export const LineItemForm = (props: IProps) => {
         <td className="text-center p-1" style={{ width: "5%" }}>
           <Form.Group>
             <Form.Check
+              className="mt-2"
               type="checkbox"
               disabled={!props.editing}
               checked={formik.values.requestDdForm === true ? true : false}
@@ -135,6 +136,7 @@ export const LineItemForm = (props: IProps) => {
         <td className="text-center p-1" style={{ width: "5%" }}>
           <Form.Group>
             <Form.Check
+              className="mt-2"
               type="checkbox"
               disabled={!props.editing}
               checked={formik.values.requestDaForm === true ? true : false}
