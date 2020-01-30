@@ -31,6 +31,14 @@ export const LineItemForm = (props: IProps) => {
     );
   }, [formik.values.requestCost, formik.values.requestQty]);
 
+  //only change if the input is acceptable for a number field
+  const handleNumbersOnlyChange = (e: any) => {
+    const re = /^\d*\.?\d*$/;
+    if (e.target.value === "" || re.test(e.target.value)) {
+      formik.handleChange(e);
+    }
+  };
+
   //call the outside onChange handler when user leaves any field
   //todo: use actual formik subform logic to do this
   const handleBlur = (e: any) => {
@@ -57,8 +65,7 @@ export const LineItemForm = (props: IProps) => {
               name="requestQty"
               id="requestQty"
               value={formik.values.requestQty.toString()}
-              onChange={formik.handleChange}
-              pattern="[0-9]*"
+              onChange={handleNumbersOnlyChange}
               onBlur={handleBlur}
             />
           </Form.Group>
@@ -101,12 +108,11 @@ export const LineItemForm = (props: IProps) => {
               </InputGroup.Prepend>
               <Form.Control
                 type="text"
-                pattern="[0-9]*"
                 disabled={!props.editing}
                 id="requestCost"
                 name="requestCost"
                 value={formik.values.requestCost.toString()}
-                onChange={formik.handleChange}
+                onChange={handleNumbersOnlyChange}
                 onBlur={handleBlur}
               />
             </InputGroup>
