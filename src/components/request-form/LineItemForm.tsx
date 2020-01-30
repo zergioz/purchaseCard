@@ -33,7 +33,9 @@ export const LineItemForm = (props: IProps) => {
 
   //only change if the input is acceptable for a number field
   const handleNumbersOnlyChange = (e: any) => {
-    const re = /^\d*\.?\d*$/;
+    //const re = /^[0-9\b]+$/;
+    //const re = /^[0-9]+(\.[0-9][0-9]?)?/;
+    const re = /^((\d+(\.\d*)?)|(\.\d+))$/;
     if (e.target.value === "" || re.test(e.target.value)) {
       formik.handleChange(e);
     }
@@ -42,8 +44,7 @@ export const LineItemForm = (props: IProps) => {
   //call the outside onChange handler when user leaves any field
   //todo: use actual formik subform logic to do this
   const handleBlur = (e: any) => {
-    console.log(e);
-    props.onChange(new Detail(formik.values));
+    props.onChange(formik.values as Detail);
   };
 
   //when the editing state changes, reset the validation on this line
@@ -153,7 +154,7 @@ export const LineItemForm = (props: IProps) => {
                 </InputGroup.Text>
               </InputGroup.Prepend>
               <Form.Control
-                type="number"
+                type="text"
                 disabled={true}
                 id="requestTotal"
                 name="requestTotal"

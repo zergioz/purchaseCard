@@ -128,6 +128,7 @@ export const RequestForm = (props: IProps) => {
     for (var i = 0; i < items.length; i++) {
       sum += items[i].requestTotal;
     }
+    console.log(sum);
     return formatter.format(sum);
   };
 

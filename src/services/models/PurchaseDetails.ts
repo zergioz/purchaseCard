@@ -25,7 +25,7 @@ export class Detail {
 
   constructor(data: any = {}) {
     this.id = data.id || getRandomString(8);
-    this.requestQty = parseInt(data.requestQty) || 0;
+    this.requestQty = parseFloat(data.requestQty) || 0;
     this.requestDesc = data.requestDesc || "";
     this.requestSrc = data.requestSrc || "";
     this.requestDdForm =
@@ -36,8 +36,8 @@ export class Detail {
       data.requestDaForm === "true" || data.requestDaForm === true
         ? true
         : false;
-    this.requestCost = data.requestCost || 0;
-    this.requestTotal = data.requestTotal || 0;
+    this.requestCost = parseFloat(data.requestCost) || 0;
+    this.requestTotal = parseFloat(data.requestTotal) || 0;
   }
 
   public getValidationSchema(): Yup.ObjectSchema {
