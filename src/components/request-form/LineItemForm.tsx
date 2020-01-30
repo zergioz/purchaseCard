@@ -34,6 +34,7 @@ export const LineItemForm = (props: IProps) => {
   //call the outside onChange handler when user leaves any field
   //todo: use actual formik subform logic to do this
   const handleBlur = (e: any) => {
+    console.log(e);
     props.onChange(new Detail(formik.values));
   };
 
