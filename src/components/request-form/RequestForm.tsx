@@ -715,7 +715,7 @@ export const RequestForm = (props: IProps) => {
                                       id={`purchaseDetails[${index}].requestTotal`}
                                       value={formik.values.purchaseDetails[
                                         index
-                                      ].requestTotal.toString()}
+                                      ].requestTotal.toFixed(2)}
                                       onChange={formik.handleChange}
                                     />
                                   </InputGroup>
