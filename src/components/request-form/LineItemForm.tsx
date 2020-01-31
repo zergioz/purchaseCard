@@ -7,6 +7,7 @@ import { ConfirmationModal } from "./ConfirmationModal";
 
 interface IProps {
   item: Detail;
+  index: number;
   editing: boolean;
   currency: string;
   onDeleteClicked: (item: Detail) => void;
