@@ -64,6 +64,8 @@ export class PurchaseDetails {
   Details: Detail[];
 
   constructor(data: any = {}) {
-    this.Details = data.Details || [];
+    this.Details = data.Details
+      ? data.Details.map((d: any) => new Detail(d))
+      : [];
   }
 }
