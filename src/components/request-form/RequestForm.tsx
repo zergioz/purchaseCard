@@ -583,8 +583,12 @@ export const RequestForm = (props: IProps) => {
                                       if (handleNumbersOnlyChange(e)) {
                                         formik.setFieldValue(
                                           `purchaseDetails[${index}].requestTotal`,
-                                          formik.values.purchaseDetails[index]
-                                            .requestCost * e.target.value
+                                          Math.ceil(
+                                            formik.values.purchaseDetails[index]
+                                              .requestCost *
+                                              e.target.value *
+                                              100
+                                          ) / 100
                                         );
                                       }
                                     }}
@@ -646,8 +650,13 @@ export const RequestForm = (props: IProps) => {
                                         if (handleNumbersOnlyChange(e)) {
                                           formik.setFieldValue(
                                             `purchaseDetails[${index}].requestTotal`,
-                                            formik.values.purchaseDetails[index]
-                                              .requestQty * e.target.value
+                                            Math.ceil(
+                                              formik.values.purchaseDetails[
+                                                index
+                                              ].requestQty *
+                                                e.target.value *
+                                                100
+                                            ) / 100
                                           );
                                         }
                                       }}
@@ -711,12 +720,9 @@ export const RequestForm = (props: IProps) => {
                                     <Form.Control
                                       type="text"
                                       disabled={true}
-                                      name={`purchaseDetails[${index}].requestTotal`}
-                                      id={`purchaseDetails[${index}].requestTotal`}
-                                      value={formik.values.purchaseDetails[
-                                        index
-                                      ].requestTotal.toFixed(2)}
-                                      onChange={formik.handleChange}
+                                      {...formik.getFieldProps(
+                                        `purchaseDetails[${index}].requestTotal`
+                                      )}
                                     />
                                   </InputGroup>
                                 </Form.Group>
