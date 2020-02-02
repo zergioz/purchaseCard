@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer, useEffect, useContext } from "react";
 import { ApprovalModal } from "../approval-modal/ApprovalModal";
 import { Request } from "../../services/models/Request";
 import { Dropdown, ButtonGroup, Spinner } from "react-bootstrap";
@@ -12,6 +12,8 @@ import { ApprovalActions } from "../../constants/ApprovalActions";
 import { RequestService } from "../../services";
 import { useToasts } from "react-toast-notifications";
 import { Link, useHistory } from "react-router-dom";
+import { EmailService } from "../../services/EmailService";
+import RoleContext from "../../contexts/RoleContext";
 
 interface IProps {
   request: Request;
@@ -25,6 +27,8 @@ interface IProps {
 }
 export const ApprovalActionsButton = (props: IProps) => {
   const svc = new RequestService();
+  const emailSvc = new EmailService();
+  const { roles } = useContext(RoleContext);
   const [loading, setLoading] = useState<boolean>(!!props.loading);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalAction, setModalAction] = useState<ApprovalAction | null>(null);
@@ -39,6 +43,8 @@ export const ApprovalActionsButton = (props: IProps) => {
   //fires only after the reducer updates the state of the request
   useEffect(() => {
     if (props.request.status !== nextRequestState.status) {
+      emailSvc.notifyNextApproversFor(nextRequestState, roles);
+      emailSvc.notifySubmitterFor(nextRequestState);
       props.onRequestUpdated(nextRequestState);
     }
   }, [nextRequestState.status]);

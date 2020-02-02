@@ -46,7 +46,7 @@ export const RequestForm = (props: IProps) => {
   const { roles } = useContext(RoleContext);
 
   const cardholders = roles
-    .filter(role => role.role === "CARD HOLDER" && role.active === "YES")
+    .filter(role => role.role === "CARD HOLDER" && role.active)
     .sort((a: Role, b: Role) => {
       if (a.directorate < b.directorate) {
         return -1;
@@ -571,9 +571,10 @@ export const RequestForm = (props: IProps) => {
                           const rowBgColorDarker = isEven ? "#dee2e6" : "";
                           const lightRed = "#ffe1e1";
                           return (
-                            <>
+                            <React.Fragment
+                              key={`line-item-${index}-${item.id}-cost`}
+                            >
                               <tr
-                                key={`line-item-${index}-${item.id}-cost`}
                                 style={{
                                   background: rowBgColor
                                 }}
@@ -803,7 +804,7 @@ export const RequestForm = (props: IProps) => {
                                   </span>
                                 </td>
                               </tr>
-                            </>
+                            </React.Fragment>
                           );
                         }
                       )}
