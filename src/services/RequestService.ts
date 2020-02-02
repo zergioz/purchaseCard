@@ -1,7 +1,7 @@
 import dal from "./dal";
 import { ISerializer } from "./ISerializer";
 import { JsonStringSerializer } from "./JsonStringSerializer";
-import { Observable, from } from "rxjs";
+import { Observable, from, of } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { Request } from "./models/Request";
 import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
@@ -163,6 +163,7 @@ export class RequestService {
     const requestData = {
       REQUEST_STATUS: "DRAFT"
     };
+
     return this.dal.createRow(this.listName, requestData).pipe(
       //tap((items: any) => console.log(items)),
       //parse nested json strings
@@ -197,6 +198,24 @@ export class RequestService {
     } as ccRequestTracker;
 
     return this.dal.updateRow(this.listName, requestData);
+  }
+
+  clone(request: Request): Observable<Request> {
+    return this.createDraft().pipe(
+      map(draft => {
+        draft.requestField = request.requestField;
+        draft.purchaseDetails = request.purchaseDetails;
+        return draft;
+      }),
+      map(clone => {
+        this.update(clone);
+        return clone;
+      })
+    );
+  }
+
+  delete(request: Request): Observable<Request> {
+    return this.dal.deleteRow(this.listName, request.id);
   }
 
   uploadAttachment(

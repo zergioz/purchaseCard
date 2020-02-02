@@ -51,8 +51,8 @@ const App = () => {
       <UserProvider>
         <RequestProvider>
           <RoleProvider>
-            <ToastProvider>
-              <Router>
+            <Router>
+              <ToastProvider>
                 <TopNav></TopNav>
                 <div className="container-fluid-spacious">
                   <div className="row">
@@ -66,13 +66,18 @@ const App = () => {
                     <div className="col-md-12">
                       <Switch>
                         {makeRoutes()}
+                        {/* trick to allow links to other requests from the details page */}
+                        <Redirect
+                          from="/requests/details/:requestId/reload"
+                          to="/requests/details/:requestId"
+                        />
                         <Redirect from="/" to="/requests" />
                       </Switch>
                     </div>
                   </div>
                 </div>
-              </Router>
-            </ToastProvider>
+              </ToastProvider>
+            </Router>
           </RoleProvider>
         </RequestProvider>
       </UserProvider>

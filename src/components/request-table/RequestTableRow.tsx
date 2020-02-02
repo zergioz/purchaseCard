@@ -67,6 +67,7 @@ export const RequestTableRow: React.FC<IProps> = props => {
               onRequestUpdated={onRequestUpdated}
               loading={loading}
               disabled={loading}
+              actions={new Set(item.getAvailableActions())}
             />
           )} */}
         </ButtonToolbar>

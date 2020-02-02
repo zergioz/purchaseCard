@@ -16,6 +16,7 @@ import { ApprovalAction } from "./ApprovalAction";
 import { compareDesc, parseISO } from "date-fns";
 import * as Yup from "yup";
 import { ApprovalActions } from "../../constants/ApprovalActions";
+import { getStatusesByFriendlyName } from "../../constants/StepStatus";
 
 export interface IRequestApprovals {
   [key: string]: any;
@@ -106,6 +107,13 @@ export class Request implements IRequest {
     const sortedHist = this.history[status] || [];
     sortedHist.sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)));
     return sortedHist;
+  }
+
+  //returns the actions that are available for a request in this status
+  public getAvailableActions(): string[] {
+    const statuses = getStatusesByFriendlyName();
+    const actions = statuses[this.status].actionsAvailable;
+    return actions;
   }
 
   public getLastActionFor(
