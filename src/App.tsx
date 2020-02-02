@@ -66,6 +66,11 @@ const App = () => {
                     <div className="col-md-12">
                       <Switch>
                         {makeRoutes()}
+                        {/* trick to allow links to other requests from the details page */}
+                        <Redirect
+                          from="/requests/details/:requestId/reload"
+                          to="/requests/details/:requestId"
+                        />
                         <Redirect from="/" to="/requests" />
                       </Switch>
                     </div>
