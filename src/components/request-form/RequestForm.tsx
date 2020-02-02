@@ -566,8 +566,8 @@ export const RequestForm = (props: IProps) => {
                       formik.values.purchaseDetails.map(
                         (item: Detail, index: number) => {
                           const isEven = (index + 1) % 2 === 0;
-                          const rowBgColor = isEven ? "#f2f2f2" : "";
-                          const rowBgColorDarker = isEven ? "#ccc" : "#eee";
+                          const rowBgColor = isEven ? "#dee2e6" : "";
+                          const rowBgColorDarker = isEven ? "#dee2e6" : "";
                           const lightRed = "#ffe1e1";
                           return (
                             <>
@@ -580,7 +580,8 @@ export const RequestForm = (props: IProps) => {
                                 <td
                                   style={{
                                     width: "1%",
-                                    background: rowBgColorDarker
+                                    background: rowBgColorDarker,
+                                    borderRight: "1px solid #ccc"
                                   }}
                                 ></td>
                                 <td className="p-1">
@@ -726,7 +727,8 @@ export const RequestForm = (props: IProps) => {
                                 <td
                                   className="pt-1"
                                   style={{
-                                    background: rowBgColorDarker
+                                    background: rowBgColorDarker,
+                                    borderRight: "1px solid #ccc"
                                   }}
                                 >
                                   <b>{`#${index + 1}`}</b>
