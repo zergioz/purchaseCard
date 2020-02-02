@@ -38,6 +38,7 @@ interface IProps {
   setEditing: (editing: boolean) => void;
 }
 export const RequestForm = (props: IProps) => {
+  const [total, setTotal] = useState<string>("");
   const [discardModalOpen, setDiscardModalOpen] = useState<boolean>(false);
   const [request, setRequest] = useState<Request>(props.request);
   const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
@@ -93,6 +94,21 @@ export const RequestForm = (props: IProps) => {
     validationSchema: new Request().getValidationSchema()
   });
 
+  //recalculate the line item totals whenever the data changes
+  useEffect(() => {
+    setTotal(formatTotal());
+  }, [formik.values.purchaseDetails, formik.values.RequestCurrencyType]);
+
+  //update our state if the request changes - after an update is sent, for example
+  useEffect(() => {
+    setRequest(props.request);
+  }, [props.request]);
+
+  //when this form loads, calculate and format the line item totals
+  useEffect(() => {
+    setTotal(formatTotal());
+  }, []);
+
   const updateRequest = (values: any) => {
     props.setEditing(false);
     //todo: use nested initial values and rename all our controls.  formik can handle it
@@ -123,7 +139,8 @@ export const RequestForm = (props: IProps) => {
     props.setEditing(true);
   };
 
-  //only change if the input is acceptable for a number field
+  //this onChange handler is for number inputs - allows decimal points but blocks all
+  //other non-numeric characters.  used for qty and cost inputs
   const handleNumbersOnlyChange = (e: any): boolean => {
     //const re = /^[0-9\b]+$/;
     //const re = /^[0-9]+(\.[0-9][0-9]?)?/;
@@ -135,7 +152,7 @@ export const RequestForm = (props: IProps) => {
     return false;
   };
 
-  //calculates total cost of all the line items
+  //calculates total cost of all the line items in the form and outputs a string with dollar or euro symbol
   const formatTotal = (): string => {
     const formatter = new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -150,16 +167,6 @@ export const RequestForm = (props: IProps) => {
     console.log(sum);
     return formatter.format(sum);
   };
-
-  const [total, setTotal] = useState<string>(formatTotal());
-
-  useEffect(() => {
-    setTotal(formatTotal());
-  }, [formik.values.purchaseDetails, formik.values.RequestCurrencyType]);
-
-  useEffect(() => {
-    setRequest(props.request);
-  }, [props.request]);
 
   //this is a wrapper for the react-date-picker control so that it works with Formik and React-Bootstrap
   //todo: remove hardcoded executionDate field name
@@ -194,9 +201,19 @@ export const RequestForm = (props: IProps) => {
 
   return (
     <>
+      {/* modals */}
       <ValidationErrorModal
         show={errorModalOpen}
         onHide={() => setErrorModalOpen(false)}
+      />
+      <ConfirmationModal
+        open={discardModalOpen}
+        onHide={() => setDiscardModalOpen(false)}
+        onConfirm={() => onCancelClicked()}
+        title="Discard Changes"
+        body="Are you sure you want to discard your changes?"
+        confirmText="Yes"
+        cancelText="No"
       />
       {request && (
         <Form noValidate>
@@ -542,110 +559,41 @@ export const RequestForm = (props: IProps) => {
             <legend>Line Items</legend>
             <Row>
               <Col>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>Quantity</th>
-                      <th>Description</th>
-                      <th>Vendor</th>
-                      <th>Unit Cost/Rate</th>
-                      <th>
-                        DD
-                        <br />
-                        250
-                      </th>
-                      <th>
-                        DA
-                        <br />
-                        2062
-                      </th>
-                      <th>Total</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                <Table responsive borderless>
+                  <tbody style={{ borderTop: "1px solid #dee2e6" }}>
+                    <tr></tr>
                     {formik.values.purchaseDetails &&
                       formik.values.purchaseDetails.map(
                         (item: Detail, index: number) => {
+                          const isEven = (index + 1) % 2 === 0;
+                          const rowBgColor = isEven ? "#f2f2f2" : "";
+                          const rowBgColorDarker = isEven ? "#ccc" : "#eee";
+                          const lightRed = "#ffe1e1";
                           return (
-                            <tr key={`line-item-${index}-${item.id}`}>
-                              <td className="p-1" style={{ width: "8%" }}>
-                                <Form.Group>
-                                  <Form.Control
-                                    type="text"
-                                    disabled={!props.editing}
-                                    name={`purchaseDetails[${index}].requestQty`}
-                                    id={`purchaseDetails[${index}].requestQty`}
-                                    value={formik.values.purchaseDetails[
-                                      index
-                                    ].requestQty.toString()}
-                                    onChange={(e: any) => {
-                                      if (handleNumbersOnlyChange(e)) {
-                                        formik.setFieldValue(
-                                          `purchaseDetails[${index}].requestTotal`,
-                                          Math.ceil(
-                                            formik.values.purchaseDetails[index]
-                                              .requestCost *
-                                              e.target.value *
-                                              100
-                                          ) / 100
-                                        );
-                                      }
-                                    }}
-                                  />
-                                </Form.Group>
-                              </td>
-                              <td className="p-1">
-                                <Form.Group>
-                                  <Form.Control
-                                    type="text"
-                                    disabled={!props.editing}
-                                    name={`purchaseDetails[${index}].requestDesc`}
-                                    id={`purchaseDetails[${index}].requestDesc`}
-                                    value={
-                                      formik.values.purchaseDetails[index]
-                                        .requestDesc
-                                    }
-                                    onChange={formik.handleChange}
-                                    placeholder="Description"
-                                  />
-                                </Form.Group>
-                              </td>
-                              <td className="p-1">
-                                <Form.Group>
-                                  <Form.Control
-                                    type="text"
-                                    disabled={!props.editing}
-                                    name={`purchaseDetails[${index}].requestSrc`}
-                                    id={`purchaseDetails[${index}].requestSrc`}
-                                    value={
-                                      formik.values.purchaseDetails[index]
-                                        .requestSrc
-                                    }
-                                    onChange={formik.handleChange}
-                                    placeholder="Source"
-                                  />
-                                </Form.Group>
-                              </td>
-                              <td className="p-1" style={{ width: "15%" }}>
-                                <Form.Group>
-                                  <InputGroup className="mb-3">
-                                    <InputGroup.Prepend>
-                                      <InputGroup.Text>
-                                        {formik.values.RequestCurrencyType ==
-                                        "Euro"
-                                          ? "€"
-                                          : "$"}
-                                      </InputGroup.Text>
-                                    </InputGroup.Prepend>
+                            <>
+                              <tr
+                                key={`line-item-${index}-${item.id}-cost`}
+                                style={{
+                                  background: rowBgColor
+                                }}
+                              >
+                                <td
+                                  style={{
+                                    width: "1%",
+                                    background: rowBgColorDarker
+                                  }}
+                                ></td>
+                                <td className="p-1">
+                                  <Form.Group>
+                                    <Form.Label>Quantity</Form.Label>
                                     <Form.Control
                                       type="text"
                                       disabled={!props.editing}
-                                      name={`purchaseDetails[${index}].requestCost`}
-                                      id={`purchaseDetails[${index}].requestCost`}
+                                      name={`purchaseDetails[${index}].requestQty`}
+                                      id={`purchaseDetails[${index}].requestQty`}
                                       value={formik.values.purchaseDetails[
                                         index
-                                      ].requestCost.toString()}
+                                      ].requestQty.toString()}
                                       onChange={(e: any) => {
                                         if (handleNumbersOnlyChange(e)) {
                                           formik.setFieldValue(
@@ -653,7 +601,7 @@ export const RequestForm = (props: IProps) => {
                                             Math.ceil(
                                               formik.values.purchaseDetails[
                                                 index
-                                              ].requestQty *
+                                              ].requestCost *
                                                 e.target.value *
                                                 100
                                             ) / 100
@@ -661,115 +609,216 @@ export const RequestForm = (props: IProps) => {
                                         }
                                       }}
                                     />
-                                  </InputGroup>
-                                </Form.Group>
-                              </td>
-                              <td
-                                className="text-center p-1"
-                                style={{ width: "5%" }}
-                              >
-                                <Form.Group>
-                                  <Form.Check
-                                    className="mt-2"
-                                    type="checkbox"
-                                    disabled={!props.editing}
-                                    checked={
-                                      formik.values.purchaseDetails[index]
-                                        .requestDdForm === true
-                                        ? true
-                                        : false
-                                    }
-                                    name={`purchaseDetails[${index}].requestDdForm`}
-                                    id={`purchaseDetails[${index}].requestDdForm`}
-                                    onChange={formik.handleChange}
-                                  />
-                                </Form.Group>
-                              </td>
-                              <td
-                                className="text-center p-1"
-                                style={{ width: "5%" }}
-                              >
-                                <Form.Group>
-                                  <Form.Check
-                                    className="mt-2"
-                                    type="checkbox"
-                                    disabled={!props.editing}
-                                    checked={
-                                      formik.values.purchaseDetails[index]
-                                        .requestDaForm === true
-                                        ? true
-                                        : false
-                                    }
-                                    name={`purchaseDetails[${index}].requestDaForm`}
-                                    id={`purchaseDetails[${index}].requestDaForm`}
-                                    onChange={formik.handleChange}
-                                  />
-                                </Form.Group>
-                              </td>
-                              <td className="p-1" style={{ width: "15%" }}>
-                                <Form.Group>
-                                  <InputGroup className="mb-3">
-                                    <InputGroup.Prepend>
-                                      <InputGroup.Text>
-                                        {formik.values.RequestCurrencyType ==
-                                        "Euro"
-                                          ? "€"
-                                          : "$"}
-                                      </InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control
-                                      type="text"
-                                      disabled={true}
-                                      {...formik.getFieldProps(
-                                        `purchaseDetails[${index}].requestTotal`
-                                      )}
+                                  </Form.Group>
+                                </td>
+
+                                <td className="p-1">
+                                  <Form.Group>
+                                    <Form.Label>Unit Cost/Rate</Form.Label>
+                                    <InputGroup className="mb-3">
+                                      <InputGroup.Prepend>
+                                        <InputGroup.Text>
+                                          {formik.values.RequestCurrencyType ==
+                                          "Euro"
+                                            ? "€"
+                                            : "$"}
+                                        </InputGroup.Text>
+                                      </InputGroup.Prepend>
+                                      <Form.Control
+                                        type="text"
+                                        disabled={!props.editing}
+                                        name={`purchaseDetails[${index}].requestCost`}
+                                        id={`purchaseDetails[${index}].requestCost`}
+                                        value={formik.values.purchaseDetails[
+                                          index
+                                        ].requestCost.toString()}
+                                        onChange={(e: any) => {
+                                          if (handleNumbersOnlyChange(e)) {
+                                            formik.setFieldValue(
+                                              `purchaseDetails[${index}].requestTotal`,
+                                              Math.ceil(
+                                                formik.values.purchaseDetails[
+                                                  index
+                                                ].requestQty *
+                                                  e.target.value *
+                                                  100
+                                              ) / 100
+                                            );
+                                          }
+                                        }}
+                                      />
+                                    </InputGroup>
+                                  </Form.Group>
+                                </td>
+                                <td className="text-center p-1">
+                                  <Form.Group>
+                                    <Form.Label>DD-250</Form.Label>
+                                    <Form.Check
+                                      className="mt-2"
+                                      type="checkbox"
+                                      disabled={!props.editing}
+                                      checked={
+                                        formik.values.purchaseDetails[index]
+                                          .requestDdForm === true
+                                          ? true
+                                          : false
+                                      }
+                                      name={`purchaseDetails[${index}].requestDdForm`}
+                                      id={`purchaseDetails[${index}].requestDdForm`}
+                                      onChange={formik.handleChange}
                                     />
-                                  </InputGroup>
-                                </Form.Group>
-                              </td>
-                              <td className="p-1">
-                                <span className="text-danger">
-                                  <FaTimes
-                                    title="Delete this line"
-                                    className="mt-2"
-                                    style={{
-                                      cursor: "pointer",
-                                      display: props.editing
-                                        ? "inherit"
-                                        : "none"
-                                    }}
-                                    onClick={() => {
-                                      const array = formik.values.purchaseDetails.filter(
-                                        i => i.id !== item.id
-                                      );
-                                      formik.setFieldValue(
-                                        "purchaseDetails",
-                                        array
-                                      );
-                                    }}
-                                  />
-                                </span>
-                              </td>
-                            </tr>
+                                  </Form.Group>
+                                </td>
+                                <td className="text-center p-1">
+                                  <Form.Group>
+                                    <Form.Label>DA-2062</Form.Label>
+                                    <Form.Check
+                                      className="mt-2"
+                                      type="checkbox"
+                                      disabled={!props.editing}
+                                      checked={
+                                        formik.values.purchaseDetails[index]
+                                          .requestDaForm === true
+                                          ? true
+                                          : false
+                                      }
+                                      name={`purchaseDetails[${index}].requestDaForm`}
+                                      id={`purchaseDetails[${index}].requestDaForm`}
+                                      onChange={formik.handleChange}
+                                    />
+                                  </Form.Group>
+                                </td>
+                                <td className="p-1">
+                                  <Form.Group>
+                                    <Form.Label>Total Cost</Form.Label>
+                                    <InputGroup className="mb-3">
+                                      <InputGroup.Prepend>
+                                        <InputGroup.Text>
+                                          {formik.values.RequestCurrencyType ==
+                                          "Euro"
+                                            ? "€"
+                                            : "$"}
+                                        </InputGroup.Text>
+                                      </InputGroup.Prepend>
+                                      <Form.Control
+                                        type="text"
+                                        disabled={true}
+                                        {...formik.getFieldProps(
+                                          `purchaseDetails[${index}].requestTotal`
+                                        )}
+                                      />
+                                    </InputGroup>
+                                  </Form.Group>
+                                </td>
+                                <td
+                                  style={{
+                                    background: props.editing ? lightRed : ""
+                                  }}
+                                ></td>
+                              </tr>
+                              <tr
+                                key={`line-item-${index}-${item.id}-desc`}
+                                style={{
+                                  background: rowBgColor,
+                                  borderBottom: `1px solid #ccc`
+                                }}
+                              >
+                                <td
+                                  className="pt-1"
+                                  style={{
+                                    background: rowBgColorDarker
+                                  }}
+                                >
+                                  <b>{`#${index + 1}`}</b>
+                                </td>
+                                <td className="p-1" colSpan={5}>
+                                  <Row>
+                                    <Col>
+                                      <Form.Group>
+                                        <Form.Label>Description</Form.Label>
+                                        <Form.Control
+                                          as="textarea"
+                                          type="text"
+                                          disabled={!props.editing}
+                                          name={`purchaseDetails[${index}].requestDesc`}
+                                          id={`purchaseDetails[${index}].requestDesc`}
+                                          value={
+                                            formik.values.purchaseDetails[index]
+                                              .requestDesc
+                                          }
+                                          onChange={formik.handleChange}
+                                          placeholder="Enter a description of the item being purchased"
+                                        />
+                                      </Form.Group>
+                                    </Col>
+                                    <Col>
+                                      <Form.Group>
+                                        <Form.Label>Vendor/Source</Form.Label>
+                                        <Form.Control
+                                          as="textarea"
+                                          type="text"
+                                          disabled={!props.editing}
+                                          name={`purchaseDetails[${index}].requestSrc`}
+                                          id={`purchaseDetails[${index}].requestSrc`}
+                                          value={
+                                            formik.values.purchaseDetails[index]
+                                              .requestSrc
+                                          }
+                                          onChange={formik.handleChange}
+                                          placeholder="Enter the vendor name or URL"
+                                        />
+                                      </Form.Group>
+                                    </Col>
+                                  </Row>
+                                </td>
+                                <td
+                                  className="p-1"
+                                  style={{
+                                    background: props.editing ? "#ffe1e1" : ""
+                                  }}
+                                >
+                                  <span className="text-danger">
+                                    <FaTimes
+                                      title="Delete this line"
+                                      className="mt-2"
+                                      style={{
+                                        cursor: "pointer",
+                                        display: props.editing
+                                          ? "inherit"
+                                          : "none"
+                                      }}
+                                      onClick={() => {
+                                        const array = formik.values.purchaseDetails.filter(
+                                          i => i.id !== item.id
+                                        );
+                                        formik.setFieldValue(
+                                          "purchaseDetails",
+                                          array
+                                        );
+                                      }}
+                                    />
+                                  </span>
+                                </td>
+                              </tr>
+                            </>
                           );
                         }
                       )}
                   </tbody>
                   <tfoot>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <th>
+                    <tr style={{ borderTop: `1px solid #dee2e6` }}>
+                      <th style={{ width: "1%" }}></th>
+                      <th>Totals</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th className="text-right">
                         <span className="pl-3">{total}</span>
                       </th>
-                      <td></td>
+                      <th style={{ width: "1%" }}></th>
                     </tr>
                     <tr>
-                      <td colSpan={9} align="right">
+                      <td colSpan={7} align="right">
                         <Button
                           variant="outline-primary"
                           disabled={!props.editing}
@@ -803,7 +852,10 @@ export const RequestForm = (props: IProps) => {
           {cardholderFieldStatuses.has(request.status) && (
             <Form.Group className="bg-light p-3">
               <legend>
-                Cardholder Data <small>(Cardholder Only)</small>
+                Cardholder Data{" "}
+                <small className="text-secondary">
+                  (to be completed by Cardholder)
+                </small>
               </legend>
               <Row>
                 <Col>
@@ -867,7 +919,10 @@ export const RequestForm = (props: IProps) => {
           {j8FieldStatuses.has(request.status) && (
             <Form.Group className="bg-light p-3">
               <legend>
-                J8 Data <small>(J8 Only)</small>
+                J8 Data{" "}
+                <small className="text-secondary">
+                  (to be completed by J8)
+                </small>
               </legend>
               <Row>
                 <Col>
@@ -989,15 +1044,6 @@ export const RequestForm = (props: IProps) => {
           </Form.Group>
         </Form>
       )}
-      <ConfirmationModal
-        open={discardModalOpen}
-        onHide={() => setDiscardModalOpen(false)}
-        onConfirm={() => onCancelClicked()}
-        title="Discard Changes"
-        body="Are you sure you want to discard your changes?"
-        confirmText="Yes"
-        cancelText="No"
-      />
     </>
   );
 };
