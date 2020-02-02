@@ -165,7 +165,7 @@ export const ApprovalActionsButton = (props: IProps) => {
         <Dropdown.Menu>
           <Dropdown.Item
             hidden={!props.actions.has("submit")}
-            onClick={() => onActionClicked("approve")}
+            onClick={() => onActionClicked("submit")}
           >
             Submit
           </Dropdown.Item>

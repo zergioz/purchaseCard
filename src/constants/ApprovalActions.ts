@@ -37,6 +37,24 @@ export const ApprovalActions: IApprovalActions = {
     },
     formInputsRequired: ["status", "comments", "user"]
   },
+  submit: {
+    bootstrapClass: "success",
+    type: "approve",
+    actor: "Submitted by",
+    action: "Submit",
+    date: new Date().toISOString(),
+    verb: "Submit",
+    pastTense: "Submitted",
+    description:
+      "You are submitting this request and sending it to the first approver.",
+    form: RequestApprovalForm,
+    formInputs: {
+      status: "",
+      comments: "",
+      user: ""
+    },
+    formInputsRequired: ["user"]
+  },
   approve: {
     bootstrapClass: "success",
     type: "approve",
