@@ -94,7 +94,13 @@ export const RequestAttachmentsTable = (props: IProps) => {
                       ? attachmentType
                       : "Other"}
                   </td>
-                  <td style={{ width: "1%" }}>
+                  <td
+                    className="p-1 pt-2"
+                    style={{
+                      width: "1%",
+                      background: props.editing ? "#ffe1e1" : ""
+                    }}
+                  >
                     <span className="text-danger">
                       <FaTimes
                         title="Delete this file"
