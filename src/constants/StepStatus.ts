@@ -1,6 +1,5 @@
-import { Request, IRequestApprovals } from "../services/models/Request";
+import { Request } from "../services/models/Request";
 import { groupBy } from "../helpers/GroupBy";
-import { ApprovalAction } from "../services/models/ApprovalAction";
 
 /*
  * This stuff is all a big workaround to make the filtering interface
@@ -8,165 +7,92 @@ import { ApprovalAction } from "../services/models/ApprovalAction";
  *
  * The app was built around the StepStatus array which is a constant that was
  * copied from production.  The steps are in order from 1 to 12
- * and the only keys that really matter are "caseStep" - which matches the
+ * and the only keys that really matter are "uglyName" - which matches the
  * value that the old app puts into the Request "status" field - and
  * "friendlyName" - which is what the react app uses as the display name
- * for any particular step.
+ * for any particular step.  "approvalName" is the key under which the legacy
+ * app stored approval information for a step
  */
 
 export interface IStatus {
-  stepName: string;
-  stepStatus: string;
-  stepArray: string[];
-  caseStep: string;
-  fwd: string;
-  fwdj6: string;
-  numerStep: number;
+  uglyName: string;
   friendlyName: string;
   approvalName: string;
+  actionsAvailable: string[];
 }
 
 export const StepStatus: IStatus[] = [
   {
-    stepName: "",
-    stepStatus: "",
-    stepArray: [],
-    caseStep: "DRAFT",
-    fwd: "DRAFT",
-    fwdj6: "DRAFT",
-    numerStep: 1,
+    uglyName: "DRAFT",
     friendlyName: "Draft",
-    approvalName: ""
+    approvalName: "",
+    actionsAvailable: ["submit", "delete", "clone"]
   },
   {
-    stepName: "",
-    stepStatus: "",
-    stepArray: [],
-    caseStep: "SUBMITTED",
-    fwd: "DIR APPROVAL",
-    fwdj6: "DIR APPROVAL",
-    numerStep: 2,
+    uglyName: "SUBMITTED",
     friendlyName: "Director",
-    approvalName: "directorateApproval"
+    approvalName: "directorateApproval",
+    actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
-    stepName: "directorate",
-    stepStatus: "DIRECTORATE_APPROVAL",
-    stepArray: [
-      "directorateComment",
-      "directorateStatus",
-      "directorateSignature"
-    ],
-    caseStep: "DIRECTORATE_APPROVAL",
-    fwd: "BO APPROVAL",
-    fwdj6: "BO APPROVAL",
-    numerStep: 3,
+    uglyName: "DIRECTORATE_APPROVAL",
     friendlyName: "Billing Official",
-    approvalName: "billingOfficialApproval"
+    approvalName: "billingOfficialApproval",
+    actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
-    stepName: "bo",
-    stepStatus: "BILLING_OFFICIAL_APPROVAL",
-    stepArray: ["boComment", "boStatus", "boSignature"],
-    caseStep: "BILLING_OFFICIAL_APPROVAL",
-    fwd: "PBO APPROVAL",
-    fwdj6: "J6 APPROVAL",
-    numerStep: 4,
+    uglyName: "BILLING_OFFICIAL_APPROVAL",
     friendlyName: "Tech Review",
-    approvalName: "j6Approval"
+    approvalName: "j6Approval",
+    actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
-    stepName: "j6",
-    stepStatus: "J6_APPROVAL",
-    stepArray: ["j6Comment", "j6Status", "j6Signature"],
-    caseStep: "J6_APPROVAL",
-    fwd: "ERROR: SEE J69",
-    fwdj6: "PBO APPROVAL",
-    numerStep: 5,
+    uglyName: "J6_APPROVAL",
     friendlyName: "PBO Approval",
-    approvalName: "pboApproval"
+    approvalName: "pboApproval",
+    actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
-    stepName: "pbo",
-    stepStatus: "PBO_APPROVAL",
-    stepArray: ["pboComment", "pboStatus", "pboSignature"],
-    caseStep: "PBO_APPROVAL",
-    fwd: "J8 APPROVAL",
-    fwdj6: "J8 APPROVAL",
-    numerStep: 6,
+    uglyName: "PBO_APPROVAL",
     friendlyName: "Finance",
-    approvalName: "j8Approval"
+    approvalName: "j8Approval",
+    actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
-    stepName: "j8",
-    stepStatus: "J8_APPROVAL",
-    stepArray: ["j8Comment", "j8FiscalYear", "j8Quater", "j8Signature"],
-    caseStep: "J8_APPROVAL",
-    fwd: "CARD HOLDER VALIDATION",
-    fwdj6: "CARD HOLDER VALIDATION",
-    numerStep: 7,
+    uglyName: "J8_APPROVAL",
     friendlyName: "Cardholder",
-    approvalName: "cardholderValidation"
+    approvalName: "cardholderValidation",
+    actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
-    stepName: "cardholder",
-    stepStatus: "CARD_HOLDER_VALIDATION",
-    stepArray: [
-      "cardHolderComment",
-      "cardHolderTransactionId",
-      "cardHolderExecuted",
-      "cardHolderSignature"
-    ],
-    caseStep: "CARD_HOLDER_VALIDATION",
-    fwd: "REQUESTOR VALIDATION",
-    fwdj6: "REQUESTOR VALIDATION",
-    numerStep: 8,
+    uglyName: "CARD_HOLDER_VALIDATION",
     friendlyName: "Requestor",
-    approvalName: "requestorValidation"
+    approvalName: "requestorValidation",
+    actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
-    stepName: "requestor",
-    stepStatus: "REQUESTOR_VALIDATION",
-    stepArray: ["requestorComment", "requestorSignature"],
-    caseStep: "REQUESTOR_VALIDATION",
-    fwd: "SUPPLY VALIDATION",
-    fwdj6: "SUPPLY VALIDATION",
-    numerStep: 9.3,
+    uglyName: "REQUESTOR_VALIDATION",
     friendlyName: "Supply",
-    approvalName: "supplyValidation"
+    approvalName: "supplyValidation",
+    actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
-    stepName: "supply",
-    stepStatus: "SUPPLY_VALIDATION",
-    stepArray: ["supplyComment", "supplySignature"],
-    caseStep: "SUPPLY_VALIDATION",
-    fwd: "PENDING PBO FINAL",
-    fwdj6: "PENDING PBO FINAL",
-    numerStep: 9.6,
+    uglyName: "SUPPLY_VALIDATION",
     friendlyName: "PBO Final",
-    approvalName: "finalValidation"
+    approvalName: "finalValidation",
+    actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
-    stepName: "j4",
-    stepStatus: "FINAL_VALIDATION",
-    stepArray: ["j4Comment", "j4Signature"],
-    caseStep: "FINAL_VALIDATION",
-    fwd: "PENDING CLOSING",
-    fwdj6: "PENDING CLOSING",
-    numerStep: 9.9,
+    uglyName: "FINAL_VALIDATION",
     friendlyName: "BO Final",
-    approvalName: "budgetOfficerApproval"
+    approvalName: "budgetOfficerApproval",
+    actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
-    stepName: "",
-    stepStatus: "",
-    stepArray: [],
-    caseStep: "CLOSED",
-    fwd: "CLOSED",
-    fwdj6: "CLOSED",
-    numerStep: 10,
+    uglyName: "CLOSED",
     friendlyName: "Closed",
-    approvalName: ""
+    approvalName: "",
+    actionsAvailable: ["clone"]
   }
 ];
 
@@ -185,17 +111,17 @@ export const getStatusesByFriendlyName = (): StatusesByFriendlyName => {
   return statuses;
 };
 
-//statuses are stored in the db with the caseStep value
+//statuses are stored in the db with the uglyName value
 //leaving this here for when we write to db
 export const convertToUgly = (friendlyName: string): string => {
   const status = StepStatus.find(
     status => status.friendlyName === friendlyName
   );
-  return status ? status.caseStep : "";
+  return status ? status.uglyName : "";
 };
 
-export const convertToFriendly = (caseStep: string): string => {
-  const status = StepStatus.find(status => status.caseStep === caseStep);
+export const convertToFriendly = (uglyName: string): string => {
+  const status = StepStatus.find(status => status.uglyName === uglyName);
   return status ? status.friendlyName : "";
 };
 

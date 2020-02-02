@@ -256,10 +256,11 @@ export const RequestForm = (props: IProps) => {
                   </Button>
                   <ApprovalActionsButton
                     className="p-1"
-                    disabled={!canEdit || props.editing}
+                    disabled={props.editing}
                     variant="danger"
                     request={request}
                     onRequestUpdated={props.onRequestUpdated}
+                    actions={new Set(request.getAvailableActions())}
                   />
                 </ButtonToolbar>
               </Col>
@@ -1035,10 +1036,11 @@ export const RequestForm = (props: IProps) => {
                   </Button>
                   <ApprovalActionsButton
                     className="p-1"
-                    disabled={!canEdit || props.editing}
+                    disabled={props.editing}
                     variant="danger"
                     request={request}
                     onRequestUpdated={props.onRequestUpdated}
+                    actions={new Set(request.getAvailableActions())}
                   />
                 </ButtonToolbar>
               </Col>

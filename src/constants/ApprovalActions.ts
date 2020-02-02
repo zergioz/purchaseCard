@@ -71,5 +71,40 @@ export const ApprovalActions: IApprovalActions = {
       user: ""
     },
     formInputsRequired: ["comments", "user"]
+  },
+  clone: {
+    bootstrapClass: "primary",
+    type: "clone",
+    actor: "Cloned by",
+    action: "Clone",
+    date: new Date().toISOString(),
+    verb: "Clone",
+    pastTense: "Cloned",
+    description:
+      "You are copying the contents of this request into a new draft.",
+    form: RequestApprovalForm,
+    formInputs: {
+      status: "",
+      comments: "",
+      user: ""
+    },
+    formInputsRequired: ["user"]
+  },
+  delete: {
+    bootstrapClass: "danger",
+    type: "delete",
+    actor: "Deleted by",
+    action: "Delete",
+    date: new Date().toISOString(),
+    verb: "Delete",
+    pastTense: "Deleted",
+    description: "You are permanently deleting this request.",
+    form: RequestApprovalForm,
+    formInputs: {
+      status: "",
+      comments: "",
+      user: ""
+    },
+    formInputsRequired: ["user"]
   }
 };
