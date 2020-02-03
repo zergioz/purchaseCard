@@ -18,7 +18,7 @@ import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { Detail, PurchaseDetails } from "../../services/models/PurchaseDetails";
 import { ValidationErrorModal } from "./ValidationErrorModal";
-import { useFormik } from "formik";
+import { useFormik, getIn } from "formik";
 import ReactDatePicker, {
   DatePickerProps
 } from "react-date-picker/dist/entry.nostyle";
@@ -31,7 +31,6 @@ import RoleContext from "../../contexts/RoleContext";
 import { Role } from "../../services/models/Role";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
-import { get } from "lodash";
 import * as Yup from "yup";
 
 interface IProps {
@@ -100,7 +99,7 @@ export const RequestForm = (props: IProps) => {
         RequestorCardHolderName: Yup.string().required("Required"),
         RequestorDSN: Yup.string()
           .required("Required")
-          .matches(phoneRegExp, "DSN number is not valid"),
+          .matches(phoneRegExp, "Not a valid DSN number"),
         RequestorDirectorate: Yup.string().required("Required"),
         RequestSource: Yup.string().required("Required"),
         RequestJustification: Yup.string().required("Required"),
@@ -110,8 +109,14 @@ export const RequestForm = (props: IProps) => {
       purchaseDetails: Yup.object<PurchaseDetails>().shape({
         Detail: Yup.array().of(
           Yup.object<Detail>().shape({
-            requestQty: Yup.number().required("Required"),
-            requestCost: Yup.number().required("Required"),
+            requestQty: Yup.number()
+              .positive()
+              .transform(value => (value == "" ? undefined : value))
+              .required("Required"),
+            requestCost: Yup.number()
+              .positive()
+              .transform(value => (value == "" ? undefined : value))
+              .required("Required"),
             requestDesc: Yup.string().required("Required"),
             requestSrc: Yup.string().required("Required"),
             requestDdForm: Yup.boolean(),
@@ -125,6 +130,7 @@ export const RequestForm = (props: IProps) => {
   //recalculate the line item totals whenever the data changes
   useEffect(() => {
     setTotal(formatTotal());
+    console.log(formik);
   }, [
     formik.values.purchaseDetails,
     formik.values.requestField.RequestCurrencyType
@@ -270,18 +276,18 @@ export const RequestForm = (props: IProps) => {
 
   //returns true if a field has validation errors
   const isInvalid = (fieldName: string): boolean => {
-    return get(formik.touched, fieldName) && get(formik.errors, fieldName);
+    return getIn(formik.touched, fieldName) && getIn(formik.errors, fieldName);
   };
 
   //returns true if a field has no validation errors
   const isValid = (fieldName: string): boolean => {
-    return get(formik.touched, fieldName) && !get(formik.errors, fieldName);
+    return getIn(formik.touched, fieldName) && !getIn(formik.errors, fieldName);
   };
 
   //returns the validation error text for a field
   const validationError = (fieldName: string) => {
     return isInvalid(fieldName) ? (
-      <small className="text-danger">{get(formik.errors, fieldName)}</small>
+      <small className="text-danger">{getIn(formik.errors, fieldName)}</small>
     ) : null;
   };
 
