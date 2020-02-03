@@ -24,6 +24,7 @@ interface IProps {
   hidden?: boolean;
   actions: Set<string>;
   onRequestUpdated: (newRequest: Request) => void;
+  onBeforeAction: (action: ApprovalAction) => boolean;
 }
 export const ApprovalActionsButton = (props: IProps) => {
   const svc = new RequestService();
@@ -57,8 +58,11 @@ export const ApprovalActionsButton = (props: IProps) => {
   //show the modal with the form specific to this action
   const onActionClicked = (action: string) => {
     const approvalAction: IApprovalAction = ApprovalActions[action];
-    setModalAction(approvalAction);
-    setModalVisible(true);
+    const actionIsAllowed = props.onBeforeAction(approvalAction);
+    if (actionIsAllowed) {
+      setModalAction(approvalAction);
+      setModalVisible(true);
+    }
   };
 
   //they closed the modal by hitting save, so dispatch the action

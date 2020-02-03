@@ -30,6 +30,7 @@ import UserContext from "../../contexts/UserContext";
 import RoleContext from "../../contexts/RoleContext";
 import { Role } from "../../services/models/Role";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
+import { ApprovalAction } from "../../services/models/ApprovalAction";
 
 interface IProps {
   request: Request;
@@ -86,10 +87,7 @@ export const RequestForm = (props: IProps) => {
       purchaseDetails: request.purchaseDetails.Details
     },
     onSubmit: values => {
-      updateRequest(values);
-      formik.setSubmitting(false);
-      formik.setErrors({});
-      formik.setTouched({});
+      saveRequest(values);
     },
     validationSchema: new Request().getValidationSchema()
   });
@@ -109,6 +107,14 @@ export const RequestForm = (props: IProps) => {
     setTotal(formatTotal());
   }, []);
 
+  //saves the request regardless of validation.  for validation use formik.handleSubmit()
+  const saveRequest = (values: any) => {
+    updateRequest(values);
+    formik.setSubmitting(false);
+    formik.setErrors({});
+    formik.setTouched({});
+  };
+
   const updateRequest = (values: any) => {
     props.setEditing(false);
     //todo: use nested initial values and rename all our controls.  formik can handle it
@@ -122,11 +128,15 @@ export const RequestForm = (props: IProps) => {
   };
 
   const onSaveClicked = () => {
-    if (!formik.isValid) {
-      setErrorModalOpen(true);
-    }
+    if (request.status === "Draft") {
+      saveRequest(formik.values);
+    } else {
+      if (!formik.isValid) {
+        setErrorModalOpen(true);
+      }
 
-    formik.handleSubmit();
+      formik.handleSubmit();
+    }
   };
 
   const onCancelClicked = () => {
@@ -137,6 +147,31 @@ export const RequestForm = (props: IProps) => {
   //unlocks the form fields
   const onEditClicked = () => {
     props.setEditing(true);
+  };
+
+  //the approval actions button calls this before an action is taken.  return true to continue the action
+  //or false to cancel the action.  we're using this validate the form fields before submission or signature
+  const onBeforeAction = (action: ApprovalAction): boolean => {
+    let isAllowed = true;
+    switch (action.type) {
+      case "approve":
+      case "submit":
+        if (formik.isValid) {
+          isAllowed = true;
+        } else {
+          setErrorModalOpen(true);
+          formik.handleSubmit();
+          isAllowed = false;
+        }
+        break;
+      case "delete":
+      case "clone":
+      case "reject":
+      default:
+        isAllowed = true;
+        break;
+    }
+    return isAllowed;
   };
 
   //this onChange handler is for number inputs - allows decimal points but blocks all
@@ -260,6 +295,7 @@ export const RequestForm = (props: IProps) => {
                     variant="danger"
                     request={request}
                     onRequestUpdated={props.onRequestUpdated}
+                    onBeforeAction={onBeforeAction}
                     actions={new Set(request.getAvailableActions())}
                   />
                 </ButtonToolbar>
@@ -1041,6 +1077,7 @@ export const RequestForm = (props: IProps) => {
                     variant="danger"
                     request={request}
                     onRequestUpdated={props.onRequestUpdated}
+                    onBeforeAction={onBeforeAction}
                     actions={new Set(request.getAvailableActions())}
                   />
                 </ButtonToolbar>
