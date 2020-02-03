@@ -627,7 +627,7 @@ export const RequestForm = (props: IProps) => {
                                 <td className="p-1">
                                   <Form.Group>
                                     <Form.Label>Unit Cost/Rate</Form.Label>
-                                    <InputGroup className="mb-3">
+                                    <InputGroup>
                                       <InputGroup.Prepend>
                                         <InputGroup.Text>
                                           {formik.values.requestField
@@ -727,7 +727,7 @@ export const RequestForm = (props: IProps) => {
                                 <td className="p-1">
                                   <Form.Group>
                                     <Form.Label>Total Cost</Form.Label>
-                                    <InputGroup className="mb-3">
+                                    <InputGroup>
                                       <InputGroup.Prepend>
                                         <InputGroup.Text>
                                           {formik.values.requestField
