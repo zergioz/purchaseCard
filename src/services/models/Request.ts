@@ -14,7 +14,7 @@ import { FinalValidation } from "./FinalValidation";
 import { SharepointUser } from "./SharepointUser";
 import { ApprovalAction } from "./ApprovalAction";
 import { compareDesc, parseISO } from "date-fns";
-
+import * as Yup from "yup";
 import { ApprovalActions } from "../../constants/ApprovalActions";
 import { getStatusesByFriendlyName } from "../../constants/StepStatus";
 
@@ -129,5 +129,43 @@ export class Request implements IRequest {
       actionsToMatch.has(action.type)
     );
     return lastAction || null;
+  }
+
+  public getValidationSchema() {
+    const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+    Yup.object({
+      requestField: Yup.object({
+        //fiscalYear: Yup.string().required("Required"),
+        //fiscalQuarter: Yup.string().required("Required")
+        //transactionId: Yup.string().required("Required"),
+        //executionDate: Yup.string().required("Required"),
+        RequestCardType: Yup.string().required("Required"),
+        RequestorCardHolderName: Yup.string().required("Required"),
+        RequestorDSN: Yup.string()
+          .required("Required")
+          .matches(phoneRegExp, "Not a valid DSN number"),
+        RequestorDirectorate: Yup.string().required("Required"),
+        RequestSource: Yup.string().required("Required"),
+        RequestJustification: Yup.string().required("Required"),
+        RequestCurrencyType: Yup.string().required("Required"),
+        RequestIsJ6: Yup.string().required("Required")
+      }),
+      lineItems: Yup.array().of(
+        Yup.object({
+          requestQty: Yup.number()
+            .positive("Can't be negative")
+            .transform(value => (isNaN(value) ? undefined : value))
+            .required("Required"),
+          requestCost: Yup.number()
+            .positive("Can't be negative")
+            .transform(value => (isNaN(value) ? undefined : value))
+            .required("Required"),
+          requestDesc: Yup.string().required("Required"),
+          requestSrc: Yup.string().required("Required"),
+          requestDdForm: Yup.boolean(),
+          requestDaForm: Yup.boolean()
+        })
+      )
+    });
   }
 }
