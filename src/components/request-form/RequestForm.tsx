@@ -89,8 +89,8 @@ export const RequestForm = (props: IProps) => {
     onSubmit: values => {
       saveRequest(values);
     },
-    validationSchema: Yup.object<Request>().shape({
-      requestField: Yup.object().shape({
+    validationSchema: Yup.object({
+      requestField: Yup.object({
         //fiscalYear: Yup.string().required("Required"),
         //fiscalQuarter: Yup.string().required("Required")
         //transactionId: Yup.string().required("Required"),
@@ -106,9 +106,9 @@ export const RequestForm = (props: IProps) => {
         RequestCurrencyType: Yup.string().required("Required"),
         RequestIsJ6: Yup.string().required("Required")
       }),
-      purchaseDetails: Yup.object<PurchaseDetails>().shape({
+      purchaseDetails: Yup.object({
         Detail: Yup.array().of(
-          Yup.object<Detail>().shape({
+          Yup.object({
             requestQty: Yup.number()
               .positive()
               .transform(value => (value == "" ? undefined : value))
