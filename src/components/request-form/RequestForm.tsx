@@ -17,7 +17,7 @@ import { FiscalYears as fiscalYears } from "../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { ValidationErrorModal } from "./ValidationErrorModal";
-import { useFormik, getIn } from "formik";
+import { useFormik, getIn, validateYupSchema, yupToFormErrors } from "formik";
 import ReactDatePicker, {
   DatePickerProps
 } from "react-date-picker/dist/entry.nostyle";
@@ -61,40 +61,30 @@ export const RequestForm = (props: IProps) => {
 
   const canEdit = request.status !== "Closed";
 
-  //show cardholder fields in these statuses
-  const cardholderFieldStatuses = new Set([
-    "Cardholder",
-    "Requestor",
-    "Supply",
-    "PBO Final",
-    "BO Final",
-    "Closed"
-  ]);
-
-  //show j8 fields in these statuses
-  const j8FieldStatuses = new Set([
-    "Finance",
-    "Cardholder",
-    "Requestor",
-    "Supply",
-    "PBO Final",
-    "BO Final",
-    "Closed"
-  ]);
-
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: request,
     onSubmit: values => {
       saveRequest(values);
     },
-    validationSchema: request.getValidationSchema()
+    //instead of using validationSchema, we are manually doing the validation so we can pass
+    //the request in to yup as a context.  this is so we can use Yup.when($status) to do conditional
+    //validation for the fields like j8 and cardholder that only need to be filled in at a
+    //specific step.
+    validate: values => {
+      const schema = request.getValidationSchema();
+      try {
+        validateYupSchema(values, schema, true, request);
+      } catch (err) {
+        return yupToFormErrors(err);
+      }
+      return {};
+    }
   });
 
   //recalculate the line item totals whenever the data changes
   useEffect(() => {
     setTotal(formatTotal());
-    console.log(formik);
   }, [formik.values.lineItems, formik.values.requestField.RequestCurrencyType]);
 
   //update our state if the request changes - after an update is sent, for example
@@ -864,7 +854,7 @@ export const RequestForm = (props: IProps) => {
               </Col>
             </Row>
           </Form.Group>
-          {cardholderFieldStatuses.has(request.status) && (
+          {request.cardholderFieldStatuses.has(request.status) && (
             <Form.Group className="bg-light p-3">
               <legend>
                 Cardholder Data{" "}
@@ -905,7 +895,7 @@ export const RequestForm = (props: IProps) => {
               </Row>
             </Form.Group>
           )}
-          {j8FieldStatuses.has(request.status) && (
+          {request.j8FieldStatuses.has(request.status) && (
             <Form.Group className="bg-light p-3">
               <legend>
                 J8 Data{" "}

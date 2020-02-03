@@ -87,24 +87,76 @@ export class Request implements IRequest {
     return lastAction || null;
   }
 
-  public getValidationSchema() {
+  //show cardholder fields in these statuses
+  public cardholderFieldStatuses = new Set([
+    "Cardholder",
+    "Requestor",
+    "Supply",
+    "PBO Final",
+    "BO Final",
+    "Closed"
+  ]);
+
+  //show j8 fields in these statuses
+  public j8FieldStatuses = new Set([
+    "Finance",
+    "Cardholder",
+    "Requestor",
+    "Supply",
+    "PBO Final",
+    "BO Final",
+    "Closed"
+  ]);
+
+  public getValidationSchema(): Yup.ObjectSchema {
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-    Yup.object({
+    return Yup.object({
+      status: Yup.string(),
       requestField: Yup.object({
-        //fiscalYear: Yup.string().required("Required"),
-        //fiscalQuarter: Yup.string().required("Required")
-        //transactionId: Yup.string().required("Required"),
-        //executionDate: Yup.string().required("Required"),
-        RequestCardType: Yup.string().required("Required"),
-        RequestorCardHolderName: Yup.string().required("Required"),
+        //the dollar sign lets us access the context that we pass in formik.validate
+        //we can't access status above because when() only works for siblings and below.
+        //fiscalYear, fiscalQuarter are only required for steps Finance and beyond.
+        fiscalYear: Yup.string().when("$status", {
+          is: value => this.j8FieldStatuses.has(value),
+          then: Yup.string().required("Required")
+        }),
+        //fiscalYear, fiscalQuarter are only required for steps Finance and beyond.
+        fiscalQuarter: Yup.string().when("$status", {
+          is: value => this.j8FieldStatuses.has(value),
+          then: Yup.string().required("Required")
+        }),
+        //transactionId, executionDate are only required for steps Cardholder and beyond.
+        transactionId: Yup.string().when("$status", {
+          is: value => this.cardholderFieldStatuses.has(value),
+          then: Yup.string().required("Required")
+        }),
+        //transactionId, executionDate are only required for steps Cardholder and beyond.
+        executionDate: Yup.string().when("$status", {
+          is: value => this.cardholderFieldStatuses.has(value),
+          then: Yup.string().required("Required")
+        }),
+        RequestCardType: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required"),
+        RequestorCardHolderName: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required"),
         RequestorDSN: Yup.string()
           .required("Required")
           .matches(phoneRegExp, "Not a valid DSN number"),
-        RequestorDirectorate: Yup.string().required("Required"),
-        RequestSource: Yup.string().required("Required"),
+        RequestorDirectorate: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required"),
+        RequestSource: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required"),
         RequestJustification: Yup.string().required("Required"),
-        RequestCurrencyType: Yup.string().required("Required"),
-        RequestIsJ6: Yup.string().required("Required")
+        RequestCurrencyType: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required"),
+        RequestIsJ6: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required")
       }),
       lineItems: Yup.array().of(
         Yup.object({
