@@ -31,6 +31,8 @@ import RoleContext from "../../contexts/RoleContext";
 import { Role } from "../../services/models/Role";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
+import { get } from "lodash";
+import * as Yup from "yup";
 
 interface IProps {
   request: Request;
@@ -81,21 +83,60 @@ export const RequestForm = (props: IProps) => {
     "Closed"
   ]);
 
+  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const formik = useFormik({
     initialValues: {
-      ...request.requestField,
-      purchaseDetails: request.purchaseDetails.Details
+      ...request
     },
     onSubmit: values => {
       saveRequest(values);
     },
-    validationSchema: new Request().getValidationSchema()
+    validationSchema: Yup.object().shape({
+      requestField: Yup.object().shape({
+        //fiscalYear: Yup.string().required("Required"),
+        //fiscalQuarter: Yup.string().required("Required")
+        //transactionId: Yup.string().required("Required"),
+        //executionDate: Yup.string().required("Required"),
+        RequestCardType: Yup.string().required("Required"),
+        RequestorCardHolderName: Yup.string().required("Required"),
+        RequestorDSN: Yup.string()
+          .required("Required")
+          .matches(phoneRegExp, "DSN number is not valid"),
+        RequestorDirectorate: Yup.string().required("Required"),
+        RequestSource: Yup.string().required("Required"),
+        RequestJustification: Yup.string().required("Required"),
+        RequestCurrencyType: Yup.string().required("Required"),
+        RequestIsJ6: Yup.string().required("Required")
+      }),
+      purchaseDetails: Yup.object().shape({
+        Detail: Yup.array().of(
+          Yup.object<Detail>().shape({
+            requestQty: Yup.number()
+              .required("Required")
+              .min(0, "No negative quantities"),
+            requestDesc: Yup.string().required("Required"),
+            requestSrc: Yup.string().required("Required"),
+            requestDdForm: Yup.boolean(),
+            requestDaForm: Yup.boolean(),
+            requestCost: Yup.number()
+              .required("Required")
+              .min(0, "No negative costs"),
+            requestTotal: Yup.number()
+              .required("Required")
+              .min(0, "No negative totals")
+          })
+        )
+      })
+    })
   });
 
   //recalculate the line item totals whenever the data changes
   useEffect(() => {
     setTotal(formatTotal());
-  }, [formik.values.purchaseDetails, formik.values.RequestCurrencyType]);
+  }, [
+    formik.values.purchaseDetails,
+    formik.values.requestField.RequestCurrencyType
+  ]);
 
   //update our state if the request changes - after an update is sent, for example
   useEffect(() => {
@@ -120,8 +161,7 @@ export const RequestForm = (props: IProps) => {
     //todo: use nested initial values and rename all our controls.  formik can handle it
     const updatedRequest = new Request({
       ...request,
-      requestField: { ...values, purchaseDetails: undefined },
-      purchaseDetails: { Details: values.purchaseDetails }
+      ...values
     });
     setRequest(updatedRequest);
     props.onRequestUpdated(updatedRequest);
@@ -191,10 +231,13 @@ export const RequestForm = (props: IProps) => {
   const formatTotal = (): string => {
     const formatter = new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: formik.values.RequestCurrencyType === "Euro" ? "EUR" : "USD",
+      currency:
+        formik.values.requestField.RequestCurrencyType === "Euro"
+          ? "EUR"
+          : "USD",
       minimumFractionDigits: 2
     });
-    const items = formik.values.purchaseDetails;
+    const items = formik.values.purchaseDetails.Details;
     let sum = 0;
     for (var i = 0; i < items.length; i++) {
       sum += items[i].requestTotal;
@@ -225,13 +268,30 @@ export const RequestForm = (props: IProps) => {
       <ReactDatePicker
         onChange={handleDateChanged}
         value={
-          formik.values.executionDate
-            ? parseISO(formik.values.executionDate)
+          formik.values.requestField.executionDate
+            ? parseISO(formik.values.requestField.executionDate)
             : undefined
         }
         {...props}
       />
     );
+  };
+
+  //returns true if a field has validation errors
+  const isInvalid = (fieldName: string): boolean => {
+    return !!(get(formik.touched, fieldName) && get(formik.errors, fieldName));
+  };
+
+  //returns true if a field has no validation errors
+  const isValid = (fieldName: string): boolean => {
+    return get(formik.touched, fieldName) && !get(formik.errors, fieldName);
+  };
+
+  //returns the validation error text for a field
+  const validationError = (fieldName: string) => {
+    return isInvalid(fieldName) ? (
+      <small className="text-danger">{get(formik.errors, fieldName)}</small>
+    ) : null;
   };
 
   return (
@@ -321,17 +381,9 @@ export const RequestForm = (props: IProps) => {
                     className="custom-select"
                     as="select"
                     disabled={!props.editing}
-                    {...formik.getFieldProps("RequestCardType")}
-                    isInvalid={
-                      !!(
-                        formik.touched.RequestCardType &&
-                        formik.errors.RequestCardType
-                      )
-                    }
-                    isValid={
-                      formik.touched.RequestCardType &&
-                      !formik.errors.RequestCardType
-                    }
+                    {...formik.getFieldProps("requestField.RequestCardType")}
+                    isInvalid={isInvalid(`requestField.RequestCardType`)}
+                    isValid={isValid(`requestField.RequestCardType`)}
                   >
                     <option value={""}>Select one</option>
                     {cardTypes.map((type: string) => {
@@ -342,12 +394,7 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  {formik.touched.RequestCardType &&
-                  formik.errors.RequestCardType ? (
-                    <small className="text-danger">
-                      {formik.errors.RequestCardType}
-                    </small>
-                  ) : null}
+                  {validationError(`requestField.RequestCardType`)}
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Cardholder</Form.Label>
@@ -355,17 +402,13 @@ export const RequestForm = (props: IProps) => {
                     className="custom-select"
                     as="select"
                     disabled={!props.editing}
-                    {...formik.getFieldProps("RequestorCardHolderName")}
-                    isInvalid={
-                      !!(
-                        formik.touched.RequestorCardHolderName &&
-                        formik.errors.RequestorCardHolderName
-                      )
-                    }
-                    isValid={
-                      formik.touched.RequestorCardHolderName &&
-                      !formik.errors.RequestorCardHolderName
-                    }
+                    {...formik.getFieldProps(
+                      "requestField.RequestorCardHolderName"
+                    )}
+                    isInvalid={isInvalid(
+                      `requestField.RequestorCardHolderName`
+                    )}
+                    isValid={isValid(`requestField.RequestorCardHolderName`)}
                   >
                     <option value={""}>Select one</option>
                     {cardholders.map((role: Role) => {
@@ -379,12 +422,7 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  {formik.touched.RequestorCardHolderName &&
-                  formik.errors.RequestorCardHolderName ? (
-                    <small className="text-danger">
-                      {formik.errors.RequestorCardHolderName}
-                    </small>
-                  ) : null}
+                  {validationError(`requestField.RequestorCardHolderName`)}
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Request Date</Form.Label>
@@ -407,22 +445,11 @@ export const RequestForm = (props: IProps) => {
                     type="text"
                     disabled={!props.editing}
                     placeholder="Enter a phone number"
-                    {...formik.getFieldProps("RequestorDSN")}
-                    isInvalid={
-                      !!(
-                        formik.touched.RequestorDSN &&
-                        formik.errors.RequestorDSN
-                      )
-                    }
-                    isValid={
-                      formik.touched.RequestorDSN && !formik.errors.RequestorDSN
-                    }
+                    {...formik.getFieldProps("requestField.RequestorDSN")}
+                    isInvalid={isInvalid(`requestField.RequestorDSN`)}
+                    isValid={isValid(`requestField.RequestorDSN`)}
                   />
-                  {formik.touched.RequestorDSN && formik.errors.RequestorDSN ? (
-                    <small className="text-danger">
-                      {formik.errors.RequestorDSN}
-                    </small>
-                  ) : null}
+                  {validationError(`requestField.RequestorDSN`)}
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Directorate</Form.Label>
@@ -430,17 +457,11 @@ export const RequestForm = (props: IProps) => {
                     className="custom-select"
                     as="select"
                     disabled={!props.editing}
-                    {...formik.getFieldProps("RequestorDirectorate")}
-                    isInvalid={
-                      !!(
-                        formik.touched.RequestorDirectorate &&
-                        formik.errors.RequestorDirectorate
-                      )
-                    }
-                    isValid={
-                      formik.touched.RequestorDirectorate &&
-                      !formik.errors.RequestorDirectorate
-                    }
+                    {...formik.getFieldProps(
+                      "requestField.RequestorDirectorate"
+                    )}
+                    isInvalid={isInvalid(`requestField.RequestorDirectorate`)}
+                    isValid={isValid(`requestField.RequestorDirectorate`)}
                   >
                     <option value={""}>Select one</option>
                     {directorates.map((directorate: string) => {
@@ -451,12 +472,7 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  {formik.touched.RequestorDirectorate &&
-                  formik.errors.RequestorDirectorate ? (
-                    <small className="text-danger">
-                      {formik.errors.RequestorDirectorate}
-                    </small>
-                  ) : null}
+                  {validationError(`requestField.RequestorDirectorate`)}
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Funding</Form.Label>
@@ -464,17 +480,9 @@ export const RequestForm = (props: IProps) => {
                     className="custom-select"
                     as="select"
                     disabled={!props.editing}
-                    {...formik.getFieldProps("RequestSource")}
-                    isInvalid={
-                      !!(
-                        formik.touched.RequestSource &&
-                        formik.errors.RequestSource
-                      )
-                    }
-                    isValid={
-                      formik.touched.RequestSource &&
-                      !formik.errors.RequestSource
-                    }
+                    {...formik.getFieldProps("requestField.RequestSource")}
+                    isInvalid={isInvalid(`requestField.RequestSource`)}
+                    isValid={isValid(`requestField.RequestSource`)}
                   >
                     <option value={""}>Select one</option>
                     {FundingSources.map(src => {
@@ -485,12 +493,7 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  {formik.touched.RequestSource &&
-                  formik.errors.RequestSource ? (
-                    <small className="text-danger">
-                      {formik.errors.RequestSource}
-                    </small>
-                  ) : null}
+                  {validationError(`requestField.RequestSource`)}
                 </Form.Group>
               </Col>
             </Row>
@@ -502,24 +505,13 @@ export const RequestForm = (props: IProps) => {
                     as="textarea"
                     disabled={!props.editing}
                     rows={4}
-                    {...formik.getFieldProps("RequestJustification")}
-                    isInvalid={
-                      !!(
-                        formik.touched.RequestJustification &&
-                        formik.errors.RequestJustification
-                      )
-                    }
-                    isValid={
-                      formik.touched.RequestJustification &&
-                      !formik.errors.RequestJustification
-                    }
+                    {...formik.getFieldProps(
+                      "requestField.RequestJustification"
+                    )}
+                    isInvalid={isInvalid(`requestField.RequestCardType`)}
+                    isValid={isValid(`requestField.RequestCardType`)}
                   />
-                  {formik.touched.RequestJustification &&
-                  formik.errors.RequestJustification ? (
-                    <small className="text-danger">
-                      {formik.errors.RequestJustification}
-                    </small>
-                  ) : null}
+                  {validationError(`requestField.RequestCardType`)}
                 </Form.Group>
               </Col>
             </Row>
@@ -533,25 +525,15 @@ export const RequestForm = (props: IProps) => {
                     className="custom-select"
                     as="select"
                     disabled={!props.editing}
-                    {...formik.getFieldProps("RequestIsJ6")}
-                    isInvalid={
-                      !!(
-                        formik.touched.RequestIsJ6 && formik.errors.RequestIsJ6
-                      )
-                    }
-                    isValid={
-                      formik.touched.RequestIsJ6 && !formik.errors.RequestIsJ6
-                    }
+                    {...formik.getFieldProps("requestField.RequestIsJ6")}
+                    isInvalid={isInvalid(`requestField.RequestIsJ6`)}
+                    isValid={isValid(`requestField.RequestIsJ6`)}
                   >
                     <option value={""}>Select one</option>
                     <option value={"Yes"}>Yes</option>
                     <option value={"No"}>No</option>
                   </Form.Control>
-                  {formik.touched.RequestIsJ6 && formik.errors.RequestIsJ6 ? (
-                    <small className="text-danger">
-                      {formik.errors.RequestIsJ6}
-                    </small>
-                  ) : null}
+                  {validationError(`requestField.RequestIsJ6`)}
                 </Form.Group>
               </Col>
               <Col>
@@ -561,17 +543,11 @@ export const RequestForm = (props: IProps) => {
                     className="custom-select"
                     as="select"
                     disabled={!props.editing}
-                    {...formik.getFieldProps("RequestCurrencyType")}
-                    isInvalid={
-                      !!(
-                        formik.touched.RequestCurrencyType &&
-                        formik.errors.RequestCurrencyType
-                      )
-                    }
-                    isValid={
-                      formik.touched.RequestCurrencyType &&
-                      !formik.errors.RequestCurrencyType
-                    }
+                    {...formik.getFieldProps(
+                      "requestField.RequestCurrencyType"
+                    )}
+                    isInvalid={isInvalid(`requestField.RequestCurrencyType`)}
+                    isValid={isValid(`requestField.RequestCurrencyType`)}
                   >
                     <option value={""}>Select one</option>
                     {currencies.map((currency: string) => {
@@ -582,12 +558,7 @@ export const RequestForm = (props: IProps) => {
                       );
                     })}
                   </Form.Control>
-                  {formik.touched.RequestCurrencyType &&
-                  formik.errors.RequestCurrencyType ? (
-                    <small className="text-danger">
-                      {formik.errors.RequestCurrencyType}
-                    </small>
-                  ) : null}
+                  {validationError(`requestField.RequestCurrencyType`)}
                 </Form.Group>
               </Col>
             </Row>
@@ -600,7 +571,8 @@ export const RequestForm = (props: IProps) => {
                   <tbody style={{ borderTop: "1px solid #dee2e6" }}>
                     <tr></tr>
                     {formik.values.purchaseDetails &&
-                      formik.values.purchaseDetails.map(
+                      formik.values.purchaseDetails.Details &&
+                      formik.values.purchaseDetails.Details.map(
                         (item: Detail, index: number) => {
                           const isEven = (index + 1) % 2 === 0;
                           const rowBgColor = isEven ? "#dee2e6" : "";
@@ -628,26 +600,37 @@ export const RequestForm = (props: IProps) => {
                                     <Form.Control
                                       type="text"
                                       disabled={!props.editing}
-                                      name={`purchaseDetails[${index}].requestQty`}
-                                      id={`purchaseDetails[${index}].requestQty`}
-                                      value={formik.values.purchaseDetails[
-                                        index
-                                      ].requestQty.toString()}
+                                      // name={`purchaseDetails[${index}].requestQty`}
+                                      // id={`purchaseDetails[${index}].requestQty`}
+                                      // value={formik.values.purchaseDetails[
+                                      //   index
+                                      // ].requestQty.toString()}
                                       onChange={(e: any) => {
                                         if (handleNumbersOnlyChange(e)) {
                                           formik.setFieldValue(
-                                            `purchaseDetails[${index}].requestTotal`,
+                                            `purchaseDetails.Details[${index}].requestTotal`,
                                             Math.ceil(
-                                              formik.values.purchaseDetails[
-                                                index
-                                              ].requestCost *
+                                              formik.values.purchaseDetails
+                                                .Details[index].requestCost *
                                                 e.target.value *
                                                 100
                                             ) / 100
                                           );
                                         }
                                       }}
+                                      {...formik.getFieldProps(
+                                        `purchaseDetails.Details[${index}].requestQty`
+                                      )}
+                                      isInvalid={isInvalid(
+                                        `purchaseDetails.Details[${index}].requestQty`
+                                      )}
+                                      isValid={isValid(
+                                        `purchaseDetails.Details[${index}].requestQty`
+                                      )}
                                     />
+                                    {validationError(
+                                      `purchaseDetails.Details[${index}].requestQty`
+                                    )}
                                   </Form.Group>
                                 </td>
 
@@ -657,8 +640,8 @@ export const RequestForm = (props: IProps) => {
                                     <InputGroup className="mb-3">
                                       <InputGroup.Prepend>
                                         <InputGroup.Text>
-                                          {formik.values.RequestCurrencyType ==
-                                          "Euro"
+                                          {formik.values.requestField
+                                            .RequestCurrencyType == "Euro"
                                             ? "€"
                                             : "$"}
                                         </InputGroup.Text>
@@ -666,26 +649,32 @@ export const RequestForm = (props: IProps) => {
                                       <Form.Control
                                         type="text"
                                         disabled={!props.editing}
-                                        name={`purchaseDetails[${index}].requestCost`}
-                                        id={`purchaseDetails[${index}].requestCost`}
-                                        value={formik.values.purchaseDetails[
-                                          index
-                                        ].requestCost.toString()}
+                                        {...formik.getFieldProps(
+                                          `purchaseDetails.Details[${index}].requestCost`
+                                        )}
                                         onChange={(e: any) => {
                                           if (handleNumbersOnlyChange(e)) {
                                             formik.setFieldValue(
-                                              `purchaseDetails[${index}].requestTotal`,
+                                              `purchaseDetails.Details[${index}].requestTotal`,
                                               Math.ceil(
-                                                formik.values.purchaseDetails[
-                                                  index
-                                                ].requestQty *
+                                                formik.values.purchaseDetails
+                                                  .Details[index].requestQty *
                                                   e.target.value *
                                                   100
                                               ) / 100
                                             );
                                           }
                                         }}
+                                        isInvalid={isInvalid(
+                                          `purchaseDetails.Details[${index}].requestCost`
+                                        )}
+                                        isValid={isValid(
+                                          `purchaseDetails.Details[${index}].requestCost`
+                                        )}
                                       />
+                                      {validationError(
+                                        `purchaseDetails.Details[${index}].requestCost`
+                                      )}
                                     </InputGroup>
                                   </Form.Group>
                                 </td>
@@ -697,15 +686,25 @@ export const RequestForm = (props: IProps) => {
                                       type="checkbox"
                                       disabled={!props.editing}
                                       checked={
-                                        formik.values.purchaseDetails[index]
-                                          .requestDdForm === true
+                                        formik.values.purchaseDetails.Details[
+                                          index
+                                        ].requestDdForm === true
                                           ? true
                                           : false
                                       }
-                                      name={`purchaseDetails[${index}].requestDdForm`}
-                                      id={`purchaseDetails[${index}].requestDdForm`}
+                                      name={`purchaseDetails.Details[${index}].requestDdForm`}
+                                      id={`purchaseDetails.Details[${index}].requestDdForm`}
                                       onChange={formik.handleChange}
+                                      isInvalid={isInvalid(
+                                        `purchaseDetails.Details[${index}].requestDdForm`
+                                      )}
+                                      isValid={isValid(
+                                        `purchaseDetails.Details[${index}].requestDdForm`
+                                      )}
                                     />
+                                    {validationError(
+                                      `purchaseDetails.Details[${index}].requestDdForm`
+                                    )}
                                   </Form.Group>
                                 </td>
                                 <td className="text-center p-1">
@@ -716,15 +715,25 @@ export const RequestForm = (props: IProps) => {
                                       type="checkbox"
                                       disabled={!props.editing}
                                       checked={
-                                        formik.values.purchaseDetails[index]
-                                          .requestDaForm === true
+                                        formik.values.purchaseDetails.Details[
+                                          index
+                                        ].requestDaForm === true
                                           ? true
                                           : false
                                       }
-                                      name={`purchaseDetails[${index}].requestDaForm`}
-                                      id={`purchaseDetails[${index}].requestDaForm`}
+                                      name={`purchaseDetails.Details[${index}].requestDaForm`}
+                                      id={`purchaseDetails.Details[${index}].requestDaForm`}
                                       onChange={formik.handleChange}
+                                      isInvalid={isInvalid(
+                                        `purchaseDetails.Details[${index}].requestDaForm`
+                                      )}
+                                      isValid={isValid(
+                                        `purchaseDetails.Details[${index}].requestDaForm`
+                                      )}
                                     />
+                                    {validationError(
+                                      `purchaseDetails.Details[${index}].requestDaForm`
+                                    )}
                                   </Form.Group>
                                 </td>
                                 <td className="p-1">
@@ -733,8 +742,8 @@ export const RequestForm = (props: IProps) => {
                                     <InputGroup className="mb-3">
                                       <InputGroup.Prepend>
                                         <InputGroup.Text>
-                                          {formik.values.RequestCurrencyType ==
-                                          "Euro"
+                                          {formik.values.requestField
+                                            .RequestCurrencyType == "Euro"
                                             ? "€"
                                             : "$"}
                                         </InputGroup.Text>
@@ -743,7 +752,7 @@ export const RequestForm = (props: IProps) => {
                                         type="text"
                                         disabled={true}
                                         {...formik.getFieldProps(
-                                          `purchaseDetails[${index}].requestTotal`
+                                          `purchaseDetails.Details[${index}].requestTotal`
                                         )}
                                       />
                                     </InputGroup>
@@ -780,15 +789,21 @@ export const RequestForm = (props: IProps) => {
                                           as="textarea"
                                           type="text"
                                           disabled={!props.editing}
-                                          name={`purchaseDetails[${index}].requestDesc`}
-                                          id={`purchaseDetails[${index}].requestDesc`}
-                                          value={
-                                            formik.values.purchaseDetails[index]
-                                              .requestDesc
-                                          }
+                                          {...formik.getFieldProps(
+                                            `purchaseDetails.Details[${index}].requestDesc`
+                                          )}
                                           onChange={formik.handleChange}
                                           placeholder="Enter a description of the item being purchased"
+                                          isInvalid={isInvalid(
+                                            `purchaseDetails.Details[${index}].requestDesc`
+                                          )}
+                                          isValid={isValid(
+                                            `purchaseDetails.Details[${index}].requestDesc`
+                                          )}
                                         />
+                                        {validationError(
+                                          `purchaseDetails.Details[${index}].requestDesc`
+                                        )}
                                       </Form.Group>
                                     </Col>
                                     <Col>
@@ -798,15 +813,21 @@ export const RequestForm = (props: IProps) => {
                                           as="textarea"
                                           type="text"
                                           disabled={!props.editing}
-                                          name={`purchaseDetails[${index}].requestSrc`}
-                                          id={`purchaseDetails[${index}].requestSrc`}
-                                          value={
-                                            formik.values.purchaseDetails[index]
-                                              .requestSrc
-                                          }
+                                          {...formik.getFieldProps(
+                                            `purchaseDetails.Details[${index}].requestSrc`
+                                          )}
                                           onChange={formik.handleChange}
                                           placeholder="Enter the vendor name or URL"
+                                          isInvalid={isInvalid(
+                                            `purchaseDetails.Details[${index}].requestSrc`
+                                          )}
+                                          isValid={isValid(
+                                            `purchaseDetails.Details[${index}].requestSrc`
+                                          )}
                                         />
+                                        {validationError(
+                                          `purchaseDetails.Details[${index}].requestSrc`
+                                        )}
                                       </Form.Group>
                                     </Col>
                                   </Row>
@@ -828,11 +849,11 @@ export const RequestForm = (props: IProps) => {
                                           : "none"
                                       }}
                                       onClick={() => {
-                                        const array = formik.values.purchaseDetails.filter(
+                                        const array = formik.values.purchaseDetails.Details.filter(
                                           i => i.id !== item.id
                                         );
                                         formik.setFieldValue(
-                                          "purchaseDetails",
+                                          "purchaseDetails.Details",
                                           array
                                         );
                                       }}
@@ -863,8 +884,8 @@ export const RequestForm = (props: IProps) => {
                           variant="outline-primary"
                           disabled={!props.editing}
                           onClick={() => {
-                            formik.setFieldValue("purchaseDetails", [
-                              ...formik.values.purchaseDetails,
+                            formik.setFieldValue("purchaseDetails.Details", [
+                              ...formik.values.purchaseDetails.Details,
                               new Detail()
                             ]);
                           }}
@@ -905,24 +926,11 @@ export const RequestForm = (props: IProps) => {
                       type="text"
                       disabled={!props.editing}
                       placeholder="Enter Transaction ID"
-                      {...formik.getFieldProps("transactionId")}
-                      isInvalid={
-                        !!(
-                          formik.touched.transactionId &&
-                          formik.errors.transactionId
-                        )
-                      }
-                      isValid={
-                        formik.touched.transactionId &&
-                        !formik.errors.transactionId
-                      }
+                      {...formik.getFieldProps("requestField.transactionId")}
+                      isInvalid={isInvalid(`requestField.transactionId`)}
+                      isValid={isValid(`requestField.transactionId`)}
                     />
-                    {formik.touched.transactionId &&
-                    formik.errors.transactionId ? (
-                      <small className="text-danger">
-                        {formik.errors.transactionId}
-                      </small>
-                    ) : null}
+                    {validationError(`requestField.transactionId`)}
                   </Form.Group>
                 </Col>
                 <Col>
@@ -932,25 +940,11 @@ export const RequestForm = (props: IProps) => {
                       as={DatePicker}
                       disabled={!props.editing}
                       className={!props.editing ? "date-picker-locked" : ""}
-                      name="executionDate"
-                      id="executionDate"
-                      isInvalid={
-                        !!(
-                          formik.touched.executionDate &&
-                          formik.errors.executionDate
-                        )
-                      }
-                      isValid={
-                        formik.touched.executionDate &&
-                        !formik.errors.executionDate
-                      }
+                      {...formik.getFieldProps("requestField.executionDate")}
+                      isInvalid={isInvalid(`requestField.executionDate`)}
+                      isValid={isValid(`requestField.executionDate`)}
                     />
-                    {formik.touched.executionDate &&
-                    formik.errors.executionDate ? (
-                      <small className="text-danger">
-                        {formik.errors.executionDate}
-                      </small>
-                    ) : null}
+                    {validationError(`requestField.executionDate`)}
                   </Form.Group>
                 </Col>
               </Row>
@@ -972,15 +966,9 @@ export const RequestForm = (props: IProps) => {
                       className="custom-select"
                       as="select"
                       disabled={!props.editing}
-                      {...formik.getFieldProps("fiscalYear")}
-                      isInvalid={
-                        !!(
-                          formik.touched.fiscalYear && formik.errors.fiscalYear
-                        )
-                      }
-                      isValid={
-                        formik.touched.fiscalYear && !formik.errors.fiscalYear
-                      }
+                      {...formik.getFieldProps("requestField.fiscalYear")}
+                      isInvalid={isInvalid(`requestField.fiscalYear`)}
+                      isValid={isValid(`requestField.fiscalYear`)}
                     >
                       <option value={""}>Select one</option>
                       {fiscalYears.map((year: any) => {
@@ -991,11 +979,7 @@ export const RequestForm = (props: IProps) => {
                         );
                       })}
                     </Form.Control>
-                    {formik.touched.fiscalYear && formik.errors.fiscalYear ? (
-                      <small className="text-danger">
-                        {formik.errors.fiscalYear}
-                      </small>
-                    ) : null}
+                    {validationError(`requestField.fiscalYear`)}
                   </Form.Group>
                 </Col>
                 <Col>
@@ -1005,17 +989,9 @@ export const RequestForm = (props: IProps) => {
                       className="custom-select"
                       as="select"
                       disabled={!props.editing}
-                      {...formik.getFieldProps("fiscalQuarter")}
-                      isInvalid={
-                        !!(
-                          formik.touched.fiscalQuarter &&
-                          formik.errors.fiscalQuarter
-                        )
-                      }
-                      isValid={
-                        formik.touched.fiscalQuarter &&
-                        !formik.errors.fiscalQuarter
-                      }
+                      {...formik.getFieldProps("requestField.fiscalQuarter")}
+                      isInvalid={isInvalid(`requestField.fiscalQuarter`)}
+                      isValid={isValid(`requestField.fiscalQuarter`)}
                     >
                       <option value={""}>Select one</option>
                       {fiscalQuarters.map((quarter: string) => {
@@ -1026,12 +1002,7 @@ export const RequestForm = (props: IProps) => {
                         );
                       })}
                     </Form.Control>
-                    {formik.touched.fiscalQuarter &&
-                    formik.errors.fiscalQuarter ? (
-                      <small className="text-danger">
-                        {formik.errors.fiscalQuarter}
-                      </small>
-                    ) : null}
+                    {validationError(`requestField.fiscalQuarter`)}
                   </Form.Group>
                 </Col>
               </Row>
