@@ -141,19 +141,16 @@ export const RequestProvider: React.FC = (props: any) => {
     let filteredRequests: Request[] = applyFilters(newFilters, requests);
     if (update) {
       //updateFilteredRequests(filteredRequests);
-      console.log(`about to apply filters: `, newFilters);
       updateFilters(newFilters);
     }
     return filteredRequests;
   };
 
   useEffect(() => {
-    console.log(`requests changed, filtering`);
     updateFilteredRequests(applyFilters(filters, requests));
   }, [requests]);
 
   useEffect(() => {
-    console.log(`filters changed, filtering`);
     updateFilteredRequests(applyFilters(filters, requests));
   }, [filters]);
 
@@ -161,7 +158,6 @@ export const RequestProvider: React.FC = (props: any) => {
     let currentRequests = [...requests];
     const index = currentRequests.findIndex(r => r.id === newRequest.id);
     if (index > -1) {
-      console.log("Replacing", currentRequests[index], newRequest);
       currentRequests[index] = newRequest;
     }
     updateRequests(currentRequests);

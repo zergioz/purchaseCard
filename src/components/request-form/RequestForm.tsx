@@ -244,7 +244,6 @@ export const RequestForm = (props: IProps) => {
     for (var i = 0; i < items.length; i++) {
       sum += items[i].requestTotal;
     }
-    console.log(sum);
     return formatter.format(sum);
   };
 
@@ -258,7 +257,6 @@ export const RequestForm = (props: IProps) => {
 
     const handleDateChanged = (date: Date | Date[]) => {
       const singleDate = makeSingleDate(date);
-      console.log(singleDate);
       formik.setFieldTouched("executionDate", true, true);
       formik.setFieldValue(
         "executionDate",

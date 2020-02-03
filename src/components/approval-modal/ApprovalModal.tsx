@@ -21,14 +21,12 @@ export const ApprovalModal = (props: IProps) => {
 
   //when the form inputs change, update the action
   const onApprovalFormInputsChanged = (inputs: any) => {
-    console.log(`onApprovalFormInputsChanged`, inputs);
     setAction({ ...action, formInputs: inputs });
   };
 
   //when the save button is clicked, timestamp it and update the request
   //also lock the progress bar so they cant do any more actions
   const onActionButtonClicked = () => {
-    console.log(`onActionButtonClicked`, action);
     action.date = new Date().toISOString();
     props.onActionFinalized(action);
     setShow(false);
