@@ -16,7 +16,7 @@ import { Currencies as currencies } from "../../constants/Currencies";
 import { FiscalYears as fiscalYears } from "../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters";
 import { FaPlus, FaTimes } from "react-icons/fa";
-import { Detail } from "../../services/models/PurchaseDetails";
+import { Detail, PurchaseDetails } from "../../services/models/PurchaseDetails";
 import { ValidationErrorModal } from "./ValidationErrorModal";
 import { useFormik } from "formik";
 import ReactDatePicker, {
@@ -86,13 +86,11 @@ export const RequestForm = (props: IProps) => {
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: {
-      ...request
-    },
+    initialValues: request,
     onSubmit: values => {
       saveRequest(values);
     },
-    validationSchema: Yup.object().shape({
+    validationSchema: Yup.object<Request>().shape({
       requestField: Yup.object().shape({
         //fiscalYear: Yup.string().required("Required"),
         //fiscalQuarter: Yup.string().required("Required")
@@ -109,22 +107,15 @@ export const RequestForm = (props: IProps) => {
         RequestCurrencyType: Yup.string().required("Required"),
         RequestIsJ6: Yup.string().required("Required")
       }),
-      purchaseDetails: Yup.object().shape({
+      purchaseDetails: Yup.object<PurchaseDetails>().shape({
         Detail: Yup.array().of(
           Yup.object<Detail>().shape({
-            requestQty: Yup.number()
-              .required("Required")
-              .min(0, "No negative quantities"),
+            requestQty: Yup.number().required("Required"),
+            requestCost: Yup.number().required("Required"),
             requestDesc: Yup.string().required("Required"),
             requestSrc: Yup.string().required("Required"),
             requestDdForm: Yup.boolean(),
-            requestDaForm: Yup.boolean(),
-            requestCost: Yup.number()
-              .required("Required")
-              .min(0, "No negative costs"),
-            requestTotal: Yup.number()
-              .required("Required")
-              .min(0, "No negative totals")
+            requestDaForm: Yup.boolean()
           })
         )
       })
@@ -220,7 +211,7 @@ export const RequestForm = (props: IProps) => {
   //other non-numeric characters.  used for qty and cost inputs
   const handleNumbersOnlyChange = (e: any): boolean => {
     //const re = /^[0-9\b]+$/;
-    //const re = /^[0-9]+(\.[0-9][0-9]?)?/;
+    //const re = /^[0-9]+(\.[0-9][0-9]?)?/;\
     const re = /^((\d+(\.\d*)?)|(\.\d+))$/;
     if (e.target.value === "" || re.test(e.target.value)) {
       formik.handleChange(e);
@@ -257,9 +248,9 @@ export const RequestForm = (props: IProps) => {
 
     const handleDateChanged = (date: Date | Date[]) => {
       const singleDate = makeSingleDate(date);
-      formik.setFieldTouched("executionDate", true, true);
+      formik.setFieldTouched("requestField.executionDate", true, true);
       formik.setFieldValue(
-        "executionDate",
+        "requestField.executionDate",
         singleDate ? singleDate.toISOString() : undefined
       );
     };
@@ -279,7 +270,7 @@ export const RequestForm = (props: IProps) => {
 
   //returns true if a field has validation errors
   const isInvalid = (fieldName: string): boolean => {
-    return !!(get(formik.touched, fieldName) && get(formik.errors, fieldName));
+    return get(formik.touched, fieldName) && get(formik.errors, fieldName);
   };
 
   //returns true if a field has no validation errors
@@ -440,11 +431,14 @@ export const RequestForm = (props: IProps) => {
               </Col>
               <Col>
                 <Form.Group>
-                  <Form.Label>Requestor DSN</Form.Label>
+                  <Form.Label>
+                    Requestor DSN{" "}
+                    <span className="text-secondary">(###-###-####)</span>
+                  </Form.Label>
                   <Form.Control
                     type="text"
                     disabled={!props.editing}
-                    placeholder="Enter a phone number"
+                    placeholder="Enter a 10 digit phone number"
                     {...formik.getFieldProps("requestField.RequestorDSN")}
                     isInvalid={isInvalid(`requestField.RequestorDSN`)}
                     isValid={isValid(`requestField.RequestorDSN`)}
@@ -508,10 +502,10 @@ export const RequestForm = (props: IProps) => {
                     {...formik.getFieldProps(
                       "requestField.RequestJustification"
                     )}
-                    isInvalid={isInvalid(`requestField.RequestCardType`)}
-                    isValid={isValid(`requestField.RequestCardType`)}
+                    isInvalid={isInvalid(`requestField.RequestJustification`)}
+                    isValid={isValid(`requestField.RequestJustification`)}
                   />
-                  {validationError(`requestField.RequestCardType`)}
+                  {validationError(`requestField.RequestJustification`)}
                 </Form.Group>
               </Col>
             </Row>
@@ -600,11 +594,9 @@ export const RequestForm = (props: IProps) => {
                                     <Form.Control
                                       type="text"
                                       disabled={!props.editing}
-                                      // name={`purchaseDetails[${index}].requestQty`}
-                                      // id={`purchaseDetails[${index}].requestQty`}
-                                      // value={formik.values.purchaseDetails[
-                                      //   index
-                                      // ].requestQty.toString()}
+                                      {...formik.getFieldProps(
+                                        `purchaseDetails.Details[${index}].requestQty`
+                                      )}
                                       onChange={(e: any) => {
                                         if (handleNumbersOnlyChange(e)) {
                                           formik.setFieldValue(
@@ -618,9 +610,6 @@ export const RequestForm = (props: IProps) => {
                                           );
                                         }
                                       }}
-                                      {...formik.getFieldProps(
-                                        `purchaseDetails.Details[${index}].requestQty`
-                                      )}
                                       isInvalid={isInvalid(
                                         `purchaseDetails.Details[${index}].requestQty`
                                       )}
@@ -940,7 +929,8 @@ export const RequestForm = (props: IProps) => {
                       as={DatePicker}
                       disabled={!props.editing}
                       className={!props.editing ? "date-picker-locked" : ""}
-                      {...formik.getFieldProps("requestField.executionDate")}
+                      name="requestField.executionDate"
+                      id="requestField.executionDate"
                       isInvalid={isInvalid(`requestField.executionDate`)}
                       isValid={isValid(`requestField.executionDate`)}
                     />
