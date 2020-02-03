@@ -16,7 +16,6 @@ import { Currencies as currencies } from "../../constants/Currencies";
 import { FiscalYears as fiscalYears } from "../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters";
 import { FaPlus, FaTimes } from "react-icons/fa";
-import { Detail, PurchaseDetails } from "../../services/models/PurchaseDetails";
 import { ValidationErrorModal } from "./ValidationErrorModal";
 import { useFormik, getIn } from "formik";
 import ReactDatePicker, {
@@ -32,6 +31,7 @@ import { Role } from "../../services/models/Role";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
 import * as Yup from "yup";
+import { LineItem } from "../../services/models/LineItem";
 
 interface IProps {
   request: Request;
@@ -106,24 +106,22 @@ export const RequestForm = (props: IProps) => {
         RequestCurrencyType: Yup.string().required("Required"),
         RequestIsJ6: Yup.string().required("Required")
       }),
-      purchaseDetails: Yup.object({
-        Detail: Yup.array().of(
-          Yup.object({
-            requestQty: Yup.number()
-              .positive()
-              .transform(value => (value == "" ? undefined : value))
-              .required("Required"),
-            requestCost: Yup.number()
-              .positive()
-              .transform(value => (value == "" ? undefined : value))
-              .required("Required"),
-            requestDesc: Yup.string().required("Required"),
-            requestSrc: Yup.string().required("Required"),
-            requestDdForm: Yup.boolean(),
-            requestDaForm: Yup.boolean()
-          })
-        )
-      })
+      lineItems: Yup.array().of(
+        Yup.object({
+          requestQty: Yup.number()
+            .positive("Can't be negative")
+            .transform(value => (isNaN(value) ? undefined : value))
+            .required("Required"),
+          requestCost: Yup.number()
+            .positive("Can't be negative")
+            .transform(value => (isNaN(value) ? undefined : value))
+            .required("Required"),
+          requestDesc: Yup.string().required("Required"),
+          requestSrc: Yup.string().required("Required"),
+          requestDdForm: Yup.boolean(),
+          requestDaForm: Yup.boolean()
+        })
+      )
     })
   });
 
@@ -131,10 +129,7 @@ export const RequestForm = (props: IProps) => {
   useEffect(() => {
     setTotal(formatTotal());
     console.log(formik);
-  }, [
-    formik.values.purchaseDetails,
-    formik.values.requestField.RequestCurrencyType
-  ]);
+  }, [formik.values.lineItems, formik.values.requestField.RequestCurrencyType]);
 
   //update our state if the request changes - after an update is sent, for example
   useEffect(() => {
@@ -236,7 +231,7 @@ export const RequestForm = (props: IProps) => {
           : "USD",
       minimumFractionDigits: 2
     });
-    const items = formik.values.purchaseDetails.Details;
+    const items = formik.values.lineItems;
     let sum = 0;
     for (var i = 0; i < items.length; i++) {
       sum += items[i].requestTotal;
@@ -570,10 +565,10 @@ export const RequestForm = (props: IProps) => {
                 <Table responsive borderless>
                   <tbody style={{ borderTop: "1px solid #dee2e6" }}>
                     <tr></tr>
-                    {formik.values.purchaseDetails &&
-                      formik.values.purchaseDetails.Details &&
-                      formik.values.purchaseDetails.Details.map(
-                        (item: Detail, index: number) => {
+                    {formik.values.lineItems &&
+                      formik.values.lineItems &&
+                      formik.values.lineItems.map(
+                        (item: LineItem, index: number) => {
                           const isEven = (index + 1) % 2 === 0;
                           const rowBgColor = isEven ? "#dee2e6" : "";
                           const rowBgColorDarker = isEven ? "#dee2e6" : "";
@@ -601,15 +596,15 @@ export const RequestForm = (props: IProps) => {
                                       type="text"
                                       disabled={!props.editing}
                                       {...formik.getFieldProps(
-                                        `purchaseDetails.Details[${index}].requestQty`
+                                        `lineItems[${index}].requestQty`
                                       )}
                                       onChange={(e: any) => {
                                         if (handleNumbersOnlyChange(e)) {
                                           formik.setFieldValue(
-                                            `purchaseDetails.Details[${index}].requestTotal`,
+                                            `lineItems[${index}].requestTotal`,
                                             Math.ceil(
-                                              formik.values.purchaseDetails
-                                                .Details[index].requestCost *
+                                              formik.values.lineItems[index]
+                                                .requestCost *
                                                 e.target.value *
                                                 100
                                             ) / 100
@@ -617,14 +612,14 @@ export const RequestForm = (props: IProps) => {
                                         }
                                       }}
                                       isInvalid={isInvalid(
-                                        `purchaseDetails.Details[${index}].requestQty`
+                                        `lineItems[${index}].requestQty`
                                       )}
                                       isValid={isValid(
-                                        `purchaseDetails.Details[${index}].requestQty`
+                                        `lineItems[${index}].requestQty`
                                       )}
                                     />
                                     {validationError(
-                                      `purchaseDetails.Details[${index}].requestQty`
+                                      `lineItems[${index}].requestQty`
                                     )}
                                   </Form.Group>
                                 </td>
@@ -645,15 +640,15 @@ export const RequestForm = (props: IProps) => {
                                         type="text"
                                         disabled={!props.editing}
                                         {...formik.getFieldProps(
-                                          `purchaseDetails.Details[${index}].requestCost`
+                                          `lineItems[${index}].requestCost`
                                         )}
                                         onChange={(e: any) => {
                                           if (handleNumbersOnlyChange(e)) {
                                             formik.setFieldValue(
-                                              `purchaseDetails.Details[${index}].requestTotal`,
+                                              `lineItems[${index}].requestTotal`,
                                               Math.ceil(
-                                                formik.values.purchaseDetails
-                                                  .Details[index].requestQty *
+                                                formik.values.lineItems[index]
+                                                  .requestQty *
                                                   e.target.value *
                                                   100
                                               ) / 100
@@ -661,16 +656,16 @@ export const RequestForm = (props: IProps) => {
                                           }
                                         }}
                                         isInvalid={isInvalid(
-                                          `purchaseDetails.Details[${index}].requestCost`
+                                          `lineItems[${index}].requestCost`
                                         )}
                                         isValid={isValid(
-                                          `purchaseDetails.Details[${index}].requestCost`
+                                          `lineItems[${index}].requestCost`
                                         )}
                                       />
-                                      {validationError(
-                                        `purchaseDetails.Details[${index}].requestCost`
-                                      )}
                                     </InputGroup>
+                                    {validationError(
+                                      `lineItems[${index}].requestCost`
+                                    )}
                                   </Form.Group>
                                 </td>
                                 <td className="text-center p-1">
@@ -681,24 +676,23 @@ export const RequestForm = (props: IProps) => {
                                       type="checkbox"
                                       disabled={!props.editing}
                                       checked={
-                                        formik.values.purchaseDetails.Details[
-                                          index
-                                        ].requestDdForm === true
+                                        formik.values.lineItems[index]
+                                          .requestDdForm === true
                                           ? true
                                           : false
                                       }
-                                      name={`purchaseDetails.Details[${index}].requestDdForm`}
-                                      id={`purchaseDetails.Details[${index}].requestDdForm`}
+                                      name={`lineItems[${index}].requestDdForm`}
+                                      id={`lineItems[${index}].requestDdForm`}
                                       onChange={formik.handleChange}
                                       isInvalid={isInvalid(
-                                        `purchaseDetails.Details[${index}].requestDdForm`
+                                        `lineItems[${index}].requestDdForm`
                                       )}
                                       isValid={isValid(
-                                        `purchaseDetails.Details[${index}].requestDdForm`
+                                        `lineItems[${index}].requestDdForm`
                                       )}
                                     />
                                     {validationError(
-                                      `purchaseDetails.Details[${index}].requestDdForm`
+                                      `lineItems[${index}].requestDdForm`
                                     )}
                                   </Form.Group>
                                 </td>
@@ -710,24 +704,23 @@ export const RequestForm = (props: IProps) => {
                                       type="checkbox"
                                       disabled={!props.editing}
                                       checked={
-                                        formik.values.purchaseDetails.Details[
-                                          index
-                                        ].requestDaForm === true
+                                        formik.values.lineItems[index]
+                                          .requestDaForm === true
                                           ? true
                                           : false
                                       }
-                                      name={`purchaseDetails.Details[${index}].requestDaForm`}
-                                      id={`purchaseDetails.Details[${index}].requestDaForm`}
+                                      name={`lineItems[${index}].requestDaForm`}
+                                      id={`lineItems[${index}].requestDaForm`}
                                       onChange={formik.handleChange}
                                       isInvalid={isInvalid(
-                                        `purchaseDetails.Details[${index}].requestDaForm`
+                                        `lineItems[${index}].requestDaForm`
                                       )}
                                       isValid={isValid(
-                                        `purchaseDetails.Details[${index}].requestDaForm`
+                                        `lineItems[${index}].requestDaForm`
                                       )}
                                     />
                                     {validationError(
-                                      `purchaseDetails.Details[${index}].requestDaForm`
+                                      `lineItems[${index}].requestDaForm`
                                     )}
                                   </Form.Group>
                                 </td>
@@ -747,7 +740,7 @@ export const RequestForm = (props: IProps) => {
                                         type="text"
                                         disabled={true}
                                         {...formik.getFieldProps(
-                                          `purchaseDetails.Details[${index}].requestTotal`
+                                          `lineItems[${index}].requestTotal`
                                         )}
                                       />
                                     </InputGroup>
@@ -785,19 +778,19 @@ export const RequestForm = (props: IProps) => {
                                           type="text"
                                           disabled={!props.editing}
                                           {...formik.getFieldProps(
-                                            `purchaseDetails.Details[${index}].requestDesc`
+                                            `lineItems[${index}].requestDesc`
                                           )}
                                           onChange={formik.handleChange}
                                           placeholder="Enter a description of the item being purchased"
                                           isInvalid={isInvalid(
-                                            `purchaseDetails.Details[${index}].requestDesc`
+                                            `lineItems[${index}].requestDesc`
                                           )}
                                           isValid={isValid(
-                                            `purchaseDetails.Details[${index}].requestDesc`
+                                            `lineItems[${index}].requestDesc`
                                           )}
                                         />
                                         {validationError(
-                                          `purchaseDetails.Details[${index}].requestDesc`
+                                          `lineItems[${index}].requestDesc`
                                         )}
                                       </Form.Group>
                                     </Col>
@@ -809,19 +802,19 @@ export const RequestForm = (props: IProps) => {
                                           type="text"
                                           disabled={!props.editing}
                                           {...formik.getFieldProps(
-                                            `purchaseDetails.Details[${index}].requestSrc`
+                                            `lineItems[${index}].requestSrc`
                                           )}
                                           onChange={formik.handleChange}
                                           placeholder="Enter the vendor name or URL"
                                           isInvalid={isInvalid(
-                                            `purchaseDetails.Details[${index}].requestSrc`
+                                            `lineItems[${index}].requestSrc`
                                           )}
                                           isValid={isValid(
-                                            `purchaseDetails.Details[${index}].requestSrc`
+                                            `lineItems[${index}].requestSrc`
                                           )}
                                         />
                                         {validationError(
-                                          `purchaseDetails.Details[${index}].requestSrc`
+                                          `lineItems[${index}].requestSrc`
                                         )}
                                       </Form.Group>
                                     </Col>
@@ -844,11 +837,11 @@ export const RequestForm = (props: IProps) => {
                                           : "none"
                                       }}
                                       onClick={() => {
-                                        const array = formik.values.purchaseDetails.Details.filter(
+                                        const array = formik.values.lineItems.filter(
                                           i => i.id !== item.id
                                         );
                                         formik.setFieldValue(
-                                          "purchaseDetails.Details",
+                                          "lineItems",
                                           array
                                         );
                                       }}
@@ -879,9 +872,9 @@ export const RequestForm = (props: IProps) => {
                           variant="outline-primary"
                           disabled={!props.editing}
                           onClick={() => {
-                            formik.setFieldValue("purchaseDetails.Details", [
-                              ...formik.values.purchaseDetails.Details,
-                              new Detail()
+                            formik.setFieldValue("lineItems", [
+                              ...formik.values.lineItems,
+                              new LineItem()
                             ]);
                           }}
                         >

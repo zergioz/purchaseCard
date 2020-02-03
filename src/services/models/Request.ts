@@ -1,6 +1,6 @@
 import { autoserializeAs, autoserialize } from "cerialize";
 import { RequestField } from "./RequestField";
-import { PurchaseDetails } from "./PurchaseDetails";
+import { LineItem } from "./LineItem";
 import { BudgetOfficerApproval } from "./BudgetOfficerApproval";
 import { BillingOfficialApproval } from "./BillingOfficialApproval";
 import { J6Approval } from "./J6Approval";
@@ -57,7 +57,7 @@ export interface IRequest {
   id?: number;
   requestor: SharepointUser;
   requestField: RequestField;
-  purchaseDetails: PurchaseDetails;
+  lineItems: LineItem[];
   status: string;
   approvals: RequestApprovals;
 }
@@ -72,8 +72,8 @@ export class Request implements IRequest {
   @autoserializeAs(RequestField)
   requestField: RequestField;
 
-  @autoserializeAs(PurchaseDetails)
-  purchaseDetails: PurchaseDetails;
+  @autoserializeAs(LineItem)
+  lineItems: LineItem[];
 
   @autoserialize
   status: string;
@@ -95,7 +95,9 @@ export class Request implements IRequest {
     this.id = data.id;
     this.requestor = data.requestor || {};
     this.requestField = new RequestField(data.requestField || {});
-    this.purchaseDetails = new PurchaseDetails(data.purchaseDetails || {});
+    this.lineItems = data.lineItems
+      ? data.lineItems.map((item: any) => new LineItem(item))
+      : [];
     this.status = data.status || "";
     this.approvals = data.approvals || {};
     this.history = data.history || {};
