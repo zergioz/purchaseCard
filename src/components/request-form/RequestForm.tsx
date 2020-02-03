@@ -85,6 +85,7 @@ export const RequestForm = (props: IProps) => {
 
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       ...request
     },
@@ -160,10 +161,11 @@ export const RequestForm = (props: IProps) => {
     props.setEditing(false);
     //todo: use nested initial values and rename all our controls.  formik can handle it
     const updatedRequest = new Request({
-      ...request,
+      request,
       ...values
     });
     setRequest(updatedRequest);
+    formik.setValues(updatedRequest);
     props.onRequestUpdated(updatedRequest);
   };
 
