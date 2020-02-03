@@ -113,7 +113,7 @@ export const RequestForm = (props: IProps) => {
       ...values
     });
     setRequest(updatedRequest);
-    formik.setValues(updatedRequest);
+    formik.resetForm(updatedRequest);
     props.onRequestUpdated(updatedRequest);
   };
 
@@ -121,11 +121,10 @@ export const RequestForm = (props: IProps) => {
     if (request.status === "Draft") {
       saveRequest(formik.values);
     } else {
+      formik.handleSubmit();
       if (!formik.isValid) {
         setErrorModalOpen(true);
       }
-
-      formik.handleSubmit();
     }
   };
 
@@ -149,8 +148,8 @@ export const RequestForm = (props: IProps) => {
         if (formik.isValid) {
           isAllowed = true;
         } else {
-          setErrorModalOpen(true);
           formik.handleSubmit();
+          setErrorModalOpen(true);
           isAllowed = false;
         }
         break;
