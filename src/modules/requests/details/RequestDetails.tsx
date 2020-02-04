@@ -35,9 +35,14 @@ export const RequestDetails = (props: IProps) => {
 
   //update our state when the filter is applied
   useEffect(() => {
-    const request = context.filteredRequests[0];
-    if (request) {
-      setRequest(request);
+    const selectedRequest = context.filteredRequests[0];
+    if (selectedRequest && !request) {
+      setRequest(selectedRequest);
+
+      //users were confused when new requests appeared locked
+      if (selectedRequest.status === "Draft") {
+        setEditing(true);
+      }
     }
   }, [context.filteredRequests]);
 
