@@ -8,7 +8,7 @@ import {
   StatusesByFriendlyName
 } from "../constants/StepStatus";
 import { ApprovalActions } from "../constants/ApprovalActions";
-import { IRequestApprovals } from "../services/models/Request";
+import { IRequestApprovals } from "../services/models/RequestApprovals";
 const statuses: StatusesByFriendlyName = getStatusesByFriendlyName();
 
 //gets the friendly status string for a legacy approval key based on the
