@@ -22,7 +22,7 @@ import ReactDatePicker, {
   DatePickerProps
 } from "react-date-picker/dist/entry.nostyle";
 import "./DatePicker.css";
-import { parseISO, format } from "date-fns";
+import { parseISO, format, isDate } from "date-fns";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { RequestAttachmentsTable } from "./RequestAttachmentsTable";
 import UserContext from "../../contexts/UserContext";
@@ -215,6 +215,9 @@ export const RequestForm = (props: IProps) => {
   const DatePicker = (props: DatePickerProps) => {
     const makeSingleDate = (date: Date | Date[] | undefined) => {
       let singleDate = Array.isArray(date) ? date[0] : date;
+      if (!isDate(singleDate)) {
+        singleDate = new Date();
+      }
       return singleDate;
     };
 
@@ -227,12 +230,25 @@ export const RequestForm = (props: IProps) => {
       );
     };
 
+    const tryParse = (isoString: string): Date => {
+      let date = new Date();
+      try {
+        date = parseISO(isoString);
+      } catch (e) {
+        console.error(
+          `tryParse(request: ${request.id}): Error parsing string`,
+          isoString
+        );
+      }
+      return date;
+    };
+
     return (
       <ReactDatePicker
         onChange={handleDateChanged}
         value={
           formik.values.requestField.executionDate
-            ? parseISO(formik.values.requestField.executionDate)
+            ? tryParse(formik.values.requestField.executionDate)
             : undefined
         }
         {...props}
