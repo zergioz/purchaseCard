@@ -438,16 +438,18 @@ export const RequestForm = (props: IProps) => {
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Request Date</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={format(
-                      parseISO(request.created),
-                      "MM/dd/yyyy"
-                    ).toUpperCase()}
-                    name="created"
-                    readOnly
-                    disabled
-                  />
+                  <ErrorBoundary>
+                    <Form.Control
+                      type="text"
+                      value={format(
+                        parseISO(request.created),
+                        "MM/dd/yyyy"
+                      ).toUpperCase()}
+                      name="created"
+                      readOnly
+                      disabled
+                    />
+                  </ErrorBoundary>
                 </Form.Group>
               </Col>
               <Col>
