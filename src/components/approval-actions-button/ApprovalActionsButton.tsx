@@ -14,6 +14,7 @@ import { useToasts } from "react-toast-notifications";
 import { Link, useHistory } from "react-router-dom";
 import { EmailService } from "../../services/EmailService";
 import RoleContext from "../../contexts/RoleContext";
+import { Observable } from "rxjs";
 
 interface IProps {
   request: Request;
@@ -23,7 +24,7 @@ interface IProps {
   loading?: boolean;
   hidden?: boolean;
   actions: Set<string>;
-  onRequestUpdated: (newRequest: Request) => void;
+  onRequestUpdated: (newRequest: Request) => Observable<Request>;
   onBeforeAction: (action: ApprovalAction) => boolean;
 }
 export const ApprovalActionsButton = (props: IProps) => {
@@ -53,7 +54,8 @@ export const ApprovalActionsButton = (props: IProps) => {
       });
       emailSvc.notifyNextApproversFor(updatedRequest, roles);
       emailSvc.notifySubmitterFor(updatedRequest);
-      props.onRequestUpdated(updatedRequest);
+      setLoading(true);
+      props.onRequestUpdated(updatedRequest).subscribe(() => setLoading(false));
     }
   }, [nextRequestState.status]);
 
@@ -163,7 +165,7 @@ export const ApprovalActionsButton = (props: IProps) => {
       <Dropdown as={ButtonGroup} size="sm" className={`${props.className}`}>
         <Dropdown.Toggle
           hidden={props.hidden}
-          disabled={props.disabled}
+          disabled={props.disabled || loading}
           variant={props.variant}
           size="sm"
           id="approval-button"

@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import RequestContext from "../../../contexts/RequestContext";
 import { Request } from "../../../services/models/Request";
-import { RequestFilters } from "../../../components/filters/RequestFilters";
 import { RequestService } from "../../../services";
 import { LoadingResults } from "../../../components/request-table/LoadingResults";
 import { Alert, Button } from "react-bootstrap";
@@ -9,6 +8,7 @@ import { ApprovalProgressBar } from "../../../components/approval-progress-bar/A
 import { RequestForm } from "../../../components/request-form/RequestForm";
 import { useToasts } from "react-toast-notifications";
 import { useHistory } from "react-router-dom";
+import { Observable } from "rxjs";
 
 interface IProps {
   requestId: number;
@@ -40,7 +40,7 @@ export const RequestDetails = (props: IProps) => {
     });
   }, []);
 
-  const onRequestUpdated = (newRequest: Request) => {
+  const onRequestUpdated = (newRequest: Request): Observable<Request> => {
     addToast(`Saving...`, {
       appearance: "info",
       autoDismiss: true
@@ -61,6 +61,7 @@ export const RequestDetails = (props: IProps) => {
       },
       () => {}
     );
+    return obs;
   };
 
   return (

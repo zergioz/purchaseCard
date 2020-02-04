@@ -15,7 +15,7 @@ import { CardTypes as cardTypes } from "../../constants/CardTypes";
 import { Currencies as currencies } from "../../constants/Currencies";
 import { FiscalYears as fiscalYears } from "../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters";
-import { FaPlus, FaTimes } from "react-icons/fa";
+import { FaPlus, FaTimes, FaNetworkWired } from "react-icons/fa";
 import { ValidationErrorModal } from "./ValidationErrorModal";
 import { useFormik, getIn, validateYupSchema, yupToFormErrors } from "formik";
 import ReactDatePicker, {
@@ -30,22 +30,27 @@ import RoleContext from "../../contexts/RoleContext";
 import { Role } from "../../services/models/Role";
 import { ApprovalActionsButton } from "../approval-actions-button/ApprovalActionsButton";
 import { ApprovalAction } from "../../services/models/ApprovalAction";
-
 import { LineItem } from "../../services/models/LineItem";
+import { Observable } from "rxjs";
+import { useHistory } from "react-router-dom";
 
 interface IProps {
   request: Request;
-  onRequestUpdated: (newRequest: Request) => void;
+  onRequestUpdated: (newRequest: Request) => Observable<Request>;
   editing: boolean;
   setEditing: (editing: boolean) => void;
 }
 export const RequestForm = (props: IProps) => {
   const [total, setTotal] = useState<string>("");
   const [discardModalOpen, setDiscardModalOpen] = useState<boolean>(false);
+  const [completedModalOpen, setCompletedModalOpen] = useState<boolean>(false);
   const [request, setRequest] = useState<Request>(props.request);
   const [errorModalOpen, setErrorModalOpen] = useState<boolean>(false);
+  const [canEdit, setCanEdit] = useState<boolean>(false);
+  const [canAction, setCanAction] = useState<boolean>(true);
   const { user } = useContext(UserContext);
   const { roles } = useContext(RoleContext);
+  const history = useHistory();
 
   const cardholders = roles
     .filter(role => role.role === "CARD HOLDER" && role.active)
@@ -58,8 +63,6 @@ export const RequestForm = (props: IProps) => {
       }
       return 0;
     });
-
-  const canEdit = request.status !== "Closed";
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -98,6 +101,7 @@ export const RequestForm = (props: IProps) => {
 
   //when this form loads, calculate and format the line item totals
   useEffect(() => {
+    setCanEdit(request.status !== "Closed");
     setTotal(formatTotal());
   }, []);
 
@@ -114,7 +118,18 @@ export const RequestForm = (props: IProps) => {
     const updatedRequest = new Request({ ...request, ...values });
     formik.resetForm(updatedRequest);
     setRequest(updatedRequest);
-    props.onRequestUpdated(updatedRequest);
+    setCanEdit(false);
+    setCanAction(false);
+    props.onRequestUpdated(updatedRequest).subscribe(
+      () => {
+        setCanEdit(request.status !== "Closed");
+        setCanAction(true);
+      },
+      () => {
+        setCanEdit(request.status !== "Closed");
+        setCanAction(true);
+      }
+    );
   };
 
   const onSaveClicked = () => {
@@ -242,6 +257,25 @@ export const RequestForm = (props: IProps) => {
     ) : null;
   };
 
+  const onRequestUpdated = (newRequest: Request): Observable<Request> => {
+    const obs = props.onRequestUpdated(newRequest);
+    setCanEdit(false);
+    setCanAction(false);
+    obs.subscribe(
+      req => {
+        setCompletedModalOpen(true);
+        setCanEdit(newRequest.status !== "Closed");
+        setCanAction(true);
+      },
+      () => {
+        setErrorModalOpen(true);
+        setCanEdit(newRequest.status !== "Closed");
+        setCanAction(true);
+      }
+    );
+    return obs;
+  };
+
   return (
     <>
       {/* modals */}
@@ -257,6 +291,17 @@ export const RequestForm = (props: IProps) => {
         body="Are you sure you want to discard your changes?"
         confirmText="Yes"
         cancelText="No"
+        size="lg"
+      />
+      <ConfirmationModal
+        open={completedModalOpen}
+        onHide={() => setCompletedModalOpen(false)}
+        onConfirm={() => history.push("/requests")}
+        title="Success"
+        body="The action was successful!"
+        confirmText="Back to Requests"
+        cancelText="Stay here"
+        size="lg"
       />
       {request && (
         <Form noValidate>
@@ -299,10 +344,10 @@ export const RequestForm = (props: IProps) => {
                   </Button>
                   <ApprovalActionsButton
                     className="p-1"
-                    disabled={props.editing}
+                    disabled={props.editing || !canAction}
                     variant="danger"
                     request={request}
-                    onRequestUpdated={props.onRequestUpdated}
+                    onRequestUpdated={onRequestUpdated}
                     onBeforeAction={onBeforeAction}
                     actions={new Set(request.getAvailableActions())}
                   />
@@ -989,10 +1034,10 @@ export const RequestForm = (props: IProps) => {
                   </Button>
                   <ApprovalActionsButton
                     className="p-1"
-                    disabled={props.editing}
+                    disabled={props.editing || !canAction}
                     variant="danger"
                     request={request}
-                    onRequestUpdated={props.onRequestUpdated}
+                    onRequestUpdated={onRequestUpdated}
                     onBeforeAction={onBeforeAction}
                     actions={new Set(request.getAvailableActions())}
                   />
