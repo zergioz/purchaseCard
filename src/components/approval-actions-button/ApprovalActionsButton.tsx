@@ -35,7 +35,7 @@ export const ApprovalActionsButton = (props: IProps) => {
   const [modalAction, setModalAction] = useState<ApprovalAction | null>(null);
   const [nextRequestState, dispatchApprovalAction] = useReducer(
     ApprovalReducer,
-    props.request
+    props.request //this doesn't get updated if props.request changes.
   );
 
   const { addToast } = useToasts();
@@ -44,9 +44,16 @@ export const ApprovalActionsButton = (props: IProps) => {
   //fires only after the reducer updates the state of the request
   useEffect(() => {
     if (props.request.status !== nextRequestState.status) {
-      emailSvc.notifyNextApproversFor(nextRequestState, roles);
-      emailSvc.notifySubmitterFor(nextRequestState);
-      props.onRequestUpdated(nextRequestState);
+      //the props.request that's passed into useReducer can be out of sync with props.request
+      //by the time an action is dispatched.  re-merge history and status in case props.request has changed
+      const updatedRequest = new Request({
+        ...props.request,
+        status: nextRequestState.status,
+        history: nextRequestState.history
+      });
+      emailSvc.notifyNextApproversFor(updatedRequest, roles);
+      emailSvc.notifySubmitterFor(updatedRequest);
+      props.onRequestUpdated(updatedRequest);
     }
   }, [nextRequestState.status]);
 
