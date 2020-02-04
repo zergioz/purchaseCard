@@ -33,6 +33,7 @@ import { ApprovalAction } from "../../services/models/ApprovalAction";
 import { LineItem } from "../../services/models/LineItem";
 import { Observable } from "rxjs";
 import { useHistory } from "react-router-dom";
+import { ErrorBoundary } from "../error-boundary/ErrorBoundary";
 
 interface IProps {
   request: Request;
@@ -233,7 +234,9 @@ export const RequestForm = (props: IProps) => {
     const tryParse = (isoString: string): Date => {
       let date = new Date();
       try {
-        date = parseISO(isoString);
+        if (isoString) {
+          date = parseISO(isoString);
+        }
       } catch (e) {
         console.error(
           `tryParse(request: ${request.id}): Error parsing string`,
@@ -999,15 +1002,17 @@ export const RequestForm = (props: IProps) => {
                 <Col>
                   <Form.Group>
                     <Form.Label>Execution Date</Form.Label>
-                    <Form.Control
-                      as={DatePicker}
-                      disabled={!props.editing}
-                      className={!props.editing ? "date-picker-locked" : ""}
-                      name="requestField.executionDate"
-                      id="requestField.executionDate"
-                      isInvalid={isInvalid(`requestField.executionDate`)}
-                      isValid={isValid(`requestField.executionDate`)}
-                    />
+                    <ErrorBoundary>
+                      <Form.Control
+                        as={DatePicker}
+                        disabled={!props.editing}
+                        className={!props.editing ? "date-picker-locked" : ""}
+                        name="requestField.executionDate"
+                        id="requestField.executionDate"
+                        isInvalid={isInvalid(`requestField.executionDate`)}
+                        isValid={isValid(`requestField.executionDate`)}
+                      />
+                    </ErrorBoundary>
                     {validationError(`requestField.executionDate`)}
                   </Form.Group>
                 </Col>
