@@ -21,17 +21,18 @@ export class EmailService {
     } else {
       approverEmails = approvers.map(approver => approver.email);
     }
-    approverEmails = ["ryan.a.mclean.ctr@socom.mil"];
     const email: IEmailProperties = {
       To: approverEmails,
       Subject: `New GPC Request (#${request.id})`,
       Body:
-        "A new GPC request has been placed in your queue." +
+        "<h3>You've received a new GPC request</h3>" +
+        "<br />" +
+        `<a href="https://soceur.sof.socom.mil/app/gpc/#/requests/details/${request.id}">GPC Request #${request.id}</a>` +
         "<br />" +
         `You are receiving this notification because you can approve this GPC request at the <b>${request.status.toUpperCase()}</b> step.` +
         "<br />" +
         "<br />" +
-        "<b>Request summary:</b>" +
+        "<h4>Request summary:</h4>" +
         "<br />" +
         "<br />" +
         `Submitter: ${request.author.FirstName} ${request.author.LastName}` +
@@ -40,12 +41,17 @@ export class EmailService {
         "<br />" +
         `Directorate: ${request.requestField.RequestorDirectorate}` +
         "<br />" +
+        `Justification:` +
+        `<blockquote>${request.requestField.RequestJustification}</blockquote>` +
+        "<br />" +
         `Waiting on: ${request.status}` +
         "<br />" +
-        `URL: https://soceur.sof.socom.mil/gpc/#/requests/details/${request.id}` +
+        `URL: https://soceur.sof.socom.mil/app/gpc/#/requests/details/${request.id}` +
         "<br />" +
         "Please action this request as quickly as possible by clicking on the link below, or by pasting the URL above into your browser." +
-        `<a href="https://soceur.sof.socom.mil/gpc/#/requests/details/${request.id}">Go to GPC Request #${request.id}</a>` +
+        "<br />" +
+        "<br />" +
+        `<a href="https://soceur.sof.socom.mil/app/gpc/#/requests/details/${request.id}">Go to GPC Request #${request.id}</a>` +
         "<br />" +
         "<br />" +
         "If you have received this message in error, please contact soceurlistj69@socom.mil to unsubscribe"
@@ -55,15 +61,18 @@ export class EmailService {
 
   notifySubmitterFor(request: Request): Observable<any> {
     let submitterEmail = [request.author.EMail ? request.author.EMail : ""];
-    submitterEmail = ["ryan.a.mclean.ctr@socom.mil"];
     const email: IEmailProperties = {
       To: submitterEmail,
       Subject: `GPC Request (#${request.id}) updated`,
       Body:
-        `You are receiving this notification because your GPC request has been moved to the ${request.status.toUpperCase()} step.` +
+        "<h3>Your GPC request has been updated</h3>" +
+        "<br />" +
+        `<a href="https://soceur.sof.socom.mil/app/gpc/#/requests/details/${request.id}">GPC Request #${request.id}</a>` +
+        "<br />" +
+        `You are receiving this notification because your GPC request has been moved to the <b>${request.status.toUpperCase()}</b> step.` +
         "<br />" +
         "<br />" +
-        "Request summary:" +
+        "<h4>Request summary:</h4>" +
         "<br />" +
         "<br />" +
         `Submitter: ${request.author.FirstName} ${request.author.LastName}` +
@@ -72,12 +81,17 @@ export class EmailService {
         "<br />" +
         `Directorate: ${request.requestField.RequestorDirectorate}` +
         "<br />" +
+        `Justification:` +
+        `<blockquote>${request.requestField.RequestJustification}</blockquote>` +
+        "<br />" +
         `Status: ${request.status}` +
         "<br />" +
-        `URL: https://soceur.sof.socom.mil/gpc/#/requests/details/${request.id}` +
+        `URL: https://soceur.sof.socom.mil/app/gpc/#/requests/details/${request.id}` +
         "<br />" +
         "You can view your request by clicking on the link below, or by pasting the URL above into your browser." +
-        `<a href="https://soceur.sof.socom.mil/gpc/#/requests/details/${request.id}">Go to GPC Request #${request.id}</a>` +
+        "<br />" +
+        "<br />" +
+        `<a href="https://soceur.sof.socom.mil/app/gpc/#/requests/details/${request.id}">Go to GPC Request #${request.id}</a>` +
         "<br />" +
         "<br />" +
         "If you have received this message in error, please contact soceurlistj69@socom.mil to unsubscribe"
