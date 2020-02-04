@@ -1,53 +1,27 @@
 import React, { useEffect, useContext, useState } from "react";
 import RequestContext from "../../../contexts/RequestContext";
-import { Request } from "../../../services/models/Request";
 import { RequestService } from "../../../services";
 import { LoadingResults } from "../../../components/request-table/LoadingResults";
 import { Alert, Button } from "react-bootstrap";
-import { ApprovalProgressBar } from "../../../components/approval-progress-bar/ApprovalProgressBar";
-import { RequestForm } from "../../../components/request-form/RequestForm";
-import UserContext from "../../../contexts/UserContext";
-import { useToasts } from "react-toast-notifications";
+import { useHistory } from "react-router-dom";
 
+//this page just shows a spinner
+//it makes a call to create a new request, updates the context with it, then redirects to the edit form
 export const NewRequest = () => {
-  const { addToast } = useToasts();
   const context = useContext(RequestContext);
-  const { user } = useContext(UserContext);
   const [request, setRequest] = useState();
+  const history = useHistory();
   const svc = new RequestService();
-  const [editing, setEditing] = useState<boolean>(true);
 
-  //start the db call to create a new draft
+  //on page load, start the db call to create a new draft
   useEffect(() => {
     const obs = svc.createDraft();
     context.subscribeTo(obs, "create");
-    obs.subscribe(request => {
+    obs.subscribe(newRequest => {
       setRequest(request);
+      history.push(`/requests/details/${newRequest.id}`);
     });
   }, []);
-
-  const onRequestUpdated = (newRequest: Request) => {
-    addToast(`Saving...`, {
-      appearance: "info",
-      autoDismiss: true
-    });
-    let obs = svc.update(newRequest);
-    obs.subscribe(
-      () => {
-        setRequest(newRequest);
-        context.updateRequest(newRequest);
-        addToast("Saved", { appearance: "success", autoDismiss: true });
-      },
-      error => {
-        console.error(`Error updating request.`, error);
-        addToast(`Error while saving!`, {
-          appearance: "error",
-          autoDismiss: false
-        });
-      },
-      () => {}
-    );
-  };
 
   return (
     <>
@@ -57,44 +31,13 @@ export const NewRequest = () => {
         </div>
       </div>
       {context.loading && <LoadingResults />}
-      {!context.loading && request && (
-        <>
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-12 mb-4 text-center">
-                <ApprovalProgressBar request={request} locked={editing} />
-                <hr />
-              </div>
-            </div>
-          </div>
-          <div className="container">
-            <div className="row">
-              <div className="col-12 m-2">
-                <RequestForm
-                  request={request}
-                  editing={editing}
-                  setEditing={setEditing}
-                  onRequestUpdated={onRequestUpdated}
-                />
-              </div>
-            </div>
-            {/* <div className="row">
-              <div className="col-12">
-                <pre style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}>
-                  {JSON.stringify(request, null, 2)}
-                </pre>
-              </div>
-            </div> */}
-          </div>
-        </>
-      )}
       {!context.loading && !request && (
         <div className="row">
           <div className="col-12">
             <Alert variant="danger">
               <Alert.Heading>Error</Alert.Heading>
               <hr />
-              There is no request data to display.{" "}
+              There was an error creating the request.{" "}
               <div className="d-flex justify-content-end">
                 <Button variant="outline-danger" href={`#/`}>
                   Go back
