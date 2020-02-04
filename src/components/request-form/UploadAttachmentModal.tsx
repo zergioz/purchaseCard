@@ -24,14 +24,14 @@ export const UploadAttachmentModal = (props: IProps) => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
   const [selectedType, setSelectedType] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
-  const [error, setError] = useState(undefined);
+  const [error, setError] = useState<string>("");
   const svc = new RequestService();
 
   useEffect(() => {
     setSelectedFile(undefined);
     setSelectedType("");
     setUploading(false);
-    setError(undefined);
+    setError("");
   }, [props.open]);
 
   const onFileTypeChanged = (e: any) => {
@@ -78,7 +78,9 @@ export const UploadAttachmentModal = (props: IProps) => {
         },
         error => {
           setUploading(false);
-          setError(error);
+          setError(
+            "Your file is either too big, has special characters in the file name, or the file name is too long.  Please rename the file and try again."
+          );
           console.error(error);
         }
       );
@@ -95,7 +97,7 @@ export const UploadAttachmentModal = (props: IProps) => {
         {error && (
           <Alert variant="danger">
             <Alert.Heading>Error Uploading</Alert.Heading>
-            <p>{JSON.stringify(error, null, 2)}</p>
+            <p>{error}</p>
           </Alert>
         )}
         <Form.Group>
