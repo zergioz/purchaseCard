@@ -32,6 +32,15 @@ export const ApprovalModal = (props: IProps) => {
     setShow(false);
   };
 
+  const stepNotice = (
+    <>
+      <br />
+      <span>
+        You are signing for the <b>{props.request.status}</b> step.
+      </span>
+    </>
+  );
+
   return (
     <>
       {props.action && (
@@ -49,6 +58,7 @@ export const ApprovalModal = (props: IProps) => {
           <Modal.Body>
             <Alert variant={props.action.bootstrapClass}>
               {props.action.description}
+              {props.action.type == "approve" ? stepNotice : null}
             </Alert>
             <props.action.form
               action={action}
