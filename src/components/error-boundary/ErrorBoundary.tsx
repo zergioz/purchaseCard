@@ -4,16 +4,16 @@ interface IState {
   hasError: boolean;
 }
 export class ErrorBoundary extends React.Component<any, IState> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: any) {
     return { hasError: true };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: any, errorInfo: any) {
     console.error(error, errorInfo);
   }
 
