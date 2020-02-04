@@ -8,6 +8,7 @@ import { Alert, Button } from "react-bootstrap";
 import { ApprovalProgressBar } from "../../../components/approval-progress-bar/ApprovalProgressBar";
 import { RequestForm } from "../../../components/request-form/RequestForm";
 import { useToasts } from "react-toast-notifications";
+import { useHistory } from "react-router-dom";
 
 interface IProps {
   requestId: number;
@@ -18,33 +19,26 @@ export const RequestDetails = (props: IProps) => {
   const context = useContext(RequestContext);
   const [request, setRequest] = useState();
   const [editing, setEditing] = useState<boolean>(false);
-  const defaultFilters = new RequestFilters();
+  const history = useHistory();
 
-  //start the db fetch
+  //get item from db on page load
   useEffect(() => {
-    context.subscribeTo(svc.read(), "read");
-  }, []);
-
-  //apply the ID filter when results come back
-  useEffect(() => {
-    defaultFilters.id = props.requestId;
-    defaultFilters.status = "";
-    context.updatePageFilters(defaultFilters);
-    context.applyFilters(defaultFilters, true);
-  }, [context.requests]);
-
-  //update our state when the filter is applied
-  useEffect(() => {
-    const selectedRequest = context.filteredRequests[0];
-    if (selectedRequest && !request) {
-      setRequest(selectedRequest);
-
-      //users were confused when new requests appeared locked
-      if (selectedRequest.status === "Draft") {
-        setEditing(true);
-      }
+    if (!props.requestId) {
+      history.push("/requests");
+      return;
     }
-  }, [context.filteredRequests]);
+    const obs = svc.read(`Id eq ${props.requestId}`);
+    context.subscribeTo(obs, "read");
+    obs.subscribe(requests => {
+      const request = requests[0];
+      if (request) {
+        setRequest(request);
+        if (request.status === "Draft") {
+          setEditing(true);
+        }
+      }
+    });
+  }, []);
 
   const onRequestUpdated = (newRequest: Request) => {
     addToast(`Saving...`, {

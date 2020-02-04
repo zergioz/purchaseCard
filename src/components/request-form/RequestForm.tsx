@@ -113,7 +113,7 @@ export const RequestForm = (props: IProps) => {
     props.setEditing(false);
     const updatedRequest = new Request({ ...request, ...values });
     formik.resetForm(updatedRequest);
-    //setRequest(updatedRequest);
+    setRequest(updatedRequest);
     props.onRequestUpdated(updatedRequest);
   };
 
