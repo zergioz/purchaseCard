@@ -1,5 +1,6 @@
 import { Observable } from "rxjs";
 import { IQueryParams } from "./IQueryParams";
+import { IEmailProperties } from "./sharepoint/SharepointConnector";
 
 export interface IDbConnector {
   readTable(params: IQueryParams): Observable<any>;
@@ -12,4 +13,5 @@ export interface IDbConnector {
   uploadAttachment(params: IQueryParams): Observable<any>;
   getAttachments(params: IQueryParams): Observable<any>;
   deleteAttachment(params: IQueryParams): Observable<any>;
+  sendEmail(emailProps: IEmailProperties): Observable<any>;
 }

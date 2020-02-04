@@ -1,13 +1,14 @@
 import React, { useEffect, useContext, useState } from "react";
 import RequestContext from "../../../contexts/RequestContext";
 import { Request } from "../../../services/models/Request";
-import { RequestFilters } from "../../../components/filters/RequestFilters";
 import { RequestService } from "../../../services";
 import { LoadingResults } from "../../../components/request-table/LoadingResults";
 import { Alert, Button } from "react-bootstrap";
 import { ApprovalProgressBar } from "../../../components/approval-progress-bar/ApprovalProgressBar";
 import { RequestForm } from "../../../components/request-form/RequestForm";
 import { useToasts } from "react-toast-notifications";
+import { useHistory } from "react-router-dom";
+import { Observable } from "rxjs";
 
 interface IProps {
   requestId: number;
@@ -18,30 +19,28 @@ export const RequestDetails = (props: IProps) => {
   const context = useContext(RequestContext);
   const [request, setRequest] = useState();
   const [editing, setEditing] = useState<boolean>(false);
-  const defaultFilters = new RequestFilters();
+  const history = useHistory();
 
-  //start the db fetch
+  //get item from db on page load
   useEffect(() => {
-    context.subscribeTo(svc.read(), "read");
+    if (!props.requestId) {
+      history.push("/requests");
+      return;
+    }
+    const obs = svc.read(`Id eq ${props.requestId}`);
+    context.subscribeTo(obs, "read");
+    obs.subscribe(requests => {
+      const request = requests[0];
+      if (request) {
+        setRequest(request);
+        if (request.status === "Draft") {
+          setEditing(true);
+        }
+      }
+    });
   }, []);
 
-  //apply the ID filter when results come back
-  useEffect(() => {
-    defaultFilters.id = props.requestId;
-    defaultFilters.status = "";
-    context.updatePageFilters(defaultFilters);
-    context.applyFilters(defaultFilters, true);
-  }, [context.requests]);
-
-  //update our state when the filter is applied
-  useEffect(() => {
-    const request = context.filteredRequests[0];
-    if (request) {
-      setRequest(request);
-    }
-  }, [context.filteredRequests]);
-
-  const onRequestUpdated = (newRequest: Request) => {
+  const onRequestUpdated = (newRequest: Request): Observable<Request> => {
     addToast(`Saving...`, {
       appearance: "info",
       autoDismiss: true
@@ -62,6 +61,7 @@ export const RequestDetails = (props: IProps) => {
       },
       () => {}
     );
+    return obs;
   };
 
   return (

@@ -1,63 +1,19 @@
 import { autoserializeAs, autoserialize } from "cerialize";
 import { RequestField } from "./RequestField";
-import { PurchaseDetails } from "./PurchaseDetails";
-import { BudgetOfficerApproval } from "./BudgetOfficerApproval";
-import { BillingOfficialApproval } from "./BillingOfficialApproval";
-import { J6Approval } from "./J6Approval";
-import { PboApproval } from "./PboApproval";
-import { DirectorateApproval } from "./DirectorateApproval";
-import { J8Approval } from "./J8Approval";
-import { CardholderValidation } from "./CardholderValidation";
-import { RequestorValidation } from "./RequestorValidation";
-import { SupplyValidation } from "./SupplyValidation";
-import { FinalValidation } from "./FinalValidation";
+import { LineItem } from "./LineItem";
 import { SharepointUser } from "./SharepointUser";
 import { ApprovalAction } from "./ApprovalAction";
 import { compareDesc, parseISO } from "date-fns";
-import * as Yup from "yup";
 import { ApprovalActions } from "../../constants/ApprovalActions";
 import { getStatusesByFriendlyName } from "../../constants/StepStatus";
-
-export interface IRequestApprovals {
-  [key: string]: any;
-}
-export class RequestApprovals implements IRequestApprovals {
-  @autoserializeAs(BudgetOfficerApproval)
-  budgetOfficerApproval?: BudgetOfficerApproval;
-
-  @autoserializeAs(BillingOfficialApproval)
-  billingOfficialApproval?: BillingOfficialApproval;
-
-  @autoserializeAs(J6Approval)
-  j6Approval?: J6Approval;
-
-  @autoserializeAs(PboApproval)
-  pboApproval?: PboApproval;
-
-  @autoserializeAs(DirectorateApproval)
-  directorateApproval?: DirectorateApproval;
-
-  @autoserializeAs(J8Approval)
-  j8Approval?: J8Approval;
-
-  @autoserializeAs(CardholderValidation)
-  cardholderValidation?: CardholderValidation;
-
-  @autoserializeAs(RequestorValidation)
-  requestorValidation?: RequestorValidation;
-
-  @autoserializeAs(SupplyValidation)
-  supplyValidation?: SupplyValidation;
-
-  @autoserializeAs(FinalValidation)
-  finalValidation?: FinalValidation;
-}
+import { RequestApprovals } from "./RequestApprovals";
+import * as Yup from "yup";
 
 export interface IRequest {
   id?: number;
   requestor: SharepointUser;
   requestField: RequestField;
-  purchaseDetails: PurchaseDetails;
+  lineItems: LineItem[];
   status: string;
   approvals: RequestApprovals;
 }
@@ -72,8 +28,8 @@ export class Request implements IRequest {
   @autoserializeAs(RequestField)
   requestField: RequestField;
 
-  @autoserializeAs(PurchaseDetails)
-  purchaseDetails: PurchaseDetails;
+  @autoserializeAs(LineItem)
+  lineItems: LineItem[];
 
   @autoserialize
   status: string;
@@ -95,7 +51,9 @@ export class Request implements IRequest {
     this.id = data.id;
     this.requestor = data.requestor || {};
     this.requestField = new RequestField(data.requestField || {});
-    this.purchaseDetails = new PurchaseDetails(data.purchaseDetails || {});
+    this.lineItems = data.lineItems
+      ? data.lineItems.map((item: any) => new LineItem(item))
+      : [];
     this.status = data.status || "";
     this.approvals = data.approvals || {};
     this.history = data.history || {};
@@ -129,24 +87,93 @@ export class Request implements IRequest {
     return lastAction || null;
   }
 
+  //show cardholder fields in these statuses
+  public cardholderFieldStatuses = new Set([
+    "Cardholder",
+    "Requestor",
+    "Supply",
+    "PBO Final",
+    "BO Final",
+    "Closed"
+  ]);
+
+  //show j8 fields in these statuses
+  public j8FieldStatuses = new Set([
+    "Finance",
+    "Cardholder",
+    "Requestor",
+    "Supply",
+    "PBO Final",
+    "BO Final",
+    "Closed"
+  ]);
+
   public getValidationSchema(): Yup.ObjectSchema {
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
     return Yup.object({
-      RequestCardType: Yup.string().required("Required"),
-      RequestorCardHolderName: Yup.string().required("Required"),
-      RequestorDSN: Yup.string()
-        .required("Required")
-        .matches(phoneRegExp, "DSN number is not valid"),
-      RequestorDirectorate: Yup.string().required("Required"),
-      RequestSource: Yup.string().required("Required"),
-      RequestJustification: Yup.string().required("Required"),
-      RequestCurrencyType: Yup.string().required("Required"),
-      RequestIsJ6: Yup.string().required("Required")
-      //fiscalYear: Yup.string().required("Required"),
-      //fiscalQuarter: Yup.string().required("Required")
-      //transactionId: Yup.string().required("Required"),
-      //executionDate: Yup.string().required("Required")
+      status: Yup.string(),
+      requestField: Yup.object({
+        //the dollar sign lets us access the context that we pass in formik.validate
+        //we can't access status above because when() only works for siblings and below.
+        //fiscalYear, fiscalQuarter are only required for steps Finance and beyond.
+        fiscalYear: Yup.string().when("$status", {
+          is: value => this.j8FieldStatuses.has(value),
+          then: Yup.string().required("Required")
+        }),
+        //fiscalYear, fiscalQuarter are only required for steps Finance and beyond.
+        fiscalQuarter: Yup.string().when("$status", {
+          is: value => this.j8FieldStatuses.has(value),
+          then: Yup.string().required("Required")
+        }),
+        //transactionId, executionDate are only required for steps Cardholder and beyond.
+        transactionId: Yup.string().when("$status", {
+          is: value => this.cardholderFieldStatuses.has(value),
+          then: Yup.string().required("Required")
+        }),
+        //transactionId, executionDate are only required for steps Cardholder and beyond.
+        executionDate: Yup.string().when("$status", {
+          is: value => this.cardholderFieldStatuses.has(value),
+          then: Yup.string().required("Required")
+        }),
+        RequestCardType: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required"),
+        RequestorCardHolderName: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required"),
+        RequestorDSN: Yup.string()
+          .required("Required")
+          .matches(phoneRegExp, "Not a valid DSN number"),
+        RequestorDirectorate: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required"),
+        RequestSource: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required"),
+        RequestJustification: Yup.string().required("Required"),
+        RequestCurrencyType: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required"),
+        RequestIsJ6: Yup.string()
+          .transform(value => (value == "Select" ? undefined : value))
+          .required("Required")
+      }),
+      lineItems: Yup.array().of(
+        Yup.object({
+          requestQty: Yup.number()
+            .positive("Can't be negative")
+            .transform(value => (isNaN(value) ? undefined : value))
+            .required("Required"),
+          requestCost: Yup.number()
+            .positive("Can't be negative")
+            .transform(value => (isNaN(value) ? undefined : value))
+            .required("Required"),
+          requestDesc: Yup.string().required("Required"),
+          requestSrc: Yup.string().required("Required"),
+          requestDdForm: Yup.boolean(),
+          requestDaForm: Yup.boolean()
+        })
+      )
     });
   }
 }

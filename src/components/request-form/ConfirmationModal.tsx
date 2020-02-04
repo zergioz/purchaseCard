@@ -9,6 +9,7 @@ interface IProps {
   title: string;
   open: boolean;
   onHide: () => void;
+  size?: "sm" | "lg" | "xl";
 }
 export const ConfirmationModal = (props: IProps) => {
   const onConfirm = () => {
@@ -17,7 +18,12 @@ export const ConfirmationModal = (props: IProps) => {
   };
 
   return (
-    <Modal show={props.open} onHide={props.onHide} size="sm" centered>
+    <Modal
+      show={props.open}
+      onHide={props.onHide}
+      size={props.size ? props.size : "sm"}
+      centered
+    >
       <Modal.Header closeButton>
         <Modal.Title>{props.title}</Modal.Title>
       </Modal.Header>

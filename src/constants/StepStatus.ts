@@ -6,18 +6,24 @@ import { groupBy } from "../helpers/GroupBy";
  * play nicely with the existing jQuery submission form in production.
  *
  * The app was built around the StepStatus array which is a constant that was
- * copied from production.  The steps are in order from 1 to 12
- * and the only keys that really matter are "uglyName" - which matches the
- * value that the old app puts into the Request "status" field - and
- * "friendlyName" - which is what the react app uses as the display name
- * for any particular step.  "approvalName" is the key under which the legacy
- * app stored approval information for a step
+ * copied from the jQuery app mentioned above.  The steps are in order from 1 to 12
+ * and the keys that really matter are:
+ *
+ * "uglyName" - which matches the value that the old app puts into the Request "status" field
+ * "friendlyName" - which is what the react app uses as the display name for any particular step
+ * "approvalName" is the key under which the legacy app stored approval information for a step
+ * "approverRoles" which is the "role" name for the users that can take action at this step (ccUsers table)
+ * "actionsAvailable" determines which actions a user can take for a request at this status
+ *
+ * NOTE: due to the way the legacy app worked, uglyName (stored in DB) is one step behind where
+ * the request actually is.
  */
 
 export interface IStatus {
   uglyName: string;
   friendlyName: string;
   approvalName: string;
+  approverRoles: string[];
   actionsAvailable: string[];
 }
 
@@ -26,72 +32,84 @@ export const StepStatus: IStatus[] = [
     uglyName: "DRAFT",
     friendlyName: "Draft",
     approvalName: "",
+    approverRoles: [],
     actionsAvailable: ["submit", "delete", "clone"]
   },
   {
     uglyName: "SUBMITTED",
     friendlyName: "Director",
     approvalName: "directorateApproval",
+    approverRoles: ["DIRECTORATE APPROVAL"],
     actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
     uglyName: "DIRECTORATE_APPROVAL",
     friendlyName: "Billing Official",
     approvalName: "billingOfficialApproval",
+    approverRoles: ["BILLING OFFICIAL"],
     actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
     uglyName: "BILLING_OFFICIAL_APPROVAL",
     friendlyName: "Tech Review",
     approvalName: "j6Approval",
+    approverRoles: ["IT APPROVAL/J6"],
     actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
     uglyName: "J6_APPROVAL",
     friendlyName: "PBO Approval",
     approvalName: "pboApproval",
+    approverRoles: ["PROPERTY BOOKS OFFICER/J4"],
     actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
     uglyName: "PBO_APPROVAL",
     friendlyName: "Finance",
     approvalName: "j8Approval",
+    approverRoles: ["FINANCIAL OFFICER/J8"],
     actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
     uglyName: "J8_APPROVAL",
     friendlyName: "Cardholder",
     approvalName: "cardholderValidation",
+    approverRoles: ["CARD HOLDER"],
     actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
     uglyName: "CARD_HOLDER_VALIDATION",
     friendlyName: "Requestor",
     approvalName: "requestorValidation",
+    approverRoles: [],
     actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
     uglyName: "REQUESTOR_VALIDATION",
     friendlyName: "Supply",
     approvalName: "supplyValidation",
+    approverRoles: ["SUPPLY"],
     actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
     uglyName: "SUPPLY_VALIDATION",
     friendlyName: "PBO Final",
     approvalName: "finalValidation",
+    approverRoles: ["PROPERTY BOOKS OFFICER/J4"],
     actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
     uglyName: "FINAL_VALIDATION",
     friendlyName: "BO Final",
     approvalName: "budgetOfficerApproval",
+    approverRoles: ["BILLING OFFICIAL"],
     actionsAvailable: ["approve", "sendto", "reject", "clone"]
   },
   {
     uglyName: "CLOSED",
     friendlyName: "Closed",
     approvalName: "",
+    approverRoles: [],
     actionsAvailable: ["clone"]
   }
 ];

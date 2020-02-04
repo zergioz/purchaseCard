@@ -10,5 +10,6 @@ export default {
     path: "/system/system-home",
     component: SystemHomeModule
   },
+  hideFromTopNav: true,
   name: "System Home"
 };

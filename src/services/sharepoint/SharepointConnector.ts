@@ -1,8 +1,17 @@
 import { sp, Web } from "@pnp/sp";
+import { EmailProperties } from "@pnp/sp";
 import { Observable, from } from "rxjs";
 import { IDbConnector } from "../IDbConnector";
 import { IQueryParams } from "../IQueryParams";
 
+export interface IEmailProperties {
+  To: string[];
+  CC?: string[];
+  BCC?: string[];
+  Subject: string;
+  Body: string;
+  From?: string;
+}
 export class SharepointConnector implements IDbConnector {
   constructor() {
     this.initialize();
@@ -156,5 +165,9 @@ export class SharepointConnector implements IDbConnector {
 
     let item = web.lists.getByTitle(listName).items.getById(params.id);
     return from(item.attachmentFiles.getByName(params.fileName).recycle());
+  }
+
+  sendEmail(emailProps: IEmailProperties) {
+    return from(sp.utility.sendEmail(emailProps));
   }
 }

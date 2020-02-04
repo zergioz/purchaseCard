@@ -24,14 +24,14 @@ export const UploadAttachmentModal = (props: IProps) => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
   const [selectedType, setSelectedType] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
-  const [error, setError] = useState(undefined);
+  const [error, setError] = useState<string>("");
   const svc = new RequestService();
 
   useEffect(() => {
     setSelectedFile(undefined);
     setSelectedType("");
     setUploading(false);
-    setError(undefined);
+    setError("");
   }, [props.open]);
 
   const onFileTypeChanged = (e: any) => {
@@ -46,12 +46,20 @@ export const UploadAttachmentModal = (props: IProps) => {
     }
   };
 
+  //remove non-sharepoint friendly stuff from the file name
+  const cleanFileName = (fileName: string): string => {
+    const notAllowedRegExp = /[^a-zA-Z0-9.]|(files|file|Dateien|fichiers|bestanden|archivos|filer|tiedostot|pliki|soubory|elemei|ficheiros|arquivos|dosyalar|datoteke|fitxers|failid|fails|bylos|fajlovi|fitxategiak)$/;
+    const clean = fileName.replace(notAllowedRegExp, "_");
+    return clean;
+  };
+
   //adds some random characters before the file extension so sharepoint
   //doesn't complain if there's another file with the same name.
   //coincidentally this is also where we store the file type...
   //just to keep things the same as the legacy app
   const renameFile = (fileName: string, fileType: string): string => {
-    const split = fileName.split(".");
+    let clean = cleanFileName(fileName);
+    const split = clean.split(".");
     const ext = split.pop();
     const name = split.join(".");
     const rand = getRandomString(8).toLowerCase();
@@ -70,7 +78,9 @@ export const UploadAttachmentModal = (props: IProps) => {
         },
         error => {
           setUploading(false);
-          setError(error);
+          setError(
+            "Your file is either too big, has special characters in the file name, or the file name is too long.  Please rename the file and try again."
+          );
           console.error(error);
         }
       );
@@ -87,7 +97,7 @@ export const UploadAttachmentModal = (props: IProps) => {
         {error && (
           <Alert variant="danger">
             <Alert.Heading>Error Uploading</Alert.Heading>
-            <p>{JSON.stringify(error, null, 2)}</p>
+            <p>{error}</p>
           </Alert>
         )}
         <Form.Group>

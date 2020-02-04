@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer, useEffect, useContext } from "react";
 import { ApprovalModal } from "../approval-modal/ApprovalModal";
 import { Request } from "../../services/models/Request";
 import { Dropdown, ButtonGroup, Spinner } from "react-bootstrap";
@@ -12,6 +12,9 @@ import { ApprovalActions } from "../../constants/ApprovalActions";
 import { RequestService } from "../../services";
 import { useToasts } from "react-toast-notifications";
 import { Link, useHistory } from "react-router-dom";
+import { EmailService } from "../../services/EmailService";
+import RoleContext from "../../contexts/RoleContext";
+import { Observable } from "rxjs";
 
 interface IProps {
   request: Request;
@@ -21,16 +24,19 @@ interface IProps {
   loading?: boolean;
   hidden?: boolean;
   actions: Set<string>;
-  onRequestUpdated: (newRequest: Request) => void;
+  onRequestUpdated: (newRequest: Request) => Observable<Request>;
+  onBeforeAction: (action: ApprovalAction) => boolean;
 }
 export const ApprovalActionsButton = (props: IProps) => {
   const svc = new RequestService();
+  const emailSvc = new EmailService();
+  const { roles } = useContext(RoleContext);
   const [loading, setLoading] = useState<boolean>(!!props.loading);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalAction, setModalAction] = useState<ApprovalAction | null>(null);
   const [nextRequestState, dispatchApprovalAction] = useReducer(
     ApprovalReducer,
-    props.request
+    props.request //this doesn't get updated if props.request changes.
   );
 
   const { addToast } = useToasts();
@@ -39,7 +45,17 @@ export const ApprovalActionsButton = (props: IProps) => {
   //fires only after the reducer updates the state of the request
   useEffect(() => {
     if (props.request.status !== nextRequestState.status) {
-      props.onRequestUpdated(nextRequestState);
+      //the props.request that's passed into useReducer can be out of sync with props.request
+      //by the time an action is dispatched.  re-merge history and status in case props.request has changed
+      const updatedRequest = new Request({
+        ...props.request,
+        status: nextRequestState.status,
+        history: nextRequestState.history
+      });
+      emailSvc.notifyNextApproversFor(updatedRequest, roles);
+      emailSvc.notifySubmitterFor(updatedRequest);
+      setLoading(true);
+      props.onRequestUpdated(updatedRequest).subscribe(() => setLoading(false));
     }
   }, [nextRequestState.status]);
 
@@ -51,8 +67,11 @@ export const ApprovalActionsButton = (props: IProps) => {
   //show the modal with the form specific to this action
   const onActionClicked = (action: string) => {
     const approvalAction: IApprovalAction = ApprovalActions[action];
-    setModalAction(approvalAction);
-    setModalVisible(true);
+    const actionIsAllowed = props.onBeforeAction(approvalAction);
+    if (actionIsAllowed) {
+      setModalAction(approvalAction);
+      setModalVisible(true);
+    }
   };
 
   //they closed the modal by hitting save, so dispatch the action
@@ -146,7 +165,7 @@ export const ApprovalActionsButton = (props: IProps) => {
       <Dropdown as={ButtonGroup} size="sm" className={`${props.className}`}>
         <Dropdown.Toggle
           hidden={props.hidden}
-          disabled={props.disabled}
+          disabled={props.disabled || loading}
           variant={props.variant}
           size="sm"
           id="approval-button"

@@ -1,7 +1,10 @@
 import { IDbConnector } from "./IDbConnector";
 import { Observable } from "rxjs";
 import { IQueryParams } from "./IQueryParams";
-import { SharepointConnector } from "./sharepoint/SharepointConnector";
+import {
+  SharepointConnector,
+  IEmailProperties
+} from "./sharepoint/SharepointConnector";
 
 export default class dal {
   private db: IDbConnector;
@@ -108,5 +111,9 @@ export default class dal {
     } as IQueryParams;
 
     return this.db.deleteAttachment(params);
+  }
+
+  sendEmail(email: IEmailProperties) {
+    return this.db.sendEmail(email);
   }
 }

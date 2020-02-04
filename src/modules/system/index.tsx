@@ -1,4 +1,5 @@
 import SystemHomeModule from "./system-home";
+import RolesModule from "./roles";
 
 export default {
   routeProps: {
@@ -6,5 +7,6 @@ export default {
     component: SystemHomeModule.routeProps.component
   },
   name: "System",
-  modules: [SystemHomeModule]
+
+  modules: [SystemHomeModule, RolesModule]
 };

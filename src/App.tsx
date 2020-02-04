@@ -19,7 +19,7 @@ const App = () => {
 
     //creates a route for each module and submodule exported from ./modules
     modules.map(module => {
-      const submodules = module.modules;
+      const submodules: Array<any> = module.modules;
       routes.push(<Route exact {...module.routeProps} key={module.name} />);
 
       //each module can have an array of submodules

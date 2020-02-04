@@ -8,7 +8,6 @@ import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
 import { convertToFriendly, convertToUgly } from "../constants/StepStatus";
 import { convertApprovalsToHistory } from "../helpers/ApprovalsToHistory";
 import { RequestField } from "./models/RequestField";
-import { PurchaseDetails } from "./models/PurchaseDetails";
 
 export class RequestService {
   private dal: dal;
@@ -98,26 +97,29 @@ export class RequestService {
           : ""
       };
 
+      //flatten this nested JSON stuff out so it is easier to deal with
+      let purchaseDetails = item.PURCHASE_DETAILS
+        ? JSON.parse(item.PURCHASE_DETAILS)
+        : {};
+
       /*
        * this is the core data that we care about on a request.
        *
-       * the gpc specific fields are stored in the requestField and purchaseDetails objects.
+       * the gpc specific fields are stored in the requestField and lineItems objects.
        *
        * future versions of this app
-       * used for other purposes should probably break requestField and purchaseDetails out
+       * used for other purposes should probably break requestField and lineItems out
        * and store that stuff in its own list which is referenced from here.
        *
        * then a "Request" could be repurposed for any type of form/packet that needs to go through
        * a pipeline of approvals
        */
-      //todo: store requestField and purchaseDetails stuff in their own list, reference the item id from here
+      //todo: store requestField and lineItems stuff in their own list, reference the item id from here
       parsed = {
         id: item.Id,
         requestor: item.Author,
         requestField: requestField,
-        purchaseDetails: item.PURCHASE_DETAILS
-          ? JSON.parse(item.PURCHASE_DETAILS)
-          : {},
+        lineItems: purchaseDetails.Details ? purchaseDetails.Details : [],
         status: convertToFriendly(item.REQUEST_STATUS),
         approvals: approvals,
         history: item.History
@@ -189,10 +191,9 @@ export class RequestService {
         request.requestField || {},
         RequestField
       ),
-      PURCHASE_DETAILS: this.serializer.serialize(
-        request.purchaseDetails || {},
-        PurchaseDetails
-      ),
+      PURCHASE_DETAILS: JSON.stringify({
+        Details: request.lineItems
+      }),
       REQUEST_STATUS: convertToUgly(request.status),
       History: JSON.stringify(request.history || {})
     } as ccRequestTracker;
@@ -204,7 +205,7 @@ export class RequestService {
     return this.createDraft().pipe(
       map(draft => {
         draft.requestField = request.requestField;
-        draft.purchaseDetails = request.purchaseDetails;
+        draft.lineItems = request.lineItems;
         return draft;
       }),
       map(clone => {

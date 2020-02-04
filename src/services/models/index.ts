@@ -7,7 +7,6 @@ import { FinalValidation } from "./FinalValidation";
 import { J6Approval } from "./J6Approval";
 import { J8Approval } from "./J8Approval";
 import { PboApproval } from "./PboApproval";
-import { PurchaseDetails } from "./PurchaseDetails";
 import { RequestField } from "./RequestField";
 import { RequestorValidation } from "./RequestorValidation";
 import { SupplyValidation } from "./SupplyValidation";
@@ -25,7 +24,6 @@ export default [
   J6Approval,
   J8Approval,
   PboApproval,
-  PurchaseDetails,
   RequestField,
   RequestorValidation,
   SupplyValidation,

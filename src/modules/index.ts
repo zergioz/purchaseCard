@@ -1,3 +1,3 @@
 import RequestsModule from "./requests";
 import SystemModule from "./system";
-export default [RequestsModule];
+export default [RequestsModule, SystemModule];

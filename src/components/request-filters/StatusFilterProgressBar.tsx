@@ -11,7 +11,6 @@ export const StatusFilterProgressBar = () => {
 
   //if the status filter changes, update our state
   useEffect(() => {
-    console.log(`selected changing`, selected);
     let index = statuses.indexOf(selected);
     //blank filter isn't in the list
     index = index == -1 ? 0 : index;
