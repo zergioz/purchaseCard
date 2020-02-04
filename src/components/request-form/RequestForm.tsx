@@ -72,15 +72,19 @@ export const RequestForm = (props: IProps) => {
     //validation for the fields like j8 and cardholder that only need to be filled in at a
     //specific step.
     validate: values => {
-      const schema = request.getValidationSchema();
-      try {
-        validateYupSchema(values, schema, true, request);
-      } catch (err) {
-        return yupToFormErrors(err);
-      }
-      return {};
+      return validateForm(values);
     }
   });
+
+  const validateForm = (values: any) => {
+    const schema = request.getValidationSchema();
+    try {
+      validateYupSchema(values, schema, true, request);
+    } catch (err) {
+      return yupToFormErrors(err);
+    }
+    return {};
+  };
 
   //recalculate the line item totals whenever the data changes
   useEffect(() => {
@@ -107,13 +111,9 @@ export const RequestForm = (props: IProps) => {
 
   const updateRequest = (values: any) => {
     props.setEditing(false);
-    //todo: use nested initial values and rename all our controls.  formik can handle it
-    const updatedRequest = new Request({
-      request,
-      ...values
-    });
-    setRequest(updatedRequest);
+    const updatedRequest = new Request({ ...request, ...values });
     formik.resetForm(updatedRequest);
+    //setRequest(updatedRequest);
     props.onRequestUpdated(updatedRequest);
   };
 
@@ -145,7 +145,8 @@ export const RequestForm = (props: IProps) => {
     switch (action.type) {
       case "approve":
       case "submit":
-        if (formik.isValid) {
+        const errors = validateForm(formik.values);
+        if (Object.entries(errors).length === 0) {
           isAllowed = true;
         } else {
           formik.handleSubmit();
@@ -853,47 +854,6 @@ export const RequestForm = (props: IProps) => {
               </Col>
             </Row>
           </Form.Group>
-          {request.cardholderFieldStatuses.has(request.status) && (
-            <Form.Group className="bg-light p-3">
-              <legend>
-                Cardholder Data{" "}
-                <small className="text-secondary">
-                  (to be completed by Cardholder)
-                </small>
-              </legend>
-              <Row>
-                <Col>
-                  <Form.Group>
-                    <Form.Label>Transaction ID</Form.Label>
-                    <Form.Control
-                      type="text"
-                      disabled={!props.editing}
-                      placeholder="Enter Transaction ID"
-                      {...formik.getFieldProps("requestField.transactionId")}
-                      isInvalid={isInvalid(`requestField.transactionId`)}
-                      isValid={isValid(`requestField.transactionId`)}
-                    />
-                    {validationError(`requestField.transactionId`)}
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group>
-                    <Form.Label>Execution Date</Form.Label>
-                    <Form.Control
-                      as={DatePicker}
-                      disabled={!props.editing}
-                      className={!props.editing ? "date-picker-locked" : ""}
-                      name="requestField.executionDate"
-                      id="requestField.executionDate"
-                      isInvalid={isInvalid(`requestField.executionDate`)}
-                      isValid={isValid(`requestField.executionDate`)}
-                    />
-                    {validationError(`requestField.executionDate`)}
-                  </Form.Group>
-                </Col>
-              </Row>
-            </Form.Group>
-          )}
           {request.j8FieldStatuses.has(request.status) && (
             <Form.Group className="bg-light p-3">
               <legend>
@@ -947,6 +907,47 @@ export const RequestForm = (props: IProps) => {
                       })}
                     </Form.Control>
                     {validationError(`requestField.fiscalQuarter`)}
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Form.Group>
+          )}
+          {request.cardholderFieldStatuses.has(request.status) && (
+            <Form.Group className="bg-light p-3">
+              <legend>
+                Cardholder Data{" "}
+                <small className="text-secondary">
+                  (to be completed by Cardholder)
+                </small>
+              </legend>
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Transaction ID</Form.Label>
+                    <Form.Control
+                      type="text"
+                      disabled={!props.editing}
+                      placeholder="Enter Transaction ID"
+                      {...formik.getFieldProps("requestField.transactionId")}
+                      isInvalid={isInvalid(`requestField.transactionId`)}
+                      isValid={isValid(`requestField.transactionId`)}
+                    />
+                    {validationError(`requestField.transactionId`)}
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group>
+                    <Form.Label>Execution Date</Form.Label>
+                    <Form.Control
+                      as={DatePicker}
+                      disabled={!props.editing}
+                      className={!props.editing ? "date-picker-locked" : ""}
+                      name="requestField.executionDate"
+                      id="requestField.executionDate"
+                      isInvalid={isInvalid(`requestField.executionDate`)}
+                      isValid={isValid(`requestField.executionDate`)}
+                    />
+                    {validationError(`requestField.executionDate`)}
                   </Form.Group>
                 </Col>
               </Row>
