@@ -21,7 +21,7 @@ export class EmailService {
     } else {
       approverEmails = approvers.map(approver => approver.email);
     }
-    //approverEmails = ["ryan.mclean.adm@soceur.onmicrosoft.com"];
+    approverEmails = ["ryan.a.mclean.ctr@socom.mil"];
     const email: IEmailProperties = {
       To: approverEmails,
       Subject: `New GPC Request (#${request.id})`,
@@ -50,14 +50,12 @@ export class EmailService {
         "<br />" +
         "If you have received this message in error, please contact soceurlistj69@socom.mil to unsubscribe"
     };
-    console.log("Emailed approvers: ", approverEmails);
-    return of([]);
-    //return this.dal.sendEmail(email);
+    return this.dal.sendEmail(email);
   }
 
   notifySubmitterFor(request: Request): Observable<any> {
     let submitterEmail = [request.author.EMail ? request.author.EMail : ""];
-    //submitterEmail = ["ryan.mclean.adm@soceur.onmicrosoft.com"];
+    submitterEmail = ["ryan.a.mclean.ctr@socom.mil"];
     const email: IEmailProperties = {
       To: submitterEmail,
       Subject: `GPC Request (#${request.id}) updated`,
@@ -84,8 +82,6 @@ export class EmailService {
         "<br />" +
         "If you have received this message in error, please contact soceurlistj69@socom.mil to unsubscribe"
     };
-    console.log("Emailed submitter: ", submitterEmail);
-    return of([]);
-    //return this.dal.sendEmail(email);
+    return this.dal.sendEmail(email);
   }
 }
