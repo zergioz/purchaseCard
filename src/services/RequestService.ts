@@ -8,6 +8,7 @@ import { ccRequestTracker } from "./models/interfaces/ccRequestTracker";
 import { convertToFriendly, convertToUgly } from "../constants/StepStatus";
 import { convertApprovalsToHistory } from "../helpers/ApprovalsToHistory";
 import { RequestField } from "./models/RequestField";
+import { parse } from "date-fns";
 
 export class RequestService {
   private dal: dal;
@@ -92,8 +93,12 @@ export class RequestService {
         executionDate: requestField.executionDate
           ? requestField.executionDate
           : approvals.cardholderValidation &&
-            approvals.cardholderValidation.cardHolderExecuted
-          ? approvals.cardholderValidation.cardHolderExecuted
+            approvals.cardholderValidation.cardHolderExecuted //old app stored as M/d/yyyy
+          ? parse(
+              approvals.cardholderValidation.cardHolderExecuted,
+              "MM/dd/yyyy",
+              new Date()
+            ).toISOString()
           : ""
       };
 
