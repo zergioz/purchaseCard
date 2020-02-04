@@ -50,7 +50,9 @@ export class EmailService {
         "<br />" +
         "If you have received this message in error, please contact soceurlistj69@socom.mil to unsubscribe"
     };
-    return this.dal.sendEmail(email);
+    console.log("Emailed approvers: ", approverEmails);
+    return of([]);
+    //return this.dal.sendEmail(email);
   }
 
   notifySubmitterFor(request: Request): Observable<any> {
@@ -82,6 +84,8 @@ export class EmailService {
         "<br />" +
         "If you have received this message in error, please contact soceurlistj69@socom.mil to unsubscribe"
     };
-    return this.dal.sendEmail(email);
+    console.log("Emailed submitter: ", submitterEmail);
+    return of([]);
+    //return this.dal.sendEmail(email);
   }
 }
