@@ -8,6 +8,7 @@
     "@pnp/logging": "^1.3.7",
     "@pnp/odata": "^1.3.7",
     "@pnp/sp": "^1.3.7",
+    "@react-pdf/renderer": "^1.6.8",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
