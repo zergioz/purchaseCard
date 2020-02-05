@@ -23,9 +23,10 @@ export type PopoverPlacement =
 export const useActionBadges = (
   request: Request,
   popoverPlacement: PopoverPlacement,
-  statusText: boolean = true
+  statusText: boolean = true,
+  hide?: string[]
 ) => {
-  const hiddenBadges = new Set(["Draft", "Submitted", "Closed"]);
+  const hiddenBadges = new Set(hide || ["Draft", "Submitted", "Closed"]);
   const statuses = Object.keys(getStatusesByFriendlyName());
   const [badges, setBadges] = useState<Array<any>>([]);
 
