@@ -108,6 +108,27 @@ export class Request implements IRequest {
     "Closed"
   ]);
 
+  //add up the line items
+  public getTotal = (): number => {
+    const items = this.lineItems;
+    let sum = 0;
+    for (var i = 0; i < items.length; i++) {
+      sum += items[i].requestTotal;
+    }
+    return sum;
+  };
+
+  //outputs a string with dollar or euro symbol
+  public formatAmount = (amount: number): string => {
+    const formatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency:
+        this.requestField.RequestCurrencyType === "Euro" ? "EUR" : "USD",
+      minimumFractionDigits: 2
+    });
+    return formatter.format(amount);
+  };
+
   public getValidationSchema(): Yup.ObjectSchema {
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
     return Yup.object({

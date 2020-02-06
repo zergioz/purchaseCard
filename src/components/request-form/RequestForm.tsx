@@ -202,20 +202,12 @@ export const RequestForm = (props: IProps) => {
 
   //calculates total cost of all the line items in the form and outputs a string with dollar or euro symbol
   const formatTotal = (): string => {
-    const formatter = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency:
-        formik.values.requestField.RequestCurrencyType === "Euro"
-          ? "EUR"
-          : "USD",
-      minimumFractionDigits: 2
-    });
     const items = formik.values.lineItems;
     let sum = 0;
     for (var i = 0; i < items.length; i++) {
       sum += items[i].requestTotal;
     }
-    return formatter.format(sum);
+    return request.formatAmount(sum);
   };
 
   //this is a wrapper for the react-date-picker control so that it works with Formik and React-Bootstrap
