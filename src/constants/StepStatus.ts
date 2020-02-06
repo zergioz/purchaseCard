@@ -33,84 +33,84 @@ export const StepStatus: IStatus[] = [
     friendlyName: "Draft",
     approvalName: "",
     approverRoles: [],
-    actionsAvailable: ["submit", "delete", "clone"]
+    actionsAvailable: ["submit", "delete", "pdf", "clone"]
   },
   {
     uglyName: "SUBMITTED",
     friendlyName: "Director",
     approvalName: "directorateApproval",
     approverRoles: ["DIRECTORATE APPROVAL"],
-    actionsAvailable: ["approve", "sendto", "reject", "clone"]
+    actionsAvailable: ["approve", "sendto", "reject", "pdf", "clone"]
   },
   {
     uglyName: "DIRECTORATE_APPROVAL",
     friendlyName: "Billing Official",
     approvalName: "billingOfficialApproval",
     approverRoles: ["BILLING OFFICIAL"],
-    actionsAvailable: ["approve", "sendto", "reject", "clone"]
+    actionsAvailable: ["approve", "sendto", "reject", "pdf", "clone"]
   },
   {
     uglyName: "BILLING_OFFICIAL_APPROVAL",
     friendlyName: "Tech Review",
     approvalName: "j6Approval",
     approverRoles: ["IT APPROVAL/J6"],
-    actionsAvailable: ["approve", "sendto", "reject", "clone"]
+    actionsAvailable: ["approve", "sendto", "reject", "pdf", "clone"]
   },
   {
     uglyName: "J6_APPROVAL",
     friendlyName: "PBO Approval",
     approvalName: "pboApproval",
     approverRoles: ["PROPERTY BOOKS OFFICER/J4"],
-    actionsAvailable: ["approve", "sendto", "reject", "clone"]
+    actionsAvailable: ["approve", "sendto", "reject", "pdf", "clone"]
   },
   {
     uglyName: "PBO_APPROVAL",
     friendlyName: "Finance",
     approvalName: "j8Approval",
     approverRoles: ["FINANCIAL OFFICER/J8"],
-    actionsAvailable: ["approve", "sendto", "reject", "clone"]
+    actionsAvailable: ["approve", "sendto", "reject", "pdf", "clone"]
   },
   {
     uglyName: "J8_APPROVAL",
     friendlyName: "Cardholder",
     approvalName: "cardholderValidation",
     approverRoles: ["CARD HOLDER"],
-    actionsAvailable: ["approve", "sendto", "reject", "clone"]
+    actionsAvailable: ["approve", "sendto", "reject", "pdf", "clone"]
   },
   {
     uglyName: "CARD_HOLDER_VALIDATION",
     friendlyName: "Requestor",
     approvalName: "requestorValidation",
     approverRoles: [],
-    actionsAvailable: ["approve", "sendto", "reject", "clone"]
+    actionsAvailable: ["approve", "sendto", "reject", "pdf", "clone"]
   },
   {
     uglyName: "REQUESTOR_VALIDATION",
     friendlyName: "Supply",
     approvalName: "supplyValidation",
     approverRoles: ["SUPPLY"],
-    actionsAvailable: ["approve", "sendto", "reject", "clone"]
+    actionsAvailable: ["approve", "sendto", "reject", "pdf", "clone"]
   },
   {
     uglyName: "SUPPLY_VALIDATION",
     friendlyName: "PBO Final",
     approvalName: "finalValidation",
     approverRoles: ["PROPERTY BOOKS OFFICER/J4"],
-    actionsAvailable: ["approve", "sendto", "reject", "clone"]
+    actionsAvailable: ["approve", "sendto", "reject", "pdf", "clone"]
   },
   {
     uglyName: "FINAL_VALIDATION",
     friendlyName: "BO Final",
     approvalName: "budgetOfficerApproval",
     approverRoles: ["BILLING OFFICIAL"],
-    actionsAvailable: ["approve", "sendto", "reject", "clone"]
+    actionsAvailable: ["approve", "sendto", "reject", "pdf", "clone"]
   },
   {
     uglyName: "CLOSED",
     friendlyName: "Closed",
     approvalName: "",
     approverRoles: [],
-    actionsAvailable: ["clone"]
+    actionsAvailable: ["pdf", "clone"]
   }
 ];
 

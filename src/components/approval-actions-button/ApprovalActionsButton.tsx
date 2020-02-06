@@ -214,6 +214,12 @@ export const ApprovalActionsButton = (props: IProps) => {
             Delete
           </Dropdown.Item>
           <Dropdown.Item
+            hidden={!props.actions.has("pdf")}
+            onClick={() => history.push(`/requests/print/${props.request.id}`)}
+          >
+            Export to PDF
+          </Dropdown.Item>
+          <Dropdown.Item
             hidden={!props.actions.has("clone")}
             onClick={() => onActionClicked("clone")}
           >
