@@ -46,6 +46,8 @@ export const RequestTable = (props: IProps) => {
                     <th>FY/Qt</th>
                     <th>Justification</th>
                     <th>Submitted</th>
+                    <th>Executed</th>
+                    <th>Total</th>
                   </tr>
                 </thead>
                 <tbody id="requestList">
