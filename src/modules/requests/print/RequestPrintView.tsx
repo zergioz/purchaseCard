@@ -6,13 +6,16 @@ import { Alert, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import { RequestPdf } from "../../../components/request-pdf/RequestPdf";
+import { Attachment } from "../../../services/models/SharepointAttachments";
 interface IProps {
   requestId: number;
 }
 export const RequestPrintView = (props: IProps) => {
   const svc = new RequestService();
   const context = useContext(RequestContext);
+  const [loading, setLoading] = useState<boolean>(true);
   const [request, setRequest] = useState();
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const history = useHistory();
 
   // Internet Explorer 6-11
@@ -31,6 +34,10 @@ export const RequestPrintView = (props: IProps) => {
       const request = requests[0];
       if (request) {
         setRequest(request);
+        svc.getAttachments(request).subscribe((response: Attachment[]) => {
+          setAttachments(response);
+          setLoading(false);
+        });
       }
     });
   }, []);
@@ -42,12 +49,12 @@ export const RequestPrintView = (props: IProps) => {
           <div className="col-12 mb-4 text-center"></div>
         </div>
       </div>
-      {context.loading && <LoadingResults />}
-      {!context.loading && request && (
+      {context.loading || (loading && <LoadingResults />)}
+      {!context.loading && !loading && request && attachments && (
         <>
           {!isInternetExplorer && (
             <PDFViewer width="100%" height="900">
-              <RequestPdf request={request} />
+              <RequestPdf request={request} attachments={attachments} />
             </PDFViewer>
           )}
           {isInternetExplorer && (
@@ -74,7 +81,7 @@ export const RequestPrintView = (props: IProps) => {
           )}
         </>
       )}
-      {!context.loading && !request && (
+      {!context.loading && !loading && !request && (
         <div className="row">
           <div className="col-12">
             <Alert variant="danger">
