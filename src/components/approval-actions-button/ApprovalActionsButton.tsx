@@ -95,7 +95,7 @@ export const ApprovalActionsButton = (props: IProps) => {
     svc.delete(props.request).subscribe(
       () => {
         setLoading(false);
-        addToast("Deleted!", {
+        addToast(`Deleted Request #${props.request.id}`, {
           appearance: "success",
           autoDismiss: true
         });

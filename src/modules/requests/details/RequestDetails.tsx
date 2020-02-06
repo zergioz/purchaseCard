@@ -52,7 +52,10 @@ export const RequestDetails = (props: IProps) => {
       () => {
         setRequest(newRequest);
         context.updateRequest(newRequest);
-        addToast("Saved", { appearance: "success", autoDismiss: true });
+        addToast(`Saved Request #${request.id}`, {
+          appearance: "success",
+          autoDismiss: true
+        });
       },
       error => {
         console.error(`Error updating request.`, error);
