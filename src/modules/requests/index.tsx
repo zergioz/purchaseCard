@@ -5,6 +5,7 @@ import RequestsByStatusModule from "./requests-by-status";
 import AllOpenRequestsModule from "./all-open-requests";
 import RequestDetailsModule from "./details";
 import NewRequestModule from "./new";
+import RequestPrintModule from "./print";
 
 const AllOpenRequestsModuleComponent =
   AllOpenRequestsModule.routeProps.component;
@@ -24,6 +25,7 @@ export default {
     RequestsByStatusModule,
     RequestsByDirectorateModule,
     RequestDetailsModule,
-    NewRequestModule
+    NewRequestModule,
+    RequestPrintModule
   ]
 };

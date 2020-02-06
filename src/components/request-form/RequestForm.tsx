@@ -15,7 +15,7 @@ import { CardTypes as cardTypes } from "../../constants/CardTypes";
 import { Currencies as currencies } from "../../constants/Currencies";
 import { FiscalYears as fiscalYears } from "../../constants/FiscalYears";
 import { FiscalQuarters as fiscalQuarters } from "../../constants/FiscalQuarters";
-import { FaPlus, FaTimes, FaNetworkWired } from "react-icons/fa";
+import { FaPlus, FaTimes } from "react-icons/fa";
 import { ValidationErrorModal } from "./ValidationErrorModal";
 import { useFormik, getIn, validateYupSchema, yupToFormErrors } from "formik";
 import ReactDatePicker, {
@@ -34,6 +34,7 @@ import { LineItem } from "../../services/models/LineItem";
 import { Observable } from "rxjs";
 import { useHistory } from "react-router-dom";
 import { ErrorBoundary } from "../error-boundary/ErrorBoundary";
+import { RequestSignaturesTable } from "./RequestSignaturesTable";
 
 interface IProps {
   request: Request;
@@ -335,7 +336,7 @@ export const RequestForm = (props: IProps) => {
                 </h2>
               </Col>
               <Col className="d-flex justify-content-end">
-                <ButtonToolbar className="text-right h-50">
+                <ButtonToolbar className="text-right ">
                   <Button
                     disabled={!canEdit}
                     className="m-1"
@@ -376,6 +377,7 @@ export const RequestForm = (props: IProps) => {
           </Form.Group>
           <Form.Group className="bg-light p-3">
             <legend>Request Details</legend>
+            <hr />
             <Row>
               <Col>
                 <Form.Group>
@@ -582,6 +584,7 @@ export const RequestForm = (props: IProps) => {
           </Form.Group>
           <Form.Group className="p-3 bg-light">
             <legend>Line Items</legend>
+            <hr />
             <Row>
               <Col>
                 <Table responsive borderless>
@@ -1021,10 +1024,31 @@ export const RequestForm = (props: IProps) => {
               </Row>
             </Form.Group>
           )}
+          {request.status !== "Draft" && (
+            <Form.Group className="bg-light p-3">
+              <Row>
+                <Col>
+                  <legend>Signatures</legend>
+                </Col>
+                <Col className="text-right">
+                  <ApprovalActionsButton
+                    className="p-1"
+                    disabled={props.editing || !canAction}
+                    variant="danger"
+                    request={request}
+                    onRequestUpdated={onRequestUpdated}
+                    onBeforeAction={onBeforeAction}
+                    actions={new Set(request.getAvailableActions())}
+                  />
+                </Col>
+              </Row>
+              <RequestSignaturesTable request={request} />
+            </Form.Group>
+          )}
           <Form.Group className="bg-secondary p-3">
             <Row>
               <Col className="pt-2">
-                <span className="text-white">
+                <span className="text-white ">
                   Use the actions button to sign this form.
                 </span>
               </Col>
