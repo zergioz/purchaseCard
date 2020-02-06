@@ -69,6 +69,45 @@ export class Request implements IRequest {
     this.searchKeywords = [this.formatAmount(this.getTotal()), `#${this.id}`];
   }
 
+  //looks at the last approval for each status and returns true if it finds a match
+  public hasAction = (actions: string[]): boolean => {
+    let match = false;
+    const statuses = Object.keys(getStatusesByFriendlyName());
+    statuses.map(status => {
+      if (this.getLastActionFor(status, actions)) match = true;
+    });
+    return match;
+  };
+
+  //this is the data we'll save to the csv export
+  public getExportData() {
+    return {
+      id: this.id,
+      requestor: this.author.Title,
+      requestorPhone: this.requestField.RequestorDSN,
+      directorate: this.requestField.RequestorDirectorate,
+      submitted: this.created,
+      requiredJ6Approval: this.requestField.RequestIsJ6 == "Yes" ? true : false,
+      //lineItems: JSON.stringify(this.lineItems),
+      currency: this.requestField.RequestCurrencyType,
+      total: this.getTotal(),
+      totalFormatted: this.formatAmount(this.getTotal()),
+      //approvalHistory: JSON.stringify(this.history),
+      status: this.status,
+      rejected: this.hasAction(["reject"]),
+      completed: this.getLastActionFor("BO Final", ["approve"]) ? true : false,
+      cardType: this.requestField.RequestCardType,
+      cardHolder: this.requestField.RequestorCardHolderName,
+      justification: this.requestField.RequestJustification,
+      fundingType: this.requestField.RequestSource,
+      executionDate: this.requestField.executionDate,
+      transactionId: this.requestField.transactionId,
+      fiscalQuarter: this.requestField.fiscalQuarter,
+      fiscalYear: this.requestField.fiscalYear,
+      url: `${window.location.protocol}//${window.location.host}/app/gpc/#/requests/details/${this.id}`
+    };
+  }
+
   public getSortedHistoryDescendingFor(status: string): ApprovalAction[] {
     const sortedHist = this.history[status] || [];
     sortedHist.sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)));
