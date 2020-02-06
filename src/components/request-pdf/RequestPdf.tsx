@@ -364,7 +364,7 @@ export const RequestPdf = (props: IProps) => {
                       <View style={{ ...styles.tableCol, width: "75%" }}>
                         <Text style={styles.tableCell}>
                           <Link
-                            src={`${window.location.protocol}${window.location.host}${attachment.ServerRelativeUrl}`}
+                            src={`${window.location.protocol}//${window.location.host}${attachment.ServerRelativeUrl}`}
                           >
                             {attachment.FileName}
                           </Link>
