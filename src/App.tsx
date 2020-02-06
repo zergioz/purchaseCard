@@ -47,41 +47,29 @@ const App = () => {
   };
 
   return (
-    <div>
-      <UserProvider>
-        <RequestProvider>
-          <RoleProvider>
-            <Router>
-              <ToastProvider>
-                <TopNav></TopNav>
-                <div className="container-fluid-spacious">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <Breadcrumbs />
-                    </div>
-                  </div>
-                </div>
-                <div className="container-fluid">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <Switch>
-                        {makeRoutes()}
-                        {/* trick to allow links to other requests from the details page */}
-                        <Redirect
-                          from="/requests/details/:requestId/reload"
-                          to="/requests/details/:requestId"
-                        />
-                        <Redirect from="/" to="/requests" />
-                      </Switch>
-                    </div>
-                  </div>
-                </div>
-              </ToastProvider>
-            </Router>
-          </RoleProvider>
-        </RequestProvider>
-      </UserProvider>
-    </div>
+    <UserProvider>
+      <RequestProvider>
+        <RoleProvider>
+          <Router>
+            <ToastProvider>
+              <TopNav></TopNav>
+              <Breadcrumbs />
+              <div className="container-fluid">
+                <Switch>
+                  {makeRoutes()}
+                  {/* trick to allow links to other requests from the details page */}
+                  <Redirect
+                    from="/requests/details/:requestId/reload"
+                    to="/requests/details/:requestId"
+                  />
+                  <Redirect from="/" to="/requests" />
+                </Switch>
+              </div>
+            </ToastProvider>
+          </Router>
+        </RoleProvider>
+      </RequestProvider>
+    </UserProvider>
   );
 };
 

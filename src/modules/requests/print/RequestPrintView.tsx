@@ -56,7 +56,7 @@ export const RequestPrintView = (props: IProps) => {
       {!context.loading && !loading && request && attachments && (
         <>
           {!isInternetExplorer && (
-            <PDFViewer width="100%" height="900">
+            <PDFViewer width="100%" height="100%">
               <RequestPdf request={request} attachments={attachments} />
             </PDFViewer>
           )}
