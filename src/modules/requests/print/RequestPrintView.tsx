@@ -44,12 +44,15 @@ export const RequestPrintView = (props: IProps) => {
 
   return (
     <>
-      <div className="container">
-        <div className="row">
-          <div className="col-12 mb-4 text-center"></div>
-        </div>
-      </div>
-      {context.loading || (loading && <LoadingResults />)}
+      {context.loading ||
+        (loading && (
+          <div className="container">
+            <div className="row">
+              <div className="col-12 mb-4 text-center"></div>
+              <LoadingResults />
+            </div>
+          </div>
+        ))}
       {!context.loading && !loading && request && attachments && (
         <>
           {!isInternetExplorer && (
@@ -59,6 +62,9 @@ export const RequestPrintView = (props: IProps) => {
           )}
           {isInternetExplorer && (
             <div className="container">
+              <div className="row">
+                <div className="col-12 mb-4 text-center"></div>
+              </div>
               <div className="row">
                 <div className="col-md-12">
                   <Alert variant="info" className="mt-5">
