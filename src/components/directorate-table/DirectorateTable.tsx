@@ -18,6 +18,14 @@ export const DirectorateTable = () => {
     setModel(model);
   }, [context.requests]);
 
+  //add the totals for an array of requests
+  const getTotals = (requests: Request[]): number => {
+    return requests.reduce((acc, r) => acc + r.getTotal(), 0);
+  };
+
+  //format into dollar or euro value
+  const formatMoney = new Request().formatAmount;
+
   const createDirectorateViewModel = (requests: Request[]) => {
     directorates.map(directorate => {
       const open = applyFilters(
@@ -36,12 +44,31 @@ export const DirectorateTable = () => {
 
       const counts = {
         open: open.length,
-        closed: closed.length
+        openTotal: getTotals(open),
+        closed: closed.length,
+        closedTotal: getTotals(closed),
+        all: open.length + closed.length,
+        total: getTotals([...open, ...closed])
       };
       model[directorate] = counts;
     });
     return model;
   };
+
+  const all = applyFilters(
+    { ...new RequestFilters(), status: "" },
+    context.requests
+  );
+
+  const allOpen = applyFilters(
+    { ...new RequestFilters(), status: "All Open" },
+    all
+  );
+
+  const allClosed = applyFilters(
+    { ...new RequestFilters(), status: "Closed" },
+    all
+  );
 
   return (
     <>
@@ -52,7 +79,11 @@ export const DirectorateTable = () => {
             <tr>
               <th>Directorate</th>
               <th>Open</th>
+              <th>Open Total</th>
               <th>Closed</th>
+              <th>Closed Total</th>
+              <th>All</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody>
@@ -66,7 +97,11 @@ export const DirectorateTable = () => {
                       </Link>
                     </td>
                     <td>{model[directorate].open}</td>
+                    <td>{formatMoney(model[directorate].openTotal)}</td>
                     <td>{model[directorate].closed}</td>
+                    <td>{formatMoney(model[directorate].closedTotal)}</td>
+                    <td>{model[directorate].all}</td>
+                    <td>{formatMoney(model[directorate].total)}</td>
                   </tr>
                 )
               );
@@ -76,24 +111,18 @@ export const DirectorateTable = () => {
                 <b>All Directorates</b>
               </td>
               <td>
-                <b>
-                  {
-                    applyFilters(
-                      { ...new RequestFilters(), status: "All Open" },
-                      context.requests
-                    ).length
-                  }
-                </b>
+                <b>{allOpen.length}</b>
+              </td>
+              <td>{formatMoney(getTotals(allOpen))}</td>
+              <td>
+                <b>{allClosed.length}</b>
+              </td>
+              <td>{formatMoney(getTotals(allClosed))}</td>
+              <td>
+                <b>{all.length}</b>
               </td>
               <td>
-                <b>
-                  {
-                    applyFilters(
-                      { ...new RequestFilters(), status: "Closed" },
-                      context.requests
-                    ).length
-                  }
-                </b>
+                <b>{formatMoney(getTotals(all))}</b>
               </td>
             </tr>
           </tbody>
