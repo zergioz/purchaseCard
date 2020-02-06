@@ -1,8 +1,9 @@
 import dal from "./dal";
 import { Request } from "./models/Request";
 import { Role } from "./models/Role";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { IEmailProperties } from "./sharepoint/SharepointConnector";
+import { getStatusesByFriendlyName } from "../constants/StepStatus";
 
 export class EmailService {
   private dal: dal;
@@ -34,6 +35,29 @@ export class EmailService {
     "<br />" +
     "<br />" +
     "If you have received this message in error, please contact soceurlistj69@socom.mil to unsubscribe";
+
+  //this gets sent to j8 no matter what the cardholder does
+  notifyFinance(request: Request, roles: Role[]): Observable<any> {
+    const financeRoleNames = new Set(
+      getStatusesByFriendlyName()["Finance"].approverRoles
+    );
+    let financeUsers = roles.filter(
+      role => role.active && financeRoleNames.has(role.role)
+    );
+    const email: IEmailProperties = {
+      To: financeUsers.map(user => user.email),
+      Subject: `GPC Request (#${request.id})`,
+      Body:
+        "<h2>The cardholder has actioned this GPC request.</h2>" +
+        `<a href="${window.location.protocol}//${window.location.host}/app/gpc/#/requests/details/${request.id}">GPC Request #${request.id}</a>` +
+        "<br />" +
+        `You are receiving this notification because a cardholder has actioned this GPC request.` +
+        "<br />" +
+        "<br />" +
+        this.tail(request)
+    };
+    return this.dal.sendEmail(email);
+  }
 
   notifyRequestor(request: Request): Observable<any> {
     let approverEmails = [

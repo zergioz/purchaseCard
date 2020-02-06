@@ -52,6 +52,10 @@ export const ApprovalActionsButton = (props: IProps) => {
         status: nextRequestState.status,
         history: nextRequestState.history
       });
+      //finance always gets a notification when a request is leaving the cardholder status
+      if (props.request.status == "Cardholder") {
+        emailSvc.notifyFinance(updatedRequest, roles);
+      }
       emailSvc.notifyNextApproversFor(updatedRequest, roles);
       emailSvc.notifySubmitterFor(updatedRequest);
       setLoading(true);
