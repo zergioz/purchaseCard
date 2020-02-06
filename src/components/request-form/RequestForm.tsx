@@ -138,8 +138,14 @@ export const RequestForm = (props: IProps) => {
     if (request.status === "Draft") {
       saveRequest(formik.values);
     } else {
+      //handleSubmit will either submit or cause errors to be shown
       formik.handleSubmit();
-      if (!formik.isValid) {
+
+      //this captures the errors so we can check for it
+      const errors = validateForm(formik.values);
+      if (Object.entries(errors).length === 0) {
+        //there are no errors, save will go through
+      } else {
         setErrorModalOpen(true);
       }
     }
