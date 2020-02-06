@@ -8,6 +8,7 @@ import { LoadingResults } from "./LoadingResults";
 import { useRequestFiltering } from "../filters/RequestFilters";
 import "./RequestTable.css";
 import { RequestService } from "../../services";
+import { CSVLink, CSVDownload } from "react-csv";
 
 interface IProps {
   items?: Request[];
@@ -31,8 +32,14 @@ export const RequestTable = (props: IProps) => {
       {!context.loading && items && items.length > 0 && (
         <div className="container-fluid-spacious">
           <div className="row">
-            <div className="col-md-12 text-center">
+            <div className="col-md-1"></div>
+            <div className="col-md-10 text-center">
               <small className="text-secondary">{`Showing ${items.length} of ${pageItems.length} requests`}</small>
+            </div>
+            <div className="col-md-1 text-right">
+              <CSVLink data={items.map(request => request.getExportData())}>
+                <small>Export to CSV</small>
+              </CSVLink>
             </div>
           </div>
           <div className="row">
