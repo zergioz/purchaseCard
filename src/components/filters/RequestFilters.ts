@@ -26,6 +26,7 @@ interface IRequestFiltering {
 export const useRequestFiltering = (): IRequestFiltering => {
   const applyFilters = (filters: IRequestFilters, requests: Request[]) => {
     let filteredRequests: Request[] = requests
+      .filter(request => request.status !== "") //created on the new screen but never saved
       .filter(request => idFilter(request, filters))
       .filter(request => requestTypeFilter(request, filters))
       .filter(request => fiscalYearFilter(request, filters))

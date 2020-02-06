@@ -135,7 +135,7 @@ export const RequestForm = (props: IProps) => {
   };
 
   const onSaveClicked = () => {
-    if (request.status === "Draft") {
+    if (request.status === "Draft" || request.status == "") {
       saveRequest(formik.values);
     } else {
       //handleSubmit will either submit or cause errors to be shown
@@ -1026,7 +1026,7 @@ export const RequestForm = (props: IProps) => {
               </Row>
             </Form.Group>
           )}
-          {request.status !== "Draft" && (
+          {request.status !== "Draft" && request.status !== "" && (
             <Form.Group className="bg-light p-3">
               <Row>
                 <Col>

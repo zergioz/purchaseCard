@@ -70,7 +70,8 @@ export class Request implements IRequest {
   //returns the actions that are available for a request in this status
   public getAvailableActions(): string[] {
     const statuses = getStatusesByFriendlyName();
-    const actions = statuses[this.status].actionsAvailable;
+    const status = this.status == "" ? "Draft" : this.status;
+    const actions = statuses[status].actionsAvailable;
     return actions;
   }
 

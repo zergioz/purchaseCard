@@ -180,7 +180,7 @@ export const getNextStatus = (request: Request): any => {
       if (status == nextRequest.status) continue;
 
       //draft status doesn't require a signature
-      if (status == "Draft") continue;
+      if (status == "Draft" || status == "") continue;
 
       //stop at j6 only if it's required, otherwise keep looking
       if (status == "Tech Review") {

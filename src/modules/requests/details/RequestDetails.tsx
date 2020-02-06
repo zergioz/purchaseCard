@@ -35,7 +35,7 @@ export const RequestDetails = (props: IProps) => {
       const request = requests[0];
       if (request) {
         setRequest(request);
-        if (request.status === "Draft") {
+        if (request.status === "Draft" || request.status === "") {
           setEditing(true);
         }
       }
