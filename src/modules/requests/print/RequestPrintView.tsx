@@ -4,9 +4,6 @@ import { RequestService } from "../../../services";
 import { LoadingResults } from "../../../components/request-table/LoadingResults";
 import { Alert, Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import { RequestForm } from "../../../components/request-form/RequestForm";
-import { Request } from "../../../services/models/Request";
-import { of } from "rxjs";
 import { PDFViewer } from "@react-pdf/renderer";
 import { RequestPdf } from "../../../components/request-pdf/RequestPdf";
 interface IProps {
@@ -17,6 +14,10 @@ export const RequestPrintView = (props: IProps) => {
   const context = useContext(RequestContext);
   const [request, setRequest] = useState();
   const history = useHistory();
+
+  // Internet Explorer 6-11
+  //@ts-ignore
+  const isInternetExplorer = /*@cc_on!@*/ false || !!document.documentMode;
 
   //get item from db on page load
   useEffect(() => {
@@ -44,15 +45,33 @@ export const RequestPrintView = (props: IProps) => {
       {context.loading && <LoadingResults />}
       {!context.loading && request && (
         <>
-          <PDFViewer width="100%" height="900">
-            <RequestPdf request={request} />
-          </PDFViewer>
-          {/* <RequestForm
-            request={request}
-            editing={false}
-            onRequestUpdated={(newRequest: Request) => of(newRequest)}
-            setEditing={() => {}}
-          /> */}
+          {!isInternetExplorer && (
+            <PDFViewer width="100%" height="900">
+              <RequestPdf request={request} />
+            </PDFViewer>
+          )}
+          {isInternetExplorer && (
+            <div className="container">
+              <div className="row">
+                <div className="col-md-12">
+                  <Alert variant="info" className="mt-5">
+                    <Alert.Heading>Incompatible Browser</Alert.Heading>
+                    <p>
+                      The PDF viewer does not work in Internet Explorer. Please
+                      switch to Edge, Chrome, or Firefox to view this document.
+                    </p>
+                    <hr />
+                    <Button
+                      variant="info"
+                      href={`microsoft-edge:${window.location}`}
+                    >
+                      Open with Microsoft Edge
+                    </Button>
+                  </Alert>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
       {!context.loading && !request && (
