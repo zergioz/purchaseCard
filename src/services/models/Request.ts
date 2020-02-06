@@ -22,6 +22,10 @@ export class Request implements IRequest {
   @autoserialize
   id: number;
 
+  //holds values like $0.00 and #134 so keyword search can find it
+  @autoserialize
+  searchKeywords: string[];
+
   @autoserializeAs(SharepointUser)
   requestor: SharepointUser;
 
@@ -59,6 +63,10 @@ export class Request implements IRequest {
     this.history = data.history || {};
     this.created = data.created || new Date().toISOString();
     this.author = data.author || new SharepointUser();
+
+    //keyword search works by stringifying this object.
+    //add the $total and the id #123 here so that those will match if user searches that way
+    this.searchKeywords = [this.formatAmount(this.getTotal()), `#${this.id}`];
   }
 
   public getSortedHistoryDescendingFor(status: string): ApprovalAction[] {

@@ -98,6 +98,12 @@ export const RequestTableRow: React.FC<IProps> = props => {
       <td>
         <RequestTableDateCell dateISOString={item.created} />
       </td>
+      <td>
+        <RequestTableDateCell dateISOString={item.requestField.executionDate} />
+      </td>
+      <td>
+        <b>{item.formatAmount(item.getTotal())}</b>
+      </td>
     </tr>
   );
 };
