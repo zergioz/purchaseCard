@@ -151,9 +151,13 @@ export const RequestForm = (props: IProps) => {
     }
   };
 
-  const onCancelClicked = () => {
-    formik.resetForm();
-    props.setEditing(false);
+  const onCancelClicked = (confirmed?: boolean) => {
+    if (formik.dirty && !confirmed) {
+      setDiscardModalOpen(true);
+    } else {
+      formik.resetForm();
+      props.setEditing(false);
+    }
   };
 
   //unlocks the form fields
@@ -304,7 +308,7 @@ export const RequestForm = (props: IProps) => {
       <ConfirmationModal
         open={discardModalOpen}
         onHide={() => setDiscardModalOpen(false)}
-        onConfirm={() => onCancelClicked()}
+        onConfirm={() => onCancelClicked(true)}
         title="Discard Changes"
         body="Are you sure you want to discard your changes?"
         confirmText="Yes"
@@ -348,7 +352,7 @@ export const RequestForm = (props: IProps) => {
                     className="m-1"
                     variant="outline-light"
                     hidden={!props.editing}
-                    onClick={() => setDiscardModalOpen(true)}
+                    onClick={() => onCancelClicked()}
                   >
                     Cancel
                   </Button>
@@ -1065,7 +1069,7 @@ export const RequestForm = (props: IProps) => {
                     className="m-1"
                     variant="outline-light"
                     hidden={!props.editing}
-                    onClick={() => setDiscardModalOpen(true)}
+                    onClick={() => onCancelClicked()}
                   >
                     Cancel
                   </Button>
