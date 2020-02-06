@@ -164,7 +164,7 @@ export class SharepointConnector implements IDbConnector {
     if (siteUrl) web = new Web(siteUrl);
 
     let item = web.lists.getByTitle(listName).items.getById(params.id);
-    return from(item.attachmentFiles.getByName(params.fileName).recycle());
+    return from(item.attachmentFiles.getByName(params.fileName).delete());
   }
 
   sendEmail(emailProps: IEmailProperties) {
