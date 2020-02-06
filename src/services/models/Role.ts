@@ -42,13 +42,29 @@ export class Role {
     this.pseudoName = data.pseudoName || "";
   }
 
-  //returns true if this person can approve the request in its current state
+  //returns true if this person is an approver for the request in its current state
   caresAbout(request: Request): boolean {
+    let cares = false;
     const step = getStatusesByFriendlyName()[request.status];
     const roles = new Set(step.approverRoles);
     const directorateMatch =
       request.requestField.RequestorDirectorate == this.directorate;
     const roleMatch = roles.has(this.role);
-    return this.active && directorateMatch && roleMatch;
+
+    switch (step.friendlyName) {
+      case "Director":
+      case "Billing Official":
+      case "BO Final":
+        cares = this.active && directorateMatch && roleMatch;
+        break;
+      case "Cardholder":
+        cares = request.requestField.RequestorCardHolderName == this.email;
+        break;
+      default:
+        cares = this.active && roleMatch;
+        break;
+    }
+
+    return cares;
   }
 }
