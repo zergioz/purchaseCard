@@ -95,7 +95,7 @@ export const ApprovalActionsButton = (props: IProps) => {
     svc.delete(props.request).subscribe(
       () => {
         setLoading(false);
-        addToast("Deleted!", {
+        addToast(`Deleted Request #${props.request.id}`, {
           appearance: "success",
           autoDismiss: true
         });
@@ -212,6 +212,12 @@ export const ApprovalActionsButton = (props: IProps) => {
             onClick={() => onActionClicked("delete")}
           >
             Delete
+          </Dropdown.Item>
+          <Dropdown.Item
+            hidden={!props.actions.has("pdf")}
+            onClick={() => history.push(`/requests/print/${props.request.id}`)}
+          >
+            Export to PDF
           </Dropdown.Item>
           <Dropdown.Item
             hidden={!props.actions.has("clone")}

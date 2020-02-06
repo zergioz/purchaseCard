@@ -125,7 +125,10 @@ export class RequestService {
         requestor: item.Author,
         requestField: requestField,
         lineItems: purchaseDetails.Details ? purchaseDetails.Details : [],
-        status: convertToFriendly(item.REQUEST_STATUS),
+        status:
+          item.REQUEST_STATUS == ""
+            ? "Draft"
+            : convertToFriendly(item.REQUEST_STATUS),
         approvals: approvals,
         history: item.History
           ? JSON.parse(item.History)
@@ -166,9 +169,10 @@ export class RequestService {
       );
   }
 
+  //initial drafts don't have a status, it only gets draft status when they do the first save
   createDraft(): Observable<Request> {
     const requestData = {
-      REQUEST_STATUS: "DRAFT"
+      REQUEST_STATUS: ""
     };
 
     return this.dal.createRow(this.listName, requestData).pipe(
@@ -199,7 +203,9 @@ export class RequestService {
       PURCHASE_DETAILS: JSON.stringify({
         Details: request.lineItems
       }),
-      REQUEST_STATUS: convertToUgly(request.status),
+      REQUEST_STATUS: convertToUgly(
+        request.status === "" ? "Draft" : request.status
+      ),
       History: JSON.stringify(request.history || {})
     } as ccRequestTracker;
 

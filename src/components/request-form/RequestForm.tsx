@@ -135,19 +135,29 @@ export const RequestForm = (props: IProps) => {
   };
 
   const onSaveClicked = () => {
-    if (request.status === "Draft") {
+    if (request.status === "Draft" || request.status == "") {
       saveRequest(formik.values);
     } else {
+      //handleSubmit will either submit or cause errors to be shown
       formik.handleSubmit();
-      if (!formik.isValid) {
+
+      //this captures the errors so we can check for it
+      const errors = validateForm(formik.values);
+      if (Object.entries(errors).length === 0) {
+        //there are no errors, save will go through
+      } else {
         setErrorModalOpen(true);
       }
     }
   };
 
-  const onCancelClicked = () => {
-    formik.resetForm();
-    props.setEditing(false);
+  const onCancelClicked = (confirmed?: boolean) => {
+    if (formik.dirty && !confirmed) {
+      setDiscardModalOpen(true);
+    } else {
+      formik.resetForm();
+      props.setEditing(false);
+    }
   };
 
   //unlocks the form fields
@@ -196,20 +206,12 @@ export const RequestForm = (props: IProps) => {
 
   //calculates total cost of all the line items in the form and outputs a string with dollar or euro symbol
   const formatTotal = (): string => {
-    const formatter = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency:
-        formik.values.requestField.RequestCurrencyType === "Euro"
-          ? "EUR"
-          : "USD",
-      minimumFractionDigits: 2
-    });
     const items = formik.values.lineItems;
     let sum = 0;
     for (var i = 0; i < items.length; i++) {
       sum += items[i].requestTotal;
     }
-    return formatter.format(sum);
+    return request.formatAmount(sum);
   };
 
   //this is a wrapper for the react-date-picker control so that it works with Formik and React-Bootstrap
@@ -306,7 +308,7 @@ export const RequestForm = (props: IProps) => {
       <ConfirmationModal
         open={discardModalOpen}
         onHide={() => setDiscardModalOpen(false)}
-        onConfirm={() => onCancelClicked()}
+        onConfirm={() => onCancelClicked(true)}
         title="Discard Changes"
         body="Are you sure you want to discard your changes?"
         confirmText="Yes"
@@ -350,7 +352,7 @@ export const RequestForm = (props: IProps) => {
                     className="m-1"
                     variant="outline-light"
                     hidden={!props.editing}
-                    onClick={() => setDiscardModalOpen(true)}
+                    onClick={() => onCancelClicked()}
                   >
                     Cancel
                   </Button>
@@ -1024,7 +1026,7 @@ export const RequestForm = (props: IProps) => {
               </Row>
             </Form.Group>
           )}
-          {request.status !== "Draft" && (
+          {request.status !== "Draft" && request.status !== "" && (
             <Form.Group className="bg-light p-3">
               <Row>
                 <Col>
@@ -1067,7 +1069,7 @@ export const RequestForm = (props: IProps) => {
                     className="m-1"
                     variant="outline-light"
                     hidden={!props.editing}
-                    onClick={() => setDiscardModalOpen(true)}
+                    onClick={() => onCancelClicked()}
                   >
                     Cancel
                   </Button>
