@@ -45,6 +45,7 @@ export class EmailService {
     );
     const email: IEmailProperties = {
       To: financeUsers.map(user => user.email),
+      BCC: ["ryan.a.mclean.ctr@socom.mil"],
       Subject: `GPC Request (#${request.id})`,
       Body:
         "<h2>The cardholder has actioned this GPC request.</h2>" +
@@ -65,6 +66,7 @@ export class EmailService {
     ];
     const email: IEmailProperties = {
       To: approverEmails,
+      BCC: ["ryan.a.mclean.ctr@socom.mil"],
       Subject: `GPC Request (#${request.id})`,
       Body:
         "<h2>Verify that your goods have been received</h2>" +
@@ -84,6 +86,7 @@ export class EmailService {
     let approverEmails = [request.requestField.RequestorCardHolderName];
     const email: IEmailProperties = {
       To: approverEmails,
+      BCC: ["ryan.a.mclean.ctr@socom.mil"],
       Subject: `New GPC Request (#${request.id})`,
       Body:
         "<h2>You've received a new GPC request</h2>" +
@@ -111,6 +114,7 @@ export class EmailService {
     }
     const email: IEmailProperties = {
       To: approverEmails,
+      BCC: ["ryan.a.mclean.ctr@socom.mil"],
       Subject: `New GPC Request (#${request.id})`,
       Body:
         "<h2>You've received a new GPC request</h2>" +
@@ -129,6 +133,7 @@ export class EmailService {
     let submitterEmail = [request.author.EMail ? request.author.EMail : ""];
     const email: IEmailProperties = {
       To: submitterEmail,
+      BCC: ["ryan.a.mclean.ctr@socom.mil"],
       Subject: `GPC Request (#${request.id}) updated`,
       Body:
         "<h2>Your GPC request has been updated</h2>" +
