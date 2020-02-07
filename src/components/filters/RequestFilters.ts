@@ -30,6 +30,7 @@ export const useRequestFiltering = (): IRequestFiltering => {
   const applyFilters = (filters: IRequestFilters, requests: Request[]) => {
     //the ramda library lets us use transducers which make this a lot faster.
     //the filters are executed in the reverse order from which they appear here
+    //@ts-ignore
     let filteredRequests: Request[] = compose(
       filter((request: Request) => keywordFilter(request, filters)),
       filter((request: Request) => directorateFilter(request, filters)),

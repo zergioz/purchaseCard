@@ -1703,12 +1703,10 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
 
-"@types/ramda@^0.26.41":
-  version "0.26.41"
-  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.26.41.tgz#82161407b2ce9d17b0a19dba19fcaf00de4745a0"
-  integrity sha512-EROc+evnzHr4J/8nMBky98eP9eoWhaLtlig8JWJ12f/suvSplMH4jL6L/5X6z35PTjQRWUDf6kqI02x7bX4kHQ==
-  dependencies:
-    ts-toolbelt "^6.1.11"
+"@types/ramda@0.25.0":
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.0.tgz#f62d5a9f76b7bb40eb45cf69dac0ac548aca9222"
+  integrity sha512-5IdrohP5RJe1kbMnJ4MvQFfwA1Iqyme1b4/5mIzDiVDrR0L/AuhozrxaUGXpZRHWvJkTHQCf9yNSr+CaLM+QdA==
 
 "@types/react-csv@^1.1.1":
   version "1.1.1"
@@ -9135,15 +9133,15 @@ raf@^3.4.1:
   dependencies:
     performance-now "^2.1.0"
 
+ramda@0.25.0:
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
+  integrity sha512-GXpfrYVPwx3K7RQ6aYT8KPS8XViSXUVJT1ONhoKPE9VAleW42YE+U+8VEyGWt41EnEQW7gwecYJriTI0pKoecQ==
+
 ramda@^0.26.1:
   version "0.26.1"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.26.1.tgz#8d41351eb8111c55353617fc3bbffad8e4d35d06"
   integrity sha512-hLWjpy7EnsDBb0p+Z3B7rPi3GDeRG5ZtiI33kJhTt+ORCd38AbAIjB/9zRIUoeTbE/AVX5ZkU7m6bznsvrf8eQ==
-
-ramda@^0.27.0:
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.27.0.tgz#915dc29865c0800bf3f69b8fd6c279898b59de43"
-  integrity sha512-pVzZdDpWwWqEVVLshWUHjNwuVP7SfcmPraYuqocJp1yo2U1R7P+5QAfDhdItkuoGqIBnBYrtPp7rEPqDn9HlZA==
 
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
   version "2.1.0"
@@ -11036,11 +11034,6 @@ ts-pnp@^1.1.2:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.1.5.tgz#840e0739c89fce5f3abd9037bb091dbff16d9dec"
   integrity sha512-ti7OGMOUOzo66wLF3liskw6YQIaSsBgc4GOAlWRnIEj8htCxJUxskanMUoJOD6MDCRAXo36goXJZch+nOS0VMA==
-
-ts-toolbelt@^6.1.11:
-  version "6.1.13"
-  resolved "https://registry.yarnpkg.com/ts-toolbelt/-/ts-toolbelt-6.1.13.tgz#12935bc8b81052e5e21eaddd35372e71320d7ee3"
-  integrity sha512-xfhXvHNMg9i0+L9aALC5kU+/H1eaLl5yydMe6m+2Danmfw/sIX+ixF7JTP4XSQRaG+Xd1idoTmcCVI0QmqZllQ==
 
 tslib@1.10.0, tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.10.0"
