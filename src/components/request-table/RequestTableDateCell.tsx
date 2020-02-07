@@ -1,10 +1,12 @@
 import React from "react";
 import { format, formatDistance, parseISO } from "date-fns";
 import { ErrorBoundary } from "../error-boundary/ErrorBoundary";
+import { Badge } from "react-bootstrap";
 
 const formatStr = "dd MMM yyyy";
 interface IProps {
   dateISOString: string;
+  expired?: boolean;
 }
 
 const RequestTableDateCellUnsafe = (props: IProps) => {
@@ -24,13 +26,21 @@ const RequestTableDateCellUnsafe = (props: IProps) => {
     <div className="nowrap" style={{ whiteSpace: "pre" }}>
       {formattedDate}
       <br />
-      <small className="text-secondary">{distance}</small>
+      <small className={`${props.expired ? "text-danger" : "text-secondary"}`}>
+        {distance}
+      </small>
+      {props.expired && (
+        <>
+          <br />
+          <Badge variant="danger">Expired</Badge>
+        </>
+      )}
     </div>
   );
 };
 
 export const RequestTableDateCell = (props: IProps) => (
   <ErrorBoundary>
-    <RequestTableDateCellUnsafe dateISOString={props.dateISOString} />
+    <RequestTableDateCellUnsafe {...props} />
   </ErrorBoundary>
 );

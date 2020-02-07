@@ -96,7 +96,10 @@ export const RequestTableRow: React.FC<IProps> = props => {
         <div>{item.requestField!.RequestJustification}</div>
       </td>
       <td>
-        <RequestTableDateCell dateISOString={item.created} />
+        <RequestTableDateCell
+          dateISOString={item.created}
+          expired={item.isExpired()}
+        />
       </td>
       <td>
         <RequestTableDateCell dateISOString={item.requestField.executionDate} />
