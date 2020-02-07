@@ -88,6 +88,8 @@ export class Request implements IRequest {
       directorate: this.requestField.RequestorDirectorate,
       submitted: this.created,
       requiredJ6Approval: this.requestField.RequestIsJ6 == "Yes" ? true : false,
+      dd250: this.lineItems.find(item => item.requestDdForm) !== undefined,
+      da2062: this.lineItems.find(item => item.requestDaForm) !== undefined,
       //lineItems: JSON.stringify(this.lineItems),
       currency: this.requestField.RequestCurrencyType,
       total: this.getTotal(),
