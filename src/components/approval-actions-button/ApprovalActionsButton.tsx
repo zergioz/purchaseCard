@@ -210,7 +210,7 @@ export const ApprovalActionsButton = (props: IProps) => {
           >
             Reject &amp; Close
           </Dropdown.Item>
-          <Dropdown.Divider hidden={props.actions.size == 1} />
+          <Dropdown.Divider hidden={props.actions.size == 2} />
           <Dropdown.Item
             hidden={!props.actions.has("delete")}
             onClick={() => onActionClicked("delete")}
