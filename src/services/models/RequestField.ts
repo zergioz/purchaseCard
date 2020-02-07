@@ -26,6 +26,8 @@ export class RequestField {
   @autoserialize
   fiscalQuarter: string;
   @autoserialize
+  purchaseNumber: string;
+  @autoserialize
   transactionId: string;
   @autoserialize
   executionDate: string;
@@ -43,6 +45,7 @@ export class RequestField {
     this.RequestIsJ6 = data.RequestIsJ6 === "Yes" ? "Yes" : "No";
     this.fiscalYear = data.fiscalYear || "";
     this.fiscalQuarter = data.fiscalQuarter || "";
+    this.purchaseNumber = data.purchaseNumber || "";
     this.transactionId = data.transactionId || "";
     this.executionDate = data.executionDate || "";
   }

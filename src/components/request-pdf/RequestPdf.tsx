@@ -177,7 +177,8 @@ export const RequestPdf = (props: IProps) => {
             <View style={styles.col}>
               <Text style={styles.label}>Request Date</Text>
               <Text style={styles.value}>
-                {format(parseISO(props.request.created), "dd MMM yyyy")}
+                {props.request.created &&
+                  format(parseISO(props.request.created), "dd MMM yyyy")}
               </Text>
             </View>
             <View style={styles.col}></View>
@@ -282,7 +283,7 @@ export const RequestPdf = (props: IProps) => {
               </View>
               {props.request.lineItems.map((line: LineItem, index: number) => {
                 return (
-                  <View style={styles.tableRow}>
+                  <View style={styles.tableRow} key={line.id}>
                     <View style={{ ...styles.tableCol, width: "10%" }}>
                       <Text style={styles.tableCell}>{line.requestQty}</Text>
                     </View>
@@ -360,7 +361,7 @@ export const RequestPdf = (props: IProps) => {
                   const split = attachment.FileName.split("-");
                   const attachmentType = split[0];
                   return (
-                    <View style={styles.tableRow}>
+                    <View style={styles.tableRow} key={`attachment-${index}`}>
                       <View style={{ ...styles.tableCol, width: "75%" }}>
                         <Text style={styles.tableCell}>
                           <Link
@@ -396,6 +397,10 @@ export const RequestPdf = (props: IProps) => {
               <Text style={styles.value}>
                 {props.request.requestField.fiscalYear}
               </Text>
+              <Text style={styles.label}>Purchase Number</Text>
+              <Text style={styles.value}>
+                {props.request.requestField.purchaseNumber}
+              </Text>
             </View>
             <View style={styles.col}>
               <Text style={styles.label}>Quarter</Text>
@@ -423,7 +428,11 @@ export const RequestPdf = (props: IProps) => {
             <View style={styles.col}>
               <Text style={styles.label}>Execution Date</Text>
               <Text style={styles.value}>
-                {props.request.requestField.executionDate}
+                {props.request.requestField.executionDate &&
+                  format(
+                    parseISO(props.request.requestField.executionDate),
+                    "dd MMM yyyy"
+                  )}
               </Text>
             </View>
           </View>
@@ -489,7 +498,7 @@ export const RequestPdf = (props: IProps) => {
                 (action: ApprovalAction | null, index: number) => {
                   if (!badges[index]) return null;
                   return (
-                    <View style={{ ...styles.tableRow }}>
+                    <View style={{ ...styles.tableRow }} key={`sig-${index}`}>
                       <View style={{ ...styles.tableCol, width: "15%" }}>
                         <Text style={styles.tableCell}>
                           {action && action.formInputs["status"]}
@@ -502,7 +511,7 @@ export const RequestPdf = (props: IProps) => {
                       </View>
                       <View style={{ ...styles.tableCol, width: "10%" }}>
                         <Text style={styles.tableCell}>
-                          {action
+                          {action && action.date
                             ? format(parseISO(action.date), "dd MMM yyyy")
                             : "-"}
                         </Text>

@@ -925,7 +925,7 @@ export const RequestForm = (props: IProps) => {
               </Col>
             </Row>
           </Form.Group>
-          {request.j8FieldStatuses.has(request.status) && (
+          {request.isPast("Finance", true) && (
             <Form.Group className="bg-light p-3">
               <legend>
                 J8 Data{" "}
@@ -956,6 +956,18 @@ export const RequestForm = (props: IProps) => {
                     </Form.Control>
                     {validationError(`requestField.fiscalYear`)}
                   </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Purchase Number</Form.Label>
+                    <Form.Control
+                      type="text"
+                      disabled={!props.editing}
+                      placeholder="Enter purchase number"
+                      {...formik.getFieldProps("requestField.purchaseNumber")}
+                      isInvalid={isInvalid(`requestField.purchaseNumber`)}
+                      isValid={isValid(`requestField.purchaseNumber`)}
+                    />
+                    {validationError(`requestField.purchaseNumber`)}
+                  </Form.Group>
                 </Col>
                 <Col>
                   <Form.Group>
@@ -983,7 +995,7 @@ export const RequestForm = (props: IProps) => {
               </Row>
             </Form.Group>
           )}
-          {request.cardholderFieldStatuses.has(request.status) && (
+          {request.isPast("Cardholder", true) && (
             <Form.Group className="bg-light p-3">
               <legend>
                 Cardholder Data{" "}

@@ -44,7 +44,10 @@ export const RequestSignaturesTable = (props: IProps) => {
         <tbody>
           {getActions().map((action: ApprovalAction | null, index: number) => {
             return (
-              <tr hidden={!badges[index]}>
+              <tr
+                hidden={!badges[index]}
+                key={`sig-${props.request.id}-${index}`}
+              >
                 <td></td>
                 <td>{badges[index]}</td>
                 <td>{action ? action.pastTense : "Unsigned"}</td>

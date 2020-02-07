@@ -3,7 +3,7 @@ import { RequestField } from "./RequestField";
 import { LineItem } from "./LineItem";
 import { SharepointUser } from "./SharepointUser";
 import { ApprovalAction } from "./ApprovalAction";
-import { compareDesc, parseISO } from "date-fns";
+import { compareDesc, parseISO, differenceInDays } from "date-fns";
 import { ApprovalActions } from "../../constants/ApprovalActions";
 import { getStatusesByFriendlyName } from "../../constants/StepStatus";
 import { RequestApprovals } from "./RequestApprovals";
@@ -21,6 +21,9 @@ export interface IRequest {
 export class Request implements IRequest {
   @autoserialize
   id: number;
+
+  @autoserialize
+  expiresAfterDays: number;
 
   //holds values like $0.00 and #134 so keyword search can find it
   @autoserialize
@@ -63,6 +66,7 @@ export class Request implements IRequest {
     this.history = data.history || {};
     this.created = data.created || new Date().toISOString();
     this.author = data.author || new SharepointUser();
+    this.expiresAfterDays = 30;
 
     //keyword search works by stringifying this object.
     //add the $total and the id #123 here so that those will match if user searches that way
@@ -70,17 +74,44 @@ export class Request implements IRequest {
   }
 
   //looks at the last approval for each status and returns true if it finds a match
-  public hasAction = (actions: string[]): boolean => {
+  public hasAction = (
+    actions: string[],
+    statuses: string[] = Object.keys(getStatusesByFriendlyName())
+  ): boolean => {
     let match = false;
-    const statuses = Object.keys(getStatusesByFriendlyName());
     statuses.map(status => {
       if (this.getLastActionFor(status, actions)) match = true;
     });
     return match;
   };
 
+  //quotes have to be less than 30 days old for cardholder to purchase
+  public isExpired = (): boolean => {
+    let expired = false;
+    try {
+      const submitted = parseISO(this.created);
+      const age = differenceInDays(new Date(), submitted);
+      const tooOld = age > this.expiresAfterDays;
+      const alreadyPurchased = this.isPast("Cardholder");
+      expired = tooOld && !alreadyPurchased;
+    } catch (e) {
+      console.error(`isExpired(${this.id}): `, e);
+    }
+    return expired;
+  };
+
+  //this request has moved beyond the given status
+  public isPast = (step: string, inclusive?: boolean): boolean => {
+    const statuses = Object.keys(getStatusesByFriendlyName());
+    const currentStep = statuses.indexOf(this.status);
+    const matchIndex = inclusive
+      ? statuses.indexOf(step)
+      : statuses.indexOf(step) + 1;
+    return currentStep >= matchIndex;
+  };
+
   //this is the data we'll save to the csv export
-  public getExportData() {
+  public getExportData(): any {
     return {
       id: this.id,
       requestor: this.author.Title,
@@ -106,6 +137,7 @@ export class Request implements IRequest {
       transactionId: this.requestField.transactionId,
       fiscalQuarter: this.requestField.fiscalQuarter,
       fiscalYear: this.requestField.fiscalYear,
+      purchaseNumber: this.requestField.purchaseNumber,
       url: `${window.location.protocol}//${window.location.host}/app/gpc/#/requests/details/${this.id}`
     };
   }
@@ -124,6 +156,7 @@ export class Request implements IRequest {
     return actions;
   }
 
+  //gets the last approval action that was taken at a step
   public getLastActionFor(
     status: string,
     actionTypes: string[] = Object.keys(ApprovalActions)
@@ -136,27 +169,6 @@ export class Request implements IRequest {
     );
     return lastAction || null;
   }
-
-  //show cardholder fields in these statuses
-  public cardholderFieldStatuses = new Set([
-    "Cardholder",
-    "Requestor",
-    "Supply",
-    "PBO Final",
-    "BO Final",
-    "Closed"
-  ]);
-
-  //show j8 fields in these statuses
-  public j8FieldStatuses = new Set([
-    "Finance",
-    "Cardholder",
-    "Requestor",
-    "Supply",
-    "PBO Final",
-    "BO Final",
-    "Closed"
-  ]);
 
   //add up the line items
   public getTotal = (): number => {
@@ -186,24 +198,29 @@ export class Request implements IRequest {
       requestField: Yup.object({
         //the dollar sign lets us access the context that we pass in formik.validate
         //we can't access status above because when() only works for siblings and below.
-        //fiscalYear, fiscalQuarter are only required for steps Finance and beyond.
+        //only required for steps Finance and beyond.
         fiscalYear: Yup.string().when("$status", {
-          is: value => this.j8FieldStatuses.has(value),
+          is: value => this.isPast("Finance", true),
           then: Yup.string().required("Required")
         }),
-        //fiscalYear, fiscalQuarter are only required for steps Finance and beyond.
+        //only required for steps Finance and beyond.
         fiscalQuarter: Yup.string().when("$status", {
-          is: value => this.j8FieldStatuses.has(value),
+          is: value => this.isPast("Finance", true),
+          then: Yup.string().required("Required")
+        }),
+        //only required for steps Finance and beyond.
+        purchaseNumber: Yup.string().when("$status", {
+          is: value => this.isPast("Finance", true),
           then: Yup.string().required("Required")
         }),
         //transactionId, executionDate are only required for steps Cardholder and beyond.
         transactionId: Yup.string().when("$status", {
-          is: value => this.cardholderFieldStatuses.has(value),
+          is: value => this.isPast("Cardholder", true),
           then: Yup.string().required("Required")
         }),
         //transactionId, executionDate are only required for steps Cardholder and beyond.
         executionDate: Yup.string().when("$status", {
-          is: value => this.cardholderFieldStatuses.has(value),
+          is: value => this.isPast("Cardholder", true),
           then: Yup.string().required("Required")
         }),
         RequestCardType: Yup.string()

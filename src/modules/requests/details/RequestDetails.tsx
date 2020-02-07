@@ -105,6 +105,22 @@ export const RequestDetails = (props: IProps) => {
                     : "container"
                 }`}
               >
+                {request.isExpired() && (
+                  <div className="row">
+                    <div className="col-12 mb-1">
+                      <Alert variant="danger">
+                        <Alert.Heading>Request Expired</Alert.Heading>
+                        <p>
+                          This request has expired because the purchase was not
+                          executed by the cardholder within{" "}
+                          {request.expiresAfterDays} days of submission. Please
+                          reject this request so the requestor can upload new
+                          quotes and restart the approval process.
+                        </p>
+                      </Alert>
+                    </div>
+                  </div>
+                )}
                 <div className="row">
                   <div className="col-12 m-2">
                     <RequestForm
