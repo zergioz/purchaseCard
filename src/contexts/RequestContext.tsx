@@ -82,9 +82,7 @@ export const RequestProvider: React.FC = (props: any) => {
             }
           case "read":
             if (singleItem) {
-              console.warn(
-                "RequestContext.subscribeTo(): Tried to read a single item from the DB"
-              );
+              updateRequest(response as Request);
             } else {
               //replace the whole array
               updateRequests(response as Request[]);
