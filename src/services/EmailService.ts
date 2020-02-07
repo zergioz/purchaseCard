@@ -22,19 +22,18 @@ export class EmailService {
     "<br />" +
     `Justification:` +
     `<blockquote>${request.requestField.RequestJustification}</blockquote>` +
-    "<br />" +
-    `Waiting on: ${request.status}` +
+    `Status: ${request.status}` +
     "<br />" +
     `URL: ${window.location.protocol}//${window.location.host}/app/gpc/#/requests/details/${request.id}` +
     "<br />" +
     "<br />" +
-    "Please action this request as quickly as possible by clicking on the link below, or by pasting the URL above into your browser." +
+    "You can view your request by clicking on the link below, or by pasting the URL into your browser." +
     "<br />" +
     "<br />" +
     `<a href="${window.location.protocol}//${window.location.host}/app/gpc/#/requests/details/${request.id}">Go to GPC Request #${request.id}</a>` +
     "<br />" +
     "<br />" +
-    "If you have received this message in error, please contact soceurlistj69@socom.mil to unsubscribe";
+    "If you have received this message in error, please contact soceurlistj69@socom.mil to unsubscribe.";
 
   //this gets sent to j8 no matter what the cardholder does
   notifyFinance(request: Request, roles: Role[]): Observable<any> {
@@ -56,6 +55,7 @@ export class EmailService {
         "<br />" +
         this.tail(request)
     };
+    console.log(`notifyFinance(): `, email.To);
     return this.dal.sendEmail(email);
   }
 
@@ -70,11 +70,13 @@ export class EmailService {
         "<h2>Verify that your goods have been received</h2>" +
         `<a href="${window.location.protocol}//${window.location.host}/app/gpc/#/requests/details/${request.id}">GPC Request #${request.id}</a>` +
         "<br />" +
-        `Your cardholder has purchased the items.  Please sign to verify that the items have been received.` +
+        `You are receiving this notification because you can approve this GPC request at the <b>${request.status.toUpperCase()}</b> step.` +
+        `Sign this request <u>after you have received</u> the the item(s) purchased.` +
         "<br />" +
         "<br />" +
         this.tail(request)
     };
+    console.log(`notifyRequestor(): `, email.To);
     return this.dal.sendEmail(email);
   }
 
@@ -87,11 +89,13 @@ export class EmailService {
         "<h2>You've received a new GPC request</h2>" +
         `<a href="${window.location.protocol}//${window.location.host}/app/gpc/#/requests/details/${request.id}">GPC Request #${request.id}</a>` +
         "<br />" +
-        `You are receiving this notification so that you can execute this GPC request.` +
+        `You are receiving this notification because you can approve this GPC request at the <b>${request.status.toUpperCase()}</b> step.` +
+        `Sign this request <u>as soon as you have completed</u> the purchase.` +
         "<br />" +
         "<br />" +
         this.tail(request)
     };
+    console.log(`notifyCardholder(): `, email.To);
     return this.dal.sendEmail(email);
   }
 
@@ -117,6 +121,7 @@ export class EmailService {
         "<br />" +
         this.tail(request)
     };
+    console.log(`notifyNextApproversFor(): `, email.To);
     return this.dal.sendEmail(email);
   }
 
@@ -129,11 +134,13 @@ export class EmailService {
         "<h2>Your GPC request has been updated</h2>" +
         `<a href="${window.location.protocol}//${window.location.host}/app/gpc/#/requests/details/${request.id}">GPC Request #${request.id}</a>` +
         "<br />" +
-        `You are receiving this notification because your GPC request has been moved to the <b>${request.status.toUpperCase()}</b> step.` +
+        `You are receiving this notification because your GPC request has been moved to the ` +
+        `<b>${request.status.toUpperCase()}</b> step.` +
         "<br />" +
         "<br />" +
         this.tail(request)
     };
+    console.log(`notifySumbitterFor(): `, email.To);
     return this.dal.sendEmail(email);
   }
 }
