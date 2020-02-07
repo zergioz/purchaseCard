@@ -956,6 +956,18 @@ export const RequestForm = (props: IProps) => {
                     </Form.Control>
                     {validationError(`requestField.fiscalYear`)}
                   </Form.Group>
+                  <Form.Group>
+                    <Form.Label>Purchase Number</Form.Label>
+                    <Form.Control
+                      type="text"
+                      disabled={!props.editing}
+                      placeholder="Enter purchase number"
+                      {...formik.getFieldProps("requestField.purchaseNumber")}
+                      isInvalid={isInvalid(`requestField.purchaseNumber`)}
+                      isValid={isValid(`requestField.purchaseNumber`)}
+                    />
+                    {validationError(`requestField.purchaseNumber`)}
+                  </Form.Group>
                 </Col>
                 <Col>
                   <Form.Group>

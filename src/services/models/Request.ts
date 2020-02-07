@@ -137,6 +137,7 @@ export class Request implements IRequest {
       transactionId: this.requestField.transactionId,
       fiscalQuarter: this.requestField.fiscalQuarter,
       fiscalYear: this.requestField.fiscalYear,
+      purchaseNumber: this.requestField.purchaseNumber,
       url: `${window.location.protocol}//${window.location.host}/app/gpc/#/requests/details/${this.id}`
     };
   }
@@ -197,13 +198,18 @@ export class Request implements IRequest {
       requestField: Yup.object({
         //the dollar sign lets us access the context that we pass in formik.validate
         //we can't access status above because when() only works for siblings and below.
-        //fiscalYear, fiscalQuarter are only required for steps Finance and beyond.
+        //only required for steps Finance and beyond.
         fiscalYear: Yup.string().when("$status", {
           is: value => this.isPast("Finance", true),
           then: Yup.string().required("Required")
         }),
-        //fiscalYear, fiscalQuarter are only required for steps Finance and beyond.
+        //only required for steps Finance and beyond.
         fiscalQuarter: Yup.string().when("$status", {
+          is: value => this.isPast("Finance", true),
+          then: Yup.string().required("Required")
+        }),
+        //only required for steps Finance and beyond.
+        purchaseNumber: Yup.string().when("$status", {
           is: value => this.isPast("Finance", true),
           then: Yup.string().required("Required")
         }),
