@@ -9,6 +9,7 @@ import Media from "react-media";
 import { StatusFilter } from "../request-filters/StatusFilter";
 import { KeywordFilter } from "../request-filters/KeywordFilter";
 import { RequestTypeFilter } from "../request-filters/RequestTypeFilter";
+import { RejectedFilter } from "../request-filters/RejectedFilter";
 
 interface IProps {
   hide?: string[];
@@ -21,6 +22,7 @@ export const RequestFiltersContainer = (props: IProps) => {
   const hideDirectorate = hidden.has("DirectorateFilter");
   const hideRequestType = hidden.has("RequestTypeFilter");
   const hideFiscalYear = hidden.has("FiscalYearFilter");
+  const hideRejected = hidden.has("RejectedFilter");
   const hideCard = hidden.has("Card");
 
   return (
@@ -49,6 +51,7 @@ export const RequestFiltersContainer = (props: IProps) => {
                         {!hideDirectorate && <DirectorateFilter />}
                         {!hideRequestType && <RequestTypeFilter />}
                         {!hideFiscalYear && <FiscalYearFilter />}
+                        {!hideRejected && <RejectedFilter />}
                         <ClearFiltersButton />
                       </ButtonGroup>
                     </Card.Body>

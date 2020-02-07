@@ -8,6 +8,7 @@ export interface IRequestFilters {
   fiscalYear: string;
   keyword: string;
   type: string;
+  rejected: boolean;
 }
 export class RequestFilters implements IRequestFilters {
   id: number = -1;
@@ -17,6 +18,7 @@ export class RequestFilters implements IRequestFilters {
   fiscalYear: string = "";
   keyword: string = "";
   type: string = "";
+  rejected: boolean = true;
 }
 
 interface IRequestFiltering {
@@ -27,6 +29,7 @@ export const useRequestFiltering = (): IRequestFiltering => {
   const applyFilters = (filters: IRequestFilters, requests: Request[]) => {
     let filteredRequests: Request[] = requests
       .filter(request => request.status !== "") //created on the new screen but never saved
+      .filter(request => rejectedFilter(request, filters))
       .filter(request => idFilter(request, filters))
       .filter(request => requestTypeFilter(request, filters))
       .filter(request => fiscalYearFilter(request, filters))
@@ -71,6 +74,10 @@ export const useRequestFiltering = (): IRequestFiltering => {
         .toLowerCase()
         .includes(keyword)
     );
+  };
+
+  const rejectedFilter = (request: Request, filters: IRequestFilters) => {
+    return filters.rejected == false || !request.hasAction(["reject"]);
   };
 
   const requestorFilter = (request: Request, filters: IRequestFilters) => {
