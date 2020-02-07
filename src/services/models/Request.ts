@@ -23,7 +23,7 @@ export class Request implements IRequest {
   id: number;
 
   @autoserialize
-  expireAfterDays: number;
+  expiresAfterDays: number;
 
   //holds values like $0.00 and #134 so keyword search can find it
   @autoserialize
@@ -66,7 +66,7 @@ export class Request implements IRequest {
     this.history = data.history || {};
     this.created = data.created || new Date().toISOString();
     this.author = data.author || new SharepointUser();
-    this.expireAfterDays = 30;
+    this.expiresAfterDays = 30;
 
     //keyword search works by stringifying this object.
     //add the $total and the id #123 here so that those will match if user searches that way
@@ -91,7 +91,7 @@ export class Request implements IRequest {
     try {
       const submitted = parseISO(this.created);
       const age = differenceInDays(new Date(), submitted);
-      const tooOld = age > this.expireAfterDays;
+      const tooOld = age > this.expiresAfterDays;
       const alreadyPurchased = this.isPast("Cardholder");
       expired = tooOld && !alreadyPurchased;
     } catch (e) {

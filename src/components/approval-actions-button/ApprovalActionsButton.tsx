@@ -195,12 +195,14 @@ export const ApprovalActionsButton = (props: IProps) => {
           <Dropdown.Item
             hidden={!props.actions.has("approve")}
             onClick={() => onActionClicked("approve")}
+            disabled={props.request.isExpired()}
           >
             Approve &amp; Sign
           </Dropdown.Item>
           <Dropdown.Item
             hidden={!props.actions.has("sendto")}
             onClick={() => onActionClicked("sendto")}
+            disabled={props.request.isExpired()}
           >
             Send to...
           </Dropdown.Item>
