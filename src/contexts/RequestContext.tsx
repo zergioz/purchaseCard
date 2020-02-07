@@ -159,7 +159,6 @@ export const RequestProvider: React.FC = (props: any) => {
       currentRequests[index] = newRequest;
     }
     updateRequests(currentRequests);
-    //applyRequestFilters(filters, true);
   };
 
   return (
