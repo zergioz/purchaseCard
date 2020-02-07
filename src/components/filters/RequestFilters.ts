@@ -1,4 +1,5 @@
 import { Request } from "../../services/models/Request";
+import { compose, filter } from "ramda";
 
 export interface IRequestFilters {
   id: number;
@@ -27,16 +28,21 @@ interface IRequestFiltering {
 
 export const useRequestFiltering = (): IRequestFiltering => {
   const applyFilters = (filters: IRequestFilters, requests: Request[]) => {
-    let filteredRequests: Request[] = requests
-      .filter(request => request.status !== "") //created on the new screen but never saved
-      .filter(request => rejectedFilter(request, filters))
-      .filter(request => idFilter(request, filters))
-      .filter(request => requestTypeFilter(request, filters))
-      .filter(request => fiscalYearFilter(request, filters))
-      .filter(request => requestorFilter(request, filters))
-      .filter(request => statusFilter(request, filters))
-      .filter(request => directorateFilter(request, filters))
-      .filter(request => keywordFilter(request, filters));
+    //the ramda library lets us use transducers which make this a lot faster.
+    //the filters are executed in the reverse order from which they appear here
+    let filteredRequests: Request[] = compose(
+      filter((request: Request) => keywordFilter(request, filters)),
+      filter((request: Request) => directorateFilter(request, filters)),
+      filter((request: Request) => statusFilter(request, filters)),
+      filter((request: Request) => requestorFilter(request, filters)),
+      filter((request: Request) => fiscalYearFilter(request, filters)),
+      filter((request: Request) => requestTypeFilter(request, filters)),
+      //@ts-ignore
+      filter((request: Request) => idFilter(request, filters)),
+      filter((request: Request) => rejectedFilter(request, filters)),
+      filter((request: Request) => request.status !== "")
+    )(requests);
+
     return filteredRequests;
   };
 
