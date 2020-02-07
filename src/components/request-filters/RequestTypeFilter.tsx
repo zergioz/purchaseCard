@@ -30,8 +30,7 @@ export const RequestTypeFilter: React.FC = () => {
       disabled={context.loading}
       className="m-1"
       variant={selected === "" ? "outline-primary" : "primary"}
-      key="secondary"
-      id="secondary"
+      id="type-filter-button"
       size="sm"
       title={selected === "" ? `All Types` : `Type: ${selected}`}
     >

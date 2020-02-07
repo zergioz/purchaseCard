@@ -67,8 +67,7 @@ export const StatusFilter: React.FC = () => {
       disabled={context.loading}
       className="m-1"
       variant={selected === "" ? "outline-primary" : "primary"}
-      key="secondary"
-      id="secondary"
+      id="status-filter-button"
       size="sm"
       title={selected === "" ? `All Statuses` : `Status: ${selected}`}
     >

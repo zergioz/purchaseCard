@@ -31,9 +31,8 @@ export const DirectorateFilter: React.FC = () => {
       disabled={context.loading}
       className="m-1"
       variant={selected === "" ? "outline-primary" : "primary"}
-      key="secondary"
-      id="secondary"
       size="sm"
+      id="directorate-filter-button"
       title={selected === "" ? `All Directorates` : `Directorate: ${selected}`}
     >
       {values.map(value => {

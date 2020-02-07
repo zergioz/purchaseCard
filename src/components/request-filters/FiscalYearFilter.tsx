@@ -44,9 +44,8 @@ export const FiscalYearFilter: React.FC = () => {
       disabled={context.loading}
       className="m-1"
       variant={selected === "" ? "outline-primary" : "primary"}
-      key="secondary"
-      id="secondary"
       size="sm"
+      id="fiscal-year-filter-button"
       title={selected === "" ? `All Fiscal Years` : `Fiscal Year: ${selected}`}
     >
       {years.map(year => {
