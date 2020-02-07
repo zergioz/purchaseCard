@@ -1,7 +1,7 @@
 import React from "react";
 import { format, formatDistance, parseISO } from "date-fns";
 import { ErrorBoundary } from "../error-boundary/ErrorBoundary";
-import { Badge } from "react-bootstrap";
+import { Badge, Popover, OverlayTrigger } from "react-bootstrap";
 
 const formatStr = "dd MMM yyyy";
 interface IProps {
@@ -22,6 +22,14 @@ const RequestTableDateCellUnsafe = (props: IProps) => {
   } catch (e) {
     console.error(`RequestTableDateCellUnsafe(${props.dateISOString}): `, e);
   }
+  const popover = (
+    <Popover id="expired-popover" style={{ maxWidth: "1000px" }}>
+      <Popover.Title as="h3">Request Expired</Popover.Title>
+      <Popover.Content>
+        The items haven't been purchased in time.
+      </Popover.Content>
+    </Popover>
+  );
   return (
     <div className="nowrap" style={{ whiteSpace: "pre" }}>
       {formattedDate}
@@ -32,7 +40,11 @@ const RequestTableDateCellUnsafe = (props: IProps) => {
       {props.expired && (
         <>
           <br />
-          <Badge variant="danger">Expired</Badge>
+          <OverlayTrigger trigger="hover" placement="auto" overlay={popover}>
+            <Badge variant="danger" style={{ cursor: "pointer" }}>
+              Expired
+            </Badge>
+          </OverlayTrigger>
         </>
       )}
     </div>
