@@ -169,27 +169,6 @@ export class Request implements IRequest {
     return lastAction || null;
   }
 
-  //show cardholder fields in these statuses
-  public cardholderFieldStatuses = new Set([
-    "Cardholder",
-    "Requestor",
-    "Supply",
-    "PBO Final",
-    "BO Final",
-    "Closed"
-  ]);
-
-  //show j8 fields in these statuses
-  public j8FieldStatuses = new Set([
-    "Finance",
-    "Cardholder",
-    "Requestor",
-    "Supply",
-    "PBO Final",
-    "BO Final",
-    "Closed"
-  ]);
-
   //add up the line items
   public getTotal = (): number => {
     const items = this.lineItems;
@@ -220,22 +199,22 @@ export class Request implements IRequest {
         //we can't access status above because when() only works for siblings and below.
         //fiscalYear, fiscalQuarter are only required for steps Finance and beyond.
         fiscalYear: Yup.string().when("$status", {
-          is: value => this.j8FieldStatuses.has(value),
+          is: value => this.isPast("Finance", true),
           then: Yup.string().required("Required")
         }),
         //fiscalYear, fiscalQuarter are only required for steps Finance and beyond.
         fiscalQuarter: Yup.string().when("$status", {
-          is: value => this.j8FieldStatuses.has(value),
+          is: value => this.isPast("Finance", true),
           then: Yup.string().required("Required")
         }),
         //transactionId, executionDate are only required for steps Cardholder and beyond.
         transactionId: Yup.string().when("$status", {
-          is: value => this.cardholderFieldStatuses.has(value),
+          is: value => this.isPast("Cardholder", true),
           then: Yup.string().required("Required")
         }),
         //transactionId, executionDate are only required for steps Cardholder and beyond.
         executionDate: Yup.string().when("$status", {
-          is: value => this.cardholderFieldStatuses.has(value),
+          is: value => this.isPast("Cardholder", true),
           then: Yup.string().required("Required")
         }),
         RequestCardType: Yup.string()

@@ -925,7 +925,7 @@ export const RequestForm = (props: IProps) => {
               </Col>
             </Row>
           </Form.Group>
-          {request.j8FieldStatuses.has(request.status) && (
+          {request.isPast("Finance", true) && (
             <Form.Group className="bg-light p-3">
               <legend>
                 J8 Data{" "}
@@ -983,7 +983,7 @@ export const RequestForm = (props: IProps) => {
               </Row>
             </Form.Group>
           )}
-          {request.cardholderFieldStatuses.has(request.status) && (
+          {request.isPast("Cardholder", true) && (
             <Form.Group className="bg-light p-3">
               <legend>
                 Cardholder Data{" "}
