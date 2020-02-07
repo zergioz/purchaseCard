@@ -23,16 +23,14 @@ export const RejectedFilter: React.FC = () => {
   };
 
   return (
-    <ButtonToolbar>
-      <Button
-        disabled={context.loading}
-        className="m-1"
-        variant={!enabled ? "outline-primary" : "primary"}
-        size="sm"
-        onClick={() => onChangeSelection()}
-      >
-        {enabled ? `Hiding Rejected` : `Showing Rejected`}
-      </Button>
-    </ButtonToolbar>
+    <Button
+      disabled={context.loading}
+      className="m-1"
+      variant={!enabled ? "outline-primary" : "primary"}
+      size="sm"
+      onClick={() => onChangeSelection()}
+    >
+      {enabled ? `Hiding Rejected` : `Showing Rejected`}
+    </Button>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { DirectorateFilter } from "../request-filters/DirectorateFilter";
 import { FiscalYearFilter } from "../request-filters/FiscalYearFilter";
-import { Card, ButtonGroup } from "react-bootstrap";
+import { Card, ButtonToolbar } from "react-bootstrap";
 import { ClearFiltersButton } from "../filters/ClearFiltersButton";
 import { StatusFilterProgressBar } from "../request-filters/StatusFilterProgressBar";
 import { StatusFilterTabs } from "../request-filters/StatusFilterTabs";
@@ -46,14 +46,14 @@ export const RequestFiltersContainer = (props: IProps) => {
                   <small className="text-secondary">Filters</small>
                   <Card>
                     <Card.Body className="p-1">
-                      <ButtonGroup vertical={matches.small}>
+                      <ButtonToolbar>
                         {!hideStatus && <StatusFilter />}
+                        {!hideRejected && <RejectedFilter />}
                         {!hideDirectorate && <DirectorateFilter />}
                         {!hideRequestType && <RequestTypeFilter />}
                         {!hideFiscalYear && <FiscalYearFilter />}
-                        {!hideRejected && <RejectedFilter />}
                         <ClearFiltersButton />
-                      </ButtonGroup>
+                      </ButtonToolbar>
                     </Card.Body>
                   </Card>
                 </div>
