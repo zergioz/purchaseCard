@@ -5,21 +5,16 @@ import { Table } from "react-bootstrap";
 import RequestContext from "../../contexts/RequestContext";
 import { NoResults } from "./NoResults";
 import { LoadingResults } from "./LoadingResults";
-import { useRequestFiltering } from "../filters/RequestFilters";
+import { CSVLink } from "react-csv";
 import "./RequestTable.css";
-import { RequestService } from "../../services";
-import { CSVLink, CSVDownload } from "react-csv";
 
 interface IProps {
   items?: Request[];
   onRequestUpdated?: (newRequest: Request) => void;
 }
 export const RequestTable = (props: IProps) => {
-  const svc = new RequestService();
   const context = useContext(RequestContext);
-  const { applyFilters } = useRequestFiltering();
   const items = props.items || context.filteredRequests;
-  const pageItems = applyFilters(context.pageFilters, context.requests);
 
   const onRequestUpdated = (newRequest: Request) => {
     if (props.onRequestUpdated) props.onRequestUpdated(newRequest);
@@ -34,7 +29,7 @@ export const RequestTable = (props: IProps) => {
           <div className="row">
             <div className="col-md-1"></div>
             <div className="col-md-10 text-center">
-              <small className="text-secondary">{`Showing ${items.length} of ${pageItems.length} requests`}</small>
+              <small className="text-secondary">{`Showing ${items.length} of ${context.requests.length} requests`}</small>
             </div>
             <div className="col-md-1 text-right">
               <CSVLink data={items.map(request => request.getExportData())}>
